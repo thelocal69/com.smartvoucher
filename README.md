@@ -1,2 +1,2 @@
 # com.smartvoucher
-thang nao clone ve la cho
+the projcet web site for comunity !
