@@ -200,12 +200,6 @@ CREATE TABLE ticket(
 	primary key(id)
 );
 
-ALTER TABLE ticket
-MODIFY COLUMN id_order int unique;
-
-ALTER TABLE ticket_history
-RENAME COLUMN ticket_id to id_ticket;
-
 CREATE TABLE ticket_history(
 	id int auto_increment,
 	id_ticket int not null,
