@@ -2,7 +2,7 @@ CREATE DATABASE CybersoftProject;
 USE CybersoftProject;
 
 CREATE TABLE merchant(
-	int id auto_increment,
+	id int auto_increment,
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	merchant_code varchar(20) unique,
@@ -17,11 +17,11 @@ CREATE TABLE merchant(
 	created_by varchar(50),
 	updated_by varchar(50),
 	
-	primary key(id);
+	primary key(id)
 );
 
 CREATE TABLE chains(
-	int id auto_increment,
+	id int auto_increment,
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	chain_code varchar(20) unique, 
