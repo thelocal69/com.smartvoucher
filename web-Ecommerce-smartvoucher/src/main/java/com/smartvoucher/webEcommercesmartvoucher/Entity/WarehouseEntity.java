@@ -1,17 +1,20 @@
 package com.smartvoucher.webEcommercesmartvoucher.Entity;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 
-@Entity(name = "users")
-public class UsersEntity {
+@Entity
+public class WarehouseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(mappedBy = "idUser")
-    private List<TicketEntity> ticketEntity;
+    @OneToMany(mappedBy = "idWarehouse")
+    private List<TicketEntity> tiketEntity;
 
     public int getId() {
         return id;

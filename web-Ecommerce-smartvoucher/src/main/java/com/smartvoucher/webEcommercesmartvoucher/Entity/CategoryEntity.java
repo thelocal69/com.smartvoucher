@@ -3,15 +3,15 @@ package com.smartvoucher.webEcommercesmartvoucher.Entity;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity(name = "users")
-public class UsersEntity {
+@Entity
+public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(mappedBy = "idUser")
-    private List<TicketEntity> ticketEntity;
+    @OneToMany(mappedBy = "idCategory")
+    private List<TicketEntity> tiketEntity;
 
     public int getId() {
         return id;
@@ -20,4 +20,5 @@ public class UsersEntity {
     public void setId(int id) {
         this.id = id;
     }
+
 }
