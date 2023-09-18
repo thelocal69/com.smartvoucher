@@ -1,4 +1,4 @@
--- CREATE DATABASE CybersoftProject;
+CREATE DATABASE CybersoftProject;
 USE CybersoftProject;
 
 CREATE TABLE merchant(
@@ -90,7 +90,7 @@ CREATE TABLE warehouse(
 
 
 CREATE TABLE warehouse_issuer(
-	id_warehouse int -- auto_increment,
+	id_warehouse int, -- auto_increment,
 	created_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	-- id_warehouse int,
@@ -288,8 +288,8 @@ ALTER TABLE warehouse_acquirer ADD CONSTRAINT FK_id_merchant_warehouse_acquirer 
 ALTER TABLE warehouse_acquirer ADD CONSTRAINT FK_id_chain_warehouse_acquirer FOREIGN KEY (id_chain) REFERENCES chains(id); 
 
 ALTER TABLE warehouse ADD CONSTRAINT FK_discount_type_warehouse FOREIGN KEY (discount_type) REFERENCES discount_type(id);
-ALTER TABLE warehouse ADD CONSTRAINT FK_id_warehouse_issuer_warehouse FOREIGN KEY (id_warehouse_issuer) REFERENCES warehouse_issuer(id);
-ALTER TABLE warehouse ADD CONSTRAINT FK_id_warehouse_acquirer_warehouse FOREIGN KEY (id_warehouse_acquirer) REFERENCES warehouse_acquirer(id);
+-- ALTER TABLE warehouse ADD CONSTRAINT FK_id_warehouse_issuer_warehouse FOREIGN KEY (id_warehouse_issuer) REFERENCES warehouse_issuer(id);
+-- ALTER TABLE warehouse ADD CONSTRAINT FK_id_warehouse_acquirer_warehouse FOREIGN KEY (id_warehouse_acquirer) REFERENCES warehouse_acquirer(id);
 ALTER TABLE warehouse ADD CONSTRAINT FK_id_category_warehouse FOREIGN KEY (id_category) REFERENCES category(id);
 
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_warehouse_warehouse_stores FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
@@ -308,7 +308,7 @@ ALTER TABLE ticket_history ADD CONSTRAINT FK_id_ticket_ticket_history FOREIGN KE
 
 ALTER TABLE orders ADD CONSTRAINT FK_id_user_oder FOREIGN KEY (id_user) REFERENCES users(id);
 
-ALTER TABLE users ADD CONSTRAINT FK_id_role_user FOREIGN KEY (id_role) REFERENCES roles(id);
+-- ALTER TABLE users ADD CONSTRAINT FK_id_role_user FOREIGN KEY (id_role) REFERENCES roles(id);
 
 ALTER TABLE roles_users ADD CONSTRAINT FK_id_role_role_user FOREIGN KEY (id_role) REFERENCES roles (id);
 ALTER TABLE roles_users ADD CONSTRAINT FK_id_user_role_user FOREIGN KEY (id_user) REFERENCES users (id);
