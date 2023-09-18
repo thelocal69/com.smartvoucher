@@ -13,7 +13,7 @@ CREATE TABLE merchant(
 	phone varchar(20),
 	email varchar(50),
 	description varchar(512),
-	status int, -- giá trị 0:inactive và giá trị 1:active
+	status int NOT null, -- giá trị 0:inactive và giá trị 1:active
 	created_by varchar(50),
 	updated_by varchar(50),
 	
@@ -32,7 +32,7 @@ CREATE TABLE chains(
 	phone varchar(20),
 	email varchar(50),
 	description varchar(512),
-	status int, -- giá trị 0:inactive và giá trị 1:active
+	status int NOT null, -- giá trị 0:inactive và giá trị 1:active
 	created_by varchar(50),
 	updated_by varchar(50),
 	id_merchant int NOT null,
@@ -48,7 +48,7 @@ CREATE TABLE store(
 	name varchar(100),
 	address varchar(100),
 	phone varchar(20),
-	status int, -- giá trị 0:inactive và giá trị 1:active
+	status int NOT null, -- giá trị 0:inactive và giá trị 1:active
 	description varchar(512),
 	created_by varchar(50),
 	updated_by varchar(50),
@@ -78,10 +78,10 @@ CREATE TABLE warehouse(
 	max_discount_amount decimal(8,3),
 	available_from timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	available_to timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	status int, -- giá trị 0:inactive và giá trị 1:active
-	show_on_web int, -- giá trị 0:không hiển thị cho end user và giá trị 1:được hiển thị cho end user
+	status int NOT null, -- giá trị 0:inactive và giá trị 1:active
+	show_on_web int NOT null, -- giá trị 0:không hiển thị cho end user và giá trị 1:được hiển thị cho end user
 	capacity int,
-	vouncher_channel int, -- giá trị 0:áp dụng hình thức offline và giá trị 1:áp dụng hình thức online
+	vouncher_channel int NOT null, -- giá trị 0:áp dụng hình thức offline và giá trị 1:áp dụng hình thức online
 	id_category int NOT null,
 	
 	primary key(id)
@@ -104,8 +104,9 @@ CREATE TABLE discount_type(
 	id int auto_increment,
 	code varchar(20) unique,
 	name varchar(100),
-	status int, -- giá trị 0:inactive và giá trị 1:active
+	status int NOT null, -- giá trị 0:inactive và giá trị 1:active
 	created_by varchar(50),
+	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	primary key(id)
@@ -115,7 +116,7 @@ CREATE TABLE category(
 	id int auto_increment,
 	category_code varchar(20) unique,
 	name varchar(100),
-	status int, -- giá trị 0:inactive và giá trị 1:active
+	status int NOT null, -- giá trị 0:inactive và giá trị 1:active
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
@@ -136,7 +137,7 @@ CREATE TABLE warehouse_acquirer(
 );
 
 CREATE TABLE warehouse_stores(
-	id int auto_increment,
+	-- id int auto_increment,
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
@@ -144,17 +145,17 @@ CREATE TABLE warehouse_stores(
 	id_warehouse int NOT null,
 	id_store int NOT null,
 		
-	primary key(id)
+	primary key(id_warehouse, id_store)
 );
 
 CREATE TABLE warehouse_serial(
-	id int auto_increment,
+	-- id int auto_increment,
 	id_warehouse int NOT null,
-	batch_code varchar(20) unique,
+	-- batch_code varchar(20) unique,
 	id_serial int unique,
 		
 	-- UNIQUE(id_serial),
-	primary key(id)
+	primary key(id_warehouse, id_serial)
 );
 
 CREATE TABLE serial(
@@ -162,7 +163,7 @@ CREATE TABLE serial(
 	batch_code varchar(20) unique,
 	number_of_serial int,
 	serial_code varchar(20) unique,
-	status int, -- giá trị 0:ngừng áp dụng và giá trị 1:còn áp dụng
+	status int NOT null, -- giá trị 0:ngừng áp dụng và giá trị 1:còn áp dụng
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
@@ -180,7 +181,7 @@ CREATE TABLE ticket(
 	id_serial int unique NOT null,
 	id_warehouse int NOT null,
 	id_category int unique NOT null,
-	status int, -- giá trị 0:chưa phát hành, giá trị 1:đã phát hành, giá trị 2: đã sử dụng, giá trị 3: đã hết hạn
+	status int NOT null, -- giá trị 0:chưa phát hành, giá trị 1:đã phát hành, giá trị 2: đã sử dụng, giá trị 3: đã hết hạn
 	id_order int unique NOT null, 
 	claimed_time timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	redeemedtime_time timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
@@ -219,7 +220,7 @@ CREATE TABLE orders(
 	id int auto_increment,
 	created_by varchar(50),
 	order_no varchar(20) unique, 
-	status int, -- giá trị 0:ngừng áp dụng và giá trị 1:còn áp dụng
+	status int NOT null, -- giá trị 0:ngừng áp dụng và giá trị 1:còn áp dụng
 	id_user int NOT null,
 	quantity int,
 	id_warehouse int NOT null,
