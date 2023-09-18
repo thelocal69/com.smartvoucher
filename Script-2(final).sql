@@ -61,9 +61,9 @@ CREATE TABLE store(
 CREATE TABLE warehouse(
 	id int auto_increment,
 	warehouse_code varchar(20) unique,
-	id_warehouse_issuer int NOT null, 
-	id_warehouse_acquirer int NOT null,
-	id_store_applied int,
+	-- id_warehouse_issuer int NOT null, 
+	-- id_warehouse_acquirer int NOT null,
+	-- id_store_applied int,
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
@@ -126,14 +126,14 @@ CREATE TABLE category(
 );
 
 CREATE TABLE warehouse_acquirer(
-	id int auto_increment,
+	-- id int auto_increment,
 	created_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	id_warehouse int NOT null,
 	id_merchant int NOT null,
 	id_chain int NOT null,
 	
-	primary key(id)
+	primary key(id_warehouse)
 );
 
 CREATE TABLE warehouse_stores(
@@ -244,7 +244,7 @@ CREATE TABLE users(
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss	
-	id_role int NOT null,	
+	-- id_role int NOT null,	
 	
 	primary key (id)
 );
@@ -252,6 +252,7 @@ CREATE TABLE users(
 CREATE TABLE roles(
 	id int auto_increment,
 	name varchar(100),
+	role_code varchar(20) UNIQUE,
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
