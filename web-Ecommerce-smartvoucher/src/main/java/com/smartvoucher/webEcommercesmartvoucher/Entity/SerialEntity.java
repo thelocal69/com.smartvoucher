@@ -42,6 +42,7 @@ public class SerialEntity{
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
+    // field được references
     @OneToMany(mappedBy = "idSerial")
     private List<TicketEntity> ticketEntity;
 

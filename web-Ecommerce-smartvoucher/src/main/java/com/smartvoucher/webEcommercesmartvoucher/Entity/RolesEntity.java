@@ -1,14 +1,40 @@
 package com.smartvoucher.webEcommercesmartvoucher.Entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.List;
+
+@Setter
+@Getter
 @Entity(name = "roles")
 public class RolesEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "created_by")
+    private String createdBy;
+
+    @Column(name = "updated_by")
+    private String updatedBy;
+
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
+
+    // field được references
+    @OneToMany(mappedBy = "idRole")
+    private List<UsersEntity> usersEntities;
+
+    @OneToMany(mappedBy = "idRole")
+    private List<Roles_UsersEntity> rolesUsersEntities;
 }

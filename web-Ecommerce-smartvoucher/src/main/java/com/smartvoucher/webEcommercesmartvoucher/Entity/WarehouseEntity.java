@@ -1,11 +1,15 @@
 package com.smartvoucher.webEcommercesmartvoucher.Entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 public class WarehouseEntity {
 
@@ -13,14 +17,11 @@ public class WarehouseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    // field được references
     @OneToMany(mappedBy = "idWarehouse")
     private List<TicketEntity> tiketEntity;
 
-    public int getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "idWarehouse")
+    private List<OrdersEntity> ordersEntity;
 
-    public void setId(int id) {
-        this.id = id;
-    }
 }

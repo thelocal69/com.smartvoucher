@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Setter
 @Getter
@@ -104,5 +105,7 @@ public class TicketEntity {
     @NonNull
     private UsersEntity idUser;
 
-
+    // field được references
+    @OneToMany(mappedBy = "idTicket")
+    private List<Ticket_HistoryEntity> list;
 }
