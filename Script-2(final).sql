@@ -87,18 +87,24 @@ CREATE TABLE warehouse(
 	primary key(id)
 );
 
-
-
-CREATE TABLE warehouse_issuer(
-	id_warehouse int, -- auto_increment,
-	created_by varchar(50),
-	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	-- id_warehouse int,
-	id_merchant int NOT null,
-	id_chain int NOT null,	
+CREATE TABLE warehouse_merchant(
+	id_warehouse int,
+	id_merchant int,
+	id_role int, -- acquirer/issuer
 	
-	primary key(id_warehouse)
+	PRIMARY key(id_warehouse, id_merchant)
 );
+
+--CREATE TABLE warehouse_issuer(
+--	id_warehouse int, -- auto_increment,
+--	created_by varchar(50),
+--	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+--	-- id_warehouse int,
+--	id_merchant int NOT null,
+--	id_chain int NOT NULL,
+--	
+--	primary key(id_warehouse)
+--);
 
 CREATE TABLE discount_type(
 	id int auto_increment,
@@ -125,16 +131,16 @@ CREATE TABLE category(
 	primary key(id)
 );
 
-CREATE TABLE warehouse_acquirer(
-	-- id int auto_increment,
-	created_by varchar(50),
-	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	id_warehouse int NOT null,
-	id_merchant int NOT null,
-	id_chain int NOT null,
-	
-	primary key(id_warehouse)
-);
+--CREATE TABLE warehouse_acquirer(
+--	-- id int auto_increment,
+--	created_by varchar(50),
+--	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+--	id_warehouse int NOT null,
+--	id_merchant int NOT null,
+--	id_chain int NOT null,
+--	
+--	primary key(id_warehouse)
+--);
 
 CREATE TABLE warehouse_stores(
 	-- id int auto_increment,
@@ -168,6 +174,8 @@ CREATE TABLE serial(
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss	
+	created_by varchar(50),
+	updated_by varchar(50),
 	
 	primary key(id)
 );
@@ -224,6 +232,8 @@ CREATE TABLE orders(
 	id_user int NOT null,
 	quantity int,
 	id_warehouse int NOT null,
+	created_by varchar(50),
+	updated_by varchar(50),
 	
 	primary key(id)
 );
@@ -252,7 +262,7 @@ CREATE TABLE users(
 CREATE TABLE roles(
 	id int auto_increment,
 	name varchar(100),
-	role_code varchar(20) UNIQUE,
+	role_code varchar(100) UNIQUE,
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
