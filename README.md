@@ -1,2 +1,2 @@
 # com.smartvoucher
-the projcet web site for comunity !
+the project web site for comunity !
