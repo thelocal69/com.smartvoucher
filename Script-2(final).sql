@@ -1,11 +1,9 @@
--- DROP DATABASE CybersoftProject;
 CREATE DATABASE CybersoftProject;
+
 USE CybersoftProject;
 
 CREATE TABLE merchant(
 	id bigint auto_increment,
-	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	merchant_code varchar(20) unique,
 	name varchar(100),
 	legal_name varchar(100),
@@ -17,14 +15,14 @@ CREATE TABLE merchant(
 	status int NOT null, -- giá trị 0:inactive và giá trị 1:active
 	created_by varchar(50),
 	updated_by varchar(50),
+	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	
 	PRIMARY KEY(id)
 );
 
 CREATE TABLE chains(
 	id bigint auto_increment,
-	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	chain_code varchar(20) unique, 
 	name varchar(100),
 	legal_name varchar(100),
@@ -34,27 +32,29 @@ CREATE TABLE chains(
 	email varchar(50),
 	description varchar(512),
 	status int NOT null, -- giá trị 0:inactive và giá trị 1:active
+	id_merchant bigint NOT null,
 	created_by varchar(50),
 	updated_by varchar(50),
-	id_merchant bigint NOT null,
+	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	
 	primary key(id)
 );
 
 CREATE TABLE store(
-	id bigint auto_increment,
-	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+	id bigint auto_increment
 	store_code varchar(20) unique, 
 	name varchar(100),
 	address varchar(100),
 	phone varchar(20),
 	status int NOT null, -- giá trị 0:inactive và giá trị 1:active
 	description varchar(512),
-	created_by varchar(50),
-	updated_by varchar(50),
 	id_chain bigint NOT null,
 	id_merchant bigint NOT null,
+	created_by varchar(50),
+	updated_by varchar(50),
+	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	
 	primary key(id)
 );
@@ -62,19 +62,12 @@ CREATE TABLE store(
 CREATE TABLE warehouse(
 	id bigint auto_increment,
 	warehouse_code varchar(20) unique,
-	-- id_warehouse_issuer int NOT null, 
-	-- id_warehouse_acquirer int NOT null,
-	-- id_store_applied int,
-	created_by varchar(50),
-	updated_by varchar(50),
-	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	name varchar(100),
 	description varchar(512),
 	term_of_use varchar(255),
 	banner_url varchar(255),
 	thumbnail_url varchar(255),
-	discount_type bigint,
+	id_discount_type bigint not null,
 	discount_amount decimal(8,3),
 	max_discount_amount decimal(8,3),
 	available_from timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
@@ -84,6 +77,10 @@ CREATE TABLE warehouse(
 	capacity int,
 	vouncher_channel int NOT null, -- giá trị 0:áp dụng hình thức offline và giá trị 1:áp dụng hình thức online
 	id_category bigint NOT null,
+	created_by varchar(50),
+	updated_by varchar(50),
+	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	
 	primary key(id)
 );
@@ -91,7 +88,7 @@ CREATE TABLE warehouse(
 CREATE TABLE warehouse_merchant(
 	id_warehouse bigint,
 	id_merchant bigint,
-	id_role bigint, -- acquirer/issuer
+	id_role bigint not null, -- acquirer/issuer
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
@@ -99,17 +96,6 @@ CREATE TABLE warehouse_merchant(
 	
 	PRIMARY key(id_warehouse, id_merchant)
 );
-
--- CREATE TABLE warehouse_issuer(
---	id_warehouse int, -- auto_increment,
---	created_by varchar(50),
---	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
---	-- id_warehouse int,
---	id_merchant int NOT null,
---	id_chain int NOT NULL,
---	
---	primary key(id_warehouse)
--- );
 
 CREATE TABLE discount_type(
 	id bigint auto_increment,
@@ -135,34 +121,19 @@ CREATE TABLE category(
 	
 	primary key(id)
 );
-
--- CREATE TABLE warehouse_acquirer(
---	-- id int auto_increment,
---	created_by varchar(50),
---	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
---	id_warehouse int NOT null,
---	id_merchant int NOT null,
---	id_chain int NOT null,
---	
---	primary key(id_warehouse)
--- );
-
-CREATE TABLE warehouse_stores(
-	-- id int auto_increment,
+CREATE TABLE warehouse_stores
+	id_warehouse bigint NOT null,
+	id_store bigint NOT null,
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	id_warehouse bigint NOT null,
-	id_store bigint NOT null,
 		
 	primary key(id_warehouse, id_store)
 );
 
-CREATE TABLE warehouse_serial(
-	-- id int auto_increment,
+CREATE TABLE warehouse_serial
 	id_warehouse bigint NOT null,
-	-- batch_code varchar(20) unique,
 	id_serial bigint unique,
 	created_by varchar(50),
 	updated_by varchar(50),
@@ -189,10 +160,6 @@ CREATE TABLE serial(
 
 CREATE TABLE ticket(
 	id bigint auto_increment,
-	created_by varchar(50),
-	updated_by varchar(50),
-	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss	
 	id_serial bigint unique NOT null,
 	id_warehouse bigint NOT null,
 	id_category bigint unique NOT null,
@@ -213,6 +180,10 @@ CREATE TABLE ticket(
 	available_to timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	applied_store varchar(20),
 	id_user bigint NOT null,
+	created_by varchar(50),
+	updated_by varchar(50),
+	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	
 	primary key(id)
 );
@@ -233,15 +204,15 @@ CREATE TABLE ticket_history(
 
 CREATE TABLE orders(
 	id bigint auto_increment,
-	updated_by varchar(50),
-	created_by varchar(50),
-	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss	
 	order_no varchar(20) unique, 
 	status int NOT null, -- giá trị 0:ngừng áp dụng và giá trị 1:còn áp dụng
 	id_user bigint NOT null,
 	quantity int,
 	id_warehouse bigint NOT null,
+	updated_by varchar(50),
+	created_by varchar(50),
+	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss	
 	
 	primary key(id)
 );
@@ -261,8 +232,7 @@ CREATE TABLE users(
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss	
-	-- id_role int NOT null,	
+	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss		
 	
 	primary key (id)
 );
@@ -295,19 +265,9 @@ CREATE TABLE roles_users(
 ALTER TABLE chains ADD CONSTRAINT FK_id_merchant_chain FOREIGN KEY (id_merchant) REFERENCES merchant(id);
 
 ALTER TABLE store ADD CONSTRAINT FK_id_chain_store FOREIGN KEY (id_chain) REFERENCES chains(id); 
-ALTER TABLE store ADD CONSTRAINT FK_id_merchant_store FOREIGN KEY (id_merchant) REFERENCES merchant(id);
+ALTER TABLE store ADD CONSTRAINT FK_id_merchant_store FOREIGN KEY (id_merchant) REFERENCES merchant(id)
 
--- ALTER TABLE warehouse_issuer ADD CONSTRAINT FK_id_warehouse_warehouse_issuer FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
--- ALTER TABLE warehouse_issuer ADD CONSTRAINT FK_id_merchant_warehouse_issuer FOREIGN KEY (id_merchant) REFERENCES merchant(id);
--- LTER TABLE warehouse_issuer ADD CONSTRAINT FK_id_chain_warehouse_issuer FOREIGN KEY (id_chain) REFERENCES chains(id);
-
--- ALTER TABLE warehouse_acquirer ADD CONSTRAINT FK_id_warehouse_warehouse_acquirer FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
--- ALTER TABLE warehouse_acquirer ADD CONSTRAINT FK_id_merchant_warehouse_acquirer FOREIGN KEY (id_merchant) REFERENCES merchant(id);
--- ALTER TABLE warehouse_acquirer ADD CONSTRAINT FK_id_chain_warehouse_acquirer FOREIGN KEY (id_chain) REFERENCES chains(id); 
-
-ALTER TABLE warehouse ADD CONSTRAINT FK_discount_type_warehouse FOREIGN KEY (discount_type) REFERENCES discount_type(id);
--- ALTER TABLE warehouse ADD CONSTRAINT FK_id_warehouse_issuer_warehouse FOREIGN KEY (id_warehouse_issuer) REFERENCES warehouse_issuer(id);
--- ALTER TABLE warehouse ADD CONSTRAINT FK_id_warehouse_acquirer_warehouse FOREIGN KEY (id_warehouse_acquirer) REFERENCES warehouse_acquirer(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_discount_type_warehouse FOREIGN KEY (discount_type) REFERENCES discount_type(id)
 ALTER TABLE warehouse ADD CONSTRAINT FK_id_category_warehouse FOREIGN KEY (id_category) REFERENCES category(id);
 
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_warehouse_warehouse_stores FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
@@ -325,8 +285,6 @@ ALTER TABLE ticket ADD CONSTRAINT FK_id_user_ticker FOREIGN KEY (id_user) REFERE
 ALTER TABLE ticket_history ADD CONSTRAINT FK_id_ticket_ticket_history FOREIGN KEY (id_ticket) REFERENCES ticket(id);
 
 ALTER TABLE orders ADD CONSTRAINT FK_id_user_oder FOREIGN KEY (id_user) REFERENCES users(id);
-
--- ALTER TABLE users ADD CONSTRAINT FK_id_role_user FOREIGN KEY (id_role) REFERENCES roles(id);
 
 ALTER TABLE roles_users ADD CONSTRAINT FK_id_role_role_user FOREIGN KEY (id_role) REFERENCES roles (id);
 ALTER TABLE roles_users ADD CONSTRAINT FK_id_user_role_user FOREIGN KEY (id_user) REFERENCES users (id);
