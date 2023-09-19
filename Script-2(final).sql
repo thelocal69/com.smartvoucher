@@ -42,7 +42,7 @@ CREATE TABLE chains(
 );
 
 CREATE TABLE store(
-	id bigint auto_increment
+	id bigint auto_increment,
 	store_code varchar(20) unique, 
 	name varchar(100),
 	address varchar(100),
@@ -121,7 +121,7 @@ CREATE TABLE category(
 	
 	primary key(id)
 );
-CREATE TABLE warehouse_stores
+CREATE TABLE warehouse_stores(
 	id_warehouse bigint NOT null,
 	id_store bigint NOT null,
 	created_by varchar(50),
@@ -132,7 +132,7 @@ CREATE TABLE warehouse_stores
 	primary key(id_warehouse, id_store)
 );
 
-CREATE TABLE warehouse_serial
+CREATE TABLE warehouse_serial(
 	id_warehouse bigint NOT null,
 	id_serial bigint unique,
 	created_by varchar(50),
@@ -265,9 +265,9 @@ CREATE TABLE roles_users(
 ALTER TABLE chains ADD CONSTRAINT FK_id_merchant_chain FOREIGN KEY (id_merchant) REFERENCES merchant(id);
 
 ALTER TABLE store ADD CONSTRAINT FK_id_chain_store FOREIGN KEY (id_chain) REFERENCES chains(id); 
-ALTER TABLE store ADD CONSTRAINT FK_id_merchant_store FOREIGN KEY (id_merchant) REFERENCES merchant(id)
+ALTER TABLE store ADD CONSTRAINT FK_id_merchant_store FOREIGN KEY (id_merchant) REFERENCES merchant(id);
 
-ALTER TABLE warehouse ADD CONSTRAINT FK_discount_type_warehouse FOREIGN KEY (discount_type) REFERENCES discount_type(id)
+ALTER TABLE warehouse ADD CONSTRAINT FK_discount_type_warehouse FOREIGN KEY (id_discount_type) REFERENCES discount_type(id)
 ALTER TABLE warehouse ADD CONSTRAINT FK_id_category_warehouse FOREIGN KEY (id_category) REFERENCES category(id);
 
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_warehouse_warehouse_stores FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
