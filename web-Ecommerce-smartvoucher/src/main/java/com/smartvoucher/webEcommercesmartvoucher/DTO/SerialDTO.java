@@ -30,4 +30,6 @@ public class SerialDTO {
     private Timestamp createdAt;
 
     private Timestamp updatedAt;
+
+
 }

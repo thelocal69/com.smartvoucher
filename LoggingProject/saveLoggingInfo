@@ -33,3 +33,138 @@ This generated password is for development use only. Your security configuration
 2023-09-21 00:53:39.754  INFO 23776 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2023-09-21 00:53:39.756  INFO 23776 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2023-09-21 00:53:39.779  INFO 23776 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-09-21 01:18:21.594  INFO 14364 --- [main] .s.w.WebEcommerceSmartvoucherApplication : Starting WebEcommerceSmartvoucherApplication using Java 18 on DESKTOP-G5EP1KV with PID 14364 (D:\projectgit\com.smartvoucher\web-Ecommerce-smartvoucher\target\classes started by nhanv in D:\projectgit\com.smartvoucher\web-Ecommerce-smartvoucher)
+2023-09-21 01:18:21.596  INFO 14364 --- [main] .s.w.WebEcommerceSmartvoucherApplication : No active profile set, falling back to 1 default profile: "default"
+2023-09-21 01:18:22.107  INFO 14364 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-21 01:18:22.181  INFO 14364 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 68 ms. Found 7 JPA repository interfaces.
+2023-09-21 01:18:22.586  INFO 14364 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-09-21 01:18:22.592  INFO 14364 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-09-21 01:18:22.592  INFO 14364 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.79]
+2023-09-21 01:18:22.681  INFO 14364 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-09-21 01:18:22.681  INFO 14364 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1039 ms
+2023-09-21 01:18:22.823  INFO 14364 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-21 01:18:22.853  INFO 14364 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-09-21 01:18:22.959  INFO 14364 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-09-21 01:18:23.020  INFO 14364 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-09-21 01:18:23.272  INFO 14364 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-09-21 01:18:23.282  INFO 14364 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-09-21 01:18:23.519  WARN 14364 --- [main] org.hibernate.mapping.RootClass          : HHH000038: Composite-id class does not override equals(): com.smartvoucher.webEcommercesmartvoucher.Entity.Keys.Roles_UsersKeys
+2023-09-21 01:18:23.519  WARN 14364 --- [main] org.hibernate.mapping.RootClass          : HHH000039: Composite-id class does not override hashCode(): com.smartvoucher.webEcommercesmartvoucher.Entity.Keys.Roles_UsersKeys
+2023-09-21 01:18:23.924  INFO 14364 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-21 01:18:23.931  INFO 14364 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-21 01:18:24.203  WARN 14364 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-09-21 01:18:24.514  WARN 14364 --- [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 575b4f70-eea1-48f9-a334-2d22d7901bd7
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2023-09-21 01:18:24.599  INFO 14364 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4f72078d, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2e4d252, org.springframework.security.web.context.SecurityContextPersistenceFilter@763ddfc3, org.springframework.security.web.header.HeaderWriterFilter@5fd5d6d1, org.springframework.security.web.csrf.CsrfFilter@693ed09d, org.springframework.security.web.authentication.logout.LogoutFilter@3b850bb7, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@530d40b4, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@612531a3, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@3555d804, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@7866a7a6, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@28befd62, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@10f60e36, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@19b8f1bd, org.springframework.security.web.session.SessionManagementFilter@ff12b53, org.springframework.security.web.access.ExceptionTranslationFilter@6406b84d, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6b8f87dc]
+2023-09-21 01:18:24.646  INFO 14364 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-09-21 01:18:24.655  INFO 14364 --- [main] .s.w.WebEcommerceSmartvoucherApplication : Started WebEcommerceSmartvoucherApplication in 3.373 seconds (JVM running for 3.843)
+2023-09-21 01:52:11.399  WARN 14364 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=6m47s537ms776µs).
+2023-09-21 02:15:28.759  INFO 14364 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-09-21 02:15:28.762  INFO 14364 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-09-21 02:15:28.778  INFO 14364 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-09-21 02:15:31.729  INFO 2044 --- [main] .s.w.WebEcommerceSmartvoucherApplication : Starting WebEcommerceSmartvoucherApplication using Java 18 on DESKTOP-G5EP1KV with PID 2044 (D:\projectgit\com.smartvoucher\web-Ecommerce-smartvoucher\target\classes started by nhanv in D:\projectgit\com.smartvoucher\web-Ecommerce-smartvoucher)
+2023-09-21 02:15:31.730  INFO 2044 --- [main] .s.w.WebEcommerceSmartvoucherApplication : No active profile set, falling back to 1 default profile: "default"
+2023-09-21 02:15:32.116  INFO 2044 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-21 02:15:32.162  INFO 2044 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 39 ms. Found 7 JPA repository interfaces.
+2023-09-21 02:15:32.507  INFO 2044 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-09-21 02:15:32.513  INFO 2044 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-09-21 02:15:32.514  INFO 2044 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.79]
+2023-09-21 02:15:32.599  INFO 2044 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-09-21 02:15:32.599  INFO 2044 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 832 ms
+2023-09-21 02:15:32.713  INFO 2044 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-21 02:15:32.750  INFO 2044 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-09-21 02:15:32.854  INFO 2044 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-09-21 02:15:32.911  INFO 2044 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-09-21 02:15:33.165  INFO 2044 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-09-21 02:15:33.177  INFO 2044 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-09-21 02:15:33.397  WARN 2044 --- [main] org.hibernate.mapping.RootClass          : HHH000038: Composite-id class does not override equals(): com.smartvoucher.webEcommercesmartvoucher.Entity.Keys.Roles_UsersKeys
+2023-09-21 02:15:33.397  WARN 2044 --- [main] org.hibernate.mapping.RootClass          : HHH000039: Composite-id class does not override hashCode(): com.smartvoucher.webEcommercesmartvoucher.Entity.Keys.Roles_UsersKeys
+2023-09-21 02:15:33.702  INFO 2044 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-21 02:15:33.708  INFO 2044 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-21 02:15:33.882  WARN 2044 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-09-21 02:15:34.141  WARN 2044 --- [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 24fcab89-eb3f-4542-a5f4-47311dd6c21a
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2023-09-21 02:15:34.222  INFO 2044 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4d745ac6, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6e54bef6, org.springframework.security.web.context.SecurityContextPersistenceFilter@576a8b00, org.springframework.security.web.header.HeaderWriterFilter@24fc9aa5, org.springframework.security.web.csrf.CsrfFilter@1c97c3bb, org.springframework.security.web.authentication.logout.LogoutFilter@64de9fa4, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@68dbe225, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@23f539df, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@7dcc0296, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@20706e70, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@116efe65, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@118879d2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6b8f87dc, org.springframework.security.web.session.SessionManagementFilter@7ba623d1, org.springframework.security.web.access.ExceptionTranslationFilter@28941a68, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@52b49891]
+2023-09-21 02:15:34.259  INFO 2044 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-09-21 02:15:34.266  INFO 2044 --- [main] .s.w.WebEcommerceSmartvoucherApplication : Started WebEcommerceSmartvoucherApplication in 2.784 seconds (JVM running for 3.301)
+2023-09-21 02:18:24.985  INFO 2044 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-09-21 02:18:24.987  INFO 2044 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-09-21 02:18:24.997  INFO 2044 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-09-21 02:53:46.809  INFO 17244 --- [main] .s.w.WebEcommerceSmartvoucherApplication : Starting WebEcommerceSmartvoucherApplication using Java 18 on DESKTOP-G5EP1KV with PID 17244 (D:\projectgit\com.smartvoucher\web-Ecommerce-smartvoucher\target\classes started by nhanv in D:\projectgit\com.smartvoucher\web-Ecommerce-smartvoucher)
+2023-09-21 02:53:46.809  INFO 17244 --- [main] .s.w.WebEcommerceSmartvoucherApplication : No active profile set, falling back to 1 default profile: "default"
+2023-09-21 02:53:47.148  INFO 17244 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-21 02:53:47.179  INFO 17244 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 31 ms. Found 7 JPA repository interfaces.
+2023-09-21 02:53:47.493  INFO 17244 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-09-21 02:53:47.499  INFO 17244 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-09-21 02:53:47.499  INFO 17244 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.79]
+2023-09-21 02:53:47.576  INFO 17244 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-09-21 02:53:47.576  INFO 17244 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 728 ms
+2023-09-21 02:53:47.691  INFO 17244 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-21 02:53:47.730  INFO 17244 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-09-21 02:53:47.846  INFO 17244 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-09-21 02:53:47.904  INFO 17244 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-09-21 02:53:48.107  INFO 17244 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-09-21 02:53:48.118  INFO 17244 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-09-21 02:53:48.298  WARN 17244 --- [main] org.hibernate.mapping.RootClass          : HHH000038: Composite-id class does not override equals(): com.smartvoucher.webEcommercesmartvoucher.Entity.Keys.Roles_UsersKeys
+2023-09-21 02:53:48.298  WARN 17244 --- [main] org.hibernate.mapping.RootClass          : HHH000039: Composite-id class does not override hashCode(): com.smartvoucher.webEcommercesmartvoucher.Entity.Keys.Roles_UsersKeys
+2023-09-21 02:53:48.547  INFO 17244 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-21 02:53:48.554  INFO 17244 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-21 02:53:48.721  WARN 17244 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-09-21 02:53:48.954  WARN 17244 --- [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 81c726a7-6305-48be-ba73-a85f3aa97921
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2023-09-21 02:53:49.015  INFO 17244 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@8a11a19, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@47393345, org.springframework.security.web.context.SecurityContextPersistenceFilter@39a09c0, org.springframework.security.web.header.HeaderWriterFilter@21f0cc97, org.springframework.security.web.csrf.CsrfFilter@9863ed5, org.springframework.security.web.authentication.logout.LogoutFilter@445b4594, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@47cf65f1, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@44d6f9cf, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@5b16e486, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@396ec737, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@626ff077, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3b850bb7, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2b85edc7, org.springframework.security.web.session.SessionManagementFilter@641c8ba4, org.springframework.security.web.access.ExceptionTranslationFilter@164db8f0, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@62fbefad]
+2023-09-21 02:53:49.053  INFO 17244 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-09-21 02:53:49.059  INFO 17244 --- [main] .s.w.WebEcommerceSmartvoucherApplication : Started WebEcommerceSmartvoucherApplication in 2.492 seconds (JVM running for 2.874)
+2023-09-21 02:54:19.983  INFO 17244 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-09-21 02:54:19.983  INFO 17244 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-09-21 02:54:19.984  INFO 17244 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-09-21 02:57:28.575  INFO 17244 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-09-21 02:57:28.576  INFO 17244 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-09-21 02:57:28.587  INFO 17244 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-09-21 02:57:31.279  INFO 23924 --- [main] .s.w.WebEcommerceSmartvoucherApplication : Starting WebEcommerceSmartvoucherApplication using Java 18 on DESKTOP-G5EP1KV with PID 23924 (D:\projectgit\com.smartvoucher\web-Ecommerce-smartvoucher\target\classes started by nhanv in D:\projectgit\com.smartvoucher\web-Ecommerce-smartvoucher)
+2023-09-21 02:57:31.281  INFO 23924 --- [main] .s.w.WebEcommerceSmartvoucherApplication : No active profile set, falling back to 1 default profile: "default"
+2023-09-21 02:57:31.668  INFO 23924 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-21 02:57:31.725  INFO 23924 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 51 ms. Found 7 JPA repository interfaces.
+2023-09-21 02:57:32.058  INFO 23924 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-09-21 02:57:32.063  INFO 23924 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-09-21 02:57:32.063  INFO 23924 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.79]
+2023-09-21 02:57:32.129  INFO 23924 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-09-21 02:57:32.129  INFO 23924 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 811 ms
+2023-09-21 02:57:32.241  INFO 23924 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-21 02:57:32.267  INFO 23924 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-09-21 02:57:32.358  INFO 23924 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-09-21 02:57:32.407  INFO 23924 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-09-21 02:57:32.594  INFO 23924 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-09-21 02:57:32.603  INFO 23924 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-09-21 02:57:32.775  WARN 23924 --- [main] org.hibernate.mapping.RootClass          : HHH000038: Composite-id class does not override equals(): com.smartvoucher.webEcommercesmartvoucher.Entity.Keys.Roles_UsersKeys
+2023-09-21 02:57:32.775  WARN 23924 --- [main] org.hibernate.mapping.RootClass          : HHH000039: Composite-id class does not override hashCode(): com.smartvoucher.webEcommercesmartvoucher.Entity.Keys.Roles_UsersKeys
+2023-09-21 02:57:33.052  INFO 23924 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-21 02:57:33.058  INFO 23924 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-21 02:57:33.240  WARN 23924 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-09-21 02:57:33.473  WARN 23924 --- [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: d1dca290-2dfe-4199-8099-7c849e7487ef
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2023-09-21 02:57:33.541  INFO 23924 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@156f0281, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1e041848, org.springframework.security.web.context.SecurityContextPersistenceFilter@5274acd1, org.springframework.security.web.header.HeaderWriterFilter@15a5cc6e, org.springframework.security.web.csrf.CsrfFilter@23f539df, org.springframework.security.web.authentication.logout.LogoutFilter@641c8ba4, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@2262bc86, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@28befd62, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@7097ead6, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@2fa4888c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5e643402, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@ff12b53, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4c4be9d8, org.springframework.security.web.session.SessionManagementFilter@4fc84c92, org.springframework.security.web.access.ExceptionTranslationFilter@3e4ead73, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5dc1597f]
+2023-09-21 02:57:33.579  INFO 23924 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-09-21 02:57:33.586  INFO 23924 --- [main] .s.w.WebEcommerceSmartvoucherApplication : Started WebEcommerceSmartvoucherApplication in 2.546 seconds (JVM running for 2.949)
+2023-09-21 02:57:43.592  INFO 23924 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-09-21 02:57:43.592  INFO 23924 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-09-21 02:57:43.593  INFO 23924 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-09-21 02:59:01.360  INFO 23924 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-09-21 02:59:01.362  INFO 23924 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-09-21 02:59:01.372  INFO 23924 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

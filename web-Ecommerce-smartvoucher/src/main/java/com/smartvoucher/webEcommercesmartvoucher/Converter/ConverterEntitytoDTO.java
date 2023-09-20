@@ -1,21 +1,19 @@
 package com.smartvoucher.webEcommercesmartvoucher.Converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.DTO.SerialDTO;
-import com.smartvoucher.webEcommercesmartvoucher.DTO.UsersDTO;
 import com.smartvoucher.webEcommercesmartvoucher.Entity.SerialEntity;
-import com.smartvoucher.webEcommercesmartvoucher.Entity.UsersEntity;
-import com.smartvoucher.webEcommercesmartvoucher.Service.SerialService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class converterEntitytoDTO {
+@Component
+public class ConverterEntitytoDTO {
 
-    private SerialService serialService;
+    public List<SerialDTO> findAllSerial(List<SerialEntity> list) {
 
-
-    public List<SerialDTO> findAllSerial() {
-        List<SerialEntity> list = serialService.findAllSerial();
         List<SerialDTO> listSerial = new ArrayList<>();
 
         for (SerialEntity data : list) {
