@@ -14,10 +14,13 @@ public class RolesEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "role_code")
+    private String roleCode;
 
     @Column(name = "created_by")
     private String createdBy;
@@ -32,8 +35,6 @@ public class RolesEntity {
     private Timestamp updatedAt;
 
     // field được references
-    @OneToMany(mappedBy = "idRole")
-    private List<UsersEntity> usersEntities;
 
     @OneToMany(mappedBy = "idRole")
     private List<Roles_UsersEntity> rolesUsersEntities;

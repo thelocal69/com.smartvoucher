@@ -16,7 +16,7 @@ public class SerialEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "batch_code")
     private String batch_code;

@@ -15,7 +15,7 @@ public class UsersEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "member_code")
     private String memberCode;
@@ -58,12 +58,6 @@ public class UsersEntity {
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "id_role")
-    @NonNull
-    private RolesEntity idRole;
-
 
     // field được references
     @OneToMany(mappedBy = "idUser")

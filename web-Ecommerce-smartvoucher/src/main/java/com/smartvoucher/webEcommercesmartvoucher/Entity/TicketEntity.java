@@ -16,13 +16,13 @@ import java.util.List;
 public class TicketEntity {
 
     // sử dụng để định dạng kểu dữ liệu ' decimal(8, 3) ' trong database (* note : sử dụng trong DTO)
-    private int totalDigits = 8;
-    private int scale = 3;
+//    private int totalDigits = 8;
+//    private int scale = 3;
     //
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "created_by")
     private String createdBy;
@@ -52,6 +52,7 @@ public class TicketEntity {
     private CategoryEntity idCategory;
 
     @Column(name = "status")
+    @NonNull
     private int status;
 
     @ManyToOne

@@ -22,7 +22,7 @@ public class Roles_UsersEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_role",insertable = false, updatable = false)
-    @NonNull
+    @NonNull                     // tránh update value tới những table được references tới
     private RolesEntity idRole;
 
     @ManyToOne
