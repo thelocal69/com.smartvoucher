@@ -23,6 +23,8 @@ public class UsersDTO {
 
     private String userName;
 
+    private String fullName;
+
     private String pwd;
 
     private String phone;

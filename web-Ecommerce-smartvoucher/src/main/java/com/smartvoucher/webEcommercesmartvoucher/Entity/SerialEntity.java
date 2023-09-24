@@ -19,7 +19,7 @@ public class SerialEntity{
     private long id;
 
     @Column(name = "batch_code")
-    private String batch_code;
+    private String batchCode;
 
     @Column(name = "number_of_serial")
     private int numberOfSerial;
