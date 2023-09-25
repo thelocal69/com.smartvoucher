@@ -18,9 +18,9 @@ import java.io.Serializable;
 public class Roles_UsersKeys implements Serializable {
 
     @Column(name = "id_role")
-    private int idRole;
+    private long idRole;
 
     @Column(name = "id_user")
-    private int idUser;
+    private long idUser;
 
 }

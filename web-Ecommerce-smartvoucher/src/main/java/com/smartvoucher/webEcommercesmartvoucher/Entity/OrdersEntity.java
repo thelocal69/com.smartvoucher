@@ -15,7 +15,7 @@ public class OrdersEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "created_by")
     private String createdBy;
@@ -33,6 +33,7 @@ public class OrdersEntity {
     private String orderNo;
 
     @Column(name = "status")
+    @NonNull
     private int status;
 
     @ManyToOne

@@ -16,10 +16,10 @@ public class SerialEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "batch_code")
-    private String batch_code;
+    private String batchCode;
 
     @Column(name = "number_of_serial")
     private int numberOfSerial;
