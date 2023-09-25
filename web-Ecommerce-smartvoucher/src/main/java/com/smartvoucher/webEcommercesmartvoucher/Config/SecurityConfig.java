@@ -13,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -46,12 +48,24 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                    .antMatchers(HttpMethod.POST, "/serial").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/serial").hasRole("USER")
+//                    .antMatchers(HttpMethod.POST, "/serial").hasRole("ADMIN")
+//                    .antMatchers(HttpMethod.PUT, "/serial").hasRole("ADMIN")
+//                    .antMatchers(HttpMethod.GET, "/serial").hasRole("USER")
+                        .antMatchers("/serial/**").permitAll()
                 .anyRequest().authenticated() // tất cả những cái còn lại đều cần phải chứng thực
                 .and().httpBasic()
                 .and().build();
 
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("").allowedMethods("").allowedHeaders("").allowCredentials(false).maxAge(3600);;
+            }
+        };
     }
 
 

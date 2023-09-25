@@ -65,8 +65,16 @@ public class SerialController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<?> deleteSerial(@RequestBody SerialEntity serialEntity) {
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
+    public ResponseEntity<?> deleteSerial(@RequestParam long id) {
 
-        return ResponseEntity.status(HttpStatus.OK).body("");
+        boolean deleteSerial = serialService.deleteSerial(id);
+
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setStatus("OK");
+        baseResponse.setMessage( deleteSerial == true ? "Delete Serial Success!": "Delete Serial Fail!");
+        baseResponse.setData(deleteSerial);
+
+        return ResponseEntity.status(HttpStatus.OK).body(baseResponse);
     }
 }

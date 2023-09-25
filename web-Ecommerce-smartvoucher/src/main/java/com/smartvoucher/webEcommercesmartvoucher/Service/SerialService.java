@@ -43,6 +43,13 @@ public class SerialService {
         SerialEntity checkSerial = serialRepository.findSerialBySerialCode(serialEntity.getSerialCode());
 
         if(checkSerial == null){
+
+            // lấy thời gian hiện tại set cho field createAt
+            // không cho admin hoặc client tự nhập vào
+            Date currentDate = new Date();
+            Timestamp currentTimestamp = new Timestamp(currentDate.getTime());
+            serialEntity.setCreatedAt(currentTimestamp);
+
             serialRepository.save(serialEntity);
             isSuccess = true;
         }
@@ -131,4 +138,15 @@ public class SerialService {
         return checkUpdate;
     }
 
+    public boolean deleteSerial(long id) {
+
+        boolean checkSerial = serialRepository.existsById(id), deleteSerial = false;
+
+        if(checkSerial == true) {
+            serialRepository.deleteById(id);
+            deleteSerial = true;
+        }
+
+        return deleteSerial;
+    }
 }
