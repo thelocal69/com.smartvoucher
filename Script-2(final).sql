@@ -117,6 +117,7 @@ CREATE TABLE category(
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+	banner_url varchar(255),
 	
 	primary key(id)
 );
@@ -258,7 +259,6 @@ CREATE TABLE roles_users(
 	
 	PRIMARY KEY(id_role, id_user)
 );
-
 
 
 ALTER TABLE chains ADD CONSTRAINT FK_id_merchant_chain FOREIGN KEY (id_merchant) REFERENCES merchant(id);
