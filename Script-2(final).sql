@@ -3,7 +3,7 @@ CREATE DATABASE CybersoftProject;
 USE CybersoftProject;
 
 CREATE TABLE merchant(
-	id bigint auto_increment,
+	id bigint auto_increment
 	merchant_code varchar(20) unique,
 	name varchar(100),
 	legal_name varchar(100),
@@ -17,7 +17,6 @@ CREATE TABLE merchant(
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	
 	PRIMARY KEY(id)
 );
 
