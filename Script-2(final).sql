@@ -17,6 +17,7 @@ CREATE TABLE merchant(
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+	
 	PRIMARY KEY(id)
 );
 
@@ -146,7 +147,7 @@ CREATE TABLE warehouse_serial(
 
 CREATE TABLE serial(
 	id bigint auto_increment,
-	batch_code varchar(20),
+	batch_code varchar(20) unique,
 	number_of_serial int,
 	serial_code varchar(20) unique,
 	status int NOT null, -- giá trị 0:ngừng áp dụng và giá trị 1:còn áp dụng
