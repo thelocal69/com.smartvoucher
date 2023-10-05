@@ -1,11 +1,12 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
-import com.smartvoucher.webEcommercesmartvoucher.baseResponse.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.dto.MerchantDTO;
 import com.smartvoucher.webEcommercesmartvoucher.service.IMerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +21,7 @@ public class MerchantController {
     }
 
     @GetMapping("")
+    @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllMerchant() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
@@ -31,6 +33,7 @@ public class MerchantController {
     }
 
     @PostMapping("/api/insert")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertMerchant(@RequestBody MerchantDTO merchantDTO) {
         if (!merchantService.getAllMerchantCode(merchantDTO).isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
@@ -53,6 +56,7 @@ public class MerchantController {
 
     //this is "up-sert", that mean if the instance is not existed or not found, this method is insert the new data
     @PutMapping("/api/{id}")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> updateMerchant(@RequestBody MerchantDTO merchantDTO, @PathVariable Long id) {
         merchantDTO.setId(id);
         boolean exist = merchantService.existMerchant(merchantDTO);
@@ -76,6 +80,7 @@ public class MerchantController {
     }
 
     @DeleteMapping("/api/{id}")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> deleteMerchant(@RequestBody MerchantDTO merchantDTO, @PathVariable Long id) {
         merchantDTO.setId(id);
         if (this.merchantService.deleteMerchant(merchantDTO)){

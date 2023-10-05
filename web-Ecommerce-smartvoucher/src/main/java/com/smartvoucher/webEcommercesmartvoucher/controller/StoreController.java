@@ -1,11 +1,12 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
-import com.smartvoucher.webEcommercesmartvoucher.baseResponse.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.dto.StoreDTO;
 import com.smartvoucher.webEcommercesmartvoucher.service.IStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class StoreController {
     }
 
     @GetMapping("")
+    @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllStore() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
@@ -32,6 +34,7 @@ public class StoreController {
         );
     }
     @PostMapping("/api/insert")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertStore(@RequestBody StoreDTO storeDTO){
         List<StoreDTO> storeDTOList = storeService.getAllStoreCode(storeDTO);
         if (storeDTOList.isEmpty()){
@@ -63,6 +66,7 @@ public class StoreController {
     }
 
     @PutMapping("/api/{id}")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> updateStore(@RequestBody StoreDTO storeDTO, @PathVariable Long id){
         storeDTO.setId(id);
         boolean exist = storeService.existStore(storeDTO);
@@ -95,6 +99,7 @@ public class StoreController {
     }
 
     @DeleteMapping("/api/{id}")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> deleteStore(@RequestBody StoreDTO storeDTO, @PathVariable Long id){
         storeDTO.setId(id);
         if (this.storeService.deleteStore(storeDTO)){

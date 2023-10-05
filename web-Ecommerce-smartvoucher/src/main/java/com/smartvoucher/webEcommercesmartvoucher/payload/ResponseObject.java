@@ -1,4 +1,4 @@
-package com.smartvoucher.webEcommercesmartvoucher.baseResponse;
+package com.smartvoucher.webEcommercesmartvoucher.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

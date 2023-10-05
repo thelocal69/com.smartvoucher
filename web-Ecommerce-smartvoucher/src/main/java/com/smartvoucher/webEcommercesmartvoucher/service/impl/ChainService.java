@@ -9,6 +9,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IChainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,12 +28,14 @@ public class ChainService implements IChainService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ChainDTO> getAllChain() {
         List<ChainEntity> chainEntityList = chainRepository.findAll();
         return chainConverter.toChainDTOList(chainEntityList);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ChainDTO upsert(ChainDTO chainDTO) {
         ChainEntity chainEntity;
         if (chainDTO.getId() != null){
@@ -47,12 +50,14 @@ public class ChainService implements IChainService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ChainDTO> getAllChainCode(ChainDTO chainDTO) {
         List<ChainEntity> chainEntityList = chainRepository.findAllByChainCode(chainDTO.getChainCode());
         return chainConverter.toChainDTOList(chainEntityList);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean deleteChain(ChainDTO chainDTO) {
         boolean exists = chainRepository.existsById(chainDTO.getId());
         if (exists){
@@ -64,11 +69,13 @@ public class ChainService implements IChainService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean existChain(ChainDTO chainDTO) {
         return merchantRepository.existsById(chainDTO.getId());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean existMerchantCode(ChainDTO chainDTO) {
         return merchantRepository.existsByMerchantCode(chainDTO.getMerchantCode());
     }

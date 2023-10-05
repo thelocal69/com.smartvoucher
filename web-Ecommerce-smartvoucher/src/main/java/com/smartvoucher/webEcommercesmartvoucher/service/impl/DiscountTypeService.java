@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IDiscountTypeReposit
 import com.smartvoucher.webEcommercesmartvoucher.service.IDiscountTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,18 +24,21 @@ public class DiscountTypeService implements IDiscountTypeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<DiscountTypeDTO> getAllDiscount() {
         List<DiscountTypeEntity> discountTypeEntityList = discountTypeRepository.findAll();
         return discountTypeConverter.toDiscountTypeDTOList(discountTypeEntityList);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<DiscountTypeDTO> getAllDiscountTypeCode(DiscountTypeDTO discountTypeDTO) {
         List<DiscountTypeEntity> discountTypeEntityList = discountTypeRepository.findByCode(discountTypeDTO.getCode());
         return discountTypeConverter.toDiscountTypeDTOList(discountTypeEntityList);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public DiscountTypeDTO upsert(DiscountTypeDTO discountTypeDTO) {
         DiscountTypeEntity discountType;
         if (discountTypeDTO.getId() != null){
@@ -47,6 +51,7 @@ public class DiscountTypeService implements IDiscountTypeService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean deleteDiscountType(DiscountTypeDTO discountTypeDTO) {
         boolean exists = discountTypeRepository.existsById(discountTypeDTO.getId());
         if (exists){
@@ -58,6 +63,7 @@ public class DiscountTypeService implements IDiscountTypeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean existDiscount(DiscountTypeDTO discountTypeDTO) {
         return discountTypeRepository.existsById(discountTypeDTO.getId());
     }

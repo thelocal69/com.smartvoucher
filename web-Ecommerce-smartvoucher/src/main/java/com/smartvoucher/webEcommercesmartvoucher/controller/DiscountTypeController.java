@@ -1,11 +1,12 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
-import com.smartvoucher.webEcommercesmartvoucher.baseResponse.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.dto.DiscountTypeDTO;
 import com.smartvoucher.webEcommercesmartvoucher.service.IDiscountTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class DiscountTypeController {
     }
 
     @GetMapping("")
+    @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllDiscount() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
@@ -33,6 +35,7 @@ public class DiscountTypeController {
     }
 
     @PostMapping("/api/insert")
+    @Transactional(rollbackFor = Exception.class)
     public  ResponseEntity<ResponseObject> insertDiscount(@RequestBody DiscountTypeDTO discountTypeDTO){
         List<DiscountTypeDTO> discountTypeDTOList = discountTypeService.getAllDiscountTypeCode(discountTypeDTO);
         if (discountTypeDTOList.isEmpty()){
@@ -55,6 +58,7 @@ public class DiscountTypeController {
     }
 
     @PutMapping("/api/{id}")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> updateDiscount(@RequestBody DiscountTypeDTO discountTypeDTO, @PathVariable Long id){
         discountTypeDTO.setId(id);
         boolean exist = discountTypeService.existDiscount(discountTypeDTO);
@@ -78,6 +82,7 @@ public class DiscountTypeController {
     }
 
     @DeleteMapping("/api/{id}")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> deleteDiscount(@RequestBody DiscountTypeDTO discountTypeDTO, @PathVariable Long id){
         discountTypeDTO.setId(id);
         if (this.discountTypeService.deleteDiscountType(discountTypeDTO)){

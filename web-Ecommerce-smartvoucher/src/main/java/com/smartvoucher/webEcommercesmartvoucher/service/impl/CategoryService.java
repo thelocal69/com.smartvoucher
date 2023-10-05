@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.ICategoryRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,18 +24,21 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CategoryDTO> getAllCategory() {
         List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
         return categoryConverter.toCategoryDTOList(categoryEntityList);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CategoryDTO> getAllCategoryCode(CategoryDTO categoryDTO) {
         List<CategoryEntity> category = categoryRepository.findByCategoryCode(categoryDTO.getCategoryCode());
         return categoryConverter.toCategoryDTOList(category);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CategoryDTO upsert(CategoryDTO categoryDTO) {
         CategoryEntity categoryEntity;
         if (categoryDTO.getId() != null){
@@ -47,6 +51,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean deleteCategory(CategoryDTO categoryDTO) {
         boolean exists = categoryRepository.existsById(categoryDTO.getId());
         if (exists){
@@ -58,6 +63,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean exitsCategory(CategoryDTO categoryDTO) {
         return categoryRepository.existsById(categoryDTO.getId());
     }

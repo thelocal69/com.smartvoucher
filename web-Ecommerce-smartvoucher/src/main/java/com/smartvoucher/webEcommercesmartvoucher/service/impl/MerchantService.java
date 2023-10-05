@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IMerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,12 +24,14 @@ public class MerchantService implements IMerchantService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MerchantDTO> getAllMerchant() {
         List<MerchantEntity> merchantEntityList = merchantRepository.findAll();
         return merchantConverter.toMerchantDTOList(merchantEntityList);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MerchantDTO> getAllMerchantCode(MerchantDTO merchantDTO) {
         List<MerchantEntity> merchantEntityList = merchantRepository.findAllByMerchantCode(
                 merchantDTO.getMerchantCode().trim());
@@ -36,12 +39,14 @@ public class MerchantService implements IMerchantService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MerchantDTO getMerchantCode(MerchantDTO merchantDTO) {
         MerchantEntity merchant = merchantRepository.findOneByMerchantCode(merchantDTO.getMerchantCode());
         return merchantConverter.toMerchantDTO(merchant);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MerchantDTO upsertMerchant(MerchantDTO merchantDTO) {
         MerchantEntity merchant;
         if (merchantDTO.getId() != null){
@@ -54,6 +59,7 @@ public class MerchantService implements IMerchantService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean deleteMerchant(MerchantDTO merchantDTO) {
         boolean exist = merchantRepository.existsById(merchantDTO.getId());
         if (exist){
@@ -64,6 +70,7 @@ public class MerchantService implements IMerchantService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean existMerchant(MerchantDTO merchantDTO) {
         return merchantRepository.existsById(merchantDTO.getId());
     }

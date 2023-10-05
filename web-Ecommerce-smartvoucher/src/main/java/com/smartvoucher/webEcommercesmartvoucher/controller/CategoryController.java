@@ -1,11 +1,12 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
-import com.smartvoucher.webEcommercesmartvoucher.baseResponse.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.dto.CategoryDTO;
 import com.smartvoucher.webEcommercesmartvoucher.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class CategoryController {
     }
 
     @GetMapping("")
+    @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllCategory() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
@@ -33,6 +35,7 @@ public class CategoryController {
     }
 
     @PostMapping("/api/insert")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertCategory(@RequestBody CategoryDTO categoryDTO){
         List<CategoryDTO> category = categoryService.getAllCategoryCode(categoryDTO);
         if (category.isEmpty()){
@@ -55,6 +58,7 @@ public class CategoryController {
     }
 
     @PutMapping("/api/{id}")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> updateCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable Long id){
         categoryDTO.setId(id);
         boolean exist = categoryService.exitsCategory(categoryDTO);

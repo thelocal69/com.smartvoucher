@@ -11,6 +11,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository
 import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,18 +36,21 @@ public class WareHouseService implements IWareHouseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWareHouse() {
         List<WareHouseEntity> wareHouseEntityList = wareHouseRepository.findAll();
         return wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWareHouseCode(WareHouseDTO wareHouseDTO) {
         List<WareHouseEntity> wareHouseEntityList = wareHouseRepository.findAllByWarehouseCode(wareHouseDTO.getWarehouseCode());
         return wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public WareHouseDTO upsert(WareHouseDTO wareHouseDTO) {
         WareHouseEntity wareHouse;
         if (wareHouseDTO.getId() != null){
@@ -63,6 +67,7 @@ public class WareHouseService implements IWareHouseService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean deleteWareHouse(WareHouseDTO wareHouseDTO) {
         boolean exits = wareHouseRepository.existsById(wareHouseDTO.getId());
         if (exits){
@@ -74,17 +79,16 @@ public class WareHouseService implements IWareHouseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean existWareHouse(WareHouseDTO wareHouseDTO) {
         return wareHouseRepository.existsById(wareHouseDTO.getId());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Boolean existCategoryAndDiscount(WareHouseDTO wareHouseDTO) {
         boolean existCategoryCode = categoryRepository.existsByCategoryCode(wareHouseDTO.getCategoryCode());
         boolean existDiscountCode = discountTypeRepository.existsByCode(wareHouseDTO.getDiscountTypeCode());
-        if (existDiscountCode && existCategoryCode){
-            return true;
-        }
-        return false;
+        return existDiscountCode && existCategoryCode;
     }
 }
