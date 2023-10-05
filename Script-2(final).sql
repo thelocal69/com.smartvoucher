@@ -146,7 +146,7 @@ CREATE TABLE warehouse_serial(
 
 CREATE TABLE serial(
 	id bigint auto_increment,
-	batch_code varchar(20) unique,
+	batch_code varchar(20),
 	number_of_serial int,
 	serial_code varchar(20) unique,
 	status int NOT null, -- giá trị 0:ngừng áp dụng và giá trị 1:còn áp dụng
