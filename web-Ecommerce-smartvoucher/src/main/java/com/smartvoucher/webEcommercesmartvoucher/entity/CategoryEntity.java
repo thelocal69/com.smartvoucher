@@ -31,4 +31,5 @@ public class CategoryEntity extends BaseEntity{
 
     @OneToMany(mappedBy = "idCategory")
     private List<TicketEntity> ticketEntities;
+
 }
