@@ -17,7 +17,6 @@ CREATE TABLE merchant(
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	
 	PRIMARY KEY(id)
 );
 
@@ -118,7 +117,8 @@ CREATE TABLE category(
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	
+	banner_url varchar(255),
+
 	primary key(id)
 );
 CREATE TABLE warehouse_stores(
@@ -146,7 +146,7 @@ CREATE TABLE warehouse_serial(
 
 CREATE TABLE serial(
 	id bigint auto_increment,
-	batch_code varchar(20) unique,
+	batch_code varchar(20),
 	number_of_serial int,
 	serial_code varchar(20) unique,
 	status int NOT null, -- giá trị 0:ngừng áp dụng và giá trị 1:còn áp dụng
@@ -267,7 +267,7 @@ ALTER TABLE chains ADD CONSTRAINT FK_id_merchant_chain FOREIGN KEY (id_merchant)
 ALTER TABLE store ADD CONSTRAINT FK_id_chain_store FOREIGN KEY (id_chain) REFERENCES chains(id); 
 ALTER TABLE store ADD CONSTRAINT FK_id_merchant_store FOREIGN KEY (id_merchant) REFERENCES merchant(id);
 
-ALTER TABLE warehouse ADD CONSTRAINT FK_discount_type_warehouse FOREIGN KEY (id_discount_type) REFERENCES discount_type(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_discount_type_warehouse FOREIGN KEY (id_discount_type) REFERENCES discount_type(id)
 ALTER TABLE warehouse ADD CONSTRAINT FK_id_category_warehouse FOREIGN KEY (id_category) REFERENCES category(id);
 
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_warehouse_warehouse_stores FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);

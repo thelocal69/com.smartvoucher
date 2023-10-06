@@ -1,9 +1,8 @@
 package com.smartvoucher.webEcommercesmartvoucher.Controller;
 
-import com.smartvoucher.webEcommercesmartvoucher.DTO.RolesDTO;
-import com.smartvoucher.webEcommercesmartvoucher.DTO.UsersDTO;
-import com.smartvoucher.webEcommercesmartvoucher.Payload.BaseResponse;
-import com.smartvoucher.webEcommercesmartvoucher.Service.UsersService;
+import com.smartvoucher.webEcommercesmartvoucher.dto.UsersDTO;
+import com.smartvoucher.webEcommercesmartvoucher.payload.BaseResponse;
+import com.smartvoucher.webEcommercesmartvoucher.service.impl.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,7 @@ public class UserController {
         List<UsersDTO> listUser = usersService.findAllUser();
 
         BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setStatus("200");
+        baseResponse.setStatus(200);
         baseResponse.setMessage("List User");
         baseResponse.setData(listUser);
 

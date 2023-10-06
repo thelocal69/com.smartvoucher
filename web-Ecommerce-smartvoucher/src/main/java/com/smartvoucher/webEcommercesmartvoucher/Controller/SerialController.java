@@ -1,9 +1,9 @@
 package com.smartvoucher.webEcommercesmartvoucher.Controller;
 
-import com.smartvoucher.webEcommercesmartvoucher.DTO.SerialDTO;
-import com.smartvoucher.webEcommercesmartvoucher.Entity.SerialEntity;
-import com.smartvoucher.webEcommercesmartvoucher.Payload.BaseResponse;
-import com.smartvoucher.webEcommercesmartvoucher.Service.SerialService;
+import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
+import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
+import com.smartvoucher.webEcommercesmartvoucher.payload.BaseResponse;
+import com.smartvoucher.webEcommercesmartvoucher.service.impl.SerialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,40 +26,26 @@ public class SerialController {
     @GetMapping("")
     public ResponseEntity<?> getAllSerial() {
 
-        List<SerialDTO> list = serialService.findAllSerial();
-
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setStatus("OK");
-        baseResponse.setMessage("List Serial");
-        baseResponse.setData(list);
+       BaseResponse baseResponse = serialService.getAllSerial();
 
         return ResponseEntity.status(HttpStatus.OK).body(baseResponse);
     }
 
     @PostMapping("")
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> insertSerial(@RequestBody SerialEntity serialEntity) {
+    public ResponseEntity<?> insertSerial(@RequestBody SerialDTO serialDTO) {
 
-        boolean insertSerial = serialService.insertSerial(serialEntity);
+        BaseResponse baseResponse = serialService.insertSerial(serialDTO);
 
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setStatus("OK");
-        baseResponse.setMessage( insertSerial == true ? "Add serial success!":"Add serial fail!");
-        baseResponse.setData(insertSerial);
 
         return ResponseEntity.status(HttpStatus.OK).body(baseResponse);
     }
 
     @PutMapping("")
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> updateSerial(@RequestBody SerialEntity serialEntity) {
+    public ResponseEntity<?> updateSerial(@RequestBody SerialDTO serialDTO) {
 
-        boolean updateSerial = serialService.updateSerial(serialEntity);
-
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setStatus("OK");
-        baseResponse.setMessage( updateSerial == true ? "Update Serial Success!": "Update Serial Fail!");
-        baseResponse.setData(updateSerial);
+        BaseResponse baseResponse = serialService.updateSerial(serialDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(baseResponse);
     }
@@ -68,12 +54,7 @@ public class SerialController {
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseEntity<?> deleteSerial(@RequestParam long id) {
 
-        boolean deleteSerial = serialService.deleteSerial(id);
-
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setStatus("OK");
-        baseResponse.setMessage( deleteSerial == true ? "Delete Serial Success!": "Delete Serial Fail!");
-        baseResponse.setData(deleteSerial);
+        BaseResponse baseResponse = serialService.deleteSerial(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(baseResponse);
     }

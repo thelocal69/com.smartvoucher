@@ -1,8 +1,8 @@
 package com.smartvoucher.webEcommercesmartvoucher.Controller;
 
-import com.smartvoucher.webEcommercesmartvoucher.DTO.Ticket_HistoryDTO;
-import com.smartvoucher.webEcommercesmartvoucher.Payload.BaseResponse;
-import com.smartvoucher.webEcommercesmartvoucher.Service.Ticket_HistoryService;
+import com.smartvoucher.webEcommercesmartvoucher.dto.Ticket_HistoryDTO;
+import com.smartvoucher.webEcommercesmartvoucher.payload.BaseResponse;
+import com.smartvoucher.webEcommercesmartvoucher.service.impl.Ticket_HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,7 @@ public class Ticket_HistoryController {
         List<Ticket_HistoryDTO> list = ticketHistoryService.findAllTicketHistory();
 
         BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setStatus("200");
+        baseResponse.setStatus(200);
         baseResponse.setMessage("List TicketHistory");
         baseResponse.setData(list);
 
