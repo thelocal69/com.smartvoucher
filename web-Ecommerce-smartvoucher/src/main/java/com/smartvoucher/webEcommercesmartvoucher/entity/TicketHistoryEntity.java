@@ -1,26 +1,34 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Setter
 @Getter
-@Entity(name = "roles")
-public class RolesEntity {
+@Entity(name = "ticket_history")
+public class TicketHistoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "name")
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "id_ticket")
+    @NonNull
+    private TicketEntity idTicket;
 
-    @Column(name = "role_code")
-    private String roleCode;
+    @Column(name = "serial_code") // *Noted : xem lại
+    private String serialCode;
+
+    @Column(name = "prev_status")
+    private int prevStatus;
+
+    @Column(name = "is_latest")
+    private int isLatest;
 
     @Column(name = "created_by")
     private String createdBy;
@@ -33,9 +41,4 @@ public class RolesEntity {
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
-
-    // field được references
-
-    @OneToMany(mappedBy = "idRole")
-    private List<RolesUsersEntity> rolesUsersEntities;
 }

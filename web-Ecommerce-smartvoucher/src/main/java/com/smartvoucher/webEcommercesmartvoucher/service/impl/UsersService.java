@@ -1,6 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.smartvoucher.webEcommercesmartvoucher.converter.EntityToDTO.UsersEntityToDTO;
+import com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO.UsersEntityToDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UsersDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UsersEntity;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UsersRepository;

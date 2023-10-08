@@ -52,11 +52,11 @@ public class WareHouseEntity extends BaseEntity{
     @JoinColumn(name = "id_category")
     private CategoryEntity category;
 
-
     // field được references
     @OneToMany(mappedBy = "idWarehouse")
     private List<OrdersEntity> ordersEntities;
 
     @OneToMany(mappedBy = "idWarehouse")
     private List<TicketEntity> ticketEntities;
+
 }

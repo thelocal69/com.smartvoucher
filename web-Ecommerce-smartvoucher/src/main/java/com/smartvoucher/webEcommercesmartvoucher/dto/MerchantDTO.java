@@ -11,7 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MerchantDTO extends BaseDTO{
-
     private String merchantCode;
     private String name;
     private String legalName;
@@ -21,5 +20,4 @@ public class MerchantDTO extends BaseDTO{
     private String email;
     private String description;
     private int status;
-
 }
