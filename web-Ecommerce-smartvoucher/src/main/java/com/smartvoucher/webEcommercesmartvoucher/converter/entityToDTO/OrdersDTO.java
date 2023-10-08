@@ -1,4 +1,4 @@
-package com.smartvoucher.webEcommercesmartvoucher.converter.EntityToDTO;
+package com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO;
 
 import org.springframework.stereotype.Component;
 

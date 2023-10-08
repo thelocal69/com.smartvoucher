@@ -5,17 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-<<<<<<< HEAD
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
-=======
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import java.sql.Timestamp;
->>>>>>> demo1
 
 @Getter
 @Setter

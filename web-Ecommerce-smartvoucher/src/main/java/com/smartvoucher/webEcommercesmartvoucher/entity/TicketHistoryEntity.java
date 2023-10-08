@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity(name = "ticket_history")
-public class Ticket_HistoryEntity {
+public class TicketHistoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

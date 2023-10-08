@@ -107,5 +107,5 @@ public class TicketEntity {
 
     // field được references
     @OneToMany(mappedBy = "idTicket")
-    private List<Ticket_HistoryEntity> list;
+    private List<TicketHistoryEntity> list;
 }
