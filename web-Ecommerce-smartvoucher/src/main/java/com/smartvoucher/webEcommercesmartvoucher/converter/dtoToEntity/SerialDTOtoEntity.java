@@ -1,4 +1,4 @@
-package com.smartvoucher.webEcommercesmartvoucher.converter.DTOtoEntity;
+package com.smartvoucher.webEcommercesmartvoucher.converter.dtoToEntity;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;

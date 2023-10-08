@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity(name = "roles_users")
-public class Roles_UsersEntity {
+public class RolesUsersEntity {
 
     // Đặt PRIMARY KEY cho id_role và id_user
     @EmbeddedId

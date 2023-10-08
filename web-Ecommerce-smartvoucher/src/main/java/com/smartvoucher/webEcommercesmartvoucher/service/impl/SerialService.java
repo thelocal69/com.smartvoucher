@@ -1,7 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.smartvoucher.webEcommercesmartvoucher.converter.DTOtoEntity.SerialDTOtoEntity;
-import com.smartvoucher.webEcommercesmartvoucher.converter.EntityToDTO.SerialEntityToDTO;
+import com.smartvoucher.webEcommercesmartvoucher.converter.dtoToEntity.SerialDTOtoEntity;
+import com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO.SerialEntityToDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
 import com.smartvoucher.webEcommercesmartvoucher.payload.BaseResponse;

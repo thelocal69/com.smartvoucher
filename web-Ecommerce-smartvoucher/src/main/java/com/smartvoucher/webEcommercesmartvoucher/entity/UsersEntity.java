@@ -66,5 +66,5 @@ public class UsersEntity {
     private List<OrdersEntity> ordersEntity;
 
     @OneToMany(mappedBy = "idUser")
-    private List<Roles_UsersEntity> rolesUsersEntities;
+    private List<RolesUsersEntity> rolesUsersEntities;
 }
