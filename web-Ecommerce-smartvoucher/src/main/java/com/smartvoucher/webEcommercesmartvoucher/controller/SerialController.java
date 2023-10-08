@@ -1,7 +1,6 @@
-package com.smartvoucher.webEcommercesmartvoucher.Controller;
+package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
 import com.smartvoucher.webEcommercesmartvoucher.payload.BaseResponse;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.SerialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/serial")

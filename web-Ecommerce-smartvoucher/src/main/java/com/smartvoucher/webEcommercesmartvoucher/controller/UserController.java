@@ -1,4 +1,4 @@
-package com.smartvoucher.webEcommercesmartvoucher.Controller;
+package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.UsersDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.BaseResponse;
