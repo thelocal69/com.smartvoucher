@@ -11,17 +11,11 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ticket_HistoryDTO {
+public class RolesUsersDTO {
 
-    private long id;
+    private RolesDTO idRole;
 
-    private TicketDTO idTicketDTO;
-
-    private String serialCode;
-
-    private int prevStatus;
-
-    private int isLatest;
+    private UsersDTO idUser;
 
     private String createdBy;
 
@@ -30,4 +24,5 @@ public class Ticket_HistoryDTO {
     private Timestamp createdAt;
 
     private Timestamp updatedAt;
+
 }

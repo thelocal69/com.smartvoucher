@@ -1,24 +1,24 @@
-package com.smartvoucher.webEcommercesmartvoucher.converter.EntityToDTO;
+package com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.Ticket_HistoryDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.Ticket_HistoryEntity;
+import com.smartvoucher.webEcommercesmartvoucher.dto.TicketHistoryDTO;
+import com.smartvoucher.webEcommercesmartvoucher.entity.TicketHistoryEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class Ticket_HistoryEntityToDTO {
+public class TicketHistoryEntityToDTO {
 
-    public List<Ticket_HistoryDTO> findAllTicketHistory(List<Ticket_HistoryEntity> list) {
+    public List<TicketHistoryDTO> findAllTicketHistory(List<TicketHistoryEntity> list) {
 
-        List<Ticket_HistoryDTO> listTicketHistory = new ArrayList<>();
+        List<TicketHistoryDTO> listTicketHistory = new ArrayList<>();
 
-        for(Ticket_HistoryEntity data : list) {
+        for(TicketHistoryEntity data : list) {
             TicketDTO ticketDTO = new TicketDTO();
 
-            Ticket_HistoryDTO ticketHistoryDTO = new Ticket_HistoryDTO();
+            TicketHistoryDTO ticketHistoryDTO = new TicketHistoryDTO();
             ticketHistoryDTO.setId(data.getId());
 
             ticketDTO.setId(data.getIdTicket().getId());

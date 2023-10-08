@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 
@@ -12,11 +11,17 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Roles_UsersDTO {
+public class TicketHistoryDTO {
 
-    private RolesDTO idRole;
+    private long id;
 
-    private UsersDTO idUser;
+    private TicketDTO idTicketDTO;
+
+    private String serialCode;
+
+    private int prevStatus;
+
+    private int isLatest;
 
     private String createdBy;
 
@@ -25,5 +30,4 @@ public class Roles_UsersDTO {
     private Timestamp createdAt;
 
     private Timestamp updatedAt;
-
 }
