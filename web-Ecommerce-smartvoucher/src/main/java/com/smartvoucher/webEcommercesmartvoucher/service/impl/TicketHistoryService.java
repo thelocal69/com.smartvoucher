@@ -1,6 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO.TicketHistoryEntityToDTO;
+import com.smartvoucher.webEcommercesmartvoucher.converter.TicketHistoryConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketHistoryDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketHistoryEntity;
 import com.smartvoucher.webEcommercesmartvoucher.repository.TicketHistoryRepository;
@@ -15,7 +15,7 @@ public class TicketHistoryService {
     private TicketHistoryRepository ticketHistoryRepository;
 
     @Autowired
-    private TicketHistoryEntityToDTO ticketHistoryEntityToDTO;
+    private TicketHistoryConverter ticketHistoryConverter;
 
     @Autowired
     public TicketHistoryService(TicketHistoryRepository ticketHistoryRepository) {
@@ -26,7 +26,7 @@ public class TicketHistoryService {
 
         List<TicketHistoryEntity> list = ticketHistoryRepository.findAll();
 
-        List<TicketHistoryDTO> listTicketHistory = ticketHistoryEntityToDTO.findAllTicketHistory(list);
+        List<TicketHistoryDTO> listTicketHistory = ticketHistoryConverter.findAllTicketHistory(list);
 
         return listTicketHistory;
     }

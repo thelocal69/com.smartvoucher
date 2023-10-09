@@ -1,6 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO.UsersEntityToDTO;
+import com.smartvoucher.webEcommercesmartvoucher.converter.UsersConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UsersDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UsersEntity;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UsersRepository;
@@ -15,7 +15,7 @@ public class UsersService {
     private UsersRepository usersRepository;
 
     @Autowired
-    private UsersEntityToDTO usersEntityToDTO;
+    private UsersConverter usersConverter;
 
     @Autowired
     public UsersService(UsersRepository usersRepository) {
@@ -26,7 +26,7 @@ public class UsersService {
 
         List<UsersEntity> list = usersRepository.findAll();
 
-        List<UsersDTO> listUser = usersEntityToDTO.findAllUser(list);
+        List<UsersDTO> listUser = usersConverter.findAllUser(list);
 
         return listUser;
     }

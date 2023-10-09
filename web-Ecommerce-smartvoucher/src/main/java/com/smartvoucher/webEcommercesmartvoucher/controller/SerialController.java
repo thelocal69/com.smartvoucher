@@ -1,7 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
-import com.smartvoucher.webEcommercesmartvoucher.payload.BaseResponse;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.SerialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,36 +23,36 @@ public class SerialController {
     @GetMapping("")
     public ResponseEntity<?> getAllSerial() {
 
-       BaseResponse baseResponse = serialService.getAllSerial();
+        ResponseObject responseObject = serialService.getAllSerial();
 
-        return ResponseEntity.status(HttpStatus.OK).body(baseResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
     }
 
     @PostMapping("")
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseEntity<?> insertSerial(@RequestBody SerialDTO serialDTO) {
 
-        BaseResponse baseResponse = serialService.insertSerial(serialDTO);
+        ResponseObject responseObject = serialService.insertSerial(serialDTO);
 
 
-        return ResponseEntity.status(HttpStatus.OK).body(baseResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
     }
 
     @PutMapping("")
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseEntity<?> updateSerial(@RequestBody SerialDTO serialDTO) {
 
-        BaseResponse baseResponse = serialService.updateSerial(serialDTO);
+        ResponseObject responseObject = serialService.updateSerial(serialDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body(baseResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
     }
 
     @DeleteMapping("")
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseEntity<?> deleteSerial(@RequestParam long id) {
 
-        BaseResponse baseResponse = serialService.deleteSerial(id);
+        ResponseObject responseObject = serialService.deleteSerial(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(baseResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
     }
 }

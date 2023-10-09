@@ -1,4 +1,4 @@
-package com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO;
+package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.UsersDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UsersEntity;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UsersEntityToDTO {
+public class UsersConverter {
 
     public List<UsersDTO> findAllUser(List<UsersEntity> list) {
 

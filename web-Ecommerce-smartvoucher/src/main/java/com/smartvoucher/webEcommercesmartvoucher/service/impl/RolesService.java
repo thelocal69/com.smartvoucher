@@ -1,6 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO.RolesEntityToDTO;
+import com.smartvoucher.webEcommercesmartvoucher.converter.RolesConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.RolesDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RolesEntity;
 import com.smartvoucher.webEcommercesmartvoucher.repository.RolesRepository;
@@ -15,7 +15,7 @@ public class RolesService {
     private final RolesRepository rolesRepository;
 
     @Autowired
-    private RolesEntityToDTO rolesEntityToDTO;
+    private RolesConverter rolesConverter;
 
     @Autowired
     public RolesService(RolesRepository rolesRepository) {
@@ -26,7 +26,7 @@ public class RolesService {
 
         List<RolesEntity> list = rolesRepository.findAll();
 
-        List<RolesDTO> listRole = rolesEntityToDTO.findAllRole(list);
+        List<RolesDTO> listRole = rolesConverter.findAllRole(list);
 
         return listRole;
     }

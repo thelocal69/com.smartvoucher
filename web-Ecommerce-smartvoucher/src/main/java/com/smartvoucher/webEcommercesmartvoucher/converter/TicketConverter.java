@@ -1,4 +1,4 @@
-package com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO;
+package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.*;
 import com.smartvoucher.webEcommercesmartvoucher.dto.OrdersDTO;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class TicketEntityToDTO {
+public class TicketConverter {
 
     public List<TicketDTO> findAllTicket(List<TicketEntity> list) {
 
