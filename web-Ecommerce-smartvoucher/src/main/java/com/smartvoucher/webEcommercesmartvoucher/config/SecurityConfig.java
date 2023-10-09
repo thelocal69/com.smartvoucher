@@ -1,3 +1,5 @@
+/*
+
 package com.smartvoucher.webEcommercesmartvoucher.config;
 
 import org.springframework.context.annotation.Bean;
@@ -47,9 +49,9 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-//                    .antMatchers(HttpMethod.POST, "/serial").hasRole("ADMIN")
-//                    .antMatchers(HttpMethod.PUT, "/serial").hasRole("ADMIN")
-//                    .antMatchers(HttpMethod.GET, "/serial").hasRole("USER")
+                    .antMatchers(HttpMethod.POST, "/serial").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/serial").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/serial").hasRole("USER")
                         .antMatchers("/serial/**").permitAll()
                 .anyRequest().authenticated() // tất cả những cái còn lại đều cần phải chứng thực
                 .and().httpBasic()
@@ -57,15 +59,5 @@ public class SecurityConfig {
 
     }
 
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").allowedHeaders("*").allowCredentials(false).maxAge(3600);
-//            }
-//        };
-//    }
-
-
 }
+*/

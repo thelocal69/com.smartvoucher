@@ -1,7 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
-import com.smartvoucher.webEcommercesmartvoucher.payload.BaseResponse;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.TicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +26,12 @@ public class TicketController {
 
         List<TicketDTO> listTicket = ticketService.findAllTicket();
 
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setStatus(200);
-        baseResponse.setMessage("Danh sách Ticket");
-        baseResponse.setData(listTicket);
+        ResponseObject responseObject = new ResponseObject();
+        responseObject.setStatus("Success");
+        responseObject.setMessage("Danh sách Ticket");
+        responseObject.setData(listTicket);
 
-        return ResponseEntity.status(HttpStatus.OK).body(baseResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
     }
 
 }

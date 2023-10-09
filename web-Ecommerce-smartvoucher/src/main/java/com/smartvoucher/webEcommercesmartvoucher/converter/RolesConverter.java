@@ -1,4 +1,4 @@
-package com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO;
+package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.RolesDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RolesEntity;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class RolesEntityToDTO {
+public class RolesConverter {
     public List<RolesDTO> findAllRole(List<RolesEntity> list) {
 
         List<RolesDTO> listRole = new ArrayList<>();

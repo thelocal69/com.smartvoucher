@@ -1,16 +1,15 @@
 package com.smartvoucher.webEcommercesmartvoucher.service;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
-import com.smartvoucher.webEcommercesmartvoucher.payload.BaseResponse;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 
 public interface ISerialService {
 
-    BaseResponse getAllSerial();
+    ResponseObject getAllSerial();
 
-    BaseResponse insertSerial(SerialDTO serialDTO);
+    ResponseObject insertSerial(SerialDTO serialDTO);
 
-    BaseResponse updateSerial(SerialDTO serialDTO);
+    ResponseObject updateSerial(SerialDTO serialDTO);
 
-    BaseResponse deleteSerial(long id);
+    ResponseObject deleteSerial(long id);
 }

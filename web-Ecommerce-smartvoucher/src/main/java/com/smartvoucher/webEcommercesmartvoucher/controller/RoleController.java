@@ -1,7 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.RolesDTO;
-import com.smartvoucher.webEcommercesmartvoucher.payload.BaseResponse;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.RolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,11 +26,11 @@ public class RoleController {
 
         List<RolesDTO> list = rolesService.findAllRole();
 
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setStatus(200);
-        baseResponse.setMessage("List Role");
-        baseResponse.setData(list);
+        ResponseObject responseObject = new ResponseObject();
+        responseObject.setStatus("Success");
+        responseObject.setMessage("List Role");
+        responseObject.setData(list);
 
-        return ResponseEntity.status(HttpStatus.OK).body(baseResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
     }
 }

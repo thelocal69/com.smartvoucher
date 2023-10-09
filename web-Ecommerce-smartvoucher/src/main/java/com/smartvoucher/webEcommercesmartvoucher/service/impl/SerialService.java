@@ -1,10 +1,9 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.smartvoucher.webEcommercesmartvoucher.converter.dtoToEntity.SerialDTOtoEntity;
-import com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO.SerialEntityToDTO;
+import com.smartvoucher.webEcommercesmartvoucher.converter.SerialConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
-import com.smartvoucher.webEcommercesmartvoucher.payload.BaseResponse;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.SerialRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,50 +19,45 @@ public class SerialService implements ISerialService {
 
     private final SerialRepository serialRepository;
 
-    private SerialEntityToDTO serialEntityToDTO;
-
-    private SerialDTOtoEntity serialDTOtoEntity;
+    private SerialConverter serialConverter;
 
     @Autowired
     public SerialService(SerialRepository serialRepository,
-                         SerialEntityToDTO serialEntityToDTO,
-                         SerialDTOtoEntity serialDTOtoEntity) {
+                         SerialConverter serialConverter) {
         this.serialRepository = serialRepository;
-        this.serialEntityToDTO = serialEntityToDTO;
-        this.serialDTOtoEntity = serialDTOtoEntity;
-
+        this.serialConverter = serialConverter;
     }
 
     @Override
-    public BaseResponse getAllSerial() {
+    public ResponseObject getAllSerial() {
 
-        BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setStatus(200);
-        baseResponse.setMessage("List Serial");
-        baseResponse.setData("Not found, List Serial is empty !");
+        ResponseObject responseObject = new ResponseObject();
+        responseObject.setStatus("Success");
+        responseObject.setMessage("List Serial");
+        responseObject.setData("Not found, List Serial is empty !");
 
         try {
 
             List<SerialEntity> list = serialRepository.findAll();
-            List<SerialDTO> listSerial = serialEntityToDTO.findAllSerial(list);
+            List<SerialDTO> listSerial = serialConverter.findAllSerial(list);
 
-            baseResponse.setData(listSerial);
+            responseObject.setData(listSerial);
 
         } catch (Exception e) {
             System.out.println("Serial Service : " + e.getLocalizedMessage());
         }
 
-        return baseResponse;
+        return responseObject;
     }
 
     @Override
-    public BaseResponse insertSerial(SerialDTO serialDTO) {
+    public ResponseObject insertSerial(SerialDTO serialDTO) {
 
         boolean isSuccess = false;
-        BaseResponse baseResponse = new BaseResponse();
+        ResponseObject responseObject = new ResponseObject();
 
         // convert SerialDTO to SerialEntity
-        SerialEntity serialEntity = serialDTOtoEntity.insertSerial(serialDTO);
+        SerialEntity serialEntity = serialConverter.insertSerial(serialDTO);
 
         try {
 
@@ -90,19 +84,19 @@ public class SerialService implements ISerialService {
         }
 
         // set field BaseResponse
-        baseResponse.setStatus(200);
-        baseResponse.setMessage( isSuccess == true ? "Add serial success!":"Add serial fail!");
-        baseResponse.setData(isSuccess);
+        responseObject.setStatus("Success");
+        responseObject.setMessage( isSuccess == true ? "Add serial success!":"Add serial fail!");
+        responseObject.setData(isSuccess);
 
-        return baseResponse;
+        return responseObject;
     }
 
 
     @Override
-    public BaseResponse updateSerial(SerialDTO serialDTO) {
+    public ResponseObject updateSerial(SerialDTO serialDTO) {
 
         boolean checkUpdate = false;
-        BaseResponse baseResponse = new BaseResponse();
+        ResponseObject responseObject = new ResponseObject();
 
         try {
             // orElse(null) : return Object / if Object not found, will return null
@@ -183,20 +177,20 @@ public class SerialService implements ISerialService {
             System.out.println("Serial Service : " + e.getLocalizedMessage() );
         }
 
-        baseResponse.setStatus(200);
-        baseResponse.setMessage( checkUpdate == true ? "Update Serial Success!": "Update Serial Fail!");
-        baseResponse.setData(checkUpdate);
+        responseObject.setStatus("Success");
+        responseObject.setMessage( checkUpdate == true ? "Update Serial Success!": "Update Serial Fail!");
+        responseObject.setData(checkUpdate);
 
-        return baseResponse;
+        return responseObject;
     }
 
     @Override
-    public BaseResponse deleteSerial(long id) {
+    public ResponseObject deleteSerial(long id) {
 
         boolean checkSerial = serialRepository.existsById(id),
                 deleteSerial = false;
 
-        BaseResponse baseResponse = new BaseResponse();
+        ResponseObject responseObject = new ResponseObject();
 
         try {
             if(checkSerial == true) {
@@ -208,10 +202,10 @@ public class SerialService implements ISerialService {
             System.out.println("Serial Service : " + e.getLocalizedMessage());
         }
 
-        baseResponse.setStatus(200);
-        baseResponse.setMessage( deleteSerial == true ? "Delete Serial Success!": "Delete Serial Fail!");
-        baseResponse.setData(deleteSerial);
+        responseObject.setStatus("Success");
+        responseObject.setMessage( deleteSerial == true ? "Delete Serial Success!": "Delete Serial Fail!");
+        responseObject.setData(deleteSerial);
 
-        return baseResponse;
+        return responseObject;
     }
 }

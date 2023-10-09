@@ -1,6 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO.TicketEntityToDTO;
+import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
 import com.smartvoucher.webEcommercesmartvoucher.repository.TicketRepository;
@@ -15,7 +15,7 @@ public class TicketService {
     private final TicketRepository ticketRepository;
 
     @Autowired
-    private TicketEntityToDTO ticketEntityToDTO;
+    private TicketConverter ticketConverter;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository) {
@@ -26,7 +26,7 @@ public class TicketService {
 
         List<TicketEntity> list = ticketRepository.findAll();
 
-        List<TicketDTO> listTicket = ticketEntityToDTO.findAllTicket(list);
+        List<TicketDTO> listTicket = ticketConverter.findAllTicket(list);
 
         return listTicket;
     }

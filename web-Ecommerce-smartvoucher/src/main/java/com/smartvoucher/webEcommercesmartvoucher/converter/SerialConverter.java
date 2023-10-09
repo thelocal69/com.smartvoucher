@@ -1,4 +1,4 @@
-package com.smartvoucher.webEcommercesmartvoucher.converter.entityToDTO;
+package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class SerialEntityToDTO {
+public class SerialConverter {
 
     public List<SerialDTO> findAllSerial(List<SerialEntity> list) {
 
@@ -31,6 +31,20 @@ public class SerialEntityToDTO {
         }
 
         return listSerial;
+
+    }
+
+    public SerialEntity insertSerial(SerialDTO serialDTO) {
+
+        SerialEntity serialEntity = new SerialEntity();
+
+        serialEntity.setBatchCode(serialDTO.getBatchCode());
+        serialEntity.setNumberOfSerial(serialDTO.getNumberOfSerial());
+        serialEntity.setSerialCode(serialDTO.getSerialCode());
+        serialEntity.setCreatedBy(serialDTO.getCreatedBy());
+        serialEntity.setUpdatedBy(serialDTO.getUpdatedBy());
+
+        return serialEntity;
 
     }
 }
