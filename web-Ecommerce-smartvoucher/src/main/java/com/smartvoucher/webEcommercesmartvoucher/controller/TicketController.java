@@ -27,7 +27,7 @@ public class TicketController {
         List<TicketDTO> listTicket = ticketService.findAllTicket();
 
         ResponseObject responseObject = new ResponseObject();
-        responseObject.setStatus("Success");
+        responseObject.setStatusCode(200);
         responseObject.setMessage("Danh sách Ticket");
         responseObject.setData(listTicket);
 

@@ -27,7 +27,7 @@ public class ChainController {
     public ResponseEntity<ResponseObject> getAllChain() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
-                        "Success",
+                        200,
                         "Get All chain success !",
                         this.chainService.getAllChain()
                 )
@@ -41,7 +41,7 @@ public class ChainController {
         if (!chainDTOList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
                     new ResponseObject(
-                            "Failed",
+                            501,
                             "Chain code is duplicated !",
                             ""
                     )
@@ -51,14 +51,14 @@ public class ChainController {
             return  (existMerchantCode)
                     ? ResponseEntity.status(HttpStatus.OK).body(
                             new ResponseObject(
-                                    "Success",
+                                    200,
                                     "Insert is completed !",
                                     chainService.upsert(chainDTO)
                             )
             )
                     : ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                             new ResponseObject(
-                                    "Failed",
+                                    404,
                                     "Merchant code not exist or empty !",
                                         ""
                 )
@@ -76,14 +76,14 @@ public class ChainController {
             return  (existMerchantCode)
                     ? ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Update is completed !",
                             chainService.upsert(chainDTO)
                     )
             )
                     : ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
                     new ResponseObject(
-                            "Failed",
+                            501,
                             "Merchant code not exist or empty !",
                             ""
                     )
@@ -91,7 +91,7 @@ public class ChainController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject(
-                            "Failed",
+                            501,
                             "Cannot update chain id = "+id,
                             ""
                     )
@@ -106,7 +106,7 @@ public class ChainController {
         if (this.chainService.deleteChain(chainDTO)){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Delete is completed !",
                             "{}"
                     )
@@ -114,7 +114,7 @@ public class ChainController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject(
-                            "Failed",
+                            404,
                             "Cannot deleted chain id = "+id,
                             ""
                     )
