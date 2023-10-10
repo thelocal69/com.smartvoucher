@@ -25,6 +25,11 @@ public class CategoryEntity extends BaseEntity{
     @Column(name = "banner_url")
     private String bannerUrl;
 
+    // field được references
     @OneToMany(mappedBy = "category")
     private List<WareHouseEntity> wareHouseEntityList;
+
+    @OneToMany(mappedBy = "idCategory")
+    private List<TicketEntity> ticketEntities;
+
 }

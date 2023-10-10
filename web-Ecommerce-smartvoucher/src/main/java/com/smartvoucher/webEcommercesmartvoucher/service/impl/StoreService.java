@@ -4,7 +4,6 @@ import com.smartvoucher.webEcommercesmartvoucher.converter.StoreConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.StoreDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.ChainEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.MerchantEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.StoreEntity;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IChainRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IStoreRepository;

@@ -5,11 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -53,4 +51,12 @@ public class WareHouseEntity extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "id_category")
     private CategoryEntity category;
+
+    // field được references
+    @OneToMany(mappedBy = "idWarehouse")
+    private List<OrdersEntity> ordersEntities;
+
+    @OneToMany(mappedBy = "idWarehouse")
+    private List<TicketEntity> ticketEntities;
+
 }

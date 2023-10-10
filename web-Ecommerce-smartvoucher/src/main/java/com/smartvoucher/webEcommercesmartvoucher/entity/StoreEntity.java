@@ -5,33 +5,35 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity(name = "store")
-public class StoreEntity extends BaseEntity{
-    @Column(name = "store_code", unique = true)
-    private String storeCode;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "address")
-    private String address;
-    @Column(name = "phone")
-    private String phone;
-    @Column(name = "description")
-    private String description;
-    @Column(name = "status", nullable = false)
-    private int status;
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Entity(name = "store")
+    public class StoreEntity extends BaseEntity{
+        @Column(name = "store_code", unique = true)
+        private String storeCode;
+        @Column(name = "name")
+        private String name;
+        @Column(name = "address")
+        private String address;
+        @Column(name = "phone")
+        private String phone;
+        @Column(name = "description")
+        private String description;
+        @Column(name = "status", nullable = false)
+        private int status;
 
-    @ManyToOne
-    @JoinColumn(name = "id_merchant")
-    private MerchantEntity merchant;
+        @ManyToOne
+        @JoinColumn(name = "id_merchant")
+        private MerchantEntity merchant;
 
-    @ManyToOne
-    @JoinColumn(name = "id_chain")
-    private ChainEntity chain;
-}
+        @ManyToOne
+        @JoinColumn(name = "id_chain")
+        private ChainEntity chain;
+    }

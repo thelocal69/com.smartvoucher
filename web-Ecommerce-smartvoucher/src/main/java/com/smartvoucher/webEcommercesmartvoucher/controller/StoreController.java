@@ -27,7 +27,7 @@ public class StoreController {
     public ResponseEntity<ResponseObject> getAllStore() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
-                        "Success",
+                        200,
                         "Get All store success !",
                         this.storeService.getAllStore()
                 )
@@ -42,14 +42,14 @@ public class StoreController {
             return  (existMerchantCodeAndChainCode)
                     ? ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Insert is completed !",
                             this.storeService.upsert(storeDTO)
                     )
             )
                     : ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
                     new ResponseObject(
-                            "Failed",
+                            501,
                             "Merchant code or Chain code, not found or empty",
                             ""
                     )
@@ -57,7 +57,7 @@ public class StoreController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
                     new ResponseObject(
-                            "Failed",
+                            501,
                             "Store code is duplicated !",
                             ""
                     )
@@ -75,14 +75,14 @@ public class StoreController {
             return  (existMerchantCodeAndChainCode)
                     ? ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Update is completed !",
                             this.storeService.upsert(storeDTO)
                     )
             )
                     : ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
                     new ResponseObject(
-                            "Failed",
+                            501,
                             "Merchant code or Chain code, not found or empty",
                             ""
                     )
@@ -90,7 +90,7 @@ public class StoreController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject(
-                            "Failed",
+                            404,
                             "Cannot update store id = "+id,
                             ""
                     )
@@ -105,7 +105,7 @@ public class StoreController {
         if (this.storeService.deleteStore(storeDTO)){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Delete is completed !",
                             "{}"
                     )
@@ -113,7 +113,7 @@ public class StoreController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject(
-                            "Failed",
+                            404,
                             "Cannot delete store id = "+id,
                             ""
                     )

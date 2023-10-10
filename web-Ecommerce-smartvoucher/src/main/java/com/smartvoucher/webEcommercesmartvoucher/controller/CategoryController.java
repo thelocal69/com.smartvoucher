@@ -27,7 +27,7 @@ public class CategoryController {
     public ResponseEntity<ResponseObject> getAllCategory() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
-                        "Success",
+                        200,
                         "Get All category success !",
                         this.categoryService.getAllCategory()
                 )
@@ -41,7 +41,7 @@ public class CategoryController {
         if (category.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Insert is completed !",
                             this.categoryService.upsert(categoryDTO)
                     )
@@ -49,7 +49,7 @@ public class CategoryController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
                     new ResponseObject(
-                            "Failed",
+                            501,
                             "Category code is duplicated !",
                             ""
                     )
@@ -65,7 +65,7 @@ public class CategoryController {
         if (exist){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Update is completed !",
                             this.categoryService.upsert(categoryDTO)
                     )
@@ -73,7 +73,7 @@ public class CategoryController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject(
-                            "Failed",
+                            404,
                             "Cannot update category id = "+id,
                             ""
                     )
@@ -88,7 +88,7 @@ public class CategoryController {
         if (this.categoryService.deleteCategory(categoryDTO)){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Delete is completed !",
                             "{}"
                     )
@@ -96,7 +96,7 @@ public class CategoryController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject(
-                            "Failed",
+                            404,
                             "Cannot delete category id = "+id,
                             ""
                     )
