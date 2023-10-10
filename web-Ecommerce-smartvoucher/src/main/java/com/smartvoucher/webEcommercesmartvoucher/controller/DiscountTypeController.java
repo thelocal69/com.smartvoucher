@@ -27,7 +27,7 @@ public class DiscountTypeController {
     public ResponseEntity<ResponseObject> getAllDiscount() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
-                        "Success",
+                        200,
                         "Get All discount success !",
                         this.discountTypeService.getAllDiscount()
                 )
@@ -41,7 +41,7 @@ public class DiscountTypeController {
         if (discountTypeDTOList.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Insert is completed !",
                             this.discountTypeService.upsert(discountTypeDTO)
                     )
@@ -49,7 +49,7 @@ public class DiscountTypeController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
                     new ResponseObject(
-                            "Failed",
+                            501,
                             "Discount code is duplicated !",
                             ""
                     )
@@ -65,7 +65,7 @@ public class DiscountTypeController {
         if (exist){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Update is completed !",
                             this.discountTypeService.upsert(discountTypeDTO)
                     )
@@ -73,7 +73,7 @@ public class DiscountTypeController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject(
-                            "Failed",
+                            404,
                             "Cannot update discount id = "+id,
                            ""
                     )
@@ -88,7 +88,7 @@ public class DiscountTypeController {
         if (this.discountTypeService.deleteDiscountType(discountTypeDTO)){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Delete is completed !",
                             "{}"
                     )
@@ -96,7 +96,7 @@ public class DiscountTypeController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject(
-                            "Failed",
+                            404,
                             "Cannot delete discount id = "+id,
                             ""
                     )

@@ -27,7 +27,7 @@ public class WareHouseController {
     public ResponseEntity<ResponseObject> getAllWareHouse() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
-                        "Success",
+                        200,
                         "Get All warehouse success !",
                         this.wareHouseService.getAllWareHouse()
                 )
@@ -43,14 +43,13 @@ public class WareHouseController {
             return (existCategoryCodeAndDiscountCode)
                     ? ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Insert is completed !",
                             this.wareHouseService.upsert(wareHouseDTO)
                     )
             )
                     : ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
-                    new ResponseObject(
-                            "Failed",
+                    new ResponseObject(501,
                             "Category code or discount code, not found or empty",
                             ""
                     )
@@ -58,7 +57,7 @@ public class WareHouseController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
                     new ResponseObject(
-                            "Failed",
+                            501,
                             "Warehouse code is duplicated !",
                             ""
                     )
@@ -75,15 +74,14 @@ public class WareHouseController {
             boolean existCategoryCodeAndDiscountCode = wareHouseService.existCategoryAndDiscount(wareHouseDTO);
             return (existCategoryCodeAndDiscountCode)
                     ? ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(
-                            "Success",
+                    new ResponseObject(200,
                             "Update is completed !",
                             this.wareHouseService.upsert(wareHouseDTO)
                     )
             )
                     : ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
                     new ResponseObject(
-                            "Failed",
+                            501,
                             "Category code or discount code, not found or empty",
                             ""
                     )
@@ -91,7 +89,7 @@ public class WareHouseController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject(
-                            "Failed",
+                            404,
                             "Cannot update warehouse id = "+id,
                             ""
                     )
@@ -106,7 +104,7 @@ public class WareHouseController {
         if (this.wareHouseService.deleteWareHouse(wareHouseDTO)){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Delete is completed !",
                             "{}"
                     )
@@ -114,7 +112,7 @@ public class WareHouseController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject(
-                            "Failed",
+                            404,
                             "Cannot delete warehouse id = "+id,
                             ""
                     )

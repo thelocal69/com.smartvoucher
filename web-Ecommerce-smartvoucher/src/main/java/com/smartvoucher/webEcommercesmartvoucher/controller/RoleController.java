@@ -27,7 +27,7 @@ public class RoleController {
         List<RolesDTO> list = rolesService.findAllRole();
 
         ResponseObject responseObject = new ResponseObject();
-        responseObject.setStatus("Success");
+        responseObject.setStatusCode(200);
         responseObject.setMessage("List Role");
         responseObject.setData(list);
 
