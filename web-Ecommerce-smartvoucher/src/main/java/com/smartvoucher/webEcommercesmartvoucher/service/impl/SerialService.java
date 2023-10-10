@@ -8,6 +8,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.SerialRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -32,7 +33,7 @@ public class SerialService implements ISerialService {
     public ResponseObject getAllSerial() {
 
         ResponseObject responseObject = new ResponseObject();
-        responseObject.setStatus("Success");
+        responseObject.setStatus(200);
         responseObject.setMessage("List Serial");
         responseObject.setData("Not found, List Serial is empty !");
 
@@ -51,17 +52,20 @@ public class SerialService implements ISerialService {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseObject insertSerial(SerialDTO serialDTO) {
 
         boolean isSuccess = false;
-        ResponseObject responseObject = new ResponseObject();
+
+        int status = 500; // 500 : error not specifically
+        String message = "Internal Server Error";
+
+        ResponseObject responseObject = new ResponseObject(status , message ,isSuccess );
 
         // convert SerialDTO to SerialEntity
         SerialEntity serialEntity = serialConverter.insertSerial(serialDTO);
 
-        try {
-
-            SerialEntity checkSerial = serialRepository.findSerialBySerialCode(serialEntity.getSerialCode());
+        SerialEntity checkSerial = serialRepository.findSerialBySerialCode(serialEntity.getSerialCode());
 
             if(checkSerial == null){
 
@@ -74,18 +78,27 @@ public class SerialService implements ISerialService {
                 // fill default status number 1
                 serialEntity.setStatus(1);
 
+                try {
                 serialRepository.save(serialEntity);
-                isSuccess = true;
 
+                isSuccess = true;
+                status = 200;
+
+                } catch (Exception e) {
+                    System.out.println("Serial Service : " + e.getLocalizedMessage() );
+                    return responseObject;
+                }
+
+            } else {
+                // 409 : conflict data in database
+                status = 409;
             }
 
-        } catch (Exception e) {
-            System.out.println("Serial Service : " + e.getLocalizedMessage() );
-        }
+            message = (isSuccess == true) ? "Add serial success!":"Add serial fail!";
 
         // set field BaseResponse
-        responseObject.setStatus("Success");
-        responseObject.setMessage( isSuccess == true ? "Add serial success!":"Add serial fail!");
+        responseObject.setStatus(status);
+        responseObject.setMessage(message);
         responseObject.setData(isSuccess);
 
         return responseObject;

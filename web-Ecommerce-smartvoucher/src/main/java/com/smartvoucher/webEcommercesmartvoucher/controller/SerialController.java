@@ -21,6 +21,7 @@ public class SerialController {
     }
 
     @GetMapping("")
+    @Transactional(readOnly = true)
     public ResponseEntity<?> getAllSerial() {
 
         ResponseObject responseObject = serialService.getAllSerial();
