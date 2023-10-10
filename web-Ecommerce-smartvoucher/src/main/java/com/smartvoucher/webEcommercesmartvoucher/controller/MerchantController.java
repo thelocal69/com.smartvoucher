@@ -25,7 +25,7 @@ public class MerchantController {
     public ResponseEntity<ResponseObject> getAllMerchant() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
-                        "Success",
+                        200,
                         "Get All merchant success !",
                         this.merchantService.getAllMerchant()
                 )
@@ -38,7 +38,7 @@ public class MerchantController {
         if (!merchantService.getAllMerchantCode(merchantDTO).isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
                     new ResponseObject(
-                            "Failed",
+                            501,
                             "Merchant code is duplicated !",
                             ""
                     )
@@ -46,7 +46,7 @@ public class MerchantController {
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Insert is completed !",
                             this.merchantService.upsertMerchant(merchantDTO)
                     )
@@ -63,7 +63,7 @@ public class MerchantController {
         if (exist){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Update is complete !",
                             this.merchantService.upsertMerchant(merchantDTO)
                     )
@@ -71,7 +71,7 @@ public class MerchantController {
         }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject(
-                            "Failed",
+                            404,
                             "Cannot update merchant id = "+id,
                             ""
                     )
@@ -86,7 +86,7 @@ public class MerchantController {
         if (this.merchantService.deleteMerchant(merchantDTO)){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
-                            "Success",
+                            200,
                             "Delete is completed !",
                             "{}"
                     )
@@ -95,7 +95,7 @@ public class MerchantController {
         {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     new ResponseObject(
-                            "Failed",
+                            404,
                             "Cannot delete merchant id = " + id,
                             ""
                     )

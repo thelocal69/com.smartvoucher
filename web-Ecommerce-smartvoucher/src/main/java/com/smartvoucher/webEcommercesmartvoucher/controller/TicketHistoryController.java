@@ -29,7 +29,7 @@ public class TicketHistoryController {
         List<TicketHistoryDTO> list = ticketHistoryService.findAllTicketHistory();
 
         ResponseObject responseObject = new ResponseObject();
-        responseObject.setStatus("Success");
+        responseObject.setStatusCode(200);
         responseObject.setMessage("List TicketHistory");
         responseObject.setData(list);
 

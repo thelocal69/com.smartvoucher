@@ -27,7 +27,7 @@ public class UserController {
         List<UsersDTO> listUser = usersService.findAllUser();
 
         ResponseObject responseObject = new ResponseObject();
-        responseObject.setStatus("Success");
+        responseObject.setStatusCode(200);
         responseObject.setMessage("List User");
         responseObject.setData(listUser);
 
