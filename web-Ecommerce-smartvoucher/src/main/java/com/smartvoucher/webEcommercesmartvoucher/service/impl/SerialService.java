@@ -6,6 +6,7 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.SerialRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,22 +31,23 @@ public class SerialService implements ISerialService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseObject getAllSerial() {
 
         ResponseObject responseObject = new ResponseObject();
-        responseObject.setStatus(200);
+        responseObject.setStatusCode(200);
         responseObject.setMessage("List Serial");
-        responseObject.setData("Not found, List Serial is empty !");
 
         try {
 
             List<SerialEntity> list = serialRepository.findAll();
             List<SerialDTO> listSerial = serialConverter.findAllSerial(list);
 
-            responseObject.setData(listSerial);
+        responseObject.setData(listSerial);
 
         } catch (Exception e) {
             System.out.println("Serial Service : " + e.getLocalizedMessage());
+            return new ResponseObject(500, e.getLocalizedMessage(), "Not found List Serial !");
         }
 
         return responseObject;
@@ -53,172 +55,91 @@ public class SerialService implements ISerialService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject insertSerial(SerialDTO serialDTO) {
+    public ResponseObject insertSerial(@NonNull SerialDTO serialDTO) {
 
         boolean isSuccess = false;
+        int status = 501; // 501 : Not Implemented
 
-        int status = 500; // 500 : error not specifically
-        String message = "Internal Server Error";
+        SerialEntity checkSerialCode = serialRepository.findSerialBySerialCode(serialDTO.getSerialCode());
 
-        ResponseObject responseObject = new ResponseObject(status , message ,isSuccess );
-
-        // convert SerialDTO to SerialEntity
-        SerialEntity serialEntity = serialConverter.insertSerial(serialDTO);
-
-        SerialEntity checkSerial = serialRepository.findSerialBySerialCode(serialEntity.getSerialCode());
-
-            if(checkSerial == null){
-
-                // get present time set field createAt
-                // don't fill createAt by admin or client
-                Date date = new Date();
-                Timestamp currentTimestamp = new Timestamp(date.getTime());
-                serialEntity.setCreatedAt(currentTimestamp);
-
-                // fill default status number 1
-                serialEntity.setStatus(1);
-
+            if(checkSerialCode == null){
                 try {
-                serialRepository.save(serialEntity);
-
+                // save information Serial
+                serialRepository.save(serialConverter.insertSerial(serialDTO));
                 isSuccess = true;
                 status = 200;
 
+                } catch (javax.validation.ConstraintViolationException ex) {
+                    // Validation Error
+                    throw new javax.validation.ConstraintViolationException("Validation Fail!", ex.getConstraintViolations());
+
+                } catch (Exception e) {
+                    // error not specific
+                    System.out.println("Serial Service : " + e.getLocalizedMessage() );
+                    return new ResponseObject(500 , e.getLocalizedMessage() ,isSuccess);
+                }
+            }
+
+        String message = (isSuccess == true) ? "Add serial success!":"Serial Code is available!";
+
+        return new ResponseObject(status, message, isSuccess);
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
+    public ResponseObject updateSerial(@NonNull SerialDTO serialDTO) {
+
+        boolean isSuccess = false;
+        int status = 501;  // 501 : not implemented
+
+        // orElse(null) : return Object / if Object not found, will return null
+        SerialEntity oldSerial = serialRepository.findById(serialDTO.getId()).orElse(null);
+        SerialEntity checkSerial = serialRepository.findSerialBySerialCode(serialDTO.getSerialCode());
+
+        if (checkSerial == null) {
+            if (oldSerial != null){
+                try {
+
+                serialRepository.save(serialConverter.updateSerial(serialDTO, oldSerial));
+                isSuccess = true;
+                status = 200;
+
+                } catch (javax.validation.ConstraintViolationException ex) {
+                    // Validation Error
+                    throw new javax.validation.ConstraintViolationException("Validation Fail!", ex.getConstraintViolations());
+
                 } catch (Exception e) {
                     System.out.println("Serial Service : " + e.getLocalizedMessage() );
-                    return responseObject;
+                    return new ResponseObject(500 , e.getLocalizedMessage() ,isSuccess);
                 }
-
-            } else {
-                // 409 : conflict data in database
-                status = 409;
             }
-
-            message = (isSuccess == true) ? "Add serial success!":"Add serial fail!";
-
-        // set field BaseResponse
-        responseObject.setStatus(status);
-        responseObject.setMessage(message);
-        responseObject.setData(isSuccess);
-
-        return responseObject;
-    }
-
-
-    @Override
-    public ResponseObject updateSerial(SerialDTO serialDTO) {
-
-        boolean checkUpdate = false;
-        ResponseObject responseObject = new ResponseObject();
-
-        try {
-            // orElse(null) : return Object / if Object not found, will return null
-            SerialEntity updateSerial = serialRepository.findById(serialDTO.getId()).orElse(null);
-
-            if (updateSerial != null){
-
-                if ((serialDTO.getBatchCode() != null)
-                        && !serialDTO.getBatchCode().isEmpty()
-                        && !Objects.equals(serialDTO.getBatchCode(), updateSerial.getBatchCode()) )
-                {
-                    updateSerial.setBatchCode(serialDTO.getBatchCode());
-                }
-
-                if (serialDTO.getNumberOfSerial() > 0
-                        && !Objects.equals(serialDTO.getNumberOfSerial(), updateSerial.getNumberOfSerial()) )
-                {
-                    updateSerial.setNumberOfSerial(serialDTO.getNumberOfSerial());
-                }
-
-                if ((serialDTO.getSerialCode() != null)
-                        && !serialDTO.getSerialCode().isEmpty()
-                        && !Objects.equals(serialDTO.getSerialCode(), updateSerial.getSerialCode()) )
-                {
-                    updateSerial.setSerialCode(serialDTO.getSerialCode());
-                }
-
-                if (serialDTO.getStatus() > 0
-                        && !Objects.equals(serialDTO.getStatus(), updateSerial.getStatus()) )
-                {
-                    updateSerial.setStatus(serialDTO.getStatus());
-                }
-
-                if ((serialDTO.getCreatedBy() != null)
-                        && !serialDTO.getCreatedBy().isEmpty()
-                        && !Objects.equals(serialDTO.getCreatedBy(), updateSerial.getCreatedBy()) )
-                {
-                    updateSerial.setCreatedBy(serialDTO.getCreatedBy());
-                }
-
-                if ((serialDTO.getUpdatedBy() != null)
-                        && !serialDTO.getUpdatedBy().isEmpty()
-                        && !Objects.equals(serialDTO.getUpdatedBy(), updateSerial.getUpdatedBy()) )
-                {
-                    updateSerial.setUpdatedBy(serialDTO.getUpdatedBy());
-                }
-
-                if (serialDTO.getCreatedAt() != null)
-                {
-                    // currentTimestamp : lấy ra thời gian hiện tại
-                    Date currentDate = new Date();
-                    Timestamp currentTimestamp = new Timestamp(currentDate.getTime());
-
-                    // so sánh thời gian khi request tới : before or equals thời gian hiện tại
-                    if( (serialDTO.getCreatedAt().before(currentTimestamp) || serialDTO.getCreatedAt().equals(currentTimestamp))
-                            && !Objects.equals(serialDTO.getCreatedAt(), updateSerial.getCreatedAt())) {
-
-                        updateSerial.setCreatedAt(serialDTO.getCreatedAt());
-
-                    }
-
-                }
-
-                // get present time set field updateAt
-                // don't fill updateAt by admin and client !
-                Date currentDate = new Date();
-                Timestamp currentTimestamp = new Timestamp(currentDate.getTime());
-                updateSerial.setUpdatedAt(currentTimestamp);
-
-
-                serialRepository.save(updateSerial);
-
-                checkUpdate = true;
-
-            }
-
-        } catch (Exception e) {
-            System.out.println("Serial Service : " + e.getLocalizedMessage() );
         }
+        String message = (isSuccess == true) ? "Update Serial Success!": "Serial is Available, update Serial fail!";
 
-        responseObject.setStatus("Success");
-        responseObject.setMessage( checkUpdate == true ? "Update Serial Success!": "Update Serial Fail!");
-        responseObject.setData(checkUpdate);
-
-        return responseObject;
+        return new ResponseObject(status, message, isSuccess);
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseObject deleteSerial(long id) {
 
-        boolean checkSerial = serialRepository.existsById(id),
-                deleteSerial = false;
+        boolean checkSerial = serialRepository.existsById(id);
+        int status = 501;
 
-        ResponseObject responseObject = new ResponseObject();
-
-        try {
             if(checkSerial == true) {
+                try {
+
                 serialRepository.deleteById(id);
-                deleteSerial = true;
+                status = 200;
+
+                } catch (Exception e) {
+                    System.out.println("Serial Service : " + e.getLocalizedMessage());
+                    return new ResponseObject(500 , e.getLocalizedMessage() ,false);
+                }
             }
+            String message =  (checkSerial == true) ? "Delete Serial Success!": "Serial not Available, Delete Serial Fail!";
 
-        } catch (Exception e) {
-            System.out.println("Serial Service : " + e.getLocalizedMessage());
-        }
-
-        responseObject.setStatus("Success");
-        responseObject.setMessage( deleteSerial == true ? "Delete Serial Success!": "Delete Serial Fail!");
-        responseObject.setData(deleteSerial);
-
-        return responseObject;
+        return new ResponseObject(status, message, checkSerial);
     }
 }
