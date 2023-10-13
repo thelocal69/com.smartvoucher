@@ -3,8 +3,16 @@ package com.smartvoucher.webEcommercesmartvoucher.entity;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
@@ -12,6 +20,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity(name = "ticket")
+@EntityListeners(AuditingEntityListener.class)
 public class TicketEntity {
 
     // sử dụng để định dạng kểu dữ liệu ' decimal(8, 3) ' trong database (* note : sử dụng trong DTO)
@@ -24,39 +33,43 @@ public class TicketEntity {
     private long id;
 
     @Column(name = "created_by")
+    @CreatedBy
     private String createdBy;
 
     @Column(name = "updated_by")
+    @LastModifiedBy
     private String updatedBy;
 
     @Column(name = "created_at")
+    @CreatedDate
     private Timestamp createdAt;
 
     @Column(name = "updated_at")
+    @LastModifiedDate
     private Timestamp updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "id_serial ")
-    @NonNull
+    @NotNull(message = "Please fill all information!")
     private SerialEntity idSerial;
 
     @ManyToOne
     @JoinColumn(name = "id_warehouse")
-    @NonNull
+    @NotNull(message = "Please fill all information!")
     private WareHouseEntity idWarehouse;
 
     @ManyToOne
     @JoinColumn(name = "id_category")
-    @NonNull
+    @NotNull(message = "Please fill all information!")
     private CategoryEntity idCategory;
 
     @Column(name = "status")
-    @NonNull
+    @NotNull(message = "Please fill all information!")
     private int status;
 
     @ManyToOne
     @JoinColumn(name = "id_order")
-    @NonNull
+    @NotNull(message = "Please fill all information!")
     private OrdersEntity idOrder;
 
     @Column(name = "claimed_time")
@@ -69,6 +82,8 @@ public class TicketEntity {
     private Timestamp expiredTime;
 
     @Column(name = "discount_type")
+    @NotNull(message = "Please fill all information!")
+    @NotBlank(message = "Please fill all information!")
     private String discountType;
 
     @Column(name = "discount_amount")
@@ -84,10 +99,13 @@ public class TicketEntity {
     private String acquirerLogoUrl;
 
     @Column(name = "term_of_use")
+    @NotNull(message = "Please fill all information!")
+    @NotBlank(message = "Please fill all information!")
     private String termOfUse;
 
     @Column(name = "description")
     private String description;
+
     @Column(name = "vouncher_channel")
     private String voucherChannel;
 
@@ -98,6 +116,8 @@ public class TicketEntity {
     private Timestamp avaibleTo;
 
     @Column(name = "applied_store")
+    @NotNull(message = "Please fill all information!")
+    @NotBlank(message = "Please fill all information!")
     private String appliedStore;
 
     @ManyToOne

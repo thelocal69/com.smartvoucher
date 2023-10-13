@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class RolesConverter {
@@ -19,8 +20,8 @@ public class RolesConverter {
             rolesDTO.setId(data.getId());
             rolesDTO.setName(data.getName());
             rolesDTO.setRoleCode(data.getRoleCode());
-            rolesDTO.setUpdatedAt(data.getUpdatedAt());
             rolesDTO.setCreatedAt(data.getCreatedAt());
+            rolesDTO.setUpdatedAt(data.getUpdatedAt());
             rolesDTO.setCreatedBy(data.getCreatedBy());
             rolesDTO.setUpdatedBy(data.getUpdatedBy());
 
@@ -28,5 +29,33 @@ public class RolesConverter {
         }
 
         return listRole;
+    }
+
+    public RolesEntity insertRole(RolesDTO rolesDTO) {
+
+        RolesEntity role = new RolesEntity();
+        role.setName(rolesDTO.getName());
+        role.setRoleCode(rolesDTO.getRoleCode());
+
+        return role;
+    }
+
+    public RolesEntity updateRole(RolesDTO rolesDTO, RolesEntity oldRole) {
+
+        if (rolesDTO.getName() != null
+                && !rolesDTO.getName().isEmpty()
+                && !rolesDTO.getName().substring(5).isEmpty()
+                && !Objects.equals(rolesDTO.getName(), oldRole.getName()) ) {
+            oldRole.setName(rolesDTO.getName());
+        }
+
+        if (rolesDTO.getRoleCode() != null
+                && !rolesDTO.getRoleCode().isEmpty()
+                && !Objects.equals(rolesDTO.getRoleCode(), oldRole.getRoleCode()) ) {
+            oldRole.setRoleCode(rolesDTO.getRoleCode());
+        }
+
+        return oldRole;
+
     }
 }

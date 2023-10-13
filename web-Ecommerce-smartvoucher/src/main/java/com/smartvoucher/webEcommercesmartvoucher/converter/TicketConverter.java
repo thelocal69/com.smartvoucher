@@ -22,10 +22,7 @@ public class TicketConverter {
             CategoryDTO categoryDTO = new CategoryDTO();
             OrdersDTO ordersDTO = new OrdersDTO();
             UsersDTO usersDTO = new UsersDTO();
-
-            TicketDTO ticketDTO = new TicketDTO(); // This is : ticketDTO
-
-            ticketDTO.setId(data.getId());
+            TicketDTO ticketDTO = new TicketDTO(); // This is ticketDTO
 
             serialDTO.setId(data.getIdSerial().getId());
             ticketDTO.setIdSerialDTO(serialDTO); // set id serial
@@ -36,11 +33,13 @@ public class TicketConverter {
             categoryDTO.setId(data.getIdCategory().getId());
             ticketDTO.setIdCategoryDTO(categoryDTO); // set id category
 
-            ticketDTO.setStatus(data.getStatus());
-
             ordersDTO.setId(data.getIdOrder().getId());
             ticketDTO.setIdOrderDTO(ordersDTO); // set id order
 
+            usersDTO.setId(data.getIdUser().getId());
+            ticketDTO.setIdUserDTO(usersDTO); // set id User
+
+            ticketDTO.setId(data.getId());
             ticketDTO.setClaimedTime(data.getClaimedTime());
             ticketDTO.setRedeemedtimeTime(data.getRedeemedtimeTime());
             ticketDTO.setExpiredTime(data.getExpiredTime());
@@ -56,16 +55,10 @@ public class TicketConverter {
             ticketDTO.setAvailableTo(data.getAvaibleTo());
             ticketDTO.setAppliedStore(data.getAppliedStore());
 
-            usersDTO.setId(data.getIdUser().getId());
-            ticketDTO.setIdUserDTO(usersDTO); // set id User
-
-            ticketDTO.setCreatedBy(data.getCreatedBy());
-            ticketDTO.setUpdatedBy(data.getUpdatedBy());
-            ticketDTO.setCreatedAt(data.getCreatedAt());
-            ticketDTO.setUpdatedAt(data.getUpdatedAt());
+            // fill default status 1
+            ticketDTO.setStatus(1);
 
             listTicket.add(ticketDTO);
-
         }
 
         return listTicket;
