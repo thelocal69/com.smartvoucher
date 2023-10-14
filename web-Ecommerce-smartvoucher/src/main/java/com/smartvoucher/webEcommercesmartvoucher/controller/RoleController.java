@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.impl.RolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +24,8 @@ public class RoleController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getAllRole() {
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> getAllRole() throws Exception {
 
         ResponseObject responseObject =rolesService.getAllRole();
 
@@ -31,7 +33,8 @@ public class RoleController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> insertRole(@RequestBody RolesDTO rolesDTO) {
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
+    public ResponseEntity<?> insertRole(@RequestBody RolesDTO rolesDTO) throws Exception {
 
         ResponseObject responseObject = rolesService.insertRole(rolesDTO);
 
@@ -39,7 +42,8 @@ public class RoleController {
     }
 
     @PutMapping()
-    public ResponseEntity<?> updateRole(@RequestBody RolesDTO rolesDTO) {
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
+    public ResponseEntity<?> updateRole(@RequestBody RolesDTO rolesDTO) throws Exception {
 
         ResponseObject responseObject = rolesService.updateRole(rolesDTO);
 
@@ -47,7 +51,8 @@ public class RoleController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> deleteRole(@RequestParam long id) {
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
+    public ResponseEntity<?> deleteRole(@RequestParam long id) throws Exception {
 
         ResponseObject responseObject = rolesService.deleteRole(id);
 

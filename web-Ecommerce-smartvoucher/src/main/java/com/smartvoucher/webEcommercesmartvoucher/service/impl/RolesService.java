@@ -119,6 +119,7 @@ public class RolesService implements IRoleService {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseObject deleteRole(long id) {
 
         boolean checkRole = rolesRepository.existsById(id);

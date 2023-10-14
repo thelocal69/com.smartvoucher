@@ -5,18 +5,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolation;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
-@ControllerAdvice
-@RestController
-public class CustomExceptionHandler {
+@RestControllerAdvice
+public class GlobalExceptionHandler {
 
     @ExceptionHandler({javax.validation.ConstraintViolationException.class})
     public ResponseEntity<?> handleValidationException(javax.validation.ConstraintViolationException ex) {
+        // AOP aspect oriented propraming
 
         // save list constraintViolations
         Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
