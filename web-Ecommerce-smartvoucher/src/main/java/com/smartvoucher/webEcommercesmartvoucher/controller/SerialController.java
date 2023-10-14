@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.SerialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/serial")
 public class SerialController {
 
-    private SerialService serialService;
+    private ISerialService serialService;
 
     @Autowired
     public SerialController(SerialService serialService) {
@@ -21,38 +22,38 @@ public class SerialController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAllSerial() {
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> getAllSerial() throws Exception{
 
         ResponseObject responseObject = serialService.getAllSerial();
 
-        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
     }
 
-    @PostMapping("")
+    @PostMapping()
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> insertSerial(@RequestBody SerialDTO serialDTO) {
+    public ResponseEntity<?> insertSerial(@RequestBody SerialDTO serialDTO) throws Exception {
 
         ResponseObject responseObject = serialService.insertSerial(serialDTO);
 
-
-        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
     }
 
-    @PutMapping("")
+    @PutMapping()
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> updateSerial(@RequestBody SerialDTO serialDTO) {
+    public ResponseEntity<?> updateSerial(@RequestBody SerialDTO serialDTO) throws Exception {
 
         ResponseObject responseObject = serialService.updateSerial(serialDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
     }
 
-    @DeleteMapping("")
+    @DeleteMapping()
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> deleteSerial(@RequestParam long id) {
+    public ResponseEntity<?> deleteSerial(@RequestParam long id) throws Exception {
 
         ResponseObject responseObject = serialService.deleteSerial(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
     }
 }

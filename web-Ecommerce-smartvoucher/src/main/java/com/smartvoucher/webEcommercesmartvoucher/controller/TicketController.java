@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.TicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,23 +16,18 @@ import java.util.List;
 @RequestMapping("/ticket")
 public class TicketController {
 
-    private final TicketService ticketService;
+    private final ITicketService ticketService;
 
-    public TicketController(TicketService ticketService) {
+    public TicketController(ITicketService ticketService) {
         this.ticketService = ticketService;
     }
 
     @GetMapping
     public ResponseEntity<?> getAllTicket(){
 
-        List<TicketDTO> listTicket = ticketService.findAllTicket();
+        ResponseObject responseObject = ticketService.getAllTicket();
 
-        ResponseObject responseObject = new ResponseObject();
-        responseObject.setStatusCode(200);
-        responseObject.setMessage("Danh sách Ticket");
-        responseObject.setData(listTicket);
-
-        return ResponseEntity.status(HttpStatus.OK).body(responseObject);
+        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
     }
 
 }
