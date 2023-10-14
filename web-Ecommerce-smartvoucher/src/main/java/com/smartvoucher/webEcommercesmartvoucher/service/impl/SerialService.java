@@ -95,10 +95,9 @@ public class SerialService implements ISerialService {
 
         // orElse(null) : return Object / if Object not found, will return null
         SerialEntity oldSerial = serialRepository.findById(serialDTO.getId()).orElse(null);
-        SerialEntity checkSerial = serialRepository.findSerialBySerialCode(serialDTO.getSerialCode());
+        List<SerialEntity> checkSerial = serialRepository.findSerialBySerialCodeAndId(serialDTO.getSerialCode(), serialDTO.getId());
 
-        if (checkSerial == null) {
-            if (oldSerial != null){
+            if (oldSerial != null && checkSerial.isEmpty()){
                 try {
 
                 serialRepository.save(serialConverter.updateSerial(serialDTO, oldSerial));
@@ -114,7 +113,6 @@ public class SerialService implements ISerialService {
                     return new ResponseObject(500 , e.getLocalizedMessage() ,isSuccess);
                 }
             }
-        }
         String message = (isSuccess == true) ? "Update Serial Success!": "Serial is Available, update Serial fail!";
 
         return new ResponseObject(status, message, isSuccess);

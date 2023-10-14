@@ -23,7 +23,7 @@ public class SerialController {
 
     @GetMapping("")
     @Transactional(readOnly = true)
-    public ResponseEntity<?> getAllSerial() {
+    public ResponseEntity<?> getAllSerial() throws Exception{
 
         ResponseObject responseObject = serialService.getAllSerial();
 
@@ -32,7 +32,7 @@ public class SerialController {
 
     @PostMapping()
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> insertSerial(@RequestBody SerialDTO serialDTO) {
+    public ResponseEntity<?> insertSerial(@RequestBody SerialDTO serialDTO) throws Exception {
 
         ResponseObject responseObject = serialService.insertSerial(serialDTO);
 
@@ -41,7 +41,7 @@ public class SerialController {
 
     @PutMapping()
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> updateSerial(@RequestBody SerialDTO serialDTO) {
+    public ResponseEntity<?> updateSerial(@RequestBody SerialDTO serialDTO) throws Exception {
 
         ResponseObject responseObject = serialService.updateSerial(serialDTO);
 
@@ -50,7 +50,7 @@ public class SerialController {
 
     @DeleteMapping()
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> deleteSerial(@RequestParam long id) {
+    public ResponseEntity<?> deleteSerial(@RequestParam long id) throws Exception {
 
         ResponseObject responseObject = serialService.deleteSerial(id);
 
