@@ -20,7 +20,6 @@ public class TicketHistoryEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_ticket")
-    @NonNull
     private TicketEntity idTicket;
 
     @Column(name = "serial_code") // *Noted : xem lại

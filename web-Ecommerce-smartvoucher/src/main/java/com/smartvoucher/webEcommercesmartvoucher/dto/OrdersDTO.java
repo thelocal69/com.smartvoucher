@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Getter
@@ -12,24 +14,14 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrdersDTO {
-
     private long id;
-
     private String orderNo;
-
     private int status;
-
-    private UsersDTO idUser;
-
+    private UsersDTO idUserDTO;
     private int quantity;
-
     private WareHouseDTO idWarehouseDTO;
-
     private String createdBy;
-
     private String updatedBy;
-
     private Timestamp createdAt;
-
     private Timestamp updatedAt;
 }
