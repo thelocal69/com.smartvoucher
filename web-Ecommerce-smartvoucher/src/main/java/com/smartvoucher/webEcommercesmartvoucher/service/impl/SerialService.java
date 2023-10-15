@@ -32,7 +32,7 @@ public class SerialService implements ISerialService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseObject getAllSerial() {
+    public ResponseObject getAllSerial() throws Exception {
 
         ResponseObject responseObject = new ResponseObject();
         responseObject.setStatusCode(200);
@@ -55,7 +55,7 @@ public class SerialService implements ISerialService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject insertSerial(@NonNull SerialDTO serialDTO) {
+    public ResponseObject insertSerial(@NonNull SerialDTO serialDTO) throws Exception {
 
         boolean isSuccess = false;
         int status = 501; // 501 : Not Implemented
@@ -88,7 +88,7 @@ public class SerialService implements ISerialService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject updateSerial(@NonNull SerialDTO serialDTO) {
+    public ResponseObject updateSerial(@NonNull SerialDTO serialDTO) throws Exception {
 
         boolean isSuccess = false;
         int status = 501;  // 501 : not implemented
@@ -120,7 +120,7 @@ public class SerialService implements ISerialService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject deleteSerial(long id) {
+    public ResponseObject deleteSerial(long id) throws Exception {
 
         boolean checkSerial = serialRepository.existsById(id);
         int status = 501;

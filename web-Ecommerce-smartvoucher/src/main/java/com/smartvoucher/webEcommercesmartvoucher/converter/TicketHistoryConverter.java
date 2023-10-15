@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketHistoryDTO;
+import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketHistoryEntity;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,7 @@ public class TicketHistoryConverter {
             ticketHistoryDTO.setId(data.getId());
 
             ticketDTO.setId(data.getIdTicket().getId());
+            ticketDTO.setDiscountType(data.getIdTicket().getDiscountType());
             ticketHistoryDTO.setIdTicketDTO(ticketDTO); // set id ticketHistory
 
             ticketHistoryDTO.setSerialCode(data.getSerialCode());
@@ -36,5 +38,17 @@ public class TicketHistoryConverter {
         }
 
         return listTicketHistory;
+    }
+
+    public TicketHistoryEntity insertTicketHistory(TicketEntity ticketEntity) {
+
+        TicketHistoryEntity ticketHistory = new TicketHistoryEntity();
+
+        ticketHistory.setSerialCode(ticketEntity.getIdSerial().getSerialCode());
+        ticketHistory.setIdTicket(ticketEntity);
+        ticketHistory.setIsLatest(ticketEntity.getStatus());
+        ticketHistory.setPrevStatus(ticketEntity.getStatus());
+
+        return ticketHistory;
     }
 }

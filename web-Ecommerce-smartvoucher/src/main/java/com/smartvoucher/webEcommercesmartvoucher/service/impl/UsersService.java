@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,8 +27,11 @@ public class UsersService {
 
         List<UsersEntity> list = usersRepository.findAll();
 
-        List<UsersDTO> listUser = usersConverter.findAllUser(list);
+        List<UsersDTO> listUser = new ArrayList<>();
 
+        for(UsersEntity data : list) {
+            listUser.add(usersConverter.toUserDTO(data));
+        }
         return listUser;
     }
 }

@@ -31,7 +31,7 @@ public class RolesService implements IRoleService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseObject getAllRole() {
+    public ResponseObject getAllRole() throws Exception {
 
         List<RolesDTO> listRole;
 
@@ -50,7 +50,7 @@ public class RolesService implements IRoleService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject insertRole(RolesDTO rolesDTO) {
+    public ResponseObject insertRole(RolesDTO rolesDTO) throws Exception {
 
         boolean isSuccess = false;
         int status = 501;
@@ -86,7 +86,7 @@ public class RolesService implements IRoleService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject updateRole(RolesDTO rolesDTO) {
+    public ResponseObject updateRole(RolesDTO rolesDTO) throws Exception {
 
         boolean isSuccess = false;
         int status = 501;
@@ -120,7 +120,7 @@ public class RolesService implements IRoleService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject deleteRole(long id) {
+    public ResponseObject deleteRole(long id) throws Exception{
 
         boolean checkRole = rolesRepository.existsById(id);
         int status = 501;
