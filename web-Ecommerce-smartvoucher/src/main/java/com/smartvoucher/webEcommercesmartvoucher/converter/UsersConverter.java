@@ -10,30 +10,41 @@ import java.util.List;
 @Component
 public class UsersConverter {
 
-    public List<UsersDTO> findAllUser(List<UsersEntity> list) {
-
-        List<UsersDTO> listUser = new ArrayList<>();
-
-        for (UsersEntity data : list) {
+    public UsersDTO toUserDTO(UsersEntity usersEntity) {
             UsersDTO usersDTO = new UsersDTO();
-            usersDTO.setId(data.getId());
-            usersDTO.setMemberCode(data.getMemberCode());
-            usersDTO.setFirstName(data.getFirstName());
-            usersDTO.setLastName(data.getLastName());
-            usersDTO.setFullName(data.getFullName());
-            usersDTO.setUserName(data.getUsername());
-            usersDTO.setPhone(data.getPhone());
-            usersDTO.setEmail(data.getEmail());
-            usersDTO.setStatus(data.getStatus());
-            usersDTO.setAddress(data.getAddress());
-            usersDTO.setCreatedBy(data.getCreatedBy());
-            usersDTO.setUpdatedBy(data.getUpdatedBy());
-            usersDTO.setCreatedAt(data.getCreatedAt());
-            usersDTO.setUpdatedAt(data.getUpdatedAt());
+            usersDTO.setId(usersEntity.getId());
+            usersDTO.setMemberCode(usersEntity.getMemberCode());
+            usersDTO.setFirstName(usersEntity.getFirstName());
+            usersDTO.setLastName(usersEntity.getLastName());
+            usersDTO.setFullName(usersEntity.getFullName());
+            usersDTO.setUserName(usersEntity.getUsername());
+            usersDTO.setPhone(usersEntity.getPhone());
+            usersDTO.setEmail(usersEntity.getEmail());
+            usersDTO.setStatus(usersEntity.getStatus());
+            usersDTO.setAddress(usersEntity.getAddress());
+            usersDTO.setCreatedBy(usersEntity.getCreatedBy());
+            usersDTO.setUpdatedBy(usersEntity.getUpdatedBy());
+            usersDTO.setCreatedAt(usersEntity.getCreatedAt());
+            usersDTO.setUpdatedAt(usersEntity.getUpdatedAt());
+        return usersDTO;
+    }
 
-            listUser.add(usersDTO);
-        }
-
-        return listUser;
+    public UsersEntity toUserEntity(UsersDTO usersDTO) {
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(usersDTO.getId());
+        usersEntity.setMemberCode(usersDTO.getMemberCode());
+        usersEntity.setFirstName(usersDTO.getFirstName());
+        usersEntity.setLastName(usersDTO.getLastName());
+        usersEntity.setFullName(usersDTO.getFullName());
+        usersEntity.setUsername(usersDTO.getUserName());
+        usersEntity.setPhone(usersDTO.getPhone());
+        usersEntity.setEmail(usersDTO.getEmail());
+        usersEntity.setStatus(usersDTO.getStatus());
+        usersEntity.setAddress(usersDTO.getAddress());
+        usersEntity.setCreatedBy(usersDTO.getCreatedBy());
+        usersEntity.setUpdatedBy(usersDTO.getUpdatedBy());
+        usersEntity.setCreatedAt(usersDTO.getCreatedAt());
+        usersEntity.setUpdatedAt(usersDTO.getUpdatedAt());
+        return usersEntity;
     }
 }

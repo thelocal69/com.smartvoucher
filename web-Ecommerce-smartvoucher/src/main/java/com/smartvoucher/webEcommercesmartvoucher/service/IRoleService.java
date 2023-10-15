@@ -5,11 +5,11 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 
 public interface IRoleService {
 
-    ResponseObject getAllRole();
+    ResponseObject getAllRole() throws Exception;
 
-    ResponseObject insertRole(RolesDTO rolesDTO);
+    ResponseObject insertRole(RolesDTO rolesDTO) throws Exception;
 
-    ResponseObject updateRole(RolesDTO rolesDTO);
+    ResponseObject updateRole(RolesDTO rolesDTO) throws Exception;
 
-    ResponseObject deleteRole(long id);
+    ResponseObject deleteRole(long id) throws Exception;
 }
