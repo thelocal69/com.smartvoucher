@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.entity;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity(name = "ticket_history")
+@EntityListeners(AuditingEntityListener.class)
 public class TicketHistoryEntity {
 
     @Id
@@ -18,7 +20,6 @@ public class TicketHistoryEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_ticket")
-    @NonNull
     private TicketEntity idTicket;
 
     @Column(name = "serial_code") // *Noted : xem lại

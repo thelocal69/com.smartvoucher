@@ -1,9 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -64,5 +61,24 @@ public class TicketDTO {
 
     private Timestamp updatedAt;
 
+    // getter spectify return id
+    public long getIdWarehouseDTO() {
+        return this.idWarehouseDTO.getId();
+    }
 
+    public long getIdSerialDTO() {
+        return this.idSerialDTO.getId();
+    }
+
+    public long getIdCategoryDTO() {
+        return this.idCategoryDTO.getId();
+    }
+
+    public long getIdOrderDTO() {
+        return this.idOrderDTO.getId();
+    }
+
+    public long getIdUserDTO() {
+        return this.idUserDTO.getId();
+    }
 }
