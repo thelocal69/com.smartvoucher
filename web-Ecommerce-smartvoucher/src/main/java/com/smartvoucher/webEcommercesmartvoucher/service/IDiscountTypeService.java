@@ -9,6 +9,6 @@ public interface IDiscountTypeService {
     List<DiscountTypeDTO> getAllDiscount();
     List<DiscountTypeDTO> getAllDiscountTypeCode(DiscountTypeDTO discountTypeDTO);
     DiscountTypeDTO upsert(DiscountTypeDTO discountTypeDTO);
-    Boolean deleteDiscountType(DiscountTypeDTO discountTypeDTO);
+    void deleteDiscountType(DiscountTypeDTO discountTypeDTO);
     Boolean existDiscount(DiscountTypeDTO discountTypeDTO);
 }
