@@ -22,6 +22,7 @@ public class TicketConverter {
             CategoryDTO categoryDTO = new CategoryDTO();
             OrdersDTO ordersDTO = new OrdersDTO();
             UsersDTO usersDTO = new UsersDTO();
+            StoreDTO storeDTO = new StoreDTO();
             TicketDTO ticketDTO = new TicketDTO(); // This is ticketDTO
 
             serialDTO.setId(data.getIdSerial().getId());
@@ -39,6 +40,9 @@ public class TicketConverter {
             usersDTO.setId(data.getIdUser().getId());
             ticketDTO.setIdUserDTO(usersDTO); // set id User
 
+            storeDTO.setId(data.getStore().getId());
+            ticketDTO.setStoreDTO(storeDTO);
+
             ticketDTO.setId(data.getId());
             ticketDTO.setClaimedTime(data.getClaimedTime());
             ticketDTO.setRedeemedtimeTime(data.getRedeemedtimeTime());
@@ -53,7 +57,7 @@ public class TicketConverter {
             ticketDTO.setVoucherChannel(data.getVoucherChannel());
             ticketDTO.setAvailableFrom(data.getAvailbleFrom());
             ticketDTO.setAvailableTo(data.getAvaibleTo());
-            ticketDTO.setAppliedStore(data.getAppliedStore());
+            ticketDTO.setAppliedStore(data.getStore().getStoreCode());
 
             // fill default status 1
             ticketDTO.setStatus(1);
