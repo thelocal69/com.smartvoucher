@@ -9,6 +9,6 @@ public interface IMerchantService {
     List<MerchantDTO> getAllMerchantCode(MerchantDTO merchantDTO);
     MerchantDTO getMerchantCode(MerchantDTO merchantDTO);
     MerchantDTO upsertMerchant(MerchantDTO merchantDTO);
-    Boolean deleteMerchant(MerchantDTO merchantDTO);
+    void deleteMerchant(MerchantDTO merchantDTO);
     Boolean existMerchant(MerchantDTO merchantDTO);
 }
