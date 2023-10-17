@@ -64,4 +64,7 @@ public class SerialEntity {
     @OneToMany(mappedBy = "idSerial")
     private List<TicketEntity> ticketEntity;
 
+    @OneToMany(mappedBy = "idSerial")
+    private List<WarehouseSerialEntity> warehouseSerialEntities;
+
 }

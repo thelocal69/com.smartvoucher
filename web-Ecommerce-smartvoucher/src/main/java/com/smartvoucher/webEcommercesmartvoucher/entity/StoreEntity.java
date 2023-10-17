@@ -37,4 +37,7 @@ import java.util.List;
 
         @OneToMany(mappedBy = "store")
         private List<TicketEntity> ticketEntityList;
+
+        @OneToMany(mappedBy = "idStore")
+        private List<WarehouseStoreEntity> warehouseStoreEntities;
     }
