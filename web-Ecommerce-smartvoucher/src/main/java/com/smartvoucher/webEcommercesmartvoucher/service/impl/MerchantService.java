@@ -49,11 +49,6 @@ public class MerchantService implements IMerchantService {
     @Transactional(readOnly = true)
     public MerchantDTO getMerchantCode(MerchantDTO merchantDTO) {
         MerchantEntity merchant = merchantRepository.findOneByMerchantCode(merchantDTO.getMerchantCode());
-        if (merchant == null){
-            throw new ObjectNotFoundException(
-                    404, "List merchant code is empty !"
-            );
-        }
         return merchantConverter.toMerchantDTO(merchant);
     }
 
