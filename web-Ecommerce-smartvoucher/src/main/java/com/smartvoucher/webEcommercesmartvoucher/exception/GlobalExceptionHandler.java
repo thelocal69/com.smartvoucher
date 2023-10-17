@@ -13,7 +13,7 @@ import java.util.Set;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
+    // AOP aspect oriented programming
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -29,8 +29,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({javax.validation.ConstraintViolationException.class})
     public ResponseEntity<?> handleValidationException(javax.validation.ConstraintViolationException ex) {
-        // AOP aspect oriented programming
-
         // save list constraintViolations
         Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
 

@@ -27,9 +27,9 @@ public class WareHouseDTO extends BaseDTO{
     private String bannerUrl;
     @NotBlank(message = "Please fill all data !")
     private String thumbnailUrl;
-    @NotBlank(message = "Please fill all data !")
+    @NotNull
     private Double discountAmount;
-    @NotBlank(message = "Please fill all data !")
+    @NotNull
     private Double maxDiscountAmount;
 
     private Timestamp availableFrom;
@@ -37,11 +37,11 @@ public class WareHouseDTO extends BaseDTO{
     private Timestamp availableTo;
     @NotNull
     private int status;
-    @NotBlank(message = "Please fill all data !")
+    @NotNull
     private int showOnWeb;
     @NotNull
     private int capacity;
-    @NotBlank(message = "Please fill all data !")
+    @NotNull
     private int voucherChannel;
     @NotBlank(message = "Discount type code is not empty !")
     @NotNull
