@@ -1,9 +1,8 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
-import com.smartvoucher.webEcommercesmartvoucher.dto.OrdersDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IOrderService;
-import com.smartvoucher.webEcommercesmartvoucher.service.impl.OrdersService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -29,18 +28,18 @@ public class OrderController {
 
     @PostMapping
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> insertOrder(@RequestBody OrdersDTO ordersDTO) throws Exception {
+    public ResponseEntity<?> insertOrder(@RequestBody OrderDTO orderDTO) throws Exception {
 
-        ResponseObject responseObject = ordersService.insertOrder(ordersDTO);
+        ResponseObject responseObject = ordersService.insertOrder(orderDTO);
 
         return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
     }
 
     @PutMapping
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> updateOrder(@RequestBody OrdersDTO ordersDTO) throws Exception {
+    public ResponseEntity<?> updateOrder(@RequestBody OrderDTO orderDTO) throws Exception {
 
-        ResponseObject responseObject = ordersService.updateOrder(ordersDTO);
+        ResponseObject responseObject = ordersService.updateOrder(orderDTO);
 
         return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
     }

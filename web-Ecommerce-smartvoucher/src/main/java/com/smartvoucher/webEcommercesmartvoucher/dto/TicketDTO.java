@@ -21,7 +21,7 @@ public class TicketDTO {
 
     private int status;
 
-    private OrdersDTO idOrderDTO;
+    private OrderDTO idOrderDTO;
 
     private Timestamp claimedTime;
 
@@ -51,7 +51,7 @@ public class TicketDTO {
 
     private String appliedStore;
 
-    private UsersDTO idUserDTO;
+    private UserDTO idUserDTO;
 
     private String createdBy;
 
@@ -60,25 +60,4 @@ public class TicketDTO {
     private Timestamp createdAt;
 
     private Timestamp updatedAt;
-
-    // getter spectify return id
-    public long getIdWarehouseDTO() {
-        return this.idWarehouseDTO.getId();
-    }
-
-    public long getIdSerialDTO() {
-        return this.idSerialDTO.getId();
-    }
-
-    public long getIdCategoryDTO() {
-        return this.idCategoryDTO.getId();
-    }
-
-    public long getIdOrderDTO() {
-        return this.idOrderDTO.getId();
-    }
-
-    public long getIdUserDTO() {
-        return this.idUserDTO.getId();
-    }
 }

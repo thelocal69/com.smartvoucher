@@ -1,14 +1,14 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.smartvoucher.webEcommercesmartvoucher.converter.OrdersConverter;
-import com.smartvoucher.webEcommercesmartvoucher.dto.OrdersDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.OrdersEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.UsersEntity;
+import com.smartvoucher.webEcommercesmartvoucher.converter.OrderConverter;
+import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
+import com.smartvoucher.webEcommercesmartvoucher.entity.OrderEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
-import com.smartvoucher.webEcommercesmartvoucher.repository.OrdersRepository;
-import com.smartvoucher.webEcommercesmartvoucher.repository.UsersRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.OrderRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,32 +20,32 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class OrdersService implements IOrderService {
+public class OrderService implements IOrderService {
 
-    private final OrdersRepository ordersRepository;
-    private final OrdersConverter ordersConverter;
-    private final UsersRepository usersRepository;
+    private final OrderRepository orderRepository;
+    private final OrderConverter orderConverter;
+    private final UserRepository userRepository;
     private final IWareHouseRepository iWareHouseRepository;
 
     @Autowired
-    public OrdersService(OrdersRepository ordersRepository
-            ,OrdersConverter ordersConverter
-            ,UsersRepository usersRepository
-            ,IWareHouseRepository iWareHouseRepository ) {
-        this.ordersRepository = ordersRepository;
-        this.ordersConverter = ordersConverter;
-        this.usersRepository = usersRepository;
+    public OrderService(OrderRepository orderRepository
+            , OrderConverter orderConverter
+            , UserRepository userRepository
+            , IWareHouseRepository iWareHouseRepository ) {
+        this.orderRepository = orderRepository;
+        this.orderConverter = orderConverter;
+        this.userRepository = userRepository;
         this.iWareHouseRepository = iWareHouseRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseObject getAllOrder(){
-        List<OrdersDTO> listOrder = new ArrayList<>();
+        List<OrderDTO> listOrder = new ArrayList<>();
         try {
-            List<OrdersEntity> list = ordersRepository.findAll();
-            for (OrdersEntity data : list) {
-                listOrder.add(ordersConverter.toOrdersDTO(data));
+            List<OrderEntity> list = orderRepository.findAll();
+            for (OrderEntity data : list) {
+                listOrder.add(orderConverter.toOrdersDTO(data));
             }
         } catch (Exception e) {
             System.out.println("Order Service : " + e.getLocalizedMessage());
@@ -57,20 +57,20 @@ public class OrdersService implements IOrderService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject insertOrder(@NotNull OrdersDTO ordersDTO){
+    public ResponseObject insertOrder(@NotNull OrderDTO orderDTO){
         boolean isSuccess = false;
         int status = 501;
-        Optional<OrdersEntity> order = ordersRepository.findByOrderNo(ordersDTO.getOrderNo());
+        Optional<OrderEntity> order = orderRepository.findByOrderNo(orderDTO.getOrderNo());
 
         if (order.isEmpty()) {
             try {
                 // idUserDTO and idWarehouse of ordersDTO: Not null (compulsory)
-                Optional<UsersEntity> usersEntity = usersRepository.findById(ordersDTO.getIdUserDTO().getId());
-                Optional<WareHouseEntity> wareHouseEntity = iWareHouseRepository.findById(ordersDTO.getIdWarehouseDTO().getId());
+                Optional<UserEntity> usersEntity = userRepository.findById(orderDTO.getIdUserDTO().getId());
+                Optional<WareHouseEntity> wareHouseEntity = iWareHouseRepository.findById(orderDTO.getIdWarehouseDTO().getId());
 
                 if(usersEntity.orElse(null) != null
                         && wareHouseEntity.orElse(null) != null) {
-                    ordersRepository.save(ordersConverter.insertRole(ordersDTO
+                    orderRepository.save(orderConverter.insertRole(orderDTO
                             ,usersEntity.orElse(null)
                             ,wareHouseEntity.orElse(null)));
                     isSuccess = true;
@@ -91,21 +91,21 @@ public class OrdersService implements IOrderService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject updateOrder(@NotNull OrdersDTO ordersDTO){
+    public ResponseObject updateOrder(@NotNull OrderDTO orderDTO){
         boolean isSuccess = false;
         int status = 501;
-            Optional<OrdersEntity> oldOrder = ordersRepository.findById(ordersDTO.getId());
-            List<OrdersEntity> checkOrder = ordersRepository.findByOrderNoAndId(ordersDTO.getOrderNo(), ordersDTO.getId());
+            Optional<OrderEntity> oldOrder = orderRepository.findById(orderDTO.getId());
+            List<OrderEntity> checkOrder = orderRepository.findByOrderNoAndId(orderDTO.getOrderNo(), orderDTO.getId());
 
-            if (!oldOrder.isEmpty() && checkOrder.isEmpty() && ordersDTO.getQuantity() > 0) {
+            if (!oldOrder.isEmpty() && checkOrder.isEmpty() && orderDTO.getQuantity() > 0) {
                 try {
                     // idUserDTO and idWarehouse of ordersDTO: Not null (compulsory)
-                    Optional<UsersEntity> usersEntity = usersRepository.findById(ordersDTO.getIdUserDTO().getId());
-                    Optional<WareHouseEntity> wareHouseEntity = iWareHouseRepository.findById(ordersDTO.getIdWarehouseDTO().getId());
+                    Optional<UserEntity> usersEntity = userRepository.findById(orderDTO.getIdUserDTO().getId());
+                    Optional<WareHouseEntity> wareHouseEntity = iWareHouseRepository.findById(orderDTO.getIdWarehouseDTO().getId());
 
                     if(usersEntity.orElse(null) != null
                             && wareHouseEntity.orElse(null) != null) {
-                        ordersRepository.save(ordersConverter.updateRole(ordersDTO
+                        orderRepository.save(orderConverter.updateRole(orderDTO
                                 , oldOrder.orElse(null)
                                 , usersEntity.orElse(null)
                                 , wareHouseEntity.orElse(null)));
@@ -127,12 +127,12 @@ public class OrdersService implements IOrderService {
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseObject deleteOrder(@NotNull long id){
-        boolean checkOrder = ordersRepository.existsById(id);
+        boolean checkOrder = orderRepository.existsById(id);
         int status = 501;
 
         if(checkOrder == true) {
             try {
-                ordersRepository.deleteById(id);
+                orderRepository.deleteById(id);
                 status = 200;
 
             } catch (Exception e) {

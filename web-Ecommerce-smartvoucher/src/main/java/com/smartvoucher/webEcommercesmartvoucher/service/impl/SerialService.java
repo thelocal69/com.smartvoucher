@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -32,34 +33,31 @@ public class SerialService implements ISerialService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseObject getAllSerial() throws Exception {
+    public ResponseObject getAllSerial() {
 
-        ResponseObject responseObject = new ResponseObject();
-        responseObject.setStatusCode(200);
-        responseObject.setMessage("List Serial");
+        List<SerialDTO> listSerial = new ArrayList<>();
 
         try {
 
             List<SerialEntity> list = serialRepository.findAll();
-            List<SerialDTO> listSerial = serialConverter.findAllSerial(list);
 
-        responseObject.setData(listSerial);
+            for (SerialEntity data : list) {
+                listSerial.add(serialConverter.toSerialDTO(data));
+            }
 
         } catch (Exception e) {
             System.out.println("Serial Service : " + e.getLocalizedMessage());
             return new ResponseObject(500, e.getLocalizedMessage(), "Not found List Serial !");
         }
 
-        return responseObject;
+        return new ResponseObject(200, "List Serial", listSerial );
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject insertSerial(@NonNull SerialDTO serialDTO) throws Exception {
-
+    public ResponseObject insertSerial(@NonNull SerialDTO serialDTO) {
         boolean isSuccess = false;
         int status = 501; // 501 : Not Implemented
-
         SerialEntity checkSerialCode = serialRepository.findSerialBySerialCode(serialDTO.getSerialCode());
 
             if(checkSerialCode == null){
@@ -79,17 +77,13 @@ public class SerialService implements ISerialService {
                     return new ResponseObject(500 , e.getLocalizedMessage() ,isSuccess);
                 }
             }
-
         String message = (isSuccess == true) ? "Add serial success!":"Serial Code is available!";
-
         return new ResponseObject(status, message, isSuccess);
     }
-
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseObject updateSerial(@NonNull SerialDTO serialDTO) throws Exception {
-
         boolean isSuccess = false;
         int status = 501;  // 501 : not implemented
 
@@ -114,7 +108,6 @@ public class SerialService implements ISerialService {
                 }
             }
         String message = (isSuccess == true) ? "Update Serial Success!": "Serial is Available, update Serial fail!";
-
         return new ResponseObject(status, message, isSuccess);
     }
 

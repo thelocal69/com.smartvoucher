@@ -1,15 +1,12 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.smartvoucher.webEcommercesmartvoucher.converter.RolesConverter;
-import com.smartvoucher.webEcommercesmartvoucher.dto.RolesDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.RolesEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
+import com.smartvoucher.webEcommercesmartvoucher.converter.RoleConverter;
+import com.smartvoucher.webEcommercesmartvoucher.dto.RoleDTO;
+import com.smartvoucher.webEcommercesmartvoucher.entity.RoleEntity;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
-import com.smartvoucher.webEcommercesmartvoucher.repository.RolesRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.RoleRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,28 +14,28 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RolesService implements IRoleService {
+public class RoleService implements IRoleService {
 
-    private final RolesRepository rolesRepository;
-
-    @Autowired
-    private RolesConverter rolesConverter;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public RolesService(RolesRepository rolesRepository) {
-        this.rolesRepository = rolesRepository;
+    private RoleConverter roleConverter;
+
+    @Autowired
+    public RoleService(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseObject getAllRole() throws Exception {
 
-        List<RolesDTO> listRole;
+        List<RoleDTO> listRole;
 
         try {
 
-            List<RolesEntity> list = rolesRepository.findAll();
-            listRole = rolesConverter.findAllRole(list);
+            List<RoleEntity> list = roleRepository.findAll();
+            listRole = roleConverter.findAllRole(list);
 
         } catch (Exception e) {
             System.out.println("Ticket Service : " + e.getLocalizedMessage());
@@ -50,23 +47,23 @@ public class RolesService implements IRoleService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject insertRole(RolesDTO rolesDTO) throws Exception {
+    public ResponseObject insertRole(RoleDTO roleDTO) throws Exception {
 
         boolean isSuccess = false;
         int status = 501;
 
-        if (!rolesDTO.getName().startsWith("ROLE_")) {
-            String roleName = "ROLE_" + rolesDTO.getName();
-            rolesDTO.setName(roleName);
+        if (!roleDTO.getName().startsWith("ROLE_")) {
+            String roleName = "ROLE_" + roleDTO.getName();
+            roleDTO.setName(roleName);
         }
 
-        Optional<RolesEntity> role = rolesRepository.findByName(rolesDTO.getName());
+        Optional<RoleEntity> role = roleRepository.findByName(roleDTO.getName());
 
         if (role.isEmpty()) {
 
             try {
 
-                rolesRepository.save(rolesConverter.insertRole(rolesDTO));
+                roleRepository.save(roleConverter.insertRole(roleDTO));
                 isSuccess = true;
                 status = 200;
 
@@ -86,22 +83,22 @@ public class RolesService implements IRoleService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject updateRole(RolesDTO rolesDTO) throws Exception {
+    public ResponseObject updateRole(RoleDTO roleDTO) throws Exception {
 
         boolean isSuccess = false;
         int status = 501;
 
-        if (!rolesDTO.getName().startsWith("ROLE_")) {
-            String roleName = "ROLE_" + rolesDTO.getName();
-            rolesDTO.setName(roleName);
+        if (!roleDTO.getName().startsWith("ROLE_")) {
+            String roleName = "ROLE_" + roleDTO.getName();
+            roleDTO.setName(roleName);
         }
 
-        Optional<RolesEntity> oldRole = rolesRepository.findById(rolesDTO.getId());
-        List<RolesEntity> checkRole = rolesRepository.findByNameAndId(rolesDTO.getName(), rolesDTO.getId());
+        Optional<RoleEntity> oldRole = roleRepository.findById(roleDTO.getId());
+        List<RoleEntity> checkRole = roleRepository.findByNameAndId(roleDTO.getName(), roleDTO.getId());
 
             if (!oldRole.isEmpty() && checkRole.isEmpty()) {
                 try {
-                    rolesRepository.save(rolesConverter.updateRole(rolesDTO, oldRole.orElse(null)));
+                    roleRepository.save(roleConverter.updateRole(roleDTO, oldRole.orElse(null)));
                     isSuccess = true;
                     status = 200;
 
@@ -122,13 +119,13 @@ public class RolesService implements IRoleService {
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseObject deleteRole(long id) throws Exception{
 
-        boolean checkRole = rolesRepository.existsById(id);
+        boolean checkRole = roleRepository.existsById(id);
         int status = 501;
 
         if(checkRole == true) {
             try {
 
-                rolesRepository.deleteById(id);
+                roleRepository.deleteById(id);
                 status = 200;
 
             } catch (Exception e) {

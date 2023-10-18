@@ -2,7 +2,6 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketHistoryConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketHistoryDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.RolesEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketHistoryEntity;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;

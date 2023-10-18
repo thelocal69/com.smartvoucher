@@ -1,7 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -20,7 +19,7 @@ import java.util.List;
 @Getter
 @Entity(name = "orders")
 @EntityListeners(AuditingEntityListener.class)
-public class OrdersEntity {
+public class OrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +53,7 @@ public class OrdersEntity {
     @ManyToOne
     @JoinColumn(name = "id_user")
     @NotNull(message = "Please fill all information!")
-    private UsersEntity idUser;
+    private UserEntity idUser;
 
     @Column(name = "quantity")
     @NotNull(message = "Please fill all information!")

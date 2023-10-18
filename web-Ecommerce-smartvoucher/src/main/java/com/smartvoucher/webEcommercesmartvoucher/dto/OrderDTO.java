@@ -5,19 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrdersDTO {
+public class OrderDTO {
     private long id;
     private String orderNo;
     private int status;
-    private UsersDTO idUserDTO;
+    private UserDTO idUserDTO;
     private int quantity;
     private WareHouseDTO idWarehouseDTO;
     private String createdBy;

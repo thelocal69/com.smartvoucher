@@ -1,16 +1,13 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
-import com.smartvoucher.webEcommercesmartvoucher.dto.RolesDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.RoleDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IRoleService;
-import com.smartvoucher.webEcommercesmartvoucher.service.impl.RolesService;
+import com.smartvoucher.webEcommercesmartvoucher.service.impl.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/role")
@@ -19,8 +16,8 @@ public class RoleController {
     private final IRoleService rolesService;
 
     @Autowired
-    public RoleController(RolesService rolesService) {
-        this.rolesService = rolesService;
+    public RoleController(RoleService roleService) {
+        this.rolesService = roleService;
     }
 
     @GetMapping()
@@ -34,18 +31,18 @@ public class RoleController {
 
     @PostMapping()
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> insertRole(@RequestBody RolesDTO rolesDTO) throws Exception {
+    public ResponseEntity<?> insertRole(@RequestBody RoleDTO roleDTO) throws Exception {
 
-        ResponseObject responseObject = rolesService.insertRole(rolesDTO);
+        ResponseObject responseObject = rolesService.insertRole(roleDTO);
 
         return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
     }
 
     @PutMapping()
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> updateRole(@RequestBody RolesDTO rolesDTO) throws Exception {
+    public ResponseEntity<?> updateRole(@RequestBody RoleDTO roleDTO) throws Exception {
 
-        ResponseObject responseObject = rolesService.updateRole(rolesDTO);
+        ResponseObject responseObject = rolesService.updateRole(roleDTO);
 
         return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
     }

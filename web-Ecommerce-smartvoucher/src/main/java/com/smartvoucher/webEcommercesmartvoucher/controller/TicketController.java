@@ -6,9 +6,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.TicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,9 +22,13 @@ public class TicketController {
 
     @GetMapping
     public ResponseEntity<?> getAllTicket(){
-
         ResponseObject responseObject = ticketService.getAllTicket();
+        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
+    }
 
+    @PostMapping
+    public ResponseEntity<?> insertTicket(@RequestBody TicketDTO ticketDTO) {
+        ResponseObject responseObject = ticketService.insertTicket(ticketDTO);
         return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
     }
 

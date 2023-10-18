@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity(name = "users")
-public class UsersEntity {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,7 +63,7 @@ public class UsersEntity {
     private List<TicketEntity> ticketEntity;
 
     @OneToMany(mappedBy = "idUser")
-    private List<OrdersEntity> ordersEntity;
+    private List<OrderEntity> orderEntity;
 
     @OneToMany(mappedBy = "idUser")
     private List<RolesUsersEntity> rolesUsersEntities;
