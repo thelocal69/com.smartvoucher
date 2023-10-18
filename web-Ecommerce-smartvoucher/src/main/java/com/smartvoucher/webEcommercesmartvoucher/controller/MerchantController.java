@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/merchant")
 public class MerchantController {
@@ -34,16 +36,7 @@ public class MerchantController {
 
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject> insertMerchant(@RequestBody MerchantDTO merchantDTO) {
-        if (!merchantService.getAllMerchantCode(merchantDTO).isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
-                    new ResponseObject(
-                            501,
-                            "Merchant code is duplicated !",
-                            ""
-                    )
-            );
-        } else {
+    public ResponseEntity<ResponseObject> insertMerchant(@Valid @RequestBody MerchantDTO merchantDTO) {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,
@@ -51,16 +44,13 @@ public class MerchantController {
                             this.merchantService.upsertMerchant(merchantDTO)
                     )
             );
-        }
     }
 
     //this is "up-sert", that mean if the instance is not existed or not found, this method is insert the new data
     @PutMapping("/api/{id}")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<?> updateMerchant(@RequestBody MerchantDTO merchantDTO, @PathVariable Long id) {
+    public ResponseEntity<?> updateMerchant(@Valid @RequestBody MerchantDTO merchantDTO, @PathVariable Long id) {
         merchantDTO.setId(id);
-        boolean exist = merchantService.existMerchant(merchantDTO);
-        if (exist){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,
@@ -68,39 +58,20 @@ public class MerchantController {
                             this.merchantService.upsertMerchant(merchantDTO)
                     )
             );
-        }else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(
-                            404,
-                            "Cannot update merchant id = "+id,
-                            ""
-                    )
-            );
-        }
     }
 
     @DeleteMapping("/api/{id}")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> deleteMerchant(@RequestBody MerchantDTO merchantDTO, @PathVariable Long id) {
         merchantDTO.setId(id);
-        if (this.merchantService.deleteMerchant(merchantDTO)){
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(
-                            200,
-                            "Delete is completed !",
-                            "{}"
-                    )
-            );
-        }else
-        {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(
-                            404,
-                            "Cannot delete merchant id = " + id,
-                            ""
-                    )
-            );
-        }
+        this.merchantService.deleteMerchant(merchantDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Delete is completed !",
+                        "{}"
+                )
+        );
     }
 }
 

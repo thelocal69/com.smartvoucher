@@ -1,7 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
-import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.dto.CategoryDTO;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/category")
@@ -36,9 +36,7 @@ public class CategoryController {
 
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject> insertCategory(@RequestBody CategoryDTO categoryDTO){
-        List<CategoryDTO> category = categoryService.getAllCategoryCode(categoryDTO);
-        if (category.isEmpty()){
+    public ResponseEntity<ResponseObject> insertCategory(@Valid @RequestBody CategoryDTO categoryDTO){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,
@@ -46,23 +44,12 @@ public class CategoryController {
                             this.categoryService.upsert(categoryDTO)
                     )
             );
-        }else {
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
-                    new ResponseObject(
-                            501,
-                            "Category code is duplicated !",
-                            ""
-                    )
-            );
-        }
     }
 
     @PutMapping("/api/{id}")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject> updateCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable Long id){
+    public ResponseEntity<ResponseObject> updateCategory(@Valid @RequestBody CategoryDTO categoryDTO, @PathVariable Long id){
         categoryDTO.setId(id);
-        boolean exist = categoryService.exitsCategory(categoryDTO);
-        if (exist){
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,
@@ -70,37 +57,19 @@ public class CategoryController {
                             this.categoryService.upsert(categoryDTO)
                     )
             );
-        }else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(
-                            404,
-                            "Cannot update category id = "+id,
-                            ""
-                    )
-            );
         }
-    }
 
     @DeleteMapping("/api/{id}")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject> deleteCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable Long id){
+    public ResponseEntity<ResponseObject> deleteCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable Long id) {
         categoryDTO.setId(id);
-        if (this.categoryService.deleteCategory(categoryDTO)){
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(
-                            200,
-                            "Delete is completed !",
-                            "{}"
-                    )
-            );
-        }else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject(
-                            404,
-                            "Cannot delete category id = "+id,
-                            ""
-                    )
-            );
-        }
+        this.categoryService.deleteCategory(categoryDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Delete is completed !",
+                        "{}"
+                )
+        );
     }
 }

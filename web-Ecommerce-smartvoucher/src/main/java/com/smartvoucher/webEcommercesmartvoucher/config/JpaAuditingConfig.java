@@ -14,13 +14,15 @@ import java.util.Optional;
 public class JpaAuditingConfig {
     @Bean
     public AuditorAware<String> auditorProvider(){
+        //tracking date time
         return new AuditorAwareImpl();
     }
 
     public static class AuditorAwareImpl implements AuditorAware<String> {
-
+        //use nested class
         @Override
         public Optional<String> getCurrentAuditor() {
+            //tracking user
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null || !authentication.isAuthenticated()){
                 return Optional.empty();

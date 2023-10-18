@@ -5,6 +5,9 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.StoreDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.ChainEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.MerchantEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.StoreEntity;
+import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IChainRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IStoreRepository;
@@ -39,6 +42,11 @@ public class StoreService implements IStoreService {
     @Transactional(readOnly = true)
     public List<StoreDTO> getAllStore() {
         List<StoreEntity> storeEntityList = storeRepository.findAll();
+        if (storeEntityList.isEmpty()){
+            throw new ObjectEmptyException(
+                    404, "List store is empty !"
+            );
+        }
         return storeConverter.toStoreDTOList(storeEntityList);
     }
 
@@ -53,10 +61,31 @@ public class StoreService implements IStoreService {
     @Transactional(rollbackFor = Exception.class)
     public StoreDTO upsert(StoreDTO storeDTO) {
         StoreEntity store;
+        boolean existStoreCode = existMerchantCodeAndChainCode(storeDTO);
         if (storeDTO.getId() != null){
+            boolean exist = existStore(storeDTO);
+            if (!exist){
+                throw new ObjectNotFoundException(
+                        404, "Cannot update store id: "+storeDTO.getId()
+                );
+            } else if (!existStoreCode) {
+                throw new ObjectEmptyException(
+                        406, "Merchant code or chain code is empty or not exist !"
+                );
+            }
             StoreEntity oldStore = storeRepository.findOneById(storeDTO.getId());
             store = storeConverter.toStoreEntity(storeDTO, oldStore);
         }else {
+            List<StoreEntity> allStoreCode = storeConverter.toStoreEntityList(getAllStoreCode(storeDTO));
+            if (!(allStoreCode).isEmpty()){
+                throw new DuplicationCodeException(
+                        400, "Store code is duplicated !"
+                );
+            }else if (!existStoreCode) {
+                throw new ObjectEmptyException(
+                        406, "Merchant code or chain code is empty or not exist !"
+                );
+            }
             store = storeConverter.toStoreEntity(storeDTO);
         }
         ChainEntity chain = chainRepository.findOneByChainCode(storeDTO.getChainCode());
@@ -68,14 +97,14 @@ public class StoreService implements IStoreService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean deleteStore(StoreDTO storeDTO) {
+    public void deleteStore(StoreDTO storeDTO) {
         boolean exists = storeRepository.existsById(storeDTO.getId());
-        if (exists){
-            this.storeRepository.deleteById(storeDTO.getId());
-            return true;
-        }else {
-            return false;
+        if (!exists){
+            throw new ObjectNotFoundException(
+                    404, "Cannot delete store id: "+storeDTO.getId()
+            );
         }
+        this.storeRepository.deleteById(storeDTO.getId());
     }
 
     @Override
