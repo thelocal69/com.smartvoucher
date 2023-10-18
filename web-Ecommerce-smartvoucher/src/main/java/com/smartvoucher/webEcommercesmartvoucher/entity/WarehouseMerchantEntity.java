@@ -47,6 +47,6 @@ public class WarehouseMerchantEntity{
     @ManyToOne
     @NonNull
     @JoinColumn(name = "id_role", insertable = false, updatable = false)
-    private RolesEntity idRole;
+    private RoleEntity idRole;
 
 }
