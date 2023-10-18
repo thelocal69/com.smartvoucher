@@ -31,9 +31,9 @@ public class WareHouseDTO extends BaseDTO{
     private Double discountAmount;
     @NotNull
     private Double maxDiscountAmount;
-
+    @NotNull
     private Timestamp availableFrom;
-
+    @NotNull
     private Timestamp availableTo;
     @NotNull
     private int status;
