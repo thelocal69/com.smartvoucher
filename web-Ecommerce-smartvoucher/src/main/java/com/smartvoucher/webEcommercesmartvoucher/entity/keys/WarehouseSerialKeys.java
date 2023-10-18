@@ -9,17 +9,17 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@Setter
 @Getter
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Embeddable
-public class Roles_UsersKeys implements Serializable {
+public class WarehouseSerialKeys implements Serializable
+{
+    @Column(name = "id_warehouse")
+    private long idWarehouse;
 
-    @Column(name = "id_role")
-    private long idRole;
-
-    @Column(name = "id_user")
-    private long idUser;
+    @Column(name = "id_serial")
+    private long idSerial;
 
 }
