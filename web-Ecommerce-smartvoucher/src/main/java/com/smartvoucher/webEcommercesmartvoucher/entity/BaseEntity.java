@@ -19,6 +19,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+//tracking date time jpa auditing and user
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

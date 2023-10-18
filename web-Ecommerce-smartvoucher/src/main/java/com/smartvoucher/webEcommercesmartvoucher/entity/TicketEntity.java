@@ -115,11 +115,6 @@ public class TicketEntity {
     @Column(name = "available_to")
     private Timestamp avaibleTo;
 
-    @Column(name = "applied_store")
-    @NotNull(message = "Please fill all information!")
-    @NotBlank(message = "Please fill all information!")
-    private String appliedStore;
-
     @ManyToOne
     @JoinColumn(name = "id_user")
     @NonNull
@@ -128,4 +123,10 @@ public class TicketEntity {
     // field được references
     @OneToMany(mappedBy = "idTicket")
     private List<TicketHistoryEntity> list;
+
+    @ManyToOne
+    @JoinColumn(name = "applied_store")
+    @NotNull(message = "Please fill all information!")
+    @NotBlank(message = "Please fill all information!")
+    private StoreEntity store;
 }

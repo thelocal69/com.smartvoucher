@@ -4,6 +4,9 @@ import com.smartvoucher.webEcommercesmartvoucher.converter.ChainConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.ChainDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.ChainEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.MerchantEntity;
+import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IChainRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IChainService;
@@ -31,17 +34,43 @@ public class ChainService implements IChainService {
     @Transactional(readOnly = true)
     public List<ChainDTO> getAllChain() {
         List<ChainEntity> chainEntityList = chainRepository.findAll();
+        if (chainEntityList.isEmpty()){
+            throw new ObjectEmptyException(
+                    404, "List chain is empty !"
+            );
+        }
         return chainConverter.toChainDTOList(chainEntityList);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ChainDTO upsert(ChainDTO chainDTO) {
+        boolean existMerchantCode = existMerchantCode(chainDTO);
         ChainEntity chainEntity;
         if (chainDTO.getId() != null){
+            boolean exist = existChain(chainDTO);
+            if (!exist){
+                throw new ObjectNotFoundException(
+                        404, "Cannot update chain id: "+chainDTO.getId()
+                );
+            } else if (!existMerchantCode) {
+                throw new ObjectEmptyException(
+                        406, "Merchant code is empty or not exist !"
+                );
+            }
             ChainEntity oldChainEntity = chainRepository.findOneById(chainDTO.getId());
             chainEntity = chainConverter.toChainEntity(chainDTO, oldChainEntity);
         }else {
+            List<ChainEntity> allChainCode = chainConverter.toChainEntityList(getAllChainCode(chainDTO));
+            if (!(allChainCode).isEmpty()){
+                throw new DuplicationCodeException(
+                        400, "Chain code is duplicated !"
+                );
+            }else if (!existMerchantCode) {
+                throw new ObjectEmptyException(
+                        406, "Merchant code is empty or not exist !"
+                );
+            }
             chainEntity = chainConverter.toChainEntity(chainDTO);
         }
         MerchantEntity merchant = merchantRepository.findOneByMerchantCode(chainDTO.getMerchantCode());
@@ -58,14 +87,14 @@ public class ChainService implements IChainService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean deleteChain(ChainDTO chainDTO) {
+    public void deleteChain(ChainDTO chainDTO) {
         boolean exists = chainRepository.existsById(chainDTO.getId());
-        if (exists){
-            this.chainRepository.deleteById(chainDTO.getId());
-            return  true;
-        }else {
-            return false;
+        if (!exists){
+            throw new ObjectNotFoundException(
+                    404, "Cannot delete id: "+chainDTO.getId()
+            );
         }
+        this.chainRepository.deleteById(chainDTO.getId());
     }
 
     @Override
