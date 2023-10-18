@@ -123,8 +123,8 @@ CREATE TABLE category(
 	primary key(id)
 );
 CREATE TABLE warehouse_stores(
-	id_warehouse bigint NOT null,
-	id_store bigint NOT null,
+	id_warehouse bigint,
+	id_store bigint,
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
@@ -134,7 +134,7 @@ CREATE TABLE warehouse_stores(
 );
 
 CREATE TABLE warehouse_serial(
-	id_warehouse bigint NOT null,
+	id_warehouse bigint,
 	id_serial bigint unique,
 	created_by varchar(50),
 	updated_by varchar(50),

@@ -1,22 +1,37 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity;
 
-import com.smartvoucher.webEcommercesmartvoucher.entity.keys.Warehouse_StoreKeys;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import com.smartvoucher.webEcommercesmartvoucher.entity.keys.WarehouseStoreKeys;
+import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import java.io.Serializable;
+import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Entity(name = "warehouse_stores")
-public class WarehouseStoreEntity extends BaseEntity implements Serializable {
+public class WarehouseStoreEntity{
     @EmbeddedId
-    private Warehouse_StoreKeys keys;
+    private WarehouseStoreKeys keys;
+    @CreatedBy
+    @Column(name = "created_by")
+    private String createdBy;
+    @CreatedDate
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+    @LastModifiedBy
+    @Column(name = "updated_by")
+    private String updateBy;
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private Timestamp updateAt;
 
     @ManyToOne
     @NonNull

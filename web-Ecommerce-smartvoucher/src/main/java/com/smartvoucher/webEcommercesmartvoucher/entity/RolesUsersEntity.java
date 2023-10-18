@@ -1,21 +1,27 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity;
 
-import com.smartvoucher.webEcommercesmartvoucher.entity.keys.Roles_UsersKeys;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import com.smartvoucher.webEcommercesmartvoucher.entity.keys.RolesUsersKeys;
+import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Entity(name = "roles_users")
 public class RolesUsersEntity {
 
     // Đặt PRIMARY KEY cho id_role và id_user
     @EmbeddedId
-    private Roles_UsersKeys roles_usersKeys;
+    private RolesUsersKeys roles_usersKeys;
     // ----
 
     @ManyToOne
@@ -28,15 +34,16 @@ public class RolesUsersEntity {
     @NonNull
     private UsersEntity idUser;
 
+    @CreatedBy
     @Column(name = "created_by")
     private String createdBy;
-
-    @Column(name = "updated_by")
-    private String updatedBy;
-
+    @CreatedDate
     @Column(name = "created_at")
     private Timestamp createdAt;
-
+    @LastModifiedBy
+    @Column(name = "updated_by")
+    private String updateBy;
+    @LastModifiedDate
     @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    private Timestamp updateAt;
 }
