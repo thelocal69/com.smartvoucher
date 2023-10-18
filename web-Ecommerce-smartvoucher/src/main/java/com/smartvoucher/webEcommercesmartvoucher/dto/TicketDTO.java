@@ -49,6 +49,8 @@ public class TicketDTO {
 
     private Timestamp availableTo;
 
+    private StoreDTO storeDTO;
+
     private String appliedStore;
 
     private UserDTO idUserDTO;

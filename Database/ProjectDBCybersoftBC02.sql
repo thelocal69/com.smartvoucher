@@ -179,7 +179,7 @@ CREATE TABLE ticket(
 	vouncher_channel varchar(100),
 	available_from timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	available_to timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	applied_store varchar(20),
+	applied_store bigint NOT null,
 	id_user bigint NOT null,
 	created_by varchar(50),
 	updated_by varchar(50),
@@ -282,6 +282,7 @@ ALTER TABLE ticket ADD CONSTRAINT FK_id_category_ticker FOREIGN KEY (id_category
 ALTER TABLE ticket ADD CONSTRAINT FK_id_serial_ticker FOREIGN KEY (id_serial) REFERENCES serial(id);
 ALTER TABLE ticket ADD CONSTRAINT FK_id_order_ticker FOREIGN KEY (id_order) REFERENCES orders(id);
 ALTER TABLE ticket ADD CONSTRAINT FK_id_user_ticker FOREIGN KEY (id_user) REFERENCES users(id);
+ALTER TABLE ticket ADD CONSTRAINT FK_applied_store_ticker FOREIGN KEY (applied_store) REFERENCES store(id);
 
 ALTER TABLE ticket_history ADD CONSTRAINT FK_id_ticket_ticket_history FOREIGN KEY (id_ticket) REFERENCES ticket(id);
 

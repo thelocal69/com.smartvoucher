@@ -12,12 +12,12 @@ import java.util.Date;
 
 @Component
 public class TicketConverter {
-
     private final SerialConverter serialConverter;
     private final WareHouseConverter wareHouseConverter;
     private final CategoryConverter categoryConverter;
     private final OrderConverter orderConverter;
     private UserConverter userConverter;
+
 
     @Autowired
     public TicketConverter(SerialConverter serialConverter
@@ -53,7 +53,7 @@ public class TicketConverter {
             ticketDTO.setVoucherChannel(ticketEntity.getVoucherChannel());
             ticketDTO.setAvailableFrom(ticketEntity.getAvailbleFrom());
             ticketDTO.setAvailableTo(ticketEntity.getAvaibleTo());
-            ticketDTO.setAppliedStore(ticketEntity.getAppliedStore());
+//            ticketDTO.setAppliedStore(ticketEntity.getAppliedStore());
             ticketDTO.setStatus(1);
         return ticketDTO;
     }
@@ -87,7 +87,7 @@ public class TicketConverter {
         ticket.setVoucherChannel(ticketDTO.getVoucherChannel());
 //        ticket.setAvailbleFrom();
  //       ticket.setAvaibleTo(new Timestamp(date.getTime() + expiredTime));
-        ticket.setAppliedStore(ticketDTO.getAppliedStore());
+//        ticket.setAppliedStore(ticketDTO.getAppliedStore());
 
         return ticket;
         }

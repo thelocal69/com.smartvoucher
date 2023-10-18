@@ -9,6 +9,6 @@ public interface ICategoryService {
     List<CategoryDTO> getAllCategory();
     List<CategoryDTO> getAllCategoryCode(CategoryDTO categoryDTO);
     CategoryDTO upsert(CategoryDTO categoryDTO);
-    Boolean deleteCategory(CategoryDTO categoryDTO);
+    void deleteCategory(CategoryDTO categoryDTO);
     Boolean exitsCategory(CategoryDTO categoryDTO);
 }

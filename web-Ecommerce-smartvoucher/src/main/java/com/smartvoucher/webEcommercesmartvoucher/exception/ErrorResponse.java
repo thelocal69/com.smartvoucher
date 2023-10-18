@@ -1,9 +1,10 @@
-package com.smartvoucher.webEcommercesmartvoucher.payload;
+package com.smartvoucher.webEcommercesmartvoucher.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 import java.sql.Timestamp;
 
@@ -13,7 +14,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class ErrorResponse {
     private Timestamp timestamp;
-    private int status;
+    private HttpStatus status;
     private String error;
     private String message; // error message details
     private String path; // path : place of error
