@@ -1,6 +1,8 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity.keys;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -9,20 +11,14 @@ import java.io.Serializable;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Embeddable
-public class Warehouse_StoreKeys implements Serializable {
+public class WarehouseStoreKeys implements Serializable {
 
     @Column(name = "id_warehouse")
     private long idWarehouse;
 
     @Column(name = "id_store")
     private long idStore;
-
-    Warehouse_StoreKeys(){
-    }
-
-    Warehouse_StoreKeys(long idWarehouse, long idStore) {
-        this.idWarehouse = idWarehouse;
-        this.idStore = idStore;
-    }
 }
