@@ -51,7 +51,7 @@ public class TicketDTO {
 
     private StoreDTO storeDTO;
 
-    private String appliedStore;
+    private StoreDTO idStoreDTO;
 
     private UserDTO idUserDTO;
 

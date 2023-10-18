@@ -18,18 +18,22 @@ public class TicketConverter {
     private final OrderConverter orderConverter;
     private UserConverter userConverter;
 
+    private StoreConverter storeConverter;
+
 
     @Autowired
     public TicketConverter(SerialConverter serialConverter
                     ,WareHouseConverter wareHouseConverter
                     ,CategoryConverter categoryConverter
                     ,OrderConverter orderConverter
-                    ,UserConverter userConverter) {
+                    ,UserConverter userConverter
+                    ,StoreConverter storeConverter) {
             this.categoryConverter = categoryConverter;
             this.wareHouseConverter = wareHouseConverter;
             this.serialConverter = serialConverter;
             this.orderConverter = orderConverter;
             this.userConverter = userConverter;
+            this.storeConverter = storeConverter;
     }
 
     public TicketDTO toTicketDTO(TicketEntity ticketEntity) {
@@ -53,7 +57,7 @@ public class TicketConverter {
             ticketDTO.setVoucherChannel(ticketEntity.getVoucherChannel());
             ticketDTO.setAvailableFrom(ticketEntity.getAvailbleFrom());
             ticketDTO.setAvailableTo(ticketEntity.getAvaibleTo());
-//            ticketDTO.setAppliedStore(ticketEntity.getAppliedStore());
+            ticketDTO.setIdStoreDTO(storeConverter.toStoreDTO(ticketEntity.getIdStore()));
             ticketDTO.setStatus(1);
         return ticketDTO;
     }
@@ -64,7 +68,8 @@ public class TicketConverter {
                                             , WareHouseEntity wareHouseEntity
                                             , CategoryEntity categoryEntity
                                             , OrderEntity orderEntity
-                                            , UserEntity userEntity) {
+                                            , UserEntity userEntity
+                                            , StoreEntity storeEntity) {
         // lấy DiscountAmount có kiểu dữ liệu BigDecimal để làm tròn
         BigDecimal value = new BigDecimal(String.valueOf(ticketDTO.getDiscountAmount()));
 
@@ -79,15 +84,15 @@ public class TicketConverter {
         ticket.setDiscountType(ticketDTO.getDiscountType());
         // làm tròn số thập phân sau dấy phẩy thành 3 số
         ticket.setDiscountAmount(value.setScale(3, BigDecimal.ROUND_HALF_UP));
-//        ticket.setBannerUrl("");
-//        ticket.setThumbnailUrl("");
-//        ticket.setAcquirerLogoUrl("");
+        ticket.setBannerUrl(ticketDTO.getBannerUrl());
+        ticket.setThumbnailUrl(ticketDTO.getThumbnailUrl());
+        ticket.setAcquirerLogoUrl(ticketDTO.getAcquirerLogoUrl());
         ticket.setTermOfUse(ticketDTO.getTermOfUse());
         ticket.setDescription(ticketDTO.getDescription());
         ticket.setVoucherChannel(ticketDTO.getVoucherChannel());
 //        ticket.setAvailbleFrom();
- //       ticket.setAvaibleTo(new Timestamp(date.getTime() + expiredTime));
-//        ticket.setAppliedStore(ticketDTO.getAppliedStore());
+//       ticket.setAvaibleTo(new Timestamp(date.getTime() + expiredTime));
+        ticket.setIdStore(storeEntity);
 
         return ticket;
         }

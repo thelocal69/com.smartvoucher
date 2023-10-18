@@ -126,6 +126,5 @@ public class TicketEntity {
     @ManyToOne
     @JoinColumn(name = "applied_store")
     @NotNull(message = "Please fill all information!")
-    @NotBlank(message = "Please fill all information!")
-    private StoreEntity store;
+    private StoreEntity idStore;
 }

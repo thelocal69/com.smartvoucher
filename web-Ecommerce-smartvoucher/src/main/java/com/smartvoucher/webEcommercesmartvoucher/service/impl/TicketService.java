@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
+import com.smartvoucher.webEcommercesmartvoucher.converter.StoreConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
@@ -25,6 +26,7 @@ public class TicketService implements ITicketService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final TicketConverter ticketConverter;
+    private final IStoreRepository storeRepository;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository
@@ -33,7 +35,8 @@ public class TicketService implements ITicketService {
                 ,IWareHouseRepository iWareHouseRepository
                 ,ICategoryRepository iCategoryRepository
                 ,OrderRepository orderRepository
-                ,UserRepository userRepository) {
+                ,UserRepository userRepository
+                ,IStoreRepository storeRepository) {
         this.ticketRepository = ticketRepository;
         this.ticketConverter = ticketConverter;
         this.serialRepository = serialRepository;
@@ -41,6 +44,7 @@ public class TicketService implements ITicketService {
         this.iCategoryRepository = iCategoryRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
+        this.storeRepository = storeRepository;
     }
 
     @Override
@@ -64,18 +68,19 @@ public class TicketService implements ITicketService {
         boolean isSuccess = false;
         int status = 501;
 
-//        Optional<SerialEntity> serialEntity = serialRepository.findById(ticketDTO.getIdSerialDTO().getId());
         SerialEntity serialEntity = serialRepository.findById(ticketDTO.getIdSerialDTO().getId()).orElse(null);
         WareHouseEntity wareHouseEntity = iWareHouseRepository.findById(ticketDTO.getIdWarehouseDTO().getId()).orElse(null);
         CategoryEntity categoryEntity = iCategoryRepository.findById(ticketDTO.getIdCategoryDTO().getId()).orElse(null);
         OrderEntity orderEntity = orderRepository.findById(ticketDTO.getIdOrderDTO().getId()).orElse(null);
         UserEntity userEntity = userRepository.findById(ticketDTO.getIdUserDTO().getId()).orElse(null);
+        StoreEntity storeEntity = storeRepository.findOneById(ticketDTO.getIdStoreDTO().getId());
 
         if (serialEntity != null
                 && wareHouseEntity != null
                 && categoryEntity != null
                 && orderEntity != null
-                && userEntity != null) {
+                && userEntity != null
+                && storeEntity != null) {
             try {
                 Optional<TicketEntity> ticket =
                         ticketRepository.findByIdSerialOrIdCategoryOrIdOrder(serialEntity
@@ -87,7 +92,8 @@ public class TicketService implements ITicketService {
                                                                         , wareHouseEntity
                                                                         , categoryEntity
                                                                         , orderEntity
-                                                                        , userEntity));
+                                                                        , userEntity
+                                                                        , storeEntity));
                     isSuccess = true;
                     status = 200;
                 }
