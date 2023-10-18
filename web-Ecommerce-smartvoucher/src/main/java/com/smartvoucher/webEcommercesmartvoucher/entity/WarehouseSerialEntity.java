@@ -1,6 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity;
 
-import com.smartvoucher.webEcommercesmartvoucher.entity.keys.RolesUsersKeys;
+import com.smartvoucher.webEcommercesmartvoucher.entity.keys.WarehouseSerialKeys;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -11,29 +11,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Entity(name = "roles_users")
-public class RolesUsersEntity {
-
-    // Đặt PRIMARY KEY cho id_role và id_user
+@Entity(name = "warehouse_serial")
+public class WarehouseSerialEntity{
     @EmbeddedId
-    private RolesUsersKeys roles_usersKeys;
-    // ----
-
-    @ManyToOne
-    @JoinColumn(name = "id_role",insertable = false, updatable = false)
-    @NonNull                     // tránh update value tới những table được references tới
-    private RoleEntity idRole;
-
-    @ManyToOne
-    @JoinColumn(name = "id_user", insertable = false, updatable = false)
-    @NonNull
-    private UserEntity idUser;
-
+    private WarehouseSerialKeys keys;
     @CreatedBy
     @Column(name = "created_by")
     private String createdBy;
@@ -46,4 +32,14 @@ public class RolesUsersEntity {
     @LastModifiedDate
     @Column(name = "updated_at")
     private Timestamp updateAt;
+
+    @ManyToOne
+    @NonNull
+    @JoinColumn(name = "id_warehouse", updatable = false, insertable = false)
+    private WareHouseEntity idWarehouse;
+
+    @ManyToOne
+    @NonNull
+    @JoinColumn(name = "id_serial", updatable = false, insertable = false)
+    private SerialEntity idSerial;
 }

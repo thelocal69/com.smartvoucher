@@ -59,4 +59,13 @@ public class WareHouseEntity extends BaseEntity{
     @OneToMany(mappedBy = "idWarehouse")
     private List<TicketEntity> ticketEntities;
 
+    @OneToMany(mappedBy = "idWarehouse")
+    private List<WarehouseMerchantEntity> warehouseMerchantEntities;
+
+    @OneToMany(mappedBy = "idWarehouse")
+    private List<WarehouseSerialEntity> warehouseSerialEntities;
+
+    @OneToMany(mappedBy = "idWarehouse")
+    private List<WarehouseStoreEntity> warehouseStoreEntities;
+
 }
