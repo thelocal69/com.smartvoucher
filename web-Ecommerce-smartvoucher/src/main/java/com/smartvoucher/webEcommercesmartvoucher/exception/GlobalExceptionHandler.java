@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new ErrorResponse(
                         new Timestamp(System.currentTimeMillis()),
-                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        500,
                         ex.getMessage(),
                         "Internal Server Error",
                         "/"
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(500).body(
                 new ErrorResponse(new Timestamp(date.getTime()),
-                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        500,
                                  ex.getMessage(),
                                  messageTemplate,
                             "/" + propertyPath));
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new ErrorResponse(
                         new Timestamp(System.currentTimeMillis()),
-                        HttpStatus.BAD_REQUEST,
+                        400,
                         ex.getMessage(),
                         "Code is duplicated ! please try again !",
                         "/"
@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ErrorResponse(
                         new Timestamp(System.currentTimeMillis()),
-                        HttpStatus.NOT_FOUND,
+                        404,
                         ex.getMessage(),
                         "Object not found ! please try again !",
                         "/"
@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
                 new ErrorResponse(
                         new Timestamp(System.currentTimeMillis()),
-                        HttpStatus.NOT_ACCEPTABLE,
+                        406,
                         ex.getMessage(),
                         "Object is empty ! please fill all again !",
                         "/"
