@@ -3,7 +3,6 @@ package com.smartvoucher.webEcommercesmartvoucher.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolation;
@@ -88,6 +87,19 @@ public class GlobalExceptionHandler {
                         406,
                         ex.getMessage(),
                         "Object is empty ! please fill all again !",
+                        "/"
+                )
+        );
+    }
+
+    @ExceptionHandler(InputOutputException.class)
+    public ResponseEntity<ErrorResponse> handleInputOutputException(Exception ex){
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        501,
+                        ex.getMessage(),
+                        "Input or Ouput is error !",
                         "/"
                 )
         );
