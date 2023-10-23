@@ -56,17 +56,11 @@ public class FileUploadController {
     //get image's url
     @GetMapping("/api/url")
     public ResponseEntity<ResponseObject> getUploadFiles(){
-            List<String> urls = storageService.loadAll()
-                    .map(path -> {
-                        //convert fileName to url(send request "readDetailFile")
-                        return MvcUriComponentsBuilder.fromMethodName(FileUploadController.class
-                        ,"readDetailFile", path.getFileName().toString()).build().toUri().toString();
-                    }).collect(Collectors.toList());
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,
                             "Find all list urls is completed !",
-                            urls
+                            storageService.getAllUrl()
                     )
             );
     }
