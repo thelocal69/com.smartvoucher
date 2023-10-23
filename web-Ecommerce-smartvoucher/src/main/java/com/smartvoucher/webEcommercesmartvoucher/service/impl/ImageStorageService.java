@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
+import com.smartvoucher.webEcommercesmartvoucher.controller.FileUploadController;
 import com.smartvoucher.webEcommercesmartvoucher.exception.InputOutputException;
 import com.smartvoucher.webEcommercesmartvoucher.service.IStorageService;
 import org.apache.commons.io.FileUtils;
@@ -9,6 +10,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +20,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -82,6 +86,16 @@ public class ImageStorageService implements IStorageService {
         }catch (IOException ex){
             throw new InputOutputException(501, "Failed to load stored files", ex);
         }
+    }
+
+    @Override
+    public List<String> getAllUrl() {
+        return loadAll()
+                .map(path -> {
+                    //convert fileName to url(send request "readDetailFile")
+                    return MvcUriComponentsBuilder.fromMethodName(FileUploadController.class
+                            ,"readDetailFile", path.getFileName().toString()).build().toUri().toString();
+                }).collect(Collectors.toList());
     }
 
     @Override
