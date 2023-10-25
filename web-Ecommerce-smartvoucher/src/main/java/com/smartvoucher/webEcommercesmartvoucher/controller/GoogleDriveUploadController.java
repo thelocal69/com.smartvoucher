@@ -45,7 +45,7 @@ public class GoogleDriveUploadController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
-                        "Get all files is completed !",
+                        "Upload images is completed !",
                         uploadFileService.uploadGoogleDriveFiles(fileName, folderId)
                 )
         );
