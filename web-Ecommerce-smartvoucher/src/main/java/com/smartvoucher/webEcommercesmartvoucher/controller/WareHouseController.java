@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -30,6 +31,17 @@ public class WareHouseController {
                         200,
                         "Get All warehouse success !",
                         this.wareHouseService.getAllWareHouse()
+                )
+        );
+    }
+
+    @PostMapping ("/api/upload")
+    public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Upload images is completed !",
+                        wareHouseService.uploadWarehouseImages(fileName)
                 )
         );
     }
