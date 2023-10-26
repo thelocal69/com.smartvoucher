@@ -62,6 +62,8 @@ CREATE TABLE store(
 CREATE TABLE warehouse(
 	id bigint auto_increment,
 	warehouse_code varchar(20) unique,
+	id_merchant bigint,
+	id_lable int,
 	name varchar(100),
 	description varchar(512),
 	term_of_use varchar(255),
@@ -85,16 +87,11 @@ CREATE TABLE warehouse(
 	primary key(id)
 );
 
-CREATE TABLE warehouse_merchant(
-	id_warehouse bigint,
-	id_merchant bigint,
-	id_role bigint not null, -- acquirer/issuer
-	created_by varchar(50),
-	updated_by varchar(50),
-	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	
-	PRIMARY key(id_warehouse, id_merchant)
+CREATE TABLE label(
+id int auto_increment,
+name varchar(50),
+
+primary key(id)
 );
 
 CREATE TABLE discount_type(
@@ -270,6 +267,8 @@ ALTER TABLE store ADD CONSTRAINT FK_id_merchant_store FOREIGN KEY (id_merchant) 
 
 ALTER TABLE warehouse ADD CONSTRAINT FK_discount_type_warehouse FOREIGN KEY (id_discount_type) REFERENCES discount_type(id)
 ALTER TABLE warehouse ADD CONSTRAINT FK_id_category_warehouse FOREIGN KEY (id_category) REFERENCES category(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_id_merchant_warehouse FOREIGN KEY(id_merchant) REFERENCES merchant(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_id_lable_warehouse FOREIGN KEY(id_lable) REFERENCES lable(id);
 
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_warehouse_warehouse_stores FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_store_warehouse_stores FOREIGN KEY (id_store) REFERENCES store(id);
@@ -358,6 +357,8 @@ CREATE TABLE store(
 CREATE TABLE warehouse(
 	id bigint auto_increment,
 	warehouse_code varchar(20) unique,
+	id_merchant bigint,
+	id_lable int,
 	name varchar(100),
 	description varchar(512),
 	term_of_use varchar(255),
@@ -381,16 +382,11 @@ CREATE TABLE warehouse(
 	primary key(id)
 );
 
-CREATE TABLE warehouse_merchant(
-	id_warehouse bigint,
-	id_merchant bigint,
-	id_role bigint not null, -- acquirer/issuer
-	created_by varchar(50),
-	updated_by varchar(50),
-	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	
-	PRIMARY key(id_warehouse, id_merchant)
+CREATE TABLE label(
+id int auto_increment,
+name varchar(50),
+
+primary key(id)
 );
 
 CREATE TABLE discount_type(
@@ -566,6 +562,8 @@ ALTER TABLE store ADD CONSTRAINT FK_id_merchant_store FOREIGN KEY (id_merchant) 
 
 ALTER TABLE warehouse ADD CONSTRAINT FK_discount_type_warehouse FOREIGN KEY (id_discount_type) REFERENCES discount_type(id)
 ALTER TABLE warehouse ADD CONSTRAINT FK_id_category_warehouse FOREIGN KEY (id_category) REFERENCES category(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_id_merchant_warehouse FOREIGN KEY(id_merchant) REFERENCES merchant(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_id_lable_warehouse FOREIGN KEY(id_lable) REFERENCES lable(id);
 
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_warehouse_warehouse_stores FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_store_warehouse_stores FOREIGN KEY (id_store) REFERENCES store(id);
