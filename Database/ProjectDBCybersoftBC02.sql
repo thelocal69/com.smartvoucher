@@ -85,6 +85,13 @@ CREATE TABLE warehouse(
 	primary key(id)
 );
 
+CREATE TABLE label(
+id int auto_increment,
+name varchar(50) unique,
+
+primary key(id)
+);
+
 CREATE TABLE warehouse_merchant(
 	id_warehouse bigint,
 	id_merchant bigint,
@@ -270,6 +277,8 @@ ALTER TABLE store ADD CONSTRAINT FK_id_merchant_store FOREIGN KEY (id_merchant) 
 
 ALTER TABLE warehouse ADD CONSTRAINT FK_discount_type_warehouse FOREIGN KEY (id_discount_type) REFERENCES discount_type(id)
 ALTER TABLE warehouse ADD CONSTRAINT FK_id_category_warehouse FOREIGN KEY (id_category) REFERENCES category(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_id_merchant_warehouse FOREIGN KEY(id_merchant) REFERENCES merchant(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_id_lable_warehouse FOREIGN KEY(id_lable) REFERENCES lable(id);
 
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_warehouse_warehouse_stores FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_store_warehouse_stores FOREIGN KEY (id_store) REFERENCES store(id);
@@ -379,6 +388,13 @@ CREATE TABLE warehouse(
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	
 	primary key(id)
+);
+
+CREATE TABLE label(
+id int auto_increment,
+name varchar(50) unique,
+
+primary key(id)
 );
 
 CREATE TABLE warehouse_merchant(
@@ -566,6 +582,8 @@ ALTER TABLE store ADD CONSTRAINT FK_id_merchant_store FOREIGN KEY (id_merchant) 
 
 ALTER TABLE warehouse ADD CONSTRAINT FK_discount_type_warehouse FOREIGN KEY (id_discount_type) REFERENCES discount_type(id)
 ALTER TABLE warehouse ADD CONSTRAINT FK_id_category_warehouse FOREIGN KEY (id_category) REFERENCES category(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_id_merchant_warehouse FOREIGN KEY(id_merchant) REFERENCES merchant(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_id_lable_warehouse FOREIGN KEY(id_lable) REFERENCES lable(id);
 
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_warehouse_warehouse_stores FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_store_warehouse_stores FOREIGN KEY (id_store) REFERENCES store(id);
