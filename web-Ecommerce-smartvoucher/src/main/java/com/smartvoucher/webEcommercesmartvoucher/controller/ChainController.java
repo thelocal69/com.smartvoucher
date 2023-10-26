@@ -41,7 +41,7 @@ public class ChainController {
                 new ResponseObject(
                         200,
                         "Upload images is completed !",
-                        chainService.uploadChainImages(fileName)
+                        chainService.uploadChainImages(fileName).getWebViewLink()
                 )
         );
     }

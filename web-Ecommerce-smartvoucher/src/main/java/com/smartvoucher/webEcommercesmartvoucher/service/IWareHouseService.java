@@ -14,5 +14,6 @@ public interface IWareHouseService {
     void deleteWareHouse(WareHouseDTO wareHouseDTO);
     Boolean existWareHouse(WareHouseDTO wareHouseDTO);
     Boolean existCategoryAndDiscount(WareHouseDTO wareHouseDTO);
+    Boolean existMerchantAndLabel(WareHouseDTO wareHouseDTO);
     File uploadWarehouseImages(MultipartFile fileName);
 }

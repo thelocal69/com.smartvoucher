@@ -46,7 +46,7 @@ public class GoogleDriveUploadController {
                 new ResponseObject(
                         200,
                         "Upload images is completed !",
-                        uploadFileService.uploadGoogleDriveFiles(fileName, folderId)
+                        uploadFileService.uploadGoogleDriveFiles(fileName, folderId).getWebViewLink()
                 )
         );
     }

@@ -41,7 +41,7 @@ public class CategoryController {
                 new ResponseObject(
                         200,
                         "Upload images is completed !",
-                        categoryService.uploadCategoryImages(fileName)
+                        categoryService.uploadCategoryImages(fileName).getWebViewLink()
                 )
         );
     }
