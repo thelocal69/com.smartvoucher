@@ -1,0 +1,23 @@
+Giải thích về nghiệp vụ e-voucher
+- Voucher là hình thức giảm giá dành cho user. Voucher có thể giảm theo số tiền cố định hoặc (VD: giảm 10.000VND) theo % (VD: giảm 10% tối đa 20.000 VND). Voucher có thể tồn tại ở dạng
+hard-copy (phiếu giảm giá) hoặc ở trạng thái online (voucher gắn theo account của user ở app hoặc web)
+- Voucher có thể được tặng hoặc được bán. Các đơn vị lớn bán voucher/ e-voucher ở Việt Nam có thể kể đến GotIt, Urbox, VinID
+
+=> Dự án này sẽ phát triển web bán e-voucher cho user 
+Các nghiệp vụ xử lý như sau
+1. Nhập kho voucher 
+- Table warehouse ở db. Warehouse chịu trách nhiệm gom nhóm những voucher có cùng thuộc tính để quản lý (thuộc tính: discount_type, issuer, acquirer, 
+avaialble time...) 
+- Warehouse có capacity là sức chứa tối đa của warehouse. Khi nhập kho, cần kiểm tra capacity của warehouse còn bao nhiêu chỗ trống. VD: warehouse có capacity = 100 -> số lượng voucher 
+tối đa có thể nhập kho là 100
+2. Nghiệp vụ bán voucher - xem voucher như 1 item bán online. Khi user vào web và tìm thấy voucher tương ứng với nhu cầu -> user trả tiền để mua voucher này và sử dụng. 
+- Voucher có thể dùng online hoặc offline (thể hiện ở field voucher_channel) 
+- Cần phân biệt giá bán và discount amount của voucher. VD: SmartVoucher bán voucher giảm 50k tại Phúc Long với giá bán = 20k. -> discount_amount = 50K. Khi user sử dụng voucher này 
+tại Phúc Long, user được giảm 50k trên
+tổng hóa đơn. Tuy nhiên, để sở hữu voucher, user cần trả 20k -> 20k = giá bán 
+- Khi user muốn mua voucher, cần kiểm tra số lượng ở warehouse. Nếu số lượng còn lại >0 thì user được phép mua voucher đó
+3. Nghiệp vụ kiểm tra tính hợp lệ của voucher
+- Voucher có thời hạn sử dụng -> khi user sử dụng voucher, cần kiểm tra expiration_time của voucher có hợp lệ không. Nếu hợp lệ thì user được phép dùng, nếu voucher đã hết hạn 
+hoặc đã dùng thì không được phép dùng tiếp
+4. Nghiệp vụ quản lý giao dịch mua voucher của user
+- Sau khi user mua, SmartVoucher thống kê các voucher đã mua của user theo status (đã mua, đã dùng hoặc đã hết hạn)
