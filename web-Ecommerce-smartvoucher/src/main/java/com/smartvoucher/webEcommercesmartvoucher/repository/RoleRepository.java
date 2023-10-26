@@ -10,11 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
+    Optional<RoleEntity> findByNameOrRoleCode (String roleName, String roleCode);
+    RoleEntity findByRoleCodeAndId(String roleCode, long id);
 
-    @Query("SELECT r FROM roles r WHERE r.name = ?1")
-    Optional<RoleEntity> findByName (String roleName);
-
-    @Query("SELECT r FROM roles r WHERE r.name = ?1 AND r.id != ?2")
-    List<RoleEntity> findByNameAndId (String roleName , long id);
-
+    @Query("FROM roles r WHERE r.name = ?1 AND r.id != ?2")
+    List<RoleEntity> findByNameAndId(String name, long id);
 }

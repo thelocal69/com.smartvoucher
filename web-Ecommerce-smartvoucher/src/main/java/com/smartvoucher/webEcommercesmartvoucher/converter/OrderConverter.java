@@ -36,38 +36,21 @@ public class OrderConverter {
         return orderDTO;
     }
 
-//    public OrdersEntity toOrdersEntity(OrdersDTO ordersDTO) {
-//        OrdersEntity orders = new OrdersEntity();
-//        orders.setOrderNo(ordersDTO.getOrderNo());
-//        orders.setStatus(1);
-//        orders.setIdUser(usersConverter.toUserEntity(ordersDTO.getIdUserDTO()));
-//        orders.setIdWarehouse(wareHouseConverter.toWareHouseEntity(ordersDTO.getIdWarehouseDTO()));
-//        orders.setQuantity(ordersDTO.getQuantity());
-//        return orders;
-//    }
-
     public OrderEntity insertRole(OrderDTO orderDTO, UserEntity idUser, WareHouseEntity idWareHouse) {
-        OrderEntity orders = new OrderEntity();
-        orders.setOrderNo(orderDTO.getOrderNo());
-        orders.setStatus(1);
-        orders.setIdUser(idUser);
-        orders.setIdWarehouse(idWareHouse);
-        orders.setQuantity(orderDTO.getQuantity());
-        return orders;
+        OrderEntity order = new OrderEntity();
+        order.setOrderNo(orderDTO.getOrderNo());
+        order.setStatus(1);
+        order.setIdUser(idUser);
+        order.setIdWarehouse(idWareHouse);
+        order.setQuantity(orderDTO.getQuantity());
+        return order;
     }
 
     public OrderEntity updateRole(OrderDTO orderDTO, OrderEntity oldOrder, UserEntity idUser, WareHouseEntity idWareHouse) {
-        if(orderDTO.getOrderNo() != null
-                && !orderDTO.getOrderNo().isEmpty()
-                && !Objects.equals(orderDTO.getOrderNo(), oldOrder.getOrderNo())) {
-            oldOrder.setOrderNo(orderDTO.getOrderNo());
-        }
-        if(orderDTO.getStatus() > 0
-                && !Objects.equals(orderDTO.getStatus(), oldOrder.getStatus())) {
+        if(!Objects.equals(orderDTO.getStatus(), oldOrder.getStatus())) {
             oldOrder.setStatus(orderDTO.getStatus());
         }
-        if(orderDTO.getQuantity() > 0
-                && !Objects.equals(orderDTO.getQuantity(), oldOrder.getQuantity())) {
+        if(!Objects.equals(orderDTO.getQuantity(), oldOrder.getQuantity())) {
             oldOrder.setQuantity(orderDTO.getQuantity());
         }
         if(!Objects.equals(orderDTO.getIdUserDTO().getId(), oldOrder.getIdUser().getId()) && idUser != null) {

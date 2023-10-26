@@ -21,4 +21,5 @@ public class WarehouseMerchantKeys implements Serializable {
 
     @Column(name = "id_merchant")
     private long idMerchant;
+
 }

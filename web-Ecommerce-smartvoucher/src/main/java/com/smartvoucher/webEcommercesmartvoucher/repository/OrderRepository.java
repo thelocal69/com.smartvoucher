@@ -11,8 +11,8 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
-    Optional<OrderEntity> findByOrderNo(String orderNo);
+    OrderEntity findByOrderNo(String orderNo);
 
     @Query("SELECT o FROM orders o WHERE o.orderNo = ?1 AND o.id != ?2")
-    List<OrderEntity> findByOrderNoAndId(String orderNo, long id);
+    Optional<OrderEntity> findByOrderNoAndId(String orderNo, long id);
 }

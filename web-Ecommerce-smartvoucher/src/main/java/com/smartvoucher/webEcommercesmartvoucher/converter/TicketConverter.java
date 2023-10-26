@@ -1,14 +1,13 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.*;
-import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.math.RoundingMode;
+import java.util.Objects;
 
 @Component
 public class TicketConverter {
@@ -16,9 +15,9 @@ public class TicketConverter {
     private final WareHouseConverter wareHouseConverter;
     private final CategoryConverter categoryConverter;
     private final OrderConverter orderConverter;
-    private UserConverter userConverter;
+    private final UserConverter userConverter;
 
-    private StoreConverter storeConverter;
+    private final StoreConverter storeConverter;
 
 
     @Autowired
@@ -62,7 +61,6 @@ public class TicketConverter {
         return ticketDTO;
     }
 
-    private Date date = new Date();
     public TicketEntity insertTicket(TicketDTO ticketDTO
                                             , SerialEntity serialEntity
                                             , WareHouseEntity wareHouseEntity
@@ -72,6 +70,7 @@ public class TicketConverter {
                                             , StoreEntity storeEntity) {
         // lấy DiscountAmount có kiểu dữ liệu BigDecimal để làm tròn
         BigDecimal value = new BigDecimal(String.valueOf(ticketDTO.getDiscountAmount()));
+//        BigDecimal value = new BigDecimal(String.valueOf(99999.099));
 
         TicketEntity ticket = new TicketEntity();
         ticket.setIdSerial(serialEntity);
@@ -80,20 +79,29 @@ public class TicketConverter {
         ticket.setIdOrder(orderEntity);
         ticket.setIdUser(userEntity);
         ticket.setStatus(1);
-//        ticket.setExpiredTime(new Timestamp(date.getTime() + expiredTime));
+        ticket.setClaimedTime(ticketDTO.getClaimedTime());
+        ticket.setExpiredTime(wareHouseEntity.getAvailableTo());
+        ticket.setRedeemedtimeTime(ticketDTO.getRedeemedtimeTime());
         ticket.setDiscountType(ticketDTO.getDiscountType());
         // làm tròn số thập phân sau dấy phẩy thành 3 số
-        ticket.setDiscountAmount(value.setScale(3, BigDecimal.ROUND_HALF_UP));
+        ticket.setDiscountAmount(value.setScale(3, RoundingMode.HALF_UP));
         ticket.setBannerUrl(ticketDTO.getBannerUrl());
         ticket.setThumbnailUrl(ticketDTO.getThumbnailUrl());
         ticket.setAcquirerLogoUrl(ticketDTO.getAcquirerLogoUrl());
         ticket.setTermOfUse(ticketDTO.getTermOfUse());
         ticket.setDescription(ticketDTO.getDescription());
         ticket.setVoucherChannel(ticketDTO.getVoucherChannel());
-//        ticket.setAvailbleFrom();
-//       ticket.setAvaibleTo(new Timestamp(date.getTime() + expiredTime));
+        ticket.setAvailbleFrom(wareHouseEntity.getAvailableFrom());
+       ticket.setAvaibleTo(wareHouseEntity.getAvailableTo());
         ticket.setIdStore(storeEntity);
-
         return ticket;
         }
+
+
+    public TicketEntity updateTicket(int statusTicket, TicketEntity oldTicket) {
+        if(!Objects.equals(statusTicket, oldTicket.getStatus())) {
+            oldTicket.setStatus(statusTicket);
+        }
+        return oldTicket;
+    }
 }

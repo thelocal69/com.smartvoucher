@@ -10,12 +10,7 @@ import java.util.Objects;
 
 @Component
 public class RoleConverter {
-    public List<RoleDTO> findAllRole(List<RoleEntity> list) {
-
-        List<RoleDTO> listRole = new ArrayList<>();
-
-        for (RoleEntity data : list) {
-
+    public RoleDTO toRoleDTO(RoleEntity data) {
             RoleDTO roleDTO = new RoleDTO();
             roleDTO.setId(data.getId());
             roleDTO.setName(data.getName());
@@ -24,37 +19,23 @@ public class RoleConverter {
             roleDTO.setUpdatedAt(data.getUpdatedAt());
             roleDTO.setCreatedBy(data.getCreatedBy());
             roleDTO.setUpdatedBy(data.getUpdatedBy());
-
-            listRole.add(roleDTO);
-        }
-
-        return listRole;
+        return roleDTO;
     }
 
     public RoleEntity insertRole(RoleDTO roleDTO) {
-
         RoleEntity role = new RoleEntity();
         role.setName(roleDTO.getName());
         role.setRoleCode(roleDTO.getRoleCode());
-
         return role;
     }
 
     public RoleEntity updateRole(RoleDTO roleDTO, RoleEntity oldRole) {
-
         if (roleDTO.getName() != null
                 && !roleDTO.getName().isEmpty()
                 && !roleDTO.getName().substring(5).isEmpty()
                 && !Objects.equals(roleDTO.getName(), oldRole.getName()) ) {
             oldRole.setName(roleDTO.getName());
         }
-
-        if (roleDTO.getRoleCode() != null
-                && !roleDTO.getRoleCode().isEmpty()
-                && !Objects.equals(roleDTO.getRoleCode(), oldRole.getRoleCode()) ) {
-            oldRole.setRoleCode(roleDTO.getRoleCode());
-        }
-
         return oldRole;
 
     }

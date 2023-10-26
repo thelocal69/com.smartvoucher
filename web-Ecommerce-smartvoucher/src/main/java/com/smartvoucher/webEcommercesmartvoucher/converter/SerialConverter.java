@@ -12,7 +12,6 @@ import java.util.Objects;
 
 @Component
 public class SerialConverter {
-
     public SerialDTO toSerialDTO(SerialEntity serialEntity) {
             SerialDTO serialDTO = new SerialDTO();
             serialDTO.setId(serialEntity.getId());
@@ -25,7 +24,6 @@ public class SerialConverter {
             serialDTO.setCreatedAt(serialEntity.getCreatedAt());
             serialDTO.setUpdatedAt(serialEntity.getUpdatedAt());
         return serialDTO;
-
     }
 
     public SerialEntity insertSerial(SerialDTO serialDTO) {
@@ -33,27 +31,15 @@ public class SerialConverter {
             serialEntity.setBatchCode(serialDTO.getBatchCode());
             serialEntity.setNumberOfSerial(serialDTO.getNumberOfSerial());
             serialEntity.setSerialCode(serialDTO.getSerialCode());
-            // fill default status number 1
             serialEntity.setStatus(1);
         return serialEntity;
-
     }
 
     public SerialEntity updateSerial(SerialDTO serialDTO, SerialEntity oldSerial) {
-            if ( serialDTO.getBatchCode() != null
-                    && !serialDTO.getBatchCode().isEmpty()
-                    && !Objects.equals(serialDTO.getBatchCode(), oldSerial.getBatchCode())) {
-                oldSerial.setBatchCode(serialDTO.getBatchCode());
-            }
             if (!Objects.equals(serialDTO.getNumberOfSerial(), oldSerial.getNumberOfSerial())) {
                 oldSerial.setNumberOfSerial(serialDTO.getNumberOfSerial());
             }
-            if (serialDTO.getSerialCode() != null
-                    && !serialDTO.getSerialCode().isEmpty()
-                    && !Objects.equals(serialDTO.getSerialCode(), oldSerial.getSerialCode())) {
-                oldSerial.setSerialCode(serialDTO.getSerialCode());
-            }
-            if ( serialDTO.getStatus() > 0
+            if ( serialDTO.getStatus() > 0 && serialDTO.getStatus() < 4
                     && !Objects.equals(serialDTO.getStatus(), oldSerial.getStatus())) {
                 oldSerial.setStatus(serialDTO.getStatus());
             }

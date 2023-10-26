@@ -10,11 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 @RestController
 @RequestMapping("/serial")
 public class SerialController {
 
-    private ISerialService serialService;
+    private final ISerialService serialService;
 
     @Autowired
     public SerialController(SerialService serialService) {
@@ -23,37 +26,29 @@ public class SerialController {
 
     @GetMapping("")
     @Transactional(readOnly = true)
-    public ResponseEntity<?> getAllSerial() throws Exception{
-
-        ResponseObject responseObject = serialService.getAllSerial();
-
-        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
+    public ResponseEntity<ResponseObject> getAllSerial(){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.serialService.getAllSerial());
     }
 
-    @PostMapping()
-    @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> insertSerial(@RequestBody SerialDTO serialDTO) throws Exception {
-
-        ResponseObject responseObject = serialService.insertSerial(serialDTO);
-
-        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
+    @PostMapping("")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<ResponseObject> insertSerial(@Valid @RequestBody SerialDTO serialDTO){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.serialService.insertSerial(serialDTO));
     }
 
-    @PutMapping()
-    @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> updateSerial(@RequestBody SerialDTO serialDTO) throws Exception {
-
-        ResponseObject responseObject = serialService.updateSerial(serialDTO);
-
-        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
+    @PutMapping("")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<ResponseObject> updateSerial(@Valid @RequestBody SerialDTO serialDTO){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.serialService.updateSerial(serialDTO));
     }
 
-    @DeleteMapping()
-    @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> deleteSerial(@RequestParam long id) throws Exception {
-
-        ResponseObject responseObject = serialService.deleteSerial(id);
-
-        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
+    @DeleteMapping("")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<ResponseObject> deleteSerial(@NotNull @RequestParam long id){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.serialService.deleteSerial(id));
     }
 }

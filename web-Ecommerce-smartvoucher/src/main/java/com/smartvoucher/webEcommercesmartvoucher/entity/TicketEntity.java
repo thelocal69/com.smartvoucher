@@ -21,12 +21,6 @@ import java.util.List;
 @Entity(name = "ticket")
 @EntityListeners(AuditingEntityListener.class)
 public class TicketEntity {
-
-    // sử dụng để định dạng kểu dữ liệu ' decimal(8, 3) ' trong database (* note : sử dụng trong DTO)
-//    private int totalDigits = 8;
-//    private int scale = 3;
-    //
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -48,27 +42,22 @@ public class TicketEntity {
     private Timestamp updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "id_serial ")
-    @NotNull(message = "Please fill all information!")
+    @JoinColumn(name = "id_serial ", unique = true, nullable = false)
     private SerialEntity idSerial;
 
     @ManyToOne
-    @JoinColumn(name = "id_warehouse")
-    @NotNull(message = "Please fill all information!")
+    @JoinColumn(name = "id_warehouse", nullable = false)
     private WareHouseEntity idWarehouse;
 
     @ManyToOne
-    @JoinColumn(name = "id_category")
-    @NotNull(message = "Please fill all information!")
+    @JoinColumn(name = "id_category", unique = true, nullable = false)
     private CategoryEntity idCategory;
 
-    @Column(name = "status")
-    @NotNull(message = "Please fill all information!")
+    @Column(name = "status", nullable = false)
     private int status;
 
     @ManyToOne
-    @JoinColumn(name = "id_order")
-    @NotNull(message = "Please fill all information!")
+    @JoinColumn(name = "id_order", unique = true, nullable = false)
     private OrderEntity idOrder;
 
     @Column(name = "claimed_time")
@@ -80,12 +69,10 @@ public class TicketEntity {
     @Column(name = "expired_time")
     private Timestamp expiredTime;
 
-    @Column(name = "discount_type")
-    @NotNull(message = "Please fill all information!")
-    @NotBlank(message = "Please fill all information!")
+    @Column(name = "discount_type", nullable = false)
     private String discountType;
 
-    @Column(name = "discount_amount")
+    @Column(name = "discount_amount", nullable = false)
     private BigDecimal discountAmount;
 
     @Column(name = "banner_url")
@@ -98,8 +85,6 @@ public class TicketEntity {
     private String acquirerLogoUrl;
 
     @Column(name = "term_of_use")
-    @NotNull(message = "Please fill all information!")
-    @NotBlank(message = "Please fill all information!")
     private String termOfUse;
 
     @Column(name = "description")
@@ -115,8 +100,7 @@ public class TicketEntity {
     private Timestamp avaibleTo;
 
     @ManyToOne
-    @JoinColumn(name = "id_user")
-    @NonNull
+    @JoinColumn(name = "id_user", nullable = false)
     private UserEntity idUser;
 
     // field được references
@@ -125,6 +109,5 @@ public class TicketEntity {
 
     @ManyToOne
     @JoinColumn(name = "applied_store")
-    @NotNull(message = "Please fill all information!")
     private StoreEntity idStore;
 }

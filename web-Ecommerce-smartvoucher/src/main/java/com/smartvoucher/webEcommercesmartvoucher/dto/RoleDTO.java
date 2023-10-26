@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Getter
@@ -13,9 +15,11 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class RoleDTO {
     private long id;
-
+    @NotNull(message = "Please fill all information!")
+    @NotBlank(message = "Please fill all information!")
     private String name;
-
+    @NotNull(message = "Please fill all information!")
+    @NotBlank(message = "Please fill all information!")
     private String roleCode;
 
     private String createdBy;

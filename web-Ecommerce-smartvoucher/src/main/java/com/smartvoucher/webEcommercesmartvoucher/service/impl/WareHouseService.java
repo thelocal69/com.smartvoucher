@@ -2,15 +2,11 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.smartvoucher.webEcommercesmartvoucher.converter.WareHouseConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.WareHouseDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.CategoryEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.DiscountTypeEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
-import com.smartvoucher.webEcommercesmartvoucher.repository.ICategoryRepository;
-import com.smartvoucher.webEcommercesmartvoucher.repository.IDiscountTypeRepository;
-import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +21,7 @@ public class WareHouseService implements IWareHouseService {
     private final WareHouseConverter wareHouseConverter;
     private final IDiscountTypeRepository discountTypeRepository;
     private final ICategoryRepository categoryRepository;
+
 
     @Autowired
     public WareHouseService(final IWareHouseRepository wareHouseRepository,
@@ -92,6 +89,7 @@ public class WareHouseService implements IWareHouseService {
         CategoryEntity category = categoryRepository.findOneByCategoryCode(wareHouseDTO.getCategoryCode());
         wareHouse.setDiscountType(discountType);
         wareHouse.setCategory(category);
+
         return wareHouseConverter.toWareHouseDTO(wareHouseRepository.save(wareHouse));
     }
 

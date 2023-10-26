@@ -34,12 +34,12 @@ public class WarehouseMerchantEntity{
     @Column(name = "updated_at")
     private Timestamp updateAt;
 
-    @ManyToOne
+    @ManyToOne()
     @NonNull
     @JoinColumn(name = "id_warehouse", insertable = false, updatable = false)
     private WareHouseEntity idWarehouse;
 
-    @ManyToOne
+    @ManyToOne()
     @NonNull
     @JoinColumn(name = "id_merchant", insertable = false, updatable = false)
     private MerchantEntity idMerchant;

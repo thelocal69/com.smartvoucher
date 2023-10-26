@@ -4,28 +4,27 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketHistoryDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketHistoryEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class TicketHistoryConverter {
+    private final TicketConverter ticketConverter;
 
-    public List<TicketHistoryDTO> findAllTicketHistory(List<TicketHistoryEntity> list) {
+    @Autowired
+    public TicketHistoryConverter(TicketConverter ticketConverter) {
+        this.ticketConverter = ticketConverter;
+    }
 
-        List<TicketHistoryDTO> listTicketHistory = new ArrayList<>();
-
-        for(TicketHistoryEntity data : list) {
-            TicketDTO ticketDTO = new TicketDTO();
-
+    public TicketHistoryDTO toTicketHistoryDTO(TicketHistoryEntity data) {
             TicketHistoryDTO ticketHistoryDTO = new TicketHistoryDTO();
             ticketHistoryDTO.setId(data.getId());
-
-            ticketDTO.setId(data.getIdTicket().getId());
-            ticketDTO.setDiscountType(data.getIdTicket().getDiscountType());
-            ticketHistoryDTO.setIdTicketDTO(ticketDTO); // set id ticketHistory
-
+            ticketHistoryDTO.setId(data.getIdTicket().getId());
+            ticketHistoryDTO.setIdTicketDTO(ticketConverter.toTicketDTO(data.getIdTicket())); // set id ticketHistory
             ticketHistoryDTO.setSerialCode(data.getSerialCode());
             ticketHistoryDTO.setPrevStatus(data.getPrevStatus());
             ticketHistoryDTO.setIsLatest(data.getIsLatest());
@@ -33,22 +32,14 @@ public class TicketHistoryConverter {
             ticketHistoryDTO.setUpdatedBy(data.getUpdatedBy());
             ticketHistoryDTO.setCreatedAt(data.getCreatedAt());
             ticketHistoryDTO.setUpdatedAt(data.getUpdatedAt());
-
-            listTicketHistory.add(ticketHistoryDTO);
-        }
-
-        return listTicketHistory;
+        return ticketHistoryDTO;
     }
 
-    public TicketHistoryEntity insertTicketHistory(TicketEntity ticketEntity) {
-
-        TicketHistoryEntity ticketHistory = new TicketHistoryEntity();
-
-        ticketHistory.setSerialCode(ticketEntity.getIdSerial().getSerialCode());
-        ticketHistory.setIdTicket(ticketEntity);
-        ticketHistory.setIsLatest(ticketEntity.getStatus());
-        ticketHistory.setPrevStatus(ticketEntity.getStatus());
-
-        return ticketHistory;
+    public TicketHistoryEntity updateStatusTicketHistory(TicketHistoryEntity oldTicketHistory, int statusOldTicket) {
+        if (!Objects.equals(oldTicketHistory.getPrevStatus(), oldTicketHistory.getIsLatest())) {
+            oldTicketHistory.setPrevStatus(oldTicketHistory.getIsLatest());
+        }
+        oldTicketHistory.setIsLatest(statusOldTicket);
+        return oldTicketHistory;
     }
 }

@@ -19,41 +19,28 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Entity(name = "roles")
 public class RoleEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(name = "name")
-    @NotNull(message = "Please fill all information!")
-    @NotBlank(message = "Please fill all information!")
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
-
-    @Column(name = "role_code")
-    @NotNull(message = "Please fill all information!")
-    @NotBlank(message = "Please fill all information!")
+    @Column(name = "role_code", unique = true, nullable = false)
     private String roleCode;
-
     @Column(name = "created_by")
     @CreatedBy
     private String createdBy;
-
     @Column(name = "updated_by")
     @LastModifiedBy
     private String updatedBy;
-
     @Column(name = "created_at")
     @CreatedDate
     private Timestamp createdAt;
-
     @Column(name = "updated_at")
     @LastModifiedDate
     private Timestamp updatedAt;
-
     // field được references
     @OneToMany(mappedBy = "idRole")
     private List<RolesUsersEntity> rolesUsersEntities;
-
     @OneToMany(mappedBy = "idRole")
     private List<WarehouseMerchantEntity> warehouseMerchantEntities;
 }

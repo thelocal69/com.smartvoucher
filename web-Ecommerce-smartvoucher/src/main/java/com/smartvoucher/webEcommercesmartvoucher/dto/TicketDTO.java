@@ -2,6 +2,10 @@ package com.smartvoucher.webEcommercesmartvoucher.dto;
 
 import lombok.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -13,14 +17,17 @@ public class TicketDTO {
 
     private long id;
 
+    @NotNull(message = "Please fill all information!")
     private SerialDTO idSerialDTO;
-
+    @NotNull(message = "Please fill all information!")
     private WareHouseDTO idWarehouseDTO;
-
+    @NotNull(message = "Please fill all information!")
     private CategoryDTO idCategoryDTO;
-
+    @NotNull(message = "Please fill all information!")
+    @Min(value = 0)
+    @Max(value = 3)
     private int status;
-
+    @NotNull(message = "Please fill all information!")
     private OrderDTO idOrderDTO;
 
     private Timestamp claimedTime;
@@ -28,9 +35,10 @@ public class TicketDTO {
     private Timestamp redeemedtimeTime;
 
     private Timestamp expiredTime;
-
+    @NotNull(message = "Please fill all information!")
+    @NotBlank(message = "Please fill all information!")
     private String discountType;
-
+    @NotNull(message = "Please fill all information!")
     private BigDecimal discountAmount;
 
     private String bannerUrl;
@@ -48,11 +56,9 @@ public class TicketDTO {
     private Timestamp availableFrom;
 
     private Timestamp availableTo;
-
-    private StoreDTO storeDTO;
-
+    @NotNull(message = "Please fill all information!")
     private StoreDTO idStoreDTO;
-
+    @NotNull(message = "Please fill all information!")
     private UserDTO idUserDTO;
 
     private String createdBy;

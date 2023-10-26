@@ -5,29 +5,34 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.OrderEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
+import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.OrderRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IOrderService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class OrderService implements IOrderService {
-
     private final OrderRepository orderRepository;
     private final OrderConverter orderConverter;
     private final UserRepository userRepository;
     private final IWareHouseRepository iWareHouseRepository;
 
     @Autowired
+    @Lazy
     public OrderService(OrderRepository orderRepository
             , OrderConverter orderConverter
             , UserRepository userRepository
@@ -42,107 +47,86 @@ public class OrderService implements IOrderService {
     @Transactional(readOnly = true)
     public ResponseObject getAllOrder(){
         List<OrderDTO> listOrder = new ArrayList<>();
-        try {
-            List<OrderEntity> list = orderRepository.findAll();
+        List<OrderEntity> list = orderRepository.findAll();
+        if(!list.isEmpty()) {
             for (OrderEntity data : list) {
                 listOrder.add(orderConverter.toOrdersDTO(data));
             }
-        } catch (Exception e) {
-            System.out.println("Order Service : " + e.getLocalizedMessage());
-            return new ResponseObject(500, e.getLocalizedMessage(), "Not found List Orders !");
+            return new ResponseObject(200,
+                    "List Order",
+                            listOrder);
+        } else {
+            throw new ObjectNotFoundException(404, "List Order is empty");
         }
-
-        return new ResponseObject(200, "List Orders", listOrder );
     }
 
     @Override
-    @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject insertOrder(@NotNull OrderDTO orderDTO){
-        boolean isSuccess = false;
-        int status = 501;
-        Optional<OrderEntity> order = orderRepository.findByOrderNo(orderDTO.getOrderNo());
-
-        if (order.isEmpty()) {
-            try {
-                // idUserDTO and idWarehouse of ordersDTO: Not null (compulsory)
-                Optional<UserEntity> usersEntity = userRepository.findById(orderDTO.getIdUserDTO().getId());
-                Optional<WareHouseEntity> wareHouseEntity = iWareHouseRepository.findById(orderDTO.getIdWarehouseDTO().getId());
-
-                if(usersEntity.orElse(null) != null
-                        && wareHouseEntity.orElse(null) != null) {
-                    orderRepository.save(orderConverter.insertRole(orderDTO
-                            ,usersEntity.orElse(null)
-                            ,wareHouseEntity.orElse(null)));
-                    isSuccess = true;
-                    status = 200;
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseObject insertOrder(OrderDTO orderDTO){
+        OrderEntity order = orderRepository.findByOrderNo(orderDTO.getOrderNo());
+        if (order == null) {
+                if(existsUserAndWarehouse(orderDTO)) {
+                    return new ResponseObject(200,
+                            "Add Order success",
+                            orderConverter.toOrdersDTO(orderRepository.save(
+                                    orderConverter.insertRole(
+                                            orderDTO
+                                            ,createUser(orderDTO)
+                                            ,createWareHouse(orderDTO)))) );
+                }else {
+                    throw new ObjectEmptyException(406,
+                            "User Or Warehouse is empty, please fill all data, add order fail");
                 }
-
-            } catch (javax.validation.ConstraintViolationException ex) {
-                throw new javax.validation.ConstraintViolationException("Validation Fail!", ex.getConstraintViolations());
-
-            } catch (Exception e) {
-                System.out.println("Order service : " + e.getLocalizedMessage() );
-                return new ResponseObject(500, "Add Order fail!", isSuccess);
-            }
+        } else {
+            throw new DuplicationCodeException(400, "Order is available, add order fail");
         }
-        String message = (isSuccess == true) ? "Add Order success!":"Add Order fail!";
-        return new ResponseObject(status, message, isSuccess);
     }
 
     @Override
-    @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject updateOrder(@NotNull OrderDTO orderDTO){
-        boolean isSuccess = false;
-        int status = 501;
-            Optional<OrderEntity> oldOrder = orderRepository.findById(orderDTO.getId());
-            List<OrderEntity> checkOrder = orderRepository.findByOrderNoAndId(orderDTO.getOrderNo(), orderDTO.getId());
-
-            if (!oldOrder.isEmpty() && checkOrder.isEmpty() && orderDTO.getQuantity() > 0) {
-                try {
-                    // idUserDTO and idWarehouse of ordersDTO: Not null (compulsory)
-                    Optional<UserEntity> usersEntity = userRepository.findById(orderDTO.getIdUserDTO().getId());
-                    Optional<WareHouseEntity> wareHouseEntity = iWareHouseRepository.findById(orderDTO.getIdWarehouseDTO().getId());
-
-                    if(usersEntity.orElse(null) != null
-                            && wareHouseEntity.orElse(null) != null) {
-                        orderRepository.save(orderConverter.updateRole(orderDTO
-                                , oldOrder.orElse(null)
-                                , usersEntity.orElse(null)
-                                , wareHouseEntity.orElse(null)));
-                        isSuccess = true;
-                        status = 200;
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseObject updateOrder(OrderDTO orderDTO){
+            Optional<OrderEntity> oldOrder = orderRepository.findByOrderNoAndId(orderDTO.getOrderNo(),orderDTO.getId());
+            if (oldOrder.isPresent()) {
+                    if(existsUserAndWarehouse(orderDTO)) {
+                        return new ResponseObject(200,
+                                "Update Order success",
+                                orderConverter.toOrdersDTO(
+                                        orderRepository.save(orderConverter.updateRole(
+                                                orderDTO
+                                                ,oldOrder.orElse(null)
+                                                ,createUser(orderDTO)
+                                                ,createWareHouse(orderDTO)))));
+                    } else {
+                        throw new ObjectEmptyException(406,
+                                "User Or Warehouse is empty, please fill all data, add order fail");
                     }
-                } catch (javax.validation.ConstraintViolationException ex) {
-                    throw new javax.validation.ConstraintViolationException("Validation Fail!", ex.getConstraintViolations());
-
-                } catch (Exception e) {
-                    System.out.println("Order Service : " + e.getLocalizedMessage());
-                    return new ResponseObject(500, "update Order fail!", false);
-                }
+            } else {
+                throw new ObjectNotFoundException(404, "Order not found, update Order fail");
             }
-        String message = (isSuccess == true) ? "Update Order Success!": "update Order fail!";
-        return new ResponseObject(status, message, isSuccess);
     }
 
     @Override
-    @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject deleteOrder(@NotNull long id){
-        boolean checkOrder = orderRepository.existsById(id);
-        int status = 501;
-
-        if(checkOrder == true) {
-            try {
-                orderRepository.deleteById(id);
-                status = 200;
-
-            } catch (Exception e) {
-                System.out.println("Order Service : " + e.getLocalizedMessage());
-                return new ResponseObject(500 , e.getLocalizedMessage() ,false);
-            }
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseObject deleteOrder(long id){
+        OrderEntity role = orderRepository.findById(id).orElse(null);
+        if(role != null) {
+            orderRepository.deleteById(id);
+            return new ResponseObject(200, "Delete Order Success", true);
+        } else {
+            throw new ObjectNotFoundException(404, "Can not delete Order id : " + id);
         }
-        String message = (checkOrder == true) ? "Delete Order Success!": "Order not Available, Delete Order Fail!";
-        return new ResponseObject(status, message, checkOrder);
     }
 
+    public boolean existsUserAndWarehouse(OrderDTO orderDTO) {
+        Optional<UserEntity> usersEntity = userRepository.findById(orderDTO.getIdUserDTO().getId());
+        Optional<WareHouseEntity> wareHouseEntity = iWareHouseRepository.findById(orderDTO.getIdWarehouseDTO().getId());
+        return usersEntity.isPresent() && wareHouseEntity.isPresent();
+    }
+    public UserEntity createUser(OrderDTO orderDTO) {
+        return userRepository.findById(orderDTO.getIdUserDTO().getId()).orElse(null);
+    }
+    public WareHouseEntity createWareHouse(OrderDTO orderDTO) {
+        return iWareHouseRepository.findById(orderDTO.getIdWarehouseDTO().getId()).orElse(null);
+    }
 
 }

@@ -1,8 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -11,8 +9,10 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @Entity(name = "ticket_history")
+@NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class TicketHistoryEntity {
+public class  TicketHistoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class TicketHistoryEntity {
     @JoinColumn(name = "id_ticket")
     private TicketEntity idTicket;
 
-    @Column(name = "serial_code") // *Noted : xem lại
+    @Column(name = "serial_code")
     private String serialCode;
 
     @Column(name = "prev_status")
@@ -42,4 +42,14 @@ public class TicketHistoryEntity {
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+
+    public TicketHistoryEntity(final TicketEntity idTicket,
+                               final int isLatest,
+                               final int prevStatus,
+                               final String serialCode) {
+        this.idTicket = idTicket;
+        this.isLatest = isLatest;
+        this.prevStatus = prevStatus;
+        this.serialCode = serialCode;
+    }
 }
