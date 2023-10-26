@@ -85,17 +85,6 @@ CREATE TABLE warehouse(
 	primary key(id)
 );
 
-CREATE TABLE warehouse_merchant(
-	id_warehouse bigint,
-	id_merchant bigint,
-	id_role bigint not null, -- acquirer/issuer
-	created_by varchar(50),
-	updated_by varchar(50),
-	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	
-	PRIMARY key(id_warehouse, id_merchant)
-);
 
 CREATE TABLE discount_type(
 	id bigint auto_increment,
@@ -276,6 +265,8 @@ ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_store_warehouse_stores FOREIGN
 
 ALTER TABLE warehouse_serial ADD CONSTRAINT FK_id_warehouse_warehouse_serial FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
 ALTER TABLE warehouse_serial ADD CONSTRAINT FK_id_serial_warehouse_serial FOREIGN KEY(id_serial) REFERENCES serial(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_id_merchant_warehouse FOREIGN KEY(id_merchant) REFERENCES merchant(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_id_lable_warehouse FOREIGN KEY(id_lable) REFERENCES lable(id);
 
 ALTER TABLE ticket ADD CONSTRAINT FK_id_warehouse_ticker FOREIGN KEY (id_warehouse) REFERENCES warehouse(id); 
 ALTER TABLE ticket ADD CONSTRAINT FK_id_category_ticker FOREIGN KEY (id_category) REFERENCES category(id);
@@ -379,18 +370,6 @@ CREATE TABLE warehouse(
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	
 	primary key(id)
-);
-
-CREATE TABLE warehouse_merchant(
-	id_warehouse bigint,
-	id_merchant bigint,
-	id_role bigint not null, -- acquirer/issuer
-	created_by varchar(50),
-	updated_by varchar(50),
-	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
-	
-	PRIMARY key(id_warehouse, id_merchant)
 );
 
 CREATE TABLE discount_type(
@@ -566,6 +545,8 @@ ALTER TABLE store ADD CONSTRAINT FK_id_merchant_store FOREIGN KEY (id_merchant) 
 
 ALTER TABLE warehouse ADD CONSTRAINT FK_discount_type_warehouse FOREIGN KEY (id_discount_type) REFERENCES discount_type(id)
 ALTER TABLE warehouse ADD CONSTRAINT FK_id_category_warehouse FOREIGN KEY (id_category) REFERENCES category(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_id_merchant_warehouse FOREIGN KEY(id_merchant) REFERENCES merchant(id);
+ALTER TABLE warehouse ADD CONSTRAINT FK_id_lable_warehouse FOREIGN KEY(id_lable) REFERENCES lable(id);
 
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_warehouse_warehouse_stores FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
 ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_store_warehouse_stores FOREIGN KEY (id_store) REFERENCES store(id);
