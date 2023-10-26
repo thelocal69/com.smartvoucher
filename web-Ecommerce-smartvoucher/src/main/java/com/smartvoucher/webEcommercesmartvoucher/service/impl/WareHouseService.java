@@ -5,16 +5,12 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.WareHouseConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.WareHouseDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.CategoryEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.DiscountTypeEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.InputOutputException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
-import com.smartvoucher.webEcommercesmartvoucher.repository.ICategoryRepository;
-import com.smartvoucher.webEcommercesmartvoucher.repository.IDiscountTypeRepository;
-import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +31,8 @@ public class WareHouseService implements IWareHouseService {
     private final WareHouseConverter wareHouseConverter;
     private final IDiscountTypeRepository discountTypeRepository;
     private final ICategoryRepository categoryRepository;
+    private final IMerchantRepository merchantRepository;
+    private final ILabelRepository labelRepository;
     private final Drive googleDrive;
 
     @Autowired
@@ -42,13 +40,17 @@ public class WareHouseService implements IWareHouseService {
                             final WareHouseConverter wareHouseConverter,
                             final IDiscountTypeRepository discountTypeRepository,
                             final ICategoryRepository categoryRepository,
-                            final Drive googleDrive
+                            final Drive googleDrive,
+                            final IMerchantRepository merchantRepository,
+                            final ILabelRepository labelRepository
     ) {
         this.wareHouseRepository = wareHouseRepository;
         this.wareHouseConverter = wareHouseConverter;
         this.discountTypeRepository = discountTypeRepository;
         this.categoryRepository = categoryRepository;
         this.googleDrive = googleDrive;
+        this.merchantRepository = merchantRepository;
+        this.labelRepository = labelRepository;
     }
 
     @Override
@@ -74,14 +76,13 @@ public class WareHouseService implements IWareHouseService {
     @Transactional(rollbackFor = Exception.class)
     public WareHouseDTO upsert(WareHouseDTO wareHouseDTO) {
         WareHouseEntity wareHouse;
-        boolean existWareHouseCode = existCategoryAndDiscount(wareHouseDTO);
         if (wareHouseDTO.getId() != null) {
-            boolean exist = existWareHouse(wareHouseDTO);
-            if (!exist) {
+            if (!existWareHouse(wareHouseDTO)) {
                 throw new ObjectNotFoundException(
                         404, "Cannot update warehouse id: " + wareHouseDTO.getId()
                 );
-            } else if (!existWareHouseCode) {
+            } else if (!existCategoryAndDiscount(wareHouseDTO) ||
+                        !existMerchantAndLabel(wareHouseDTO)) {
                 throw new ObjectEmptyException(
                         406, "Category code or discount code is empty or not exist !"
                 );
@@ -94,7 +95,8 @@ public class WareHouseService implements IWareHouseService {
                 throw new DuplicationCodeException(
                         400, "Warehouse code is duplicated !"
                 );
-            } else if (!existWareHouseCode) {
+            } else if (!existCategoryAndDiscount(wareHouseDTO) ||
+                        !existMerchantAndLabel(wareHouseDTO)) {
                 throw new ObjectEmptyException(
                         406, "Category code or discount code is empty or not exist !"
                 );
@@ -103,8 +105,12 @@ public class WareHouseService implements IWareHouseService {
         }
         DiscountTypeEntity discountType = discountTypeRepository.findOneByCode(wareHouseDTO.getDiscountTypeCode());
         CategoryEntity category = categoryRepository.findOneByCategoryCode(wareHouseDTO.getCategoryCode());
+        MerchantEntity merchant = merchantRepository.findOneByMerchantCode(wareHouseDTO.getMerchantCode());
+        LabelEntity label = labelRepository.findOneByName(wareHouseDTO.getLabelName());
         wareHouse.setDiscountType(discountType);
         wareHouse.setCategory(category);
+        wareHouse.setMerchant(merchant);
+        wareHouse.setLabel(label);
         return wareHouseConverter.toWareHouseDTO(wareHouseRepository.save(wareHouse));
     }
 
@@ -132,6 +138,13 @@ public class WareHouseService implements IWareHouseService {
         boolean existCategoryCode = categoryRepository.existsByCategoryCode(wareHouseDTO.getCategoryCode());
         boolean existDiscountCode = discountTypeRepository.existsByCode(wareHouseDTO.getDiscountTypeCode());
         return existDiscountCode && existCategoryCode;
+    }
+
+    @Override
+    public Boolean existMerchantAndLabel(WareHouseDTO wareHouseDTO) {
+        boolean existMerchantCode = merchantRepository.existsByMerchantCode(wareHouseDTO.getMerchantCode());
+        boolean existLabelName = labelRepository.existsByName(wareHouseDTO.getLabelName());
+        return existMerchantCode && existLabelName;
     }
 
     public Boolean isImageFile(MultipartFile file) {
