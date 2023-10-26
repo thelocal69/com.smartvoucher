@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Setter
 @Getter
@@ -22,4 +23,16 @@ public class RolesUsersKeys implements Serializable {
     @Column(name = "id_user")
     private long idUser;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RolesUsersKeys)) return false;
+        RolesUsersKeys that = (RolesUsersKeys) o;
+        return idRole == that.idRole && idUser == that.idUser;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idRole, idUser);
+    }
 }

@@ -41,6 +41,6 @@ public class MerchantEntity extends BaseEntity{
     @OneToMany(mappedBy = "merchant")
     private List<StoreEntity> storeEntityList;
 
-    @OneToMany(mappedBy = "idMerchant")
-    private List<WarehouseMerchantEntity> warehouseMerchantEntities;
+    @OneToMany(mappedBy = "merchant")
+    private List<WareHouseEntity> wareHouseEntityList;
 }
