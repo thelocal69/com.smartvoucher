@@ -1,7 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -20,50 +19,34 @@ import java.util.List;
 @Getter
 @Entity(name = "orders")
 @EntityListeners(AuditingEntityListener.class)
-public class OrdersEntity {
-
+public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @Column(name = "created_by")
     @CreatedBy
     private String createdBy;
-
     @Column(name = "updated_by")
     @LastModifiedBy
     private String updatedBy;
-
     @Column(name = "created_at")
     @CreatedDate
     private Timestamp createdAt;
-
     @Column(name = "updated_at")
     @LastModifiedDate
     private Timestamp updatedAt;
-
-    @Column(name = "order_no")
-    @NotNull(message = "Please fill all information!")
-    @NotBlank(message = "Please fill all information!")
+    @Column(name = "order_no", nullable = false, unique = true)
     private String orderNo;
-
-    @Column(name = "status")
-    @NotNull(message = "Please fill all information!")
+    @Column(name = "status", nullable = false)
     private int status;
-
-    @ManyToOne
-    @JoinColumn(name = "id_user")
-    @NotNull(message = "Please fill all information!")
-    private UsersEntity idUser;
-
-    @Column(name = "quantity")
-    @NotNull(message = "Please fill all information!")
-    @Min(value = 1 , message = "Please fill all information and minimum quantity is 1! ")
+    @Column(name = "quantity", nullable = false)
     private int quantity;
 
     @ManyToOne
-    @JoinColumn(name = "id_warehouse")
-    @NotNull(message = "Please fill all information!")
+    @JoinColumn(name = "id_user", nullable = false)
+    private UserEntity idUser;
+    @ManyToOne
+    @JoinColumn(name = "id_warehouse", nullable = false)
     private WareHouseEntity idWarehouse;
 
     // field được references

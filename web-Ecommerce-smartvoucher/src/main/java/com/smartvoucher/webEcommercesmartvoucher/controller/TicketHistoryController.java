@@ -18,8 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/ticket_history")
 public class TicketHistoryController {
-
-    private ITicketHistoryService ticketHistoryService;
+    private final ITicketHistoryService ticketHistoryService;
 
     @Autowired
     public TicketHistoryController(ITicketHistoryService ticketHistoryService) {
@@ -27,10 +26,8 @@ public class TicketHistoryController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllTicketHistory() throws Exception {
-
-        ResponseObject responseObject = ticketHistoryService.getAllTicketHistory();
-
-        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
+    public ResponseEntity<?> getAllTicketHistory(){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.ticketHistoryService.getAllTicketHistory());
     }
 }

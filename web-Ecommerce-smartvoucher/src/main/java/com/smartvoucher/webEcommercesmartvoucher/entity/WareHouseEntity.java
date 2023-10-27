@@ -54,7 +54,7 @@ public class WareHouseEntity extends BaseEntity{
 
     // field được references
     @OneToMany(mappedBy = "idWarehouse")
-    private List<OrdersEntity> ordersEntities;
+    private List<OrderEntity> ordersEntities;
 
     @OneToMany(mappedBy = "idWarehouse")
     private List<TicketEntity> ticketEntities;

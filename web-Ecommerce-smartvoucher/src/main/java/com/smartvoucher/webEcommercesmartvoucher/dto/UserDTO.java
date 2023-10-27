@@ -7,16 +7,33 @@ import lombok.Setter;
 
 import java.sql.Timestamp;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RolesDTO {
+public class UserDTO {
+
     private long id;
 
-    private String name;
+    private String memberCode;
 
-    private String roleCode;
+    private String firstName;
+
+    private String lastName;
+
+    private String userName;
+
+    private String fullName;
+
+    private String pwd;
+
+    private String phone;
+
+    private String email;
+
+    private int status;
+
+    private String address;
 
     private String createdBy;
 

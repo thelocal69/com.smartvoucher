@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.entity;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -20,42 +21,26 @@ import java.util.List;
 @Entity(name = "serial")
 @EntityListeners(AuditingEntityListener.class)
 public class SerialEntity {
-    // Note : NotBlank just use for type 'String'
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(name = "batch_code")
-    @NotNull(message = "Please fill all information!")
-    @NotBlank(message = "Please fill all information!")
+    @Column(name = "batch_code", nullable = false)
     private String batchCode;
-
-    @Column(name = "number_of_serial")
-    @NotNull(message = "Please fill all information!")
+    @Column(name = "number_of_serial", nullable = false)
     private int numberOfSerial;
-
-    @Column(name = "serial_code")
-    @NotNull(message = "Please fill all information!")
-    @NotBlank(message = "Please fill all information!")
+    @Column(name = "serial_code", unique = true, nullable = false)
     private String serialCode;
-
-    @Column(name = "status")
-    @NotNull(message = "Please fill all information!")
+    @Column(name = "status", nullable = false)
     private int status;
-
     @Column(name = "created_by")
     @CreatedBy
     private String createdBy;
-
     @Column(name = "updated_by")
     @LastModifiedBy
     private String updatedBy;
-
     @Column(name = "created_at")
     @CreatedDate
     private Timestamp createdAt;
-
     @Column(name = "updated_at")
     @LastModifiedDate
     private Timestamp updatedAt;
@@ -63,8 +48,6 @@ public class SerialEntity {
     // field được references
     @OneToMany(mappedBy = "idSerial")
     private List<TicketEntity> ticketEntity;
-
     @OneToMany(mappedBy = "idSerial")
     private List<WarehouseSerialEntity> warehouseSerialEntities;
-
 }

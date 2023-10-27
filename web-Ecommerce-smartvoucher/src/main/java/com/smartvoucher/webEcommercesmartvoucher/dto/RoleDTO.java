@@ -5,23 +5,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class OrdersDTO {
+@NoArgsConstructor
+public class RoleDTO {
     private long id;
-    private String orderNo;
-    private int status;
-    private UsersDTO idUserDTO;
-    private int quantity;
-    private WareHouseDTO idWarehouseDTO;
+    @NotNull(message = "Please fill all information!")
+    @NotBlank(message = "Please fill all information!")
+    private String name;
+    @NotNull(message = "Please fill all information!")
+    @NotBlank(message = "Please fill all information!")
+    private String roleCode;
+
     private String createdBy;
+
     private String updatedBy;
+
     private Timestamp createdAt;
+
     private Timestamp updatedAt;
 }

@@ -27,12 +27,12 @@ public class RolesUsersEntity {
     @ManyToOne
     @JoinColumn(name = "id_role",insertable = false, updatable = false)
     @NonNull                     // tránh update value tới những table được references tới
-    private RolesEntity idRole;
+    private RoleEntity idRole;
 
     @ManyToOne
     @JoinColumn(name = "id_user", insertable = false, updatable = false)
     @NonNull
-    private UsersEntity idUser;
+    private UserEntity idUser;
 
     @CreatedBy
     @Column(name = "created_by")

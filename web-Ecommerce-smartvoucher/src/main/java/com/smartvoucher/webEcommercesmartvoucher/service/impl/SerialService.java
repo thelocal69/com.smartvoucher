@@ -3,27 +3,26 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 import com.smartvoucher.webEcommercesmartvoucher.converter.SerialConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
+import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.SerialRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
-import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.Timestamp;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
+@Slf4j
 public class SerialService implements ISerialService {
-
     private final SerialRepository serialRepository;
-
-    private SerialConverter serialConverter;
-
+    private final SerialConverter serialConverter;
     @Autowired
+    @Lazy
     public SerialService(SerialRepository serialRepository,
                          SerialConverter serialConverter) {
         this.serialRepository = serialRepository;
@@ -32,112 +31,56 @@ public class SerialService implements ISerialService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseObject getAllSerial() throws Exception {
-
-        ResponseObject responseObject = new ResponseObject();
-        responseObject.setStatusCode(200);
-        responseObject.setMessage("List Serial");
-
-        try {
-
-            List<SerialEntity> list = serialRepository.findAll();
-            List<SerialDTO> listSerial = serialConverter.findAllSerial(list);
-
-        responseObject.setData(listSerial);
-
-        } catch (Exception e) {
-            System.out.println("Serial Service : " + e.getLocalizedMessage());
-            return new ResponseObject(500, e.getLocalizedMessage(), "Not found List Serial !");
+    public ResponseObject getAllSerial() {
+        List<SerialDTO> listSerial = new ArrayList<>();
+        List<SerialEntity> list = serialRepository.findAll();
+        if(!list.isEmpty()) {
+            for (SerialEntity data : list) {
+                listSerial.add(serialConverter.toSerialDTO(data));
+            }
+            return new ResponseObject(200, "List Serial", listSerial);
+        } else{
+            throw new ObjectNotFoundException(404, "List Serial is empty");
         }
-
-        return responseObject;
     }
 
     @Override
-    @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject insertSerial(@NonNull SerialDTO serialDTO) throws Exception {
-
-        boolean isSuccess = false;
-        int status = 501; // 501 : Not Implemented
-
-        SerialEntity checkSerialCode = serialRepository.findSerialBySerialCode(serialDTO.getSerialCode());
-
-            if(checkSerialCode == null){
-                try {
-                // save information Serial
-                serialRepository.save(serialConverter.insertSerial(serialDTO));
-                isSuccess = true;
-                status = 200;
-
-                } catch (javax.validation.ConstraintViolationException ex) {
-                    // Validation Error
-                    throw new javax.validation.ConstraintViolationException("Validation Fail!", ex.getConstraintViolations());
-
-                } catch (Exception e) {
-                    // error not specific
-                    System.out.println("Serial Service : " + e.getLocalizedMessage() );
-                    return new ResponseObject(500 , e.getLocalizedMessage() ,isSuccess);
-                }
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseObject insertSerial(SerialDTO serialDTO) {
+        SerialEntity checkSerial = serialRepository.findBySerialCode(serialDTO.getSerialCode());
+            if(checkSerial == null){
+                return new ResponseObject(200,
+                        "Add serial success!",
+                                serialConverter.toSerialDTO(
+                                        serialRepository.save(serialConverter.insertSerial(serialDTO))) );
+            } else {
+                throw new DuplicationCodeException(400, "Serial is available, add fail!");
             }
-
-        String message = (isSuccess == true) ? "Add serial success!":"Serial Code is available!";
-
-        return new ResponseObject(status, message, isSuccess);
     }
 
-
     @Override
-    @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject updateSerial(@NonNull SerialDTO serialDTO) throws Exception {
-
-        boolean isSuccess = false;
-        int status = 501;  // 501 : not implemented
-
-        // orElse(null) : return Object / if Object not found, will return null
-        SerialEntity oldSerial = serialRepository.findById(serialDTO.getId()).orElse(null);
-        List<SerialEntity> checkSerial = serialRepository.findSerialBySerialCodeAndId(serialDTO.getSerialCode(), serialDTO.getId());
-
-            if (oldSerial != null && checkSerial.isEmpty()){
-                try {
-
-                serialRepository.save(serialConverter.updateSerial(serialDTO, oldSerial));
-                isSuccess = true;
-                status = 200;
-
-                } catch (javax.validation.ConstraintViolationException ex) {
-                    // Validation Error
-                    throw new javax.validation.ConstraintViolationException("Validation Fail!", ex.getConstraintViolations());
-
-                } catch (Exception e) {
-                    System.out.println("Serial Service : " + e.getLocalizedMessage() );
-                    return new ResponseObject(500 , e.getLocalizedMessage() ,isSuccess);
-                }
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseObject updateSerial(SerialDTO serialDTO) {
+        SerialEntity oldSerial = serialRepository.findBySerialCodeAndId(serialDTO.getSerialCode(), serialDTO.getId());
+            if (oldSerial != null){
+                return new ResponseObject(200,
+                                "Update Serial success",
+                                serialConverter.toSerialDTO(
+                                        serialRepository.save(serialConverter.updateSerial(serialDTO, oldSerial))) );
+            } else {
+                throw new ObjectNotFoundException(404, "Serial not found, update Serial fail!");
             }
-        String message = (isSuccess == true) ? "Update Serial Success!": "Serial is Available, update Serial fail!";
-
-        return new ResponseObject(status, message, isSuccess);
     }
 
     @Override
-    @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseObject deleteSerial(long id) throws Exception {
-
-        boolean checkSerial = serialRepository.existsById(id);
-        int status = 501;
-
-            if(checkSerial == true) {
-                try {
-
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseObject deleteSerial(long id){
+        SerialEntity serial = serialRepository.findById(id).orElse(null);
+            if(serial != null) {
                 serialRepository.deleteById(id);
-                status = 200;
-
-                } catch (Exception e) {
-                    System.out.println("Serial Service : " + e.getLocalizedMessage());
-                    return new ResponseObject(500 , e.getLocalizedMessage() ,false);
-                }
+                return new ResponseObject(200, "Delete Serial Success", true);
+            } else {
+                throw new ObjectNotFoundException(404, "Can not delete Serial id : " + id);
             }
-            String message =  (checkSerial == true) ? "Delete Serial Success!": "Serial not Available, Delete Serial Fail!";
-
-        return new ResponseObject(status, message, checkSerial);
     }
 }

@@ -1,8 +1,8 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
-import com.smartvoucher.webEcommercesmartvoucher.dto.UsersDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
-import com.smartvoucher.webEcommercesmartvoucher.service.impl.UsersService;
+import com.smartvoucher.webEcommercesmartvoucher.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +15,16 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
-    private final UsersService usersService;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UsersService usersService) {
-        this.usersService = usersService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     public ResponseEntity<?> getAllUser() {
 
-        List<UsersDTO> listUser = usersService.findAllUser();
+        List<UserDTO> listUser = userService.findAllUser();
 
         ResponseObject responseObject = new ResponseObject();
         responseObject.setStatusCode(200);
