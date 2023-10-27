@@ -35,7 +35,7 @@ import java.util.List;
         @JoinColumn(name = "id_chain")
         private ChainEntity chain;
 
-        @OneToMany(mappedBy = "store")
+        @OneToMany(mappedBy = "idStore")
         private List<TicketEntity> ticketEntityList;
 
         @OneToMany(mappedBy = "idStore")

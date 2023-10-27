@@ -9,11 +9,6 @@ import java.util.List;
 
 @Repository
 public interface SerialRepository extends JpaRepository<SerialEntity, Long> {
-
-
-    @Query("SELECT s FROM serial s WHERE s.serialCode = ?1")
-    SerialEntity findSerialBySerialCode(String serialCode);
-
-    @Query("SELECT s FROM serial s WHERE s.serialCode = ?1 AND s.id != ?2")
-    List<SerialEntity> findSerialBySerialCodeAndId(String serialCode, long id);
+    SerialEntity findBySerialCode(String serialCode);
+    SerialEntity findBySerialCodeAndId(String serialCode, long id);
 }

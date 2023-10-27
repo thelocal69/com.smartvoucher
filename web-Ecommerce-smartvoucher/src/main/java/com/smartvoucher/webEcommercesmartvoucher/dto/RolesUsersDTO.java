@@ -13,9 +13,9 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class RolesUsersDTO {
 
-    private RolesDTO idRole;
+    private RoleDTO idRole;
 
-    private UsersDTO idUser;
+    private UserDTO idUser;
 
     private String createdBy;
 

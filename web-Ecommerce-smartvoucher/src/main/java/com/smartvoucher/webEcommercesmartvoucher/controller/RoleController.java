@@ -1,61 +1,51 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
-import com.smartvoucher.webEcommercesmartvoucher.dto.RolesDTO;
-import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.dto.RoleDTO;
 import com.smartvoucher.webEcommercesmartvoucher.service.IRoleService;
-import com.smartvoucher.webEcommercesmartvoucher.service.impl.RolesService;
+import com.smartvoucher.webEcommercesmartvoucher.service.impl.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/role")
 public class RoleController {
-
     private final IRoleService rolesService;
 
     @Autowired
-    public RoleController(RolesService rolesService) {
-        this.rolesService = rolesService;
+    public RoleController(RoleService roleService) {
+        this.rolesService = roleService;
     }
 
     @GetMapping()
     @Transactional(readOnly = true)
-    public ResponseEntity<?> getAllRole() throws Exception {
-
-        ResponseObject responseObject =rolesService.getAllRole();
-
-        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
+    public ResponseEntity<?> getAllRole(){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.rolesService.getAllRole());
     }
 
     @PostMapping()
-    @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> insertRole(@RequestBody RolesDTO rolesDTO) throws Exception {
-
-        ResponseObject responseObject = rolesService.insertRole(rolesDTO);
-
-        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> insertRole(@RequestBody @Valid RoleDTO roleDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.rolesService.insertRole(roleDTO));
     }
 
     @PutMapping()
-    @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> updateRole(@RequestBody RolesDTO rolesDTO) throws Exception {
-
-        ResponseObject responseObject = rolesService.updateRole(rolesDTO);
-
-        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> updateRole(@RequestBody @Valid RoleDTO roleDTO){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.rolesService.updateRole(roleDTO));
     }
 
     @DeleteMapping()
-    @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> deleteRole(@RequestParam long id) throws Exception {
-
-        ResponseObject responseObject = rolesService.deleteRole(id);
-
-        return ResponseEntity.status(responseObject.getStatusCode()).body(responseObject);
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> deleteRole(@RequestParam long id){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.rolesService.deleteRole(id));
     }
 }

@@ -2,6 +2,10 @@ package com.smartvoucher.webEcommercesmartvoucher.dto;
 
 import lombok.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -13,24 +17,28 @@ public class TicketDTO {
 
     private long id;
 
+    @NotNull(message = "Please fill all information!")
     private SerialDTO idSerialDTO;
-
+    @NotNull(message = "Please fill all information!")
     private WareHouseDTO idWarehouseDTO;
-
+    @NotNull(message = "Please fill all information!")
     private CategoryDTO idCategoryDTO;
-
+    @NotNull(message = "Please fill all information!")
+    @Min(value = 0)
+    @Max(value = 3)
     private int status;
-
-    private OrdersDTO idOrderDTO;
+    @NotNull(message = "Please fill all information!")
+    private OrderDTO idOrderDTO;
 
     private Timestamp claimedTime;
 
     private Timestamp redeemedtimeTime;
 
     private Timestamp expiredTime;
-
+    @NotNull(message = "Please fill all information!")
+    @NotBlank(message = "Please fill all information!")
     private String discountType;
-
+    @NotNull(message = "Please fill all information!")
     private BigDecimal discountAmount;
 
     private String bannerUrl;
@@ -48,12 +56,10 @@ public class TicketDTO {
     private Timestamp availableFrom;
 
     private Timestamp availableTo;
-
-    private StoreDTO storeDTO;
-
-    private String appliedStore;
-
-    private UsersDTO idUserDTO;
+    @NotNull(message = "Please fill all information!")
+    private StoreDTO idStoreDTO;
+    @NotNull(message = "Please fill all information!")
+    private UserDTO idUserDTO;
 
     private String createdBy;
 
@@ -62,25 +68,4 @@ public class TicketDTO {
     private Timestamp createdAt;
 
     private Timestamp updatedAt;
-
-    // getter spectify return id
-    public long getIdWarehouseDTO() {
-        return this.idWarehouseDTO.getId();
-    }
-
-    public long getIdSerialDTO() {
-        return this.idSerialDTO.getId();
-    }
-
-    public long getIdCategoryDTO() {
-        return this.idCategoryDTO.getId();
-    }
-
-    public long getIdOrderDTO() {
-        return this.idOrderDTO.getId();
-    }
-
-    public long getIdUserDTO() {
-        return this.idUserDTO.getId();
-    }
 }

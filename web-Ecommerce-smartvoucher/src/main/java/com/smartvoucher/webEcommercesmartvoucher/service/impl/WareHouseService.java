@@ -35,6 +35,7 @@ public class WareHouseService implements IWareHouseService {
     private final ILabelRepository labelRepository;
     private final Drive googleDrive;
 
+
     @Autowired
     public WareHouseService(final IWareHouseRepository wareHouseRepository,
                             final WareHouseConverter wareHouseConverter,

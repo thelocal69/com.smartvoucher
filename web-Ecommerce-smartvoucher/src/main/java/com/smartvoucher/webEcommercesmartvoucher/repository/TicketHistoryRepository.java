@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface TicketHistoryRepository extends JpaRepository<TicketHistoryEntity, Long> {
 
     @Query("SELECT t FROM ticket_history t WHERE t.serialCode = ?1")
-    Optional<TicketHistoryEntity> findBySerialCode (String SerialCode);
+    TicketHistoryEntity findBySerialCode (String SerialCode);
+
 }

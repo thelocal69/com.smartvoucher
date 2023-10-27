@@ -5,9 +5,5 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 
 public interface ITicketHistoryService {
-
-    ResponseObject getAllTicketHistory() throws Exception;
-
-    void addTicketHistory(TicketEntity ticketEntity) throws Exception;
-
+    ResponseObject getAllTicketHistory();
 }

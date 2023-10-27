@@ -1,9 +1,9 @@
 package com.smartvoucher.webEcommercesmartvoucher.repository;
 
-import com.smartvoucher.webEcommercesmartvoucher.entity.UsersEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UsersRepository extends JpaRepository<UsersEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 }

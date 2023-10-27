@@ -3,5 +3,5 @@ package com.smartvoucher.webEcommercesmartvoucher.converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RolesUsersConverter {
+public class RoleUsersConverter {
 }
