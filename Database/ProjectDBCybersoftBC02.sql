@@ -225,6 +225,7 @@ CREATE TABLE users(
 	phone varchar(20),
 	email varchar(50),
 	status int NOT null,
+	ava_url varchar(100),
 	address varchar(100),
 	created_by varchar(50),
 	updated_by varchar(50),
