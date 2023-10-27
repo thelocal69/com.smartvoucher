@@ -225,6 +225,7 @@ CREATE TABLE users(
 	phone varchar(20),
 	email varchar(50),
 	status int NOT null,
+	ava_url varchar(100),
 	address varchar(100),
 	created_by varchar(50),
 	updated_by varchar(50),
@@ -259,7 +260,7 @@ CREATE TABLE roles_users(
 
 
 
-ALTER TABLE chains ADD CONSTRAINT FK_id_merchant_chain FOREIGN KEY (id_merchant) REFERENCES merchant(id);
+ALTER TABLE chains ADD CONSTRAINT FK_id_merchant_chains FOREIGN KEY (id_merchant) REFERENCES merchant(id);
 
 ALTER TABLE store ADD CONSTRAINT FK_id_chain_store FOREIGN KEY (id_chain) REFERENCES chains(id); 
 ALTER TABLE store ADD CONSTRAINT FK_id_merchant_store FOREIGN KEY (id_merchant) REFERENCES merchant(id);
@@ -275,16 +276,17 @@ ALTER TABLE warehouse_stores ADD CONSTRAINT FK_id_store_warehouse_stores FOREIGN
 ALTER TABLE warehouse_serial ADD CONSTRAINT FK_id_warehouse_warehouse_serial FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
 ALTER TABLE warehouse_serial ADD CONSTRAINT FK_id_serial_warehouse_serial FOREIGN KEY(id_serial) REFERENCES serial(id);
 
-ALTER TABLE ticket ADD CONSTRAINT FK_id_warehouse_ticker FOREIGN KEY (id_warehouse) REFERENCES warehouse(id); 
-ALTER TABLE ticket ADD CONSTRAINT FK_id_category_ticker FOREIGN KEY (id_category) REFERENCES category(id);
-ALTER TABLE ticket ADD CONSTRAINT FK_id_serial_ticker FOREIGN KEY (id_serial) REFERENCES serial(id);
-ALTER TABLE ticket ADD CONSTRAINT FK_id_order_ticker FOREIGN KEY (id_order) REFERENCES orders(id);
-ALTER TABLE ticket ADD CONSTRAINT FK_id_user_ticker FOREIGN KEY (id_user) REFERENCES users(id);
-ALTER TABLE ticket ADD CONSTRAINT FK_applied_store_ticker FOREIGN KEY (applied_store) REFERENCES store(id);
+ALTER TABLE ticket ADD CONSTRAINT FK_id_warehouse_ticket FOREIGN KEY (id_warehouse) REFERENCES warehouse(id); 
+ALTER TABLE ticket ADD CONSTRAINT FK_id_category_ticket FOREIGN KEY (id_category) REFERENCES category(id);
+ALTER TABLE ticket ADD CONSTRAINT FK_id_serial_ticket FOREIGN KEY (id_serial) REFERENCES serial(id);
+ALTER TABLE ticket ADD CONSTRAINT FK_id_order_ticket FOREIGN KEY (id_order) REFERENCES orders(id);
+ALTER TABLE ticket ADD CONSTRAINT FK_id_user_ticket FOREIGN KEY (id_user) REFERENCES users(id);
+ALTER TABLE ticket ADD CONSTRAINT FK_applied_store_ticket FOREIGN KEY (applied_store) REFERENCES store(id);
 
 ALTER TABLE ticket_history ADD CONSTRAINT FK_id_ticket_ticket_history FOREIGN KEY (id_ticket) REFERENCES ticket(id);
 
-ALTER TABLE orders ADD CONSTRAINT FK_id_user_oder FOREIGN KEY (id_user) REFERENCES users(id);
+ALTER TABLE orders ADD CONSTRAINT FK_id_user_orders FOREIGN KEY (id_user) REFERENCES users(id);
+ALTER TABLE orders ADD CONSTRAINT FK_id_warehouse_orders FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
 
-ALTER TABLE roles_users ADD CONSTRAINT FK_id_role_role_user FOREIGN KEY (id_role) REFERENCES roles (id);
-ALTER TABLE roles_users ADD CONSTRAINT FK_id_user_role_user FOREIGN KEY (id_user) REFERENCES users (id);
+ALTER TABLE roles_users ADD CONSTRAINT FK_id_role_roles_users FOREIGN KEY (id_role) REFERENCES roles (id);
+ALTER TABLE roles_users ADD CONSTRAINT FK_id_user_roles_users FOREIGN KEY (id_user) REFERENCES users (id);
