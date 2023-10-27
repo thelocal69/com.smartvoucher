@@ -3,7 +3,6 @@ package com.smartvoucher.webEcommercesmartvoucher.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolation;
@@ -19,7 +18,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new ErrorResponse(
                         new Timestamp(System.currentTimeMillis()),
-                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        500,
                         ex.getMessage(),
                         "Internal Server Error",
                         "/"
@@ -27,31 +26,12 @@ public class GlobalExceptionHandler {
         );
     }
 
-/*    @ExceptionHandler({javax.validation.ConstraintViolationException.class})
-    public ResponseEntity<ErrorResponse> handleValidationException(javax.validation.ConstraintViolationException ex) {
-        Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
-        String messageTemplate = "Internal Server Error", propertyPath = "";
-        if (violations.size() > 0) {
-            for (ConstraintViolation<?> violation : violations) {
-                propertyPath = violation.getPropertyPath().toString();
-                messageTemplate = violation.getMessageTemplate();
-                break;
-            }
-        }
-        return ResponseEntity.status(500).body(
-                new ErrorResponse(new Timestamp(System.currentTimeMillis()),
-                        HttpStatus.INTERNAL_SERVER_ERROR,
-                                 ex.getMessage(),
-                                 messageTemplate,
-                            "/" + propertyPath));
-    }*/
-
     @ExceptionHandler(DuplicationCodeException.class)
     public ResponseEntity<ErrorResponse> handleDuplicationCodeException(Exception ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new ErrorResponse(
                         new Timestamp(System.currentTimeMillis()),
-                        HttpStatus.BAD_REQUEST,
+                        400,
                         ex.getMessage(),
                         "Code is duplicated ! please try again !",
                         "/"
@@ -64,7 +44,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ErrorResponse(
                         new Timestamp(System.currentTimeMillis()),
-                        HttpStatus.NOT_FOUND,
+                        404,
                         ex.getMessage(),
                         "Object not found ! please try again !",
                         "/"
@@ -77,9 +57,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
                 new ErrorResponse(
                         new Timestamp(System.currentTimeMillis()),
-                        HttpStatus.NOT_ACCEPTABLE,
+                        406,
                         ex.getMessage(),
                         "Object is empty ! please fill all again !",
+                        "/"
+                )
+        );
+    }
+
+    @ExceptionHandler(InputOutputException.class)
+    public ResponseEntity<ErrorResponse> handleInputOutputException(Exception ex){
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        501,
+                        ex.getMessage(),
+                        "Input or Ouput is error !",
                         "/"
                 )
         );

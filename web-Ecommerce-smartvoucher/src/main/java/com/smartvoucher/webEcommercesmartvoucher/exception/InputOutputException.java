@@ -5,16 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorResponse {
-    private Timestamp timestamp;
+public class InputOutputException extends RuntimeException{
     private int statusCode;
-    private String error;
-    private String message; // error message details
-    private String path; // path : place of error
+    private String message;
+    private Exception exception;
 }

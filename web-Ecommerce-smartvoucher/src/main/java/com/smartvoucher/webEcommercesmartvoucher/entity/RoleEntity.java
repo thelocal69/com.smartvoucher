@@ -41,6 +41,8 @@ public class RoleEntity {
     // field được references
     @OneToMany(mappedBy = "idRole")
     private List<RolesUsersEntity> rolesUsersEntities;
+
     @OneToMany(mappedBy = "idRole")
     private List<WarehouseMerchantEntity> warehouseMerchantEntities;
+
 }

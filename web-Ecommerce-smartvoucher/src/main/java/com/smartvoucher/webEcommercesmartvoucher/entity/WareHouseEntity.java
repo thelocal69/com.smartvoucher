@@ -41,7 +41,7 @@ public class WareHouseEntity extends BaseEntity{
     private int showOnWeb;
     @Column(name = "capacity")
     private int capacity;
-    @Column(name = "vouncher_channel", nullable = false)
+    @Column(name = "voucher_channel", nullable = false)
     private int voucherChannel;
 
     @ManyToOne
@@ -60,12 +60,16 @@ public class WareHouseEntity extends BaseEntity{
     private List<TicketEntity> ticketEntities;
 
     @OneToMany(mappedBy = "idWarehouse")
-    private List<WarehouseMerchantEntity> warehouseMerchantEntities;
-
-    @OneToMany(mappedBy = "idWarehouse")
     private List<WarehouseSerialEntity> warehouseSerialEntities;
 
     @OneToMany(mappedBy = "idWarehouse")
     private List<WarehouseStoreEntity> warehouseStoreEntities;
 
+    @ManyToOne
+    @JoinColumn(name = "id_label")
+    private LabelEntity label;
+
+    @ManyToOne
+    @JoinColumn(name = "id_merchant")
+    private MerchantEntity merchant;
 }

@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @RequestMapping("/ticket")
@@ -50,6 +55,17 @@ public class TicketController {
     public ResponseEntity<?> deleteTicket(@RequestParam long id) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.deleteTicket(id));
+    }
+
+    @PostMapping("/api/upload")
+    public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Upload images is completed !",
+                        ticketService.uploadTicketImages(fileName).getWebViewLink()
+                )
+        );
     }
 
 }
