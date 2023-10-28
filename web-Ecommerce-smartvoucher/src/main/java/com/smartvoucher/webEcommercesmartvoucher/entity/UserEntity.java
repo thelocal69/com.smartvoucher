@@ -19,6 +19,9 @@ public class UserEntity {
     @Column(name = "member_code")
     private String memberCode;
 
+    @Column(name = "ava_url")
+    private String avatarUrl;
+
     @Column(name = "first_name")
     private String firstName;
 

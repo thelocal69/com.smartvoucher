@@ -16,6 +16,7 @@ public class UserDTO {
     private long id;
 
     private String memberCode;
+    private String avatarUrl;
 
     private String firstName;
 
