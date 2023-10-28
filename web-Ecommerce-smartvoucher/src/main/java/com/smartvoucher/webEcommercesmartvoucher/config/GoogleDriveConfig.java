@@ -32,7 +32,9 @@ public class GoogleDriveConfig {
     public Drive getService() throws GeneralSecurityException, IOException{
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         return new Drive.Builder(HTTP_TRANSPORT,
-                JacksonFactory.getDefaultInstance(), googleCredential).build();
+                JacksonFactory.getDefaultInstance(), googleCredential)
+                .setApplicationName("com.smartvoucher")
+                .build();
     }
 
     @Bean

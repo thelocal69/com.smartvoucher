@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.config;
 
+import lombok.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -21,7 +22,7 @@ public class JpaAuditingConfig {
     public static class AuditorAwareImpl implements AuditorAware<String> {
         //use nested class
         @Override
-        public Optional<String> getCurrentAuditor() {
+        public @NonNull Optional<String> getCurrentAuditor() {
             //tracking user
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null || !authentication.isAuthenticated()){

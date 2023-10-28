@@ -11,6 +11,7 @@ public class UserConverter {
             UserDTO userDTO = new UserDTO();
             userDTO.setId(userEntity.getId());
             userDTO.setMemberCode(userEntity.getMemberCode());
+            userDTO.setAvatarUrl(userEntity.getAvatarUrl());
             userDTO.setFirstName(userEntity.getFirstName());
             userDTO.setLastName(userEntity.getLastName());
             userDTO.setFullName(userEntity.getFullName());
@@ -30,6 +31,7 @@ public class UserConverter {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(userDTO.getId());
         userEntity.setMemberCode(userDTO.getMemberCode());
+        userEntity.setAvatarUrl(userDTO.getAvatarUrl());
         userEntity.setFirstName(userDTO.getFirstName());
         userEntity.setLastName(userDTO.getLastName());
         userEntity.setFullName(userDTO.getFullName());
