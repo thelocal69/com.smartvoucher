@@ -20,6 +20,7 @@ import java.util.Collection;
 @Service
 public class GoogleDriveConfig {
     private final GoogleCredential googleCredential;
+    private final File P12_FOLDER = new File(System.getProperty("user.com.smartvoucher"),"p12");
 
     @Autowired
     @Lazy
@@ -35,8 +36,10 @@ public class GoogleDriveConfig {
     }
 
     @Bean
-    public GoogleCredential googleCredentia() throws GeneralSecurityException, IOException{
+    public GoogleCredential googleCredential() throws GeneralSecurityException, IOException{
         Collection<String> stringCollection = new ArrayList<>();
+        String CLIENT_SECRET_KEY = "smartvoucher-403009-ea2ab27e93c2.p12";
+        File clientSecretFilePath = new File(P12_FOLDER, CLIENT_SECRET_KEY);
         stringCollection.add("https://www.googleapis.com/auth/drive");
         HttpTransport httpTransport = new  NetHttpTransport();
         JacksonFactory jacksonFactory = new JacksonFactory();
@@ -45,7 +48,7 @@ public class GoogleDriveConfig {
                 .setJsonFactory(jacksonFactory)
                 .setServiceAccountId("com-smartvoucher@smartvoucher-403009.iam.gserviceaccount.com")
                 .setServiceAccountScopes(stringCollection)
-                .setServiceAccountPrivateKeyFromP12File(new File("p12keys/smartvoucher-403009-ea2ab27e93c2.p12"))
+                .setServiceAccountPrivateKeyFromP12File(clientSecretFilePath)
                 .build();
     }
 }
