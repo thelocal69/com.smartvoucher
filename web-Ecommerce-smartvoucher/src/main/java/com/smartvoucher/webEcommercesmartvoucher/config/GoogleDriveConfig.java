@@ -9,7 +9,7 @@ import com.google.api.services.drive.Drive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Service
+@Component
 public class GoogleDriveConfig {
     private final GoogleCredential googleCredential;
     private final File P12_FOLDER = new File(System.getProperty("user.com.smartvoucher"),"p12");
