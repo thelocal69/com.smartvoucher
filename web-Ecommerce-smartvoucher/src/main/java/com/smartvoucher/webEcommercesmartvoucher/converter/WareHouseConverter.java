@@ -28,7 +28,6 @@ public class WareHouseConverter {
         wareHouseDTO.setCapacity(wareHouseEntity.getCapacity());
         wareHouseDTO.setDiscountTypeCode(wareHouseEntity.getDiscountType().getCode());
         wareHouseDTO.setCategoryCode(wareHouseEntity.getCategory().getCategoryCode());
-        wareHouseDTO.setMerchantCode(wareHouseEntity.getMerchant().getMerchantCode());
         wareHouseDTO.setLabelName(wareHouseEntity.getLabel().getName());
         wareHouseDTO.setCreatedBy(wareHouseEntity.getCreatedBy());
         wareHouseDTO.setCreatedAt(wareHouseEntity.getCreatedAt());
