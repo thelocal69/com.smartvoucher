@@ -3,10 +3,14 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 import com.smartvoucher.webEcommercesmartvoucher.converter.SerialConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
+import com.smartvoucher.webEcommercesmartvoucher.exception.CheckCapacityException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.SerialRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.WarehouseSerialRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +25,18 @@ import java.util.List;
 public class SerialService implements ISerialService {
     private final SerialRepository serialRepository;
     private final SerialConverter serialConverter;
+    private final WarehouseSerialRepository warehouseSerialRepository;
+    private final IWareHouseRepository wareHouseRepository;
     @Autowired
     @Lazy
     public SerialService(SerialRepository serialRepository,
-                         SerialConverter serialConverter) {
+                         SerialConverter serialConverter,
+                         WarehouseSerialRepository warehouseSerialRepository,
+                         IWareHouseRepository wareHouseRepository) {
         this.serialRepository = serialRepository;
         this.serialConverter = serialConverter;
+        this.warehouseSerialRepository = warehouseSerialRepository;
+        this.wareHouseRepository = wareHouseRepository;
     }
 
     @Override
@@ -46,16 +56,26 @@ public class SerialService implements ISerialService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseObject insertSerial(SerialDTO serialDTO) {
+    public ResponseObject insertSerial(SerialDTO serialDTO, long idWarehouse) {
         SerialEntity checkSerial = serialRepository.findBySerialCode(serialDTO.getSerialCode());
-            if(checkSerial == null){
-                return new ResponseObject(200,
-                        "Add serial success!",
-                                serialConverter.toSerialDTO(
-                                        serialRepository.save(serialConverter.insertSerial(serialDTO))) );
+        if(checkSerial == null){
+            WareHouseEntity wareHouseEntity = wareHouseRepository.findOneById(idWarehouse);
+            if(wareHouseEntity != null) {
+                int total = warehouseSerialRepository.total(wareHouseEntity);
+                if(wareHouseEntity.getCapacity() - total > 0 ) {
+                    return new ResponseObject(200,
+                            "Add serial success!",
+                            serialConverter.toSerialDTO(
+                                    serialRepository.save(serialConverter.insertSerial(serialDTO))) );
+                } else {
+                    throw new CheckCapacityException(406, "Capacity is full, pls check and try again !");
+                }
             } else {
-                throw new DuplicationCodeException(400, "Serial is available, add fail!");
+                throw new ObjectNotFoundException(404, "Warehouse not found, pls try again");
             }
+        } else {
+            throw new DuplicationCodeException(400, "Serial is available, add fail!");
+        }
     }
 
     @Override
