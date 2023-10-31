@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.google.gson.Gson;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseToken;
 import com.smartvoucher.webEcommercesmartvoucher.service.IAccountService;
 import com.smartvoucher.webEcommercesmartvoucher.util.JWTHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class AccountService implements IAccountService {
         authenticationManager.authenticate(authenticationToken);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<SimpleGrantedAuthority> roles = (List<SimpleGrantedAuthority>) authentication.getAuthorities();
-        return jwtHelper.generateToken(gson.toJson(roles));
+        ResponseToken data = new ResponseToken();
+        data.setUsername(email);
+        data.setRoles(roles);
+        return jwtHelper.generateToken(gson.toJson(data));
     }
 }
