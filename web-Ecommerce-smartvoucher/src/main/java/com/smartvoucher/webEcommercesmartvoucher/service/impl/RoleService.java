@@ -23,7 +23,6 @@ public class RoleService implements IRoleService {
     private final RoleRepository roleRepository;
     private final RoleConverter roleConverter;
     @Autowired
-    @Lazy
     public RoleService(RoleRepository roleRepository,
                        RoleConverter roleConverter) {
         this.roleRepository = roleRepository;

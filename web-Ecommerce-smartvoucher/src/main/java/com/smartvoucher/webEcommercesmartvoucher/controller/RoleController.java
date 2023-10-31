@@ -18,7 +18,6 @@ public class RoleController {
     private final IRoleService rolesService;
 
     @Autowired
-    @Lazy
     public RoleController(RoleService roleService) {
         this.rolesService = roleService;
     }

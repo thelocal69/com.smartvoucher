@@ -53,7 +53,6 @@ public class TicketService implements ITicketService {
     private final Drive googleDrive;
 
     @Autowired
-    @Lazy
     public TicketService(TicketRepository ticketRepository
                 ,TicketConverter ticketConverter
                 ,SerialRepository serialRepository

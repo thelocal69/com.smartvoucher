@@ -35,18 +35,4 @@ public class OrderController {
                 this.ordersService.insertOrder(orderDTO));
     }
 
-//    @PutMapping
-//    @Transactional(rollbackFor = Exception.class)
-//    public ResponseEntity<?> updateOrder(@RequestBody @Valid OrderDTO orderDTO){
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                this.ordersService.updateOrder(orderDTO));
-//    }
-
-//    @DeleteMapping
-//    @Transactional(rollbackFor = Exception.class)
-//    public ResponseEntity<?> deleteOrder(@RequestParam long id){
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                this.ordersService.deleteOrder(id));
-//    }
-
 }
