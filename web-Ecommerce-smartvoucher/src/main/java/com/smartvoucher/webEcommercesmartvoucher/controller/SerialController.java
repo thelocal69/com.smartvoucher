@@ -5,6 +5,7 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.SerialService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ public class SerialController {
     private final ISerialService serialService;
 
     @Autowired
+    @Lazy
     public SerialController(SerialService serialService) {
         this.serialService = serialService;
     }
@@ -33,9 +35,10 @@ public class SerialController {
 
     @PostMapping("")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject> insertSerial(@Valid @RequestBody SerialDTO serialDTO){
+    public ResponseEntity<ResponseObject> insertSerial(@Valid @RequestBody SerialDTO serialDTO,
+                                                       @RequestParam long idWarehouse){
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.serialService.insertSerial(serialDTO));
+                this.serialService.insertSerial(serialDTO, idWarehouse));
     }
 
     @PutMapping("")

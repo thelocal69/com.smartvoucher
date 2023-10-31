@@ -6,6 +6,7 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketHistoryService;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.TicketHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ public class TicketHistoryController {
     private final ITicketHistoryService ticketHistoryService;
 
     @Autowired
+    @Lazy
     public TicketHistoryController(ITicketHistoryService ticketHistoryService) {
         this.ticketHistoryService = ticketHistoryService;
     }

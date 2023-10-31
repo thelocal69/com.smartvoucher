@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.validation.ConstraintViolation;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Set;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -73,6 +70,19 @@ public class GlobalExceptionHandler {
                         501,
                         ex.getMessage(),
                         "Input or Ouput is error !",
+                        "/"
+                )
+        );
+    }
+
+    @ExceptionHandler(CheckCapacityException.class)
+    public ResponseEntity<ErrorResponse> handleCheckCapacityException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        406,
+                        ex.getMessage(),
+                        "Capacity is full !",
                         "/"
                 )
         );
