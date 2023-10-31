@@ -6,6 +6,6 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 public interface IOrderService {
     ResponseObject getAllOrder();
     ResponseObject insertOrder(OrderDTO orderDTO);
-    ResponseObject updateOrder(OrderDTO orderDTO);
+//    ResponseObject updateOrder(OrderDTO orderDTO);
     ResponseObject deleteOrder(long id);
 }

@@ -29,11 +29,8 @@ public class TicketDTO {
     private int status;
     @NotNull(message = "Please fill all information!")
     private OrderDTO idOrderDTO;
-
     private Timestamp claimedTime;
-
     private Timestamp redeemedtimeTime;
-
     private Timestamp expiredTime;
     @NotNull(message = "Please fill all information!")
     @NotBlank(message = "Please fill all information!")

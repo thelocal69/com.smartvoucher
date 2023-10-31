@@ -78,7 +78,7 @@ public class TicketConverter {
         ticket.setIdCategory(categoryEntity);
         ticket.setIdOrder(orderEntity);
         ticket.setIdUser(userEntity);
-        ticket.setStatus(1);
+        ticket.setStatus(0);
         ticket.setClaimedTime(ticketDTO.getClaimedTime());
         ticket.setExpiredTime(wareHouseEntity.getAvailableTo());
         ticket.setRedeemedtimeTime(ticketDTO.getRedeemedtimeTime());
@@ -92,7 +92,7 @@ public class TicketConverter {
         ticket.setDescription(ticketDTO.getDescription());
         ticket.setVoucherChannel(ticketDTO.getVoucherChannel());
         ticket.setAvailbleFrom(wareHouseEntity.getAvailableFrom());
-       ticket.setAvaibleTo(wareHouseEntity.getAvailableTo());
+        ticket.setAvaibleTo(wareHouseEntity.getAvailableTo());
         ticket.setIdStore(storeEntity);
         return ticket;
         }

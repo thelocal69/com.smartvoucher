@@ -28,7 +28,7 @@ public class SerialEntity {
     private String batchCode;
     @Column(name = "number_of_serial", nullable = false)
     private int numberOfSerial;
-    @Column(name = "serial_code", unique = true, nullable = false)
+    @Column(name = "serial_code", unique = true, nullable = false, length = 10)
     private String serialCode;
     @Column(name = "status", nullable = false)
     private int status;

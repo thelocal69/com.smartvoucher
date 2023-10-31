@@ -2,16 +2,20 @@ package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
+import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 @Component
 public class SerialConverter {
+
+    private final RandomCodeHandler randomCodeHandler;
+
+    public SerialConverter(RandomCodeHandler randomCodeHandler){
+        this.randomCodeHandler = randomCodeHandler;
+    }
+
     public SerialDTO toSerialDTO(SerialEntity serialEntity) {
             SerialDTO serialDTO = new SerialDTO();
             serialDTO.setId(serialEntity.getId());
@@ -30,8 +34,8 @@ public class SerialConverter {
             SerialEntity serialEntity = new SerialEntity();
             serialEntity.setBatchCode(serialDTO.getBatchCode());
             serialEntity.setNumberOfSerial(serialDTO.getNumberOfSerial());
-            serialEntity.setSerialCode(serialDTO.getSerialCode());
-            serialEntity.setStatus(1);
+            serialEntity.setSerialCode(randomCodeHandler.generateRandomChars(10));
+            serialEntity.setStatus(0);
         return serialEntity;
     }
 
@@ -39,8 +43,7 @@ public class SerialConverter {
             if (!Objects.equals(serialDTO.getNumberOfSerial(), oldSerial.getNumberOfSerial())) {
                 oldSerial.setNumberOfSerial(serialDTO.getNumberOfSerial());
             }
-            if ( serialDTO.getStatus() > 0 && serialDTO.getStatus() < 4
-                    && !Objects.equals(serialDTO.getStatus(), oldSerial.getStatus())) {
+            if (!Objects.equals(serialDTO.getStatus(), oldSerial.getStatus())) {
                 oldSerial.setStatus(serialDTO.getStatus());
             }
         return oldSerial;

@@ -4,6 +4,7 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.RoleDTO;
 import com.smartvoucher.webEcommercesmartvoucher.service.IRoleService;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;

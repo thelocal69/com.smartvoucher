@@ -32,7 +32,6 @@ public class OrderService implements IOrderService {
     private final IWareHouseRepository iWareHouseRepository;
 
     @Autowired
-    @Lazy
     public OrderService(OrderRepository orderRepository
             , OrderConverter orderConverter
             , UserRepository userRepository
@@ -69,7 +68,7 @@ public class OrderService implements IOrderService {
                     return new ResponseObject(200,
                             "Add Order success",
                             orderConverter.toOrdersDTO(orderRepository.save(
-                                    orderConverter.insertRole(
+                                    orderConverter.insertOrder(
                                             orderDTO
                                             ,createUser(orderDTO)
                                             ,createWareHouse(orderDTO)))) );
@@ -80,29 +79,6 @@ public class OrderService implements IOrderService {
         } else {
             throw new DuplicationCodeException(400, "Order is available, add order fail");
         }
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseObject updateOrder(OrderDTO orderDTO){
-            Optional<OrderEntity> oldOrder = orderRepository.findByOrderNoAndId(orderDTO.getOrderNo(),orderDTO.getId());
-            if (oldOrder.isPresent()) {
-                    if(existsUserAndWarehouse(orderDTO)) {
-                        return new ResponseObject(200,
-                                "Update Order success",
-                                orderConverter.toOrdersDTO(
-                                        orderRepository.save(orderConverter.updateRole(
-                                                orderDTO
-                                                ,oldOrder.orElse(null)
-                                                ,createUser(orderDTO)
-                                                ,createWareHouse(orderDTO)))));
-                    } else {
-                        throw new ObjectEmptyException(406,
-                                "User Or Warehouse is empty, please fill all data, add order fail");
-                    }
-            } else {
-                throw new ObjectNotFoundException(404, "Order not found, update Order fail");
-            }
     }
 
     @Override
