@@ -68,8 +68,4 @@ public class WareHouseEntity extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "id_label")
     private LabelEntity label;
-
-    @ManyToOne
-    @JoinColumn(name = "id_merchant")
-    private MerchantEntity merchant;
 }

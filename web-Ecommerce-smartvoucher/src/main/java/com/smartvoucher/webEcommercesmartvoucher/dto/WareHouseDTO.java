@@ -49,9 +49,6 @@ public class WareHouseDTO extends BaseDTO{
     @NotBlank(message = "Category code is not empty !")
     @NotNull
     private String categoryCode;
-    @NotBlank(message = "Merchant code is not empty !")
-    @NotNull
-    private String merchantCode;
     @NotBlank(message = "label name is not empty !")
     @NotNull
     private String labelName;

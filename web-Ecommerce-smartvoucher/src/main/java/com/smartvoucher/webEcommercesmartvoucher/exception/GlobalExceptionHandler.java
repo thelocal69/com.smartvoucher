@@ -88,4 +88,29 @@ public class GlobalExceptionHandler {
         );
     }
 
+        @ExceptionHandler(UserNotFoundException.class)
+        public ResponseEntity<ErrorResponse> handleUserNotFoundException(Exception ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ErrorResponse(
+                            new Timestamp(System.currentTimeMillis()),
+                            404,
+                            ex.getMessage(),
+                            "User not found or not exist !",
+                            "/"
+                    )
+            );
+        }
+
+        @ExceptionHandler(JwtFilterException.class)
+        public ResponseEntity<ErrorResponse> handleJwtFilterException(Exception ex){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                    new ErrorResponse(
+                            new Timestamp(System.currentTimeMillis()),
+                            403,
+                            ex.getMessage(),
+                            "Filter is blocked !",
+                            "/"
+                    )
+            );
+        }
 }
