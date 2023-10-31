@@ -1,25 +1,35 @@
-/*
 
 package com.smartvoucher.webEcommercesmartvoucher.config;
 
+import com.smartvoucher.webEcommercesmartvoucher.filter.JWTFilter;
+import com.smartvoucher.webEcommercesmartvoucher.provider.CustomAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomAuthenticationProvider customAuthenticationProvider;
+    private final JWTFilter jwtFilter;
+
+    @Autowired
+    public SecurityConfig(final CustomAuthenticationProvider customAuthenticationProvider,
+                          final JWTFilter jwtFilter) {
+        this.customAuthenticationProvider = customAuthenticationProvider;
+        this.jwtFilter = jwtFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -28,36 +38,49 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-
-        UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder().encode("123"))
-                .roles("ADMIN")
+    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception{
+        return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
+                .authenticationProvider(customAuthenticationProvider)
                 .build();
-
-        UserDetails user = User.withUsername("user")
-                .password(passwordEncoder().encode("123"))
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(admin, user);
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeHttpRequests()
-                    .antMatchers(HttpMethod.POST, "/serial").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, "/serial").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/serial").hasRole("USER")
-                        .antMatchers("/serial/**").permitAll()
-                .anyRequest().authenticated() // tất cả những cái còn lại đều cần phải chứng thực
-                .and().httpBasic()
-                .and().build();
-
+    public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
+            return http.csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeHttpRequests()
+                    .antMatchers("/account/**").permitAll()
+                    .antMatchers("**/upload").permitAll()
+                    .antMatchers(HttpMethod.GET, "/merchant").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/merchant").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/merchant").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, "/merchant").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/chain").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/chain").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/chain").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, "/chain").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/category").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/category").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/category").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, "/category").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/discount").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/discount").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/discount").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, "/discount").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/warehouse").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/warehouse").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/warehouse").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, "/warehouse").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/store").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/store").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/store").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, "/store").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/label").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/user/api/upload").hasRole("USER")
+                    .anyRequest().authenticated() // tất cả những cái còn lại đều cần phải chứng thực
+                    .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                    .build();
     }
 
 }
-*/

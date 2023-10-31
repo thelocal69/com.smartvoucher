@@ -31,7 +31,6 @@ public class WareHouseService implements IWareHouseService {
     private final WareHouseConverter wareHouseConverter;
     private final IDiscountTypeRepository discountTypeRepository;
     private final ICategoryRepository categoryRepository;
-    private final IMerchantRepository merchantRepository;
     private final ILabelRepository labelRepository;
     private final Drive googleDrive;
 
@@ -42,7 +41,6 @@ public class WareHouseService implements IWareHouseService {
                             final IDiscountTypeRepository discountTypeRepository,
                             final ICategoryRepository categoryRepository,
                             final Drive googleDrive,
-                            final IMerchantRepository merchantRepository,
                             final ILabelRepository labelRepository
     ) {
         this.wareHouseRepository = wareHouseRepository;
@@ -50,7 +48,6 @@ public class WareHouseService implements IWareHouseService {
         this.discountTypeRepository = discountTypeRepository;
         this.categoryRepository = categoryRepository;
         this.googleDrive = googleDrive;
-        this.merchantRepository = merchantRepository;
         this.labelRepository = labelRepository;
     }
 
@@ -82,8 +79,7 @@ public class WareHouseService implements IWareHouseService {
                 throw new ObjectNotFoundException(
                         404, "Cannot update warehouse id: " + wareHouseDTO.getId()
                 );
-            } else if (!existCategoryAndDiscount(wareHouseDTO) ||
-                        !existMerchantAndLabel(wareHouseDTO)) {
+            } else if (!existCategoryAndDiscountAndLabel(wareHouseDTO)) {
                 throw new ObjectEmptyException(
                         406, "Category code or discount code is empty or not exist !"
                 );
@@ -96,8 +92,7 @@ public class WareHouseService implements IWareHouseService {
                 throw new DuplicationCodeException(
                         400, "Warehouse code is duplicated !"
                 );
-            } else if (!existCategoryAndDiscount(wareHouseDTO) ||
-                        !existMerchantAndLabel(wareHouseDTO)) {
+            } else if (!existCategoryAndDiscountAndLabel(wareHouseDTO)) {
                 throw new ObjectEmptyException(
                         406, "Category code or discount code is empty or not exist !"
                 );
@@ -106,11 +101,9 @@ public class WareHouseService implements IWareHouseService {
         }
         DiscountTypeEntity discountType = discountTypeRepository.findOneByCode(wareHouseDTO.getDiscountTypeCode());
         CategoryEntity category = categoryRepository.findOneByCategoryCode(wareHouseDTO.getCategoryCode());
-        MerchantEntity merchant = merchantRepository.findOneByMerchantCode(wareHouseDTO.getMerchantCode());
         LabelEntity label = labelRepository.findOneByName(wareHouseDTO.getLabelName());
         wareHouse.setDiscountType(discountType);
         wareHouse.setCategory(category);
-        wareHouse.setMerchant(merchant);
         wareHouse.setLabel(label);
         return wareHouseConverter.toWareHouseDTO(wareHouseRepository.save(wareHouse));
     }
@@ -135,17 +128,11 @@ public class WareHouseService implements IWareHouseService {
 
     @Override
     @Transactional(readOnly = true)
-    public Boolean existCategoryAndDiscount(WareHouseDTO wareHouseDTO) {
+    public Boolean existCategoryAndDiscountAndLabel(WareHouseDTO wareHouseDTO) {
         boolean existCategoryCode = categoryRepository.existsByCategoryCode(wareHouseDTO.getCategoryCode());
         boolean existDiscountCode = discountTypeRepository.existsByCode(wareHouseDTO.getDiscountTypeCode());
-        return existDiscountCode && existCategoryCode;
-    }
-
-    @Override
-    public Boolean existMerchantAndLabel(WareHouseDTO wareHouseDTO) {
-        boolean existMerchantCode = merchantRepository.existsByMerchantCode(wareHouseDTO.getMerchantCode());
         boolean existLabelName = labelRepository.existsByName(wareHouseDTO.getLabelName());
-        return existMerchantCode && existLabelName;
+        return existDiscountCode && existCategoryCode && existLabelName;
     }
 
     public Boolean isImageFile(MultipartFile file) {
