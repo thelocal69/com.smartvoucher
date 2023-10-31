@@ -28,7 +28,6 @@ public class SerialService implements ISerialService {
     private final WarehouseSerialRepository warehouseSerialRepository;
     private final IWareHouseRepository wareHouseRepository;
     @Autowired
-    @Lazy
     public SerialService(SerialRepository serialRepository,
                          SerialConverter serialConverter,
                          WarehouseSerialRepository warehouseSerialRepository,

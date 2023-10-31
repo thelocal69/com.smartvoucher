@@ -26,7 +26,6 @@ public class TicketController {
     private final ITicketService ticketService;
 
     @Autowired
-    @Lazy
     public TicketController(ITicketService ticketService) {
         this.ticketService = ticketService;
     }

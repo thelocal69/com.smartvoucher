@@ -21,7 +21,6 @@ public class SerialController {
     private final ISerialService serialService;
 
     @Autowired
-    @Lazy
     public SerialController(SerialService serialService) {
         this.serialService = serialService;
     }

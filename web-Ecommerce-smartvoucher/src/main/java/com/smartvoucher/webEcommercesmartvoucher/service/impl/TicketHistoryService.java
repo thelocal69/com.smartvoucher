@@ -22,7 +22,6 @@ public class TicketHistoryService implements ITicketHistoryService {
     private final TicketHistoryConverter ticketHistoryConverter;
 
     @Autowired
-    @Lazy
     public TicketHistoryService(TicketHistoryRepository ticketHistoryRepository,
                                 TicketHistoryConverter ticketHistoryConverter) {
         this.ticketHistoryRepository = ticketHistoryRepository;
