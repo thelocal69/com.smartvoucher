@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.validation.ConstraintViolation;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Set;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -73,6 +70,32 @@ public class GlobalExceptionHandler {
                         501,
                         ex.getMessage(),
                         "Input or Ouput is error !",
+                        "/"
+                )
+        );
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(Exception ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        404,
+                        ex.getMessage(),
+                        "User not found or not exist !",
+                        "/"
+                )
+        );
+    }
+
+    @ExceptionHandler(JwtFilterException.class)
+    public ResponseEntity<ErrorResponse> handleJwtFilterException(Exception ex){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        403,
+                        ex.getMessage(),
+                        "Filter is blocked !",
                         "/"
                 )
         );
