@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.filter;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.smartvoucher.webEcommercesmartvoucher.exception.JwtFilterException;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseToken;
 import com.smartvoucher.webEcommercesmartvoucher.util.JWTHelper;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +44,12 @@ public class JWTFilter extends OncePerRequestFilter {
             String token = headerValue.substring(7);
             String data = jwtHelper.parserToken(token);
             if (data != null && !data.isEmpty()){
+                ResponseToken responseToken = gson.fromJson(data, ResponseToken.class);
+                String newData = gson.toJson(responseToken.getRoles());
                 Type listType = new TypeToken<ArrayList<SimpleGrantedAuthority>>(){}.getType();
-                List<GrantedAuthority> roles = gson.fromJson(data, listType);
+                List<GrantedAuthority> roles = gson.fromJson(newData, listType);
                 UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
-                        "", "", roles
+                        responseToken.getUsername(), "", roles
                 );
                 SecurityContext contextHolder = SecurityContextHolder.getContext();
                 contextHolder.setAuthentication(userToken);
