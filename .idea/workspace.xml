@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="12185237-31df-4c91-bb79-deda5ffa055a" name="Changes" comment="removed .idea folder" />
+    <list default="true" id="12185237-31df-4c91-bb79-deda5ffa055a" name="Changes" comment="removed .idea folder">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -61,7 +63,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1698826177870</updated>
-      <workItem from="1698826178878" duration="3996000" />
+      <workItem from="1698826178878" duration="4613000" />
     </task>
     <task id="LOCAL-00001" summary="removed .idea folder">
       <option name="closed" value="true" />
