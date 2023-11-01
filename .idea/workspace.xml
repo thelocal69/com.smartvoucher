@@ -3,6 +3,8 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+
+
   <component name="ChangeListManager">
     <list default="true" id="12185237-31df-4c91-bb79-deda5ffa055a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
