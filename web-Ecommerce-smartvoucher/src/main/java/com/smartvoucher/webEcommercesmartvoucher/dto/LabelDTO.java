@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LabelDTO {
-    private Long id;
+    private int id;
     private String name;
 }

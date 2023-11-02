@@ -13,8 +13,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DiscountTypeDTO extends BaseDTO{
-    @NotBlank(message = "Discount type code is not empty !")
-    @NotNull
     private String code;
     @NotBlank(message = "Please fill all data !")
     private String name;

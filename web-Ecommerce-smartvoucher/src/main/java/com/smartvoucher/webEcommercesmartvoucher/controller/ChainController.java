@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/chain")
@@ -49,6 +50,12 @@ public class ChainController {
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertChain(@Valid @RequestBody ChainDTO chainDTO) {
+        chainDTO.setChainCode(
+                UUID.randomUUID()
+                        .toString()
+                        .replace("-","")
+                        .substring(0, 20)
+        );
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,

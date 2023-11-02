@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/store")
@@ -36,7 +37,13 @@ public class StoreController {
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertStore(@Valid @RequestBody StoreDTO storeDTO){
-            return ResponseEntity.status(HttpStatus.OK).body(
+        storeDTO.setStoreCode(
+                UUID.randomUUID()
+                        .toString()
+                        .replace("-","")
+                        .substring(0,20)
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,
                             "Insert is completed !",

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/warehouse")
@@ -49,7 +50,13 @@ public class WareHouseController {
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertWareHouse(@Valid @RequestBody WareHouseDTO wareHouseDTO){
-            return ResponseEntity.status(HttpStatus.OK).body(
+        wareHouseDTO.setWarehouseCode(
+                UUID.randomUUID()
+                        .toString()
+                        .replace("-","")
+                        .substring(0,20)
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,
                             "Insert is completed !",

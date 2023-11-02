@@ -90,7 +90,7 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.DELETE,"/ticket").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("USER")
-                    .anyRequest().authenticated() // tất cả những cái còn lại đều cần phải chứng thực
+                    .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
                     .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                     .build();
     }
