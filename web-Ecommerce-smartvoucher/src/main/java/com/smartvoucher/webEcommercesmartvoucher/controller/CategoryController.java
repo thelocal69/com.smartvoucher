@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/category")
@@ -49,7 +50,14 @@ public class CategoryController {
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertCategory(@Valid @RequestBody CategoryDTO categoryDTO){
-            return ResponseEntity.status(HttpStatus.OK).body(
+        categoryDTO.setCategoryCode(
+                UUID.randomUUID()
+                        .toString()
+                        .concat("CH")
+                        .replace("-","")
+                        .substring(0, 18)
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,
                             "Insert is completed !",

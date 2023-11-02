@@ -13,8 +13,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StoreDTO extends BaseDTO{
-    @NotBlank(message = "Store code is not empty !")
-    @NotNull
     private String storeCode;
     @NotBlank(message = "Please fill all data !")
     private String name;

@@ -61,7 +61,7 @@ CREATE TABLE store(
 CREATE TABLE warehouse(
 	id bigint auto_increment,
 	warehouse_code varchar(20) unique,
-	id_label bigint not null,
+	id_label int not null,
 	name varchar(100),
 	description varchar(512),
 	term_of_use varchar(255),
@@ -86,7 +86,7 @@ CREATE TABLE warehouse(
 );
 
 CREATE TABLE label(
-id bigint auto_increment,
+id int auto_increment,
 name varchar(50),
 
 primary key(id)

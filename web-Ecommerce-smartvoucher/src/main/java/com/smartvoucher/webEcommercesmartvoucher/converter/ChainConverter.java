@@ -22,7 +22,7 @@ public class ChainConverter {
         chainDTO.setDescription(chainEntity.getDescription());
         chainDTO.setStatus(chainEntity.getStatus());
         chainDTO.setMerchantCode(chainEntity.getMerchant().getMerchantCode());
-        chainDTO.setCreatedBy(chainDTO.getCreatedBy());
+        chainDTO.setCreatedBy(chainEntity.getCreatedBy());
         chainDTO.setCreatedAt(chainEntity.getCreatedAt());
         chainDTO.setUpdatedBy(chainEntity.getUpdateBy());
         chainDTO.setUpdatedAt(chainEntity.getUpdateAt());

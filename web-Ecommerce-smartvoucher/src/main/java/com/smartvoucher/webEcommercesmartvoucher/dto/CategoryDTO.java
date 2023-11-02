@@ -14,8 +14,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryDTO extends BaseDTO{
-    @NotBlank(message = "Category code is not empty !")
-    @NotNull
     private String categoryCode;
     @NotBlank(message = "Please fill all data !")
     private String name;
