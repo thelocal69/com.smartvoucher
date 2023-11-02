@@ -3,7 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IAccountService;
-import com.smartvoucher.webEcommercesmartvoucher.service.impl.SignUpService;
+import com.smartvoucher.webEcommercesmartvoucher.service.impl.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +16,11 @@ import javax.validation.Valid;
 public class AccountController {
 
     private final IAccountService accountService;
-    private final SignUpService signUpService;
+    private final AccountService signUpService;
 
     @Autowired
     public AccountController(final IAccountService accountService,
-                             SignUpService signUpService) {
+                             final AccountService signUpService) {
         this.accountService = accountService;
         this.signUpService = signUpService;
     }
