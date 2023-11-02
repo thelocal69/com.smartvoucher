@@ -7,6 +7,8 @@ import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.exception.InputOutputException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
 import org.apache.commons.io.FilenameUtils;
@@ -23,8 +25,8 @@ import java.util.List;
 @Service
 public class UserService implements IUserService {
 
-    private UserRepository userRepository;
-    private UserConverter userConverter;
+    private final UserRepository userRepository;
+    private final UserConverter userConverter;
     private final Drive googleDrive;
 
     public UserService(UserRepository userRepository,
@@ -35,16 +37,17 @@ public class UserService implements IUserService {
         this.googleDrive = googleDrive;
     }
 
-    public List<UserDTO> findAllUser() {
-
+    public ResponseObject getAllUser() {
         List<UserEntity> list = userRepository.findAll();
-
         List<UserDTO> listUser = new ArrayList<>();
-
-        for(UserEntity data : list) {
-            listUser.add(userConverter.toUserDTO(data));
+        if(!list.isEmpty()) {
+            for(UserEntity data : list) {
+                listUser.add(userConverter.toUserDTO(data));
+            }
+            return new ResponseObject(200, "List User", listUser);
+        } else {
+            throw new ObjectNotFoundException(404, "List User is empty");
         }
-        return listUser;
     }
 
     public Boolean isImageFile(MultipartFile file){
