@@ -14,8 +14,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChainDTO extends BaseDTO{
-    @NotBlank(message = "Chain code is not empty !")
-    @NotNull
     private String chainCode;
     @NotBlank(message = "Please fill all data !")
     private String name;

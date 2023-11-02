@@ -14,8 +14,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MerchantDTO extends BaseDTO{
-    @NotBlank(message = "Merchant code is not empty !")
-    @NotNull
     private String merchantCode;
     @NotBlank(message = "Please fill all data !")
     private String name;

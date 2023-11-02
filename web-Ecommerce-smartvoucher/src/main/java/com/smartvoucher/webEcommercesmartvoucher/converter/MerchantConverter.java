@@ -5,6 +5,7 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.MerchantEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -49,7 +50,6 @@ public class MerchantConverter {
 
     public MerchantEntity toMerchantEntity(MerchantDTO merchantDTO, MerchantEntity merchantEntity){
         merchantEntity.setId(merchantDTO.getId());
-        merchantEntity.setMerchantCode(merchantDTO.getMerchantCode());
         merchantEntity.setLegalName(merchantDTO.getLegalName());
         merchantEntity.setLogoUrl(merchantDTO.getLogoUrl());
         merchantEntity.setName(merchantDTO.getName());

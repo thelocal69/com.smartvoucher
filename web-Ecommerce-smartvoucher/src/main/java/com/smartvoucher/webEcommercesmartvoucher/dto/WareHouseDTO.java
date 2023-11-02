@@ -14,8 +14,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WareHouseDTO extends BaseDTO{
-    @NotBlank(message = "Warehouse code is not empty !")
-    @NotNull
     private String warehouseCode;
     @NotBlank(message = "Please fill all data !")
     private String name;
