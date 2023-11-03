@@ -1,19 +1,24 @@
 package com.smartvoucher.webEcommercesmartvoucher.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MerchantDTO extends BaseDTO{
+public class
+MerchantDTO{
+    private Long id;
+    private String createdBy;
+    private Timestamp createdAt;
+    private String updatedBy;
+    private Timestamp updatedAt;
     private String merchantCode;
     @NotBlank(message = "Please fill all data !")
     private String name;

@@ -75,7 +75,7 @@ public class MerchantService implements IMerchantService {
             boolean exist = existMerchant(merchantDTO);
             if (!exist){
                 throw new ObjectNotFoundException(
-                        404, "Cannot update chain id: "+merchantDTO.getId()
+                        404, "Cannot update merchant id: "+merchantDTO.getId()
                 );
             }
             MerchantEntity oldMerchant = merchantRepository.findOneById(merchantDTO.getId());
