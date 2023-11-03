@@ -10,16 +10,16 @@ import java.util.stream.Collectors;
 @Component
 public class DiscountTypeConverter {
     public DiscountTypeDTO toDiscountTypeDTO(DiscountTypeEntity discountTypeEntity){
-        DiscountTypeDTO discountTypeDTO = new DiscountTypeDTO();
-        discountTypeDTO.setId(discountTypeEntity.getId());
-        discountTypeDTO.setCode(discountTypeEntity.getCode());
-        discountTypeDTO.setName(discountTypeEntity.getName());
-        discountTypeDTO.setStatus(discountTypeEntity.getStatus());
-        discountTypeDTO.setCreatedBy(discountTypeEntity.getCreatedBy());
-        discountTypeDTO.setCreatedAt(discountTypeEntity.getCreatedAt());
-        discountTypeDTO.setUpdatedBy(discountTypeEntity.getUpdateBy());
-        discountTypeDTO.setUpdatedAt(discountTypeEntity.getUpdateAt());
-        return discountTypeDTO;
+        return DiscountTypeDTO.builder()
+                .id(discountTypeEntity.getId())
+                .createdBy(discountTypeEntity.getCreatedBy())
+                .createdAt(discountTypeEntity.getCreatedAt())
+                .updatedBy(discountTypeEntity.getUpdateBy())
+                .updatedAt(discountTypeEntity.getUpdateAt())
+                .code(discountTypeEntity.getCode())
+                .name(discountTypeEntity.getName())
+                .status(discountTypeEntity.getStatus())
+                .build();
     }
 
     public List<DiscountTypeDTO> toDiscountTypeDTOList(List<DiscountTypeEntity> discountTypeEntityList){
@@ -27,17 +27,16 @@ public class DiscountTypeConverter {
     }
 
     public DiscountTypeEntity toDiscountTypeEntity(DiscountTypeDTO discountTypeDTO){
-        DiscountTypeEntity discountTypeEntity = new DiscountTypeEntity();
-        discountTypeEntity.setId(discountTypeDTO.getId());
-        discountTypeEntity.setCode(discountTypeDTO.getCode());
-        discountTypeEntity.setName(discountTypeDTO.getName());
-        discountTypeEntity.setStatus(discountTypeDTO.getStatus());
-        return discountTypeEntity;
+        return DiscountTypeEntity.builder()
+                .id(discountTypeDTO.getId())
+                .code(discountTypeDTO.getCode())
+                .name(discountTypeDTO.getName())
+                .status(discountTypeDTO.getStatus())
+                .build();
     }
 
     public DiscountTypeEntity toDiscountTypeEntity(DiscountTypeDTO discountTypeDTO, DiscountTypeEntity discountTypeEntity){
         discountTypeEntity.setId(discountTypeDTO.getId());
-        discountTypeEntity.setCode(discountTypeDTO.getCode());
         discountTypeEntity.setName(discountTypeDTO.getName());
         discountTypeEntity.setStatus(discountTypeDTO.getStatus());
         return discountTypeEntity;

@@ -10,21 +10,21 @@ import java.util.stream.Collectors;
 @Component
 public class StoreConverter {
     public StoreDTO toStoreDTO(StoreEntity storeEntity){
-        StoreDTO storeDTO = new StoreDTO();
-        storeDTO.setId(storeEntity.getId());
-        storeDTO.setStoreCode(storeEntity.getStoreCode());
-        storeDTO.setName(storeEntity.getName());
-        storeDTO.setAddress(storeEntity.getAddress());
-        storeDTO.setPhone(storeEntity.getPhone());
-        storeDTO.setDescription(storeEntity.getDescription());
-        storeDTO.setStatus(storeEntity.getStatus());
-        storeDTO.setMerchantCode(storeEntity.getMerchant().getMerchantCode());
-        storeDTO.setChainCode(storeEntity.getChain().getChainCode());
-        storeDTO.setCreatedBy(storeEntity.getCreatedBy());
-        storeDTO.setCreatedAt(storeEntity.getCreatedAt());
-        storeDTO.setUpdatedBy(storeEntity.getUpdateBy());
-        storeDTO.setUpdatedAt(storeEntity.getUpdateAt());
-        return storeDTO;
+        return StoreDTO.builder()
+                .id(storeEntity.getId())
+                .createdBy(storeEntity.getCreatedBy())
+                .createdAt(storeEntity.getCreatedAt())
+                .updatedBy(storeEntity.getUpdateBy())
+                .updatedAt(storeEntity.getUpdateAt())
+                .storeCode(storeEntity.getStoreCode())
+                .name(storeEntity.getName())
+                .address(storeEntity.getAddress())
+                .description(storeEntity.getDescription())
+                .phone(storeEntity.getPhone())
+                .status(storeEntity.getStatus())
+                .merchantCode(storeEntity.getMerchant().getMerchantCode())
+                .chainCode(storeEntity.getChain().getChainCode())
+                .build();
     }
 
     public List<StoreDTO> toStoreDTOList(List<StoreEntity> storeEntityList){
@@ -32,20 +32,19 @@ public class StoreConverter {
     }
 
     public StoreEntity toStoreEntity(StoreDTO storeDTO){
-        StoreEntity storeEntity = new StoreEntity();
-        storeEntity.setId(storeDTO.getId());
-        storeEntity.setStoreCode(storeDTO.getStoreCode());
-        storeEntity.setName(storeDTO.getName());
-        storeEntity.setAddress(storeDTO.getAddress());
-        storeEntity.setPhone(storeDTO.getPhone());
-        storeEntity.setDescription(storeDTO.getDescription());
-        storeEntity.setStatus(storeDTO.getStatus());
-        return storeEntity;
+        return StoreEntity.builder()
+                .id(storeDTO.getId())
+                .storeCode(storeDTO.getStoreCode())
+                .name(storeDTO.getName())
+                .phone(storeDTO.getPhone())
+                .address(storeDTO.getAddress())
+                .status(storeDTO.getStatus())
+                .description(storeDTO.getDescription())
+                .build();
     }
 
     public StoreEntity toStoreEntity(StoreDTO storeDTO, StoreEntity storeEntity){
         storeEntity.setId(storeDTO.getId());
-        storeEntity.setStoreCode(storeDTO.getStoreCode());
         storeEntity.setName(storeDTO.getName());
         storeEntity.setAddress(storeDTO.getAddress());
         storeEntity.setPhone(storeDTO.getPhone());

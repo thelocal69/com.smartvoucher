@@ -85,6 +85,17 @@ CREATE TABLE warehouse(
 	primary key(id)
 );
 
+CREATE TABLE token(
+id bigint auto_increment,
+token varchar(255),
+token_type varchar(100),
+expired tinyint,
+revokes tinyint,
+id_user bigint not null,
+
+primary key(id)
+);
+
 CREATE TABLE label(
 id int auto_increment,
 name varchar(50),
@@ -304,3 +315,5 @@ ALTER TABLE orders ADD CONSTRAINT FK_id_warehouse_orders FOREIGN KEY (id_warehou
 
 ALTER TABLE roles_users ADD CONSTRAINT FK_id_role_roles_users FOREIGN KEY (id_role) REFERENCES roles (id);
 ALTER TABLE roles_users ADD CONSTRAINT FK_id_user_roles_users FOREIGN KEY (id_user) REFERENCES users (id);
+
+ALTER TABLE token ADD CONSTRAINT FK_id_user_token FOREIGN KEY (id_user) REFERENCES users(id);
