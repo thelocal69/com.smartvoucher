@@ -17,6 +17,7 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignUpDTO {
+    private String memberCode;
     private String firstName;
     private String lastName;
     private String fullName;
@@ -38,4 +39,5 @@ public class SignUpDTO {
     @Length(min = 10, max = 11, message = "The length of the phone number is at least 10 digits !")
     @Pattern(regexp = "0+(\\d*)", message = "Please enter the correct phone number format!")
     private String phone;
+    private String roleName;
 }
