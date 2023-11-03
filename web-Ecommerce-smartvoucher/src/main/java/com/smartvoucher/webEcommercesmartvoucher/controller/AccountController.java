@@ -40,18 +40,9 @@ public class AccountController {
 
     @PostMapping("/api/signup")
     public ResponseEntity<ResponseObject> SignUp(@RequestBody @Valid SignUpDTO signUpDTO) {
+        signUpDTO.setRoleName("ROLE_USER");
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.signUpService.SignUp(signUpDTO));
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<ResponseObject> logout() {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(
-                        200,
-                        "Logout is successfully !",
-                        ""
-                )
-        );
-    }
 }

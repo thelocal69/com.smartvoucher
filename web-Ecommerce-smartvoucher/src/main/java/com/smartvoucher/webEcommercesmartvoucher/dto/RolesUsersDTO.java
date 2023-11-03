@@ -1,21 +1,21 @@
 package com.smartvoucher.webEcommercesmartvoucher.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Timestamp;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class RolesUsersDTO {
+    private Long idUser;
+    private Long idRole;
 
    private String memberCode;
 
-   private String roleCode;
+   private String roleName;
 
     private String createdBy;
 

@@ -53,9 +53,8 @@ public class CategoryController {
         categoryDTO.setCategoryCode(
                 UUID.randomUUID()
                         .toString()
-                        .concat("CH")
                         .replace("-","")
-                        .substring(0, 18)
+                        .substring(0, 20)
         );
         return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
