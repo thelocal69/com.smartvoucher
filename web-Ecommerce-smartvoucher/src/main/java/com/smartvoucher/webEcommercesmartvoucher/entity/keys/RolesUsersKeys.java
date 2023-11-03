@@ -1,15 +1,13 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity.keys;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Builder
 @Setter
 @Getter
 @NoArgsConstructor

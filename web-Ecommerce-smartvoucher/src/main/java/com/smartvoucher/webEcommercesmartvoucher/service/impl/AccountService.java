@@ -1,13 +1,19 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.google.gson.Gson;
+import com.smartvoucher.webEcommercesmartvoucher.converter.RoleUsersConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
+import com.smartvoucher.webEcommercesmartvoucher.dto.RolesUsersDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
+import com.smartvoucher.webEcommercesmartvoucher.entity.RoleEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.token.Tokens;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseToken;
+import com.smartvoucher.webEcommercesmartvoucher.repository.IRoleUserRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.RoleRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.token.ITokenRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IAccountService;
@@ -29,22 +35,32 @@ public class AccountService implements IAccountService {
     private final JWTHelper jwtHelper;
     private final Gson gson;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final IRoleUserRepository roleUserRepository;
     private final ITokenRepository tokenRepository;
     private final UserConverter userConverter;
+    private final RoleUsersConverter roleUsersConverter;
 
     @Autowired
     public AccountService(final AuthenticationManager authenticationManager,
                           final JWTHelper jwtHelper,
                           final Gson gson,
                           final UserRepository userRepository,
+                          final RoleRepository roleRepository,
+                          final IRoleUserRepository roleUserRepository,
                           final ITokenRepository tokenRepository,
-                          final UserConverter userConverter) {
+                          final UserConverter userConverter,
+                          final RoleUsersConverter roleUsersConverter
+    ) {
         this.authenticationManager = authenticationManager;
         this.jwtHelper = jwtHelper;
         this.gson = gson;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.roleUserRepository = roleUserRepository;
         this.tokenRepository = tokenRepository;
         this.userConverter = userConverter;
+        this.roleUsersConverter = roleUsersConverter;
     }
 
     @Override
@@ -71,10 +87,24 @@ public class AccountService implements IAccountService {
                 signUpDTO.getEmail(),
                 signUpDTO.getPhone()).isEmpty()) {
             if(userRepository.findByUsername(signUpDTO.getUserName()) == null) {
+                //save user trướcs
+                UserDTO userDTO = userConverter.toUserDTO(
+                        userRepository.save(userConverter.signUp(signUpDTO))
+                );
+                //get id role ở phần controller
+                RoleEntity role = roleRepository.findOneByName(signUpDTO.getRoleName());
+                //get id user mới thêm lúc nãy
+                UserEntity user = userRepository.findOneByMemberCode(userDTO.getMemberCode());
+                //biến đổi nó thành dto đê xử lí
+                RolesUsersDTO rolesUsersDTO = roleUsersConverter.toRoleUserDTO(user, role);
+                //save cái dto converter đã xử lý xuống database
+                this.roleUserRepository.save(
+                        roleUsersConverter.toRoleUserEntity(rolesUsersDTO)
+                );
                 return new ResponseObject(
                         200,
                         "SignUp success!",
-                        userConverter.toUserDTO(userRepository.save(userConverter.signUp(signUpDTO))));
+                        userDTO);
             } else {
                 throw new DuplicationCodeException(400, "UserName is available! please try again.");
             }
