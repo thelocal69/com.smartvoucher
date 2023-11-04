@@ -35,4 +35,11 @@ public class OrderController {
                 this.ordersService.insertOrder(orderDTO));
     }
 
+    @DeleteMapping
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> deleteOrder(@RequestParam long id){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.ordersService.deleteOrder(id));
+    }
+
 }
