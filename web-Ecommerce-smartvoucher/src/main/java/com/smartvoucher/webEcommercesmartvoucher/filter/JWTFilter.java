@@ -4,6 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.smartvoucher.webEcommercesmartvoucher.exception.JwtFilterException;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseToken;
+import com.smartvoucher.webEcommercesmartvoucher.repository.token.ITokenRepository;
 import com.smartvoucher.webEcommercesmartvoucher.util.JWTHelper;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,30 +30,39 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTHelper jwtHelper;
     private final Gson gson;
+    private final ITokenRepository tokenRepository;
 
     @Autowired
     public JWTFilter(final JWTHelper jwtHelper,
-                     final Gson gson) {
+                     final Gson gson,
+                     final ITokenRepository tokenRepository) {
         this.jwtHelper = jwtHelper;
         this.gson = gson;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String headerValue = request.getHeader("Authorization");
+        final String headerValue = request.getHeader("Authorization");
         if (headerValue != null && headerValue.startsWith("Bearer ")){
-            String token = headerValue.substring(7);
-            String data = jwtHelper.parserToken(token);
+            final String token = headerValue.substring(7);
+            final String data = jwtHelper.parserToken(token);
             if (data != null && !data.isEmpty()){
+                boolean isValidTokens = tokenRepository.findByToken(token)
+                        .map(tokens ->
+                            !tokens.isExpired() && !tokens.isRevoke()
+                        ).orElse(false);
                 ResponseToken responseToken = gson.fromJson(data, ResponseToken.class);
                 String newData = gson.toJson(responseToken.getRoles());
                 Type listType = new TypeToken<ArrayList<SimpleGrantedAuthority>>(){}.getType();
                 List<GrantedAuthority> roles = gson.fromJson(newData, listType);
-                UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
-                        responseToken.getUsername(), "", roles
-                );
-                SecurityContext contextHolder = SecurityContextHolder.getContext();
-                contextHolder.setAuthentication(userToken);
+                if (isValidTokens){
+                    UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
+                            responseToken.getUsername(), "", roles
+                    );
+                    SecurityContext contextHolder = SecurityContextHolder.getContext();
+                    contextHolder.setAuthentication(userToken);
+                }
             }else {
                 throw new JwtFilterException(403, "Data is not exist !");
             }

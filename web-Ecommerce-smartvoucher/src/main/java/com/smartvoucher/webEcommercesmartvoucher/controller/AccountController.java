@@ -26,13 +26,13 @@ public class AccountController {
     }
 
     @PostMapping("/api/signin")
-    public ResponseEntity<ResponseObject> signin(@RequestParam String email, @RequestParam String password){
+    public ResponseEntity<ResponseObject> signin(@RequestParam String email, @RequestParam String password) {
 //        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 //        String secretString = Encoders.BASE64.encode(key.getEncoded());
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
-                        "OK",
+                        "Sign-in is successfully !",
                         accountService.token(email, password)
                 )
         );
@@ -40,7 +40,9 @@ public class AccountController {
 
     @PostMapping("/api/signup")
     public ResponseEntity<ResponseObject> SignUp(@RequestBody @Valid SignUpDTO signUpDTO) {
+        signUpDTO.setRoleName("ROLE_USER");
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.signUpService.SignUp(signUpDTO));
     }
+
 }

@@ -114,7 +114,7 @@ public class ChainService implements IChainService {
     @Override
     @Transactional(readOnly = true)
     public Boolean existChain(ChainDTO chainDTO) {
-        return merchantRepository.existsById(chainDTO.getId());
+        return chainRepository.existsById(chainDTO.getId());
     }
 
     @Override

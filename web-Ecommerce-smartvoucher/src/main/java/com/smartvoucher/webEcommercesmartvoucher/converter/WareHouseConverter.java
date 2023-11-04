@@ -10,30 +10,30 @@ import java.util.stream.Collectors;
 @Component
 public class WareHouseConverter {
     public WareHouseDTO toWareHouseDTO(WareHouseEntity wareHouseEntity){
-        WareHouseDTO wareHouseDTO = new WareHouseDTO();
-        wareHouseDTO.setId(wareHouseEntity.getId());
-        wareHouseDTO.setWarehouseCode(wareHouseEntity.getWarehouseCode());
-        wareHouseDTO.setThumbnailUrl(wareHouseEntity.getThumbnailUrl());
-        wareHouseDTO.setBannerUrl(wareHouseEntity.getBannerUrl());
-        wareHouseDTO.setDiscountAmount(wareHouseEntity.getDiscountAmount());
-        wareHouseDTO.setMaxDiscountAmount(wareHouseEntity.getMaxDiscountAmount());
-        wareHouseDTO.setName(wareHouseEntity.getName());
-        wareHouseDTO.setTermOfUse(wareHouseEntity.getTermOfUse());
-        wareHouseDTO.setDescription(wareHouseEntity.getDescription());
-        wareHouseDTO.setStatus(wareHouseEntity.getStatus());
-        wareHouseDTO.setAvailableFrom(wareHouseEntity.getAvailableFrom());
-        wareHouseDTO.setAvailableTo(wareHouseEntity.getAvailableTo());
-        wareHouseDTO.setShowOnWeb(wareHouseEntity.getShowOnWeb());
-        wareHouseDTO.setVoucherChannel(wareHouseEntity.getVoucherChannel());
-        wareHouseDTO.setCapacity(wareHouseEntity.getCapacity());
-        wareHouseDTO.setDiscountTypeCode(wareHouseEntity.getDiscountType().getCode());
-        wareHouseDTO.setCategoryCode(wareHouseEntity.getCategory().getCategoryCode());
-        wareHouseDTO.setLabelName(wareHouseEntity.getLabel().getName());
-        wareHouseDTO.setCreatedBy(wareHouseEntity.getCreatedBy());
-        wareHouseDTO.setCreatedAt(wareHouseEntity.getCreatedAt());
-        wareHouseDTO.setUpdatedBy(wareHouseEntity.getUpdateBy());
-        wareHouseDTO.setUpdatedAt(wareHouseEntity.getUpdateAt());
-        return wareHouseDTO;
+        return WareHouseDTO.builder()
+                .id(wareHouseEntity.getId())
+                .createdBy(wareHouseEntity.getCreatedBy())
+                .createdAt(wareHouseEntity.getCreatedAt())
+                .updatedBy(wareHouseEntity.getUpdateBy())
+                .updatedAt(wareHouseEntity.getUpdateAt())
+                .warehouseCode(wareHouseEntity.getWarehouseCode())
+                .name(wareHouseEntity.getName())
+                .description(wareHouseEntity.getDescription())
+                .availableFrom(wareHouseEntity.getAvailableFrom())
+                .availableTo(wareHouseEntity.getAvailableTo())
+                .bannerUrl(wareHouseEntity.getBannerUrl())
+                .capacity(wareHouseEntity.getCapacity())
+                .categoryCode(wareHouseEntity.getCategory().getCategoryCode())
+                .discountAmount(wareHouseEntity.getDiscountAmount())
+                .discountTypeCode(wareHouseEntity.getDiscountType().getCode())
+                .labelName(wareHouseEntity.getLabel().getName())
+                .maxDiscountAmount(wareHouseEntity.getMaxDiscountAmount())
+                .showOnWeb(wareHouseEntity.getShowOnWeb())
+                .termOfUse(wareHouseEntity.getTermOfUse())
+                .thumbnailUrl(wareHouseEntity.getThumbnailUrl())
+                .voucherChannel(wareHouseEntity.getVoucherChannel())
+                .status(wareHouseEntity.getStatus())
+                .build();
     }
 
     public List<WareHouseDTO> toWareHouseDTOList(List<WareHouseEntity> wareHouseEntityList){
@@ -41,28 +41,27 @@ public class WareHouseConverter {
     }
 
     public WareHouseEntity toWareHouseEntity(WareHouseDTO wareHouseDTO){
-        WareHouseEntity wareHouseEntity = new WareHouseEntity();
-        wareHouseEntity.setId(wareHouseDTO.getId());
-        wareHouseEntity.setWarehouseCode(wareHouseDTO.getWarehouseCode());
-        wareHouseEntity.setThumbnailUrl(wareHouseDTO.getThumbnailUrl());
-        wareHouseEntity.setBannerUrl(wareHouseDTO.getBannerUrl());
-        wareHouseEntity.setDiscountAmount(wareHouseDTO.getDiscountAmount());
-        wareHouseEntity.setMaxDiscountAmount(wareHouseDTO.getMaxDiscountAmount());
-        wareHouseEntity.setName(wareHouseDTO.getName());
-        wareHouseEntity.setTermOfUse(wareHouseDTO.getTermOfUse());
-        wareHouseEntity.setDescription(wareHouseDTO.getDescription());
-        wareHouseEntity.setStatus(wareHouseDTO.getStatus());
-        wareHouseEntity.setAvailableFrom(wareHouseDTO.getAvailableFrom());
-        wareHouseEntity.setAvailableTo(wareHouseDTO.getAvailableTo());
-        wareHouseEntity.setShowOnWeb(wareHouseDTO.getShowOnWeb());
-        wareHouseEntity.setVoucherChannel(wareHouseDTO.getVoucherChannel());
-        wareHouseEntity.setCapacity(wareHouseDTO.getCapacity());
-        return wareHouseEntity;
+        return WareHouseEntity.builder()
+                .id(wareHouseDTO.getId())
+                .warehouseCode(wareHouseDTO.getWarehouseCode())
+                .availableFrom(wareHouseDTO.getAvailableFrom())
+                .availableTo(wareHouseDTO.getAvailableTo())
+                .capacity(wareHouseDTO.getCapacity())
+                .discountAmount(wareHouseDTO.getDiscountAmount())
+                .bannerUrl(wareHouseDTO.getBannerUrl())
+                .description(wareHouseDTO.getDescription())
+                .maxDiscountAmount(wareHouseDTO.getMaxDiscountAmount())
+                .name(wareHouseDTO.getName())
+                .showOnWeb(wareHouseDTO.getShowOnWeb())
+                .termOfUse(wareHouseDTO.getTermOfUse())
+                .thumbnailUrl(wareHouseDTO.getThumbnailUrl())
+                .voucherChannel(wareHouseDTO.getVoucherChannel())
+                .status(wareHouseDTO.getStatus())
+                .build();
     }
 
     public WareHouseEntity toWareHouseEntity(WareHouseDTO wareHouseDTO, WareHouseEntity wareHouseEntity){
         wareHouseEntity.setId(wareHouseDTO.getId());
-        wareHouseEntity.setWarehouseCode(wareHouseDTO.getWarehouseCode());
         wareHouseEntity.setThumbnailUrl(wareHouseDTO.getThumbnailUrl());
         wareHouseEntity.setBannerUrl(wareHouseDTO.getBannerUrl());
         wareHouseEntity.setDiscountAmount(wareHouseDTO.getDiscountAmount());

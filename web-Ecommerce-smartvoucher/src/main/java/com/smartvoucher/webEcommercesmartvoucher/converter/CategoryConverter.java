@@ -10,17 +10,17 @@ import java.util.stream.Collectors;
 @Component
 public class CategoryConverter {
     public CategoryDTO toCategoryDTO(CategoryEntity categoryEntity){
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setId(categoryEntity.getId());
-        categoryDTO.setCategoryCode(categoryEntity.getCategoryCode());
-        categoryDTO.setName(categoryEntity.getName());
-        categoryDTO.setStatus(categoryEntity.getStatus());
-        categoryDTO.setBannerUrl(categoryEntity.getBannerUrl());
-        categoryDTO.setCreatedBy(categoryEntity.getCreatedBy());
-        categoryDTO.setCreatedAt(categoryEntity.getCreatedAt());
-        categoryDTO.setUpdatedBy(categoryEntity.getUpdateBy());
-        categoryDTO.setUpdatedAt(categoryEntity.getUpdateAt());
-        return categoryDTO;
+        return CategoryDTO.builder()
+                .id(categoryEntity.getId())
+                .createdBy(categoryEntity.getCreatedBy())
+                .createdAt(categoryEntity.getCreatedAt())
+                .updatedBy(categoryEntity.getUpdateBy())
+                .updatedAt(categoryEntity.getUpdateAt())
+                .categoryCode(categoryEntity.getCategoryCode())
+                .name(categoryEntity.getName())
+                .bannerUrl(categoryEntity.getBannerUrl())
+                .status(categoryEntity.getStatus())
+                .build();
     }
 
     public List<CategoryDTO> toCategoryDTOList(List<CategoryEntity> categoryEntityList){
@@ -28,18 +28,17 @@ public class CategoryConverter {
     }
 
     public CategoryEntity toCategoryEntity(CategoryDTO categoryDTO){
-        CategoryEntity categoryEntity = new CategoryEntity();
-        categoryEntity.setId(categoryDTO.getId());
-        categoryEntity.setCategoryCode(categoryDTO.getCategoryCode());
-        categoryEntity.setName(categoryDTO.getName());
-        categoryEntity.setStatus(categoryDTO.getStatus());
-        categoryEntity.setBannerUrl(categoryDTO.getBannerUrl());
-        return categoryEntity;
+        return CategoryEntity.builder()
+                .id(categoryDTO.getId())
+                .categoryCode(categoryDTO.getCategoryCode())
+                .name(categoryDTO.getName())
+                .bannerUrl(categoryDTO.getBannerUrl())
+                .status(categoryDTO.getStatus())
+                .build();
     }
 
     public CategoryEntity toCategoryEntity(CategoryDTO categoryDTO, CategoryEntity categoryEntity){
         categoryEntity.setId(categoryDTO.getId());
-        categoryEntity.setCategoryCode(categoryDTO.getCategoryCode());
         categoryEntity.setName(categoryDTO.getName());
         categoryEntity.setStatus(categoryDTO.getStatus());
         categoryEntity.setBannerUrl(categoryDTO.getBannerUrl());

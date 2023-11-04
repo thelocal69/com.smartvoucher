@@ -81,7 +81,7 @@ public class WareHouseService implements IWareHouseService {
                 );
             } else if (!existCategoryAndDiscountAndLabel(wareHouseDTO)) {
                 throw new ObjectEmptyException(
-                        406, "Category code or discount code is empty or not exist !"
+                        406, "Category code or discount code or label name is empty or not exist !"
                 );
             }
             WareHouseEntity oldWareHouse = wareHouseRepository.findOneById(wareHouseDTO.getId());
@@ -94,7 +94,7 @@ public class WareHouseService implements IWareHouseService {
                 );
             } else if (!existCategoryAndDiscountAndLabel(wareHouseDTO)) {
                 throw new ObjectEmptyException(
-                        406, "Category code or discount code is empty or not exist !"
+                        406, "Category code or discount code or label name is empty or not exist !"
                 );
             }
             wareHouse = wareHouseConverter.toWareHouseEntity(wareHouseDTO);

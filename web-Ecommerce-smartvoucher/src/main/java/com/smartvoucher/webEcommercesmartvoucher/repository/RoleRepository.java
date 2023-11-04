@@ -15,4 +15,6 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 
     @Query("FROM roles r WHERE r.name = ?1 AND r.id != ?2")
     List<RoleEntity> findByNameAndId(String name, long id);
+
+    RoleEntity findOneByName(String roleName);
 }
