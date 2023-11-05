@@ -10,6 +10,6 @@ public interface IRoleUserRepository extends JpaRepository<RolesUsersEntity, Lon
     @Query("SELECT ru FROM roles_users ru" +
             " JOIN users u ON ru.roles_usersKeys.idUser = u.id" +
             " JOIN roles r ON  ru.roles_usersKeys.idRole = r.id" +
-            " WHERE u.email = ?1")
+            " WHERE u.email = :email")
     RolesUsersEntity getEmail(String email);
 }

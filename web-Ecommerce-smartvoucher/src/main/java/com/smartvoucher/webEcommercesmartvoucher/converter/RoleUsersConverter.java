@@ -1,8 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
-import com.smartvoucher.webEcommercesmartvoucher.dto.RoleDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.RolesUsersDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RoleEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RolesUsersEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
@@ -17,6 +15,19 @@ public class RoleUsersConverter {
                 .idUser(user.getId())
                 .roleName(role.getName())
                 .memberCode(user.getMemberCode())
+                .build();
+    }
+
+    public RolesUsersDTO toRoleUserDTO(RolesUsersEntity rolesUsersEntity){
+        return RolesUsersDTO.builder()
+                .idUser(rolesUsersEntity.getRoles_usersKeys().getIdUser())
+                .idRole(rolesUsersEntity.getRoles_usersKeys().getIdRole())
+                .memberCode(rolesUsersEntity.getIdUser().getMemberCode())
+                .roleName(rolesUsersEntity.getIdRole().getRoleCode())
+                .createdBy(rolesUsersEntity.getCreatedBy())
+                .createdAt(rolesUsersEntity.getCreatedAt())
+                .updatedBy(rolesUsersEntity.getUpdateBy())
+                .updatedAt(rolesUsersEntity.getUpdateAt())
                 .build();
     }
 

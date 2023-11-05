@@ -25,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -64,6 +65,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String token(String email, String password) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 email, password
@@ -82,12 +84,13 @@ public class AccountService implements IAccountService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseObject SignUp(SignUpDTO signUpDTO) {
         if (userRepository.findByEmailOrPhone(
                 signUpDTO.getEmail(),
                 signUpDTO.getPhone()).isEmpty()) {
             if(userRepository.findByUsername(signUpDTO.getUserName()) == null) {
-                //save user trướcs
+                //save user trước
                 UserDTO userDTO = userConverter.toUserDTO(
                         userRepository.save(userConverter.signUp(signUpDTO))
                 );
