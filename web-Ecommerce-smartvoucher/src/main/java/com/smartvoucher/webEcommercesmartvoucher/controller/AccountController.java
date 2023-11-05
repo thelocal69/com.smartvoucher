@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.impl.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,6 +27,7 @@ public class AccountController {
     }
 
     @PostMapping("/api/signin")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> signin(@RequestParam String email, @RequestParam String password) {
 //        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 //        String secretString = Encoders.BASE64.encode(key.getEncoded());
@@ -39,6 +41,7 @@ public class AccountController {
     }
 
     @PostMapping("/api/signup")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> SignUp(@RequestBody @Valid SignUpDTO signUpDTO) {
         signUpDTO.setRoleName("ROLE_USER");
         return ResponseEntity.status(HttpStatus.OK).body(
