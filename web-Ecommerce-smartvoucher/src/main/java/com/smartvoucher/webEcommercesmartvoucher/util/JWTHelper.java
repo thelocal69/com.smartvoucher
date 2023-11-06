@@ -17,9 +17,8 @@ public class JWTHelper {
 
     public String generateToken(String data){
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtKey));
-        long expiredTime = 8 * 60 * 60 * 1000;
-        long newDateMIli = new Date().getTime()+expiredTime;
-        Date newExpiredTime = new Date(newDateMIli);
+        long expiredTime = System.currentTimeMillis() + 8 * 60 * 60 * 1000;
+        Date newExpiredTime = new Date(expiredTime);
         return Jwts.builder()
                 .setSubject(data)
                 .signWith(key)
