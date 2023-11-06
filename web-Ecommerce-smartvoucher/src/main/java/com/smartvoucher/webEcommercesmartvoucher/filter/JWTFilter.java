@@ -8,6 +8,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.token.ITokenReposito
 import com.smartvoucher.webEcommercesmartvoucher.util.JWTHelper;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -43,7 +44,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        final String headerValue = request.getHeader("Authorization");
+        final String headerValue = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (headerValue != null && headerValue.startsWith("Bearer ")){
             final String token = headerValue.substring(7);
             final String data = jwtHelper.parserToken(token);
