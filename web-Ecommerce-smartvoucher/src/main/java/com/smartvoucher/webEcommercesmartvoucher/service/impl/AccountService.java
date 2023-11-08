@@ -6,10 +6,15 @@ import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.RolesUsersDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.token.RefreshTokenDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RoleEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.RolesUsersEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.token.Tokens;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.JwtFilterException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.TokenRefreshException;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseAuthentication;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseToken;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IRoleUserRepository;
@@ -27,6 +32,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -66,21 +74,60 @@ public class AccountService implements IAccountService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String token(String email, String password) {
+    public ResponseAuthentication token(String email, String password) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 email, password
         );
-        authenticationManager.authenticate(authenticationToken);
+        this.authenticationManager.authenticate(authenticationToken);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<SimpleGrantedAuthority> roles = (List<SimpleGrantedAuthority>) authentication.getAuthorities();
         ResponseToken data = new ResponseToken();
         data.setUsername(email);
         data.setRoles(roles);
         String token = jwtHelper.generateToken(gson.toJson(data));
+        String refreshToken = jwtHelper.generateRefreshToken(email);
         UserEntity user = userRepository.findOneByEmail(email);
         revokeAllUserTokens(user);
-        saveUserToken(user, token);
-        return token;
+        saveUserToken(user, refreshToken);
+        return ResponseAuthentication.builder()
+                .accessToken(token)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    @Override
+    public RefreshTokenDTO refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        final String headerValue = request.getHeader("Authorization");
+        String accessToken = "";
+        if (headerValue != null && headerValue.startsWith("Bearer ")){
+            final String token = headerValue.substring(7);
+            final String data = jwtHelper.parserToken(token);
+            if (data != null && !data.isEmpty()){
+                boolean isValidTokens = tokenRepository.findByToken(token)
+                        .map(tokens ->
+                                !tokens.isExpired() && !tokens.isRevoke()
+                        ).orElse(false);
+                if (isValidTokens){
+                    RolesUsersEntity rolesUsers = roleUserRepository.getEmail(data);
+                    SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(
+                            rolesUsers.getIdRole().getName()
+                    );
+                    List<SimpleGrantedAuthority> roles = new ArrayList<>();
+                    roles.add(simpleGrantedAuthority);
+                    ResponseToken resource = new ResponseToken();
+                    resource.setUsername(rolesUsers.getIdUser().getEmail());
+                    resource.setRoles(roles);
+                    accessToken = jwtHelper.generateToken(gson.toJson(resource));
+                }else {
+                    throw new TokenRefreshException(403,"Refresh token is expired or not exist !", null);
+                }
+            }else {
+                throw new JwtFilterException(403, "Data is not exist !", null);
+            }
+        }
+        return RefreshTokenDTO.builder()
+                .accessToken(accessToken)
+                .build();
     }
 
     @Override
