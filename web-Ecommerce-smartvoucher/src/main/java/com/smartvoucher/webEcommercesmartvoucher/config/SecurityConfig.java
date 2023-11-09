@@ -18,6 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -52,7 +55,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
-            return http.csrf().disable()
+            return http.cors(cors -> cors.configurationSource(request -> {
+                CorsConfiguration corsConfig = new CorsConfiguration();
+                corsConfig.addAllowedOrigin("*");
+                corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                corsConfig.addAllowedHeader("*");
+                corsConfig.setAllowCredentials(false);
+                corsConfig.setMaxAge(3600L);
+                return corsConfig;
+            })).csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeHttpRequests()
@@ -71,22 +82,19 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.POST,"/order").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/order").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST,"/order").hasRole("USER")
-                    .antMatchers(HttpMethod.GET,"/ticket").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST,"/ticket").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, "/ticket").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE,"/ticket").hasRole("ADMIN")
+                    .antMatchers("/ticket/**").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("USER")
                     .antMatchers("/role_user").hasRole("ADMIN")
                     .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
                     .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                     .logout()
+                    .deleteCookies("JSESSIONID")
                     .logoutUrl("/account/api/logout")
                     .addLogoutHandler(logoutHandler)
                     .logoutSuccessHandler(((request, response, authentication) ->
                             SecurityContextHolder.clearContext()))
-                    .and()
-                    .build();
+                    .and().build();
     }
 
 }
