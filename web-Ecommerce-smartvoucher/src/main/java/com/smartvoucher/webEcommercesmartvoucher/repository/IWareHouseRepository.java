@@ -10,4 +10,5 @@ import java.util.List;
 public interface IWareHouseRepository extends JpaRepository<WareHouseEntity, Long> {
     List<WareHouseEntity> findAllByWarehouseCode(String wareHouseCode);
     WareHouseEntity findOneById(Long id);
+    WareHouseEntity findOneByWarehouseCode(String warehouseCode);
 }
