@@ -12,17 +12,11 @@ import java.sql.Timestamp;
 public class RolesUsersDTO {
     private Long idUser;
     private Long idRole;
-
-   private String memberCode;
-
-   private String roleName;
-
+    private String memberCode;
+    private String roleName;
     private String createdBy;
-
     private String updatedBy;
-
     private Timestamp createdAt;
-
     private Timestamp updatedAt;
 
 }
