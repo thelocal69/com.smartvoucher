@@ -156,4 +156,17 @@ public class GlobalExceptionHandler {
                     )
             );
         }
+
+        @ExceptionHandler(ExpiredVoucherException.class)
+        public ResponseEntity<ErrorResponse> handleExpiredVoucherException(Exception ex) {
+            return ResponseEntity.status(HttpStatus.GONE).body(
+                    new ErrorResponse(
+                            new Timestamp(System.currentTimeMillis()),
+                            410,
+                            ex.getMessage(),
+                            "Expired Voucher !",
+                            "/"
+                    )
+            );
+        }
 }
