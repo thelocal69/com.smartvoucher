@@ -1,18 +1,12 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
-import com.smartvoucher.webEcommercesmartvoucher.config.SecurityConfig;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.WareHouseDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
 import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class UserConverter {
@@ -50,12 +44,8 @@ public class UserConverter {
         UserEntity userEntity = new UserEntity();
         userEntity.setMemberCode(randomCodeHandler.generateRandomChars(10));
         userEntity.setPwd(passwordEncoder.encode(signUpDTO.getPassword()));
-        userEntity.setLastName(signUpDTO.getLastName());
-        userEntity.setFullName(signUpDTO.getFullName());
-        userEntity.setUsername(signUpDTO.getUserName());
         userEntity.setPhone(signUpDTO.getPhone());
         userEntity.setEmail(signUpDTO.getEmail());
-        userEntity.setAddress(signUpDTO.getAddress());
         userEntity.setStatus(1);
         return userEntity;
     }
