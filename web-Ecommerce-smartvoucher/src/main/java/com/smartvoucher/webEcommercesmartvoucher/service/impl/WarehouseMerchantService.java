@@ -8,7 +8,6 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WarehouseMerchantEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.keys.WarehouseMerchantKeys;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
-import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.RoleRepository;
@@ -53,14 +52,14 @@ public class WarehouseMerchantService implements IWarehouseMerchantService {
     public WarehouseMerchantDTO insert(WarehouseMerchantDTO warehouseMerchantDTO){
         WarehouseMerchantEntity warehouseMerchantEntity = warehouseMerchantConverter.toWarehouseMerchantEntity(warehouseMerchantDTO);
         if(warehouseMerchantDTO.getKeys()!= null){
-            if(wareHouseRepository.findAllByWarehouseCode(warehouseMerchantDTO.getWarehouseCode()).size()<1
-                    || merchantRepository.findAllByMerchantCode(warehouseMerchantDTO.getMerchantCode()).size()<1){
+            if(wareHouseRepository.findAllByWarehouseCode(warehouseMerchantDTO.getWarehouseCode()).isEmpty()
+                    || merchantRepository.findAllByMerchantCode(warehouseMerchantDTO.getMerchantCode()).isEmpty()){
                 throw new ObjectNotFoundException(
                         406,"WarehouseCode is not exist or MerchantCode is not exist!"
                 );
             }
-            else if(wareHouseRepository.findAllByWarehouseCode(warehouseMerchantDTO.getWarehouseCode()).size()<1
-                    && merchantRepository.findAllByMerchantCode(warehouseMerchantDTO.getMerchantCode()).size()<1){
+            else if(wareHouseRepository.findAllByWarehouseCode(warehouseMerchantDTO.getWarehouseCode()).isEmpty()
+                    && merchantRepository.findAllByMerchantCode(warehouseMerchantDTO.getMerchantCode()).isEmpty()){
                 throw new ObjectNotFoundException(
                         406, "WarehouseCode and MerchantCode is not exist"
                 );

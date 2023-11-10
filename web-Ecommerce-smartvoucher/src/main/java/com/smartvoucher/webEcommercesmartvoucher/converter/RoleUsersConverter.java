@@ -20,8 +20,8 @@ public class RoleUsersConverter {
 
     public RolesUsersDTO toRoleUserDTO(RolesUsersEntity rolesUsersEntity){
         return RolesUsersDTO.builder()
-                .idUser(rolesUsersEntity.getRoles_usersKeys().getIdUser())
-                .idRole(rolesUsersEntity.getRoles_usersKeys().getIdRole())
+                .idUser(rolesUsersEntity.getRoleUserKeys().getIdUser())
+                .idRole(rolesUsersEntity.getRoleUserKeys().getIdRole())
                 .memberCode(rolesUsersEntity.getIdUser().getMemberCode())
                 .roleName(rolesUsersEntity.getIdRole().getRoleCode())
                 .createdBy(rolesUsersEntity.getCreatedBy())
@@ -40,7 +40,11 @@ public class RoleUsersConverter {
 
     public RolesUsersEntity toRoleUserEntity(RolesUsersDTO rolesUsersDTO){
         RolesUsersEntity rolesUsersEntity = new RolesUsersEntity();
-        rolesUsersEntity.setRoles_usersKeys(toRoleUserKeys(rolesUsersDTO));
+        rolesUsersEntity.setRoleUserKeys(toRoleUserKeys(rolesUsersDTO));
+        rolesUsersEntity.setCreatedBy(rolesUsersDTO.getCreatedBy());
+        rolesUsersEntity.setCreatedAt(rolesUsersDTO.getCreatedAt());
+        rolesUsersEntity.setUpdateBy(rolesUsersDTO.getUpdatedBy());
+        rolesUsersEntity.setUpdateAt(rolesUsersDTO.getUpdatedAt());
         return rolesUsersEntity;
     }
 }
