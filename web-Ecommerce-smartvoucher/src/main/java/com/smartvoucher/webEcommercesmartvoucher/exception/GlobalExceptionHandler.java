@@ -6,8 +6,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.validation.ConstraintViolationException;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -123,8 +123,21 @@ public class GlobalExceptionHandler {
                     new ErrorResponse(
                             new Timestamp(System.currentTimeMillis()),
                             500,
-                            ex.getBindingResult().getFieldError().getDefaultMessage(),
+                            Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage(),
                             "Error Validation !",
+                            "/"
+                    )
+            );
+        }
+
+        @ExceptionHandler(ExpiredVoucherException.class)
+        public ResponseEntity<ErrorResponse> handleExpiredVoucherException(Exception ex) {
+            return ResponseEntity.status(HttpStatus.GONE).body(
+                    new ErrorResponse(
+                            new Timestamp(System.currentTimeMillis()),
+                            410,
+                            ex.getMessage(),
+                            "Expired Voucher !",
                             "/"
                     )
             );

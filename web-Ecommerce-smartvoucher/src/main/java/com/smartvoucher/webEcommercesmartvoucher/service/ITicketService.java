@@ -11,6 +11,7 @@ public interface ITicketService {
     ResponseObject insertTicket(TicketDTO ticketDTO);
     ResponseObject updateTicket(TicketDTO ticketDTO);
     ResponseObject deleteTicket(long idTicket);
+    ResponseObject userUseTicket(String serialCode);
     File uploadTicketImages(MultipartFile fileName);
 
 }

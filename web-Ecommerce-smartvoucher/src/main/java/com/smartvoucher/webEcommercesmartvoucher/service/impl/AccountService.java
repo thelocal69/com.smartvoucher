@@ -86,30 +86,26 @@ public class AccountService implements IAccountService {
         if (userRepository.findByEmailOrPhone(
                 signUpDTO.getEmail(),
                 signUpDTO.getPhone()).isEmpty()) {
-            if(userRepository.findByUsername(signUpDTO.getUserName()) == null) {
-                //save user trướcs
-                UserDTO userDTO = userConverter.toUserDTO(
-                        userRepository.save(userConverter.signUp(signUpDTO))
-                );
-                //get id role ở phần controller
-                RoleEntity role = roleRepository.findOneByName(signUpDTO.getRoleName());
-                //get id user mới thêm lúc nãy
-                UserEntity user = userRepository.findOneByMemberCode(userDTO.getMemberCode());
-                //biến đổi nó thành dto đê xử lí
-                RolesUsersDTO rolesUsersDTO = roleUsersConverter.toRoleUserDTO(user, role);
-                //save cái dto converter đã xử lý xuống database
-                this.roleUserRepository.save(
-                        roleUsersConverter.toRoleUserEntity(rolesUsersDTO)
-                );
-                return new ResponseObject(
-                        200,
-                        "SignUp success!",
-                        userDTO);
-            } else {
-                throw new DuplicationCodeException(400, "UserName is available! please try again.");
-            }
+            //save user trước
+            UserDTO userDTO = userConverter.toUserDTO(
+                    userRepository.save(userConverter.signUp(signUpDTO))
+            );
+            //get id role ở phần controller
+            RoleEntity role = roleRepository.findOneByName(signUpDTO.getRoleName());
+            //get id user mới thêm lúc nãy
+            UserEntity user = userRepository.findOneByMemberCode(userDTO.getMemberCode());
+            //biến đổi nó thành dto đê xử lí
+            RolesUsersDTO rolesUsersDTO = roleUsersConverter.toRoleUserDTO(user, role);
+            //save cái dto converter đã xử lý xuống database
+            this.roleUserRepository.save(
+                    roleUsersConverter.toRoleUserEntity(rolesUsersDTO)
+            );
+            return new ResponseObject(
+                    200,
+                    "SignUp success!",
+                    userDTO);
         } else {
-            throw new DuplicationCodeException(400, "Email or Phone is available! please try again.");
+            throw new DuplicationCodeException(400, "Email or Phone is available! please try again !");
         }
     }
 
