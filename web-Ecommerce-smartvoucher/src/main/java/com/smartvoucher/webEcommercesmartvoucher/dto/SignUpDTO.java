@@ -17,22 +17,13 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignUpDTO {
-    private String memberCode;
-    private String firstName;
-    private String lastName;
-    private String fullName;
     @NotNull(message = "Please fill all information!")
     @NotBlank(message = "Please fill all information!")
-    @Pattern(regexp = "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@gmail.com", message = "Please enter the correct email format!" )
+    @Pattern(regexp = "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+$", message = "Please enter the correct email format!" )
     private String email;
-    private String address;
     @NotNull(message = "Please fill all information!")
     @NotBlank(message = "Please fill all information!")
-    @Length(min = 8, message = "Minimum eight characters")
-    private String userName;
-    @NotNull(message = "Please fill all information!")
-    @NotBlank(message = "Please fill all information!")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Minimum eight characters, at least one letter and one number" )
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$", message = "Password is Minimum eight characters, at least one uppercase letter, one lowercase letter and one number" )
     private String password;
     @NotNull(message = "Please fill all information!")
     @NotBlank(message = "Please fill all information!")

@@ -79,9 +79,9 @@ public class TicketConverter {
         ticket.setIdOrder(orderEntity);
         ticket.setIdUser(userEntity);
         ticket.setStatus(0);
-        ticket.setClaimedTime(ticketDTO.getClaimedTime());
+//        ticket.setClaimedTime(ticketDTO.getClaimedTime());
         ticket.setExpiredTime(wareHouseEntity.getAvailableTo());
-        ticket.setRedeemedtimeTime(ticketDTO.getRedeemedtimeTime());
+//        ticket.setRedeemedtimeTime(ticketDTO.getRedeemedtimeTime());
         ticket.setDiscountType(ticketDTO.getDiscountType());
         // làm tròn số thập phân sau dấy phẩy thành 3 số
         ticket.setDiscountAmount(value.setScale(3, RoundingMode.HALF_UP));

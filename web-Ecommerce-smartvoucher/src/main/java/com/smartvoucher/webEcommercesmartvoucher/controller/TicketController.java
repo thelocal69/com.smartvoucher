@@ -30,32 +30,39 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    @GetMapping
+    @GetMapping("/api/getAllVoucher")
     @Transactional(readOnly = true)
     public ResponseEntity<?> getAllTicket(){
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.getAllTicket());
     }
 
-    @PostMapping
+    @PostMapping("/api/addVoucher")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.insertTicket(ticketDTO));
     }
 
-    @PutMapping
+    @PutMapping("/api/updateVoucher")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> updateTicket(@RequestBody @Valid TicketDTO ticketDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.updateTicket(ticketDTO));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/api/deleteVoucher")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> deleteTicket(@RequestParam long id) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.deleteTicket(id));
+    }
+
+    @PutMapping("/api/useVoucher")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> userUseVoucher(@RequestParam String serialCode) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.ticketService.userUseTicket(serialCode));
     }
 
     @PostMapping("/api/upload")
