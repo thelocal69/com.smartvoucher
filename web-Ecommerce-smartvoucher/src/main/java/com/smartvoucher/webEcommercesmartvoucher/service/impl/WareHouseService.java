@@ -166,4 +166,16 @@ public class WareHouseService implements IWareHouseService {
             throw new InputOutputException(501, "Failed to store file", ioException);
         }
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public WareHouseDTO getWarehouseById(Long id) {
+        WareHouseEntity wareHouseEntity = wareHouseRepository.findOneById(id);
+        if (wareHouseEntity == null) {
+            throw new ObjectNotFoundException(
+                    404, "Warehouse not found !"
+            );
+        }
+        return wareHouseConverter.toWareHouseDTO(wareHouseEntity);
+    }
 }
