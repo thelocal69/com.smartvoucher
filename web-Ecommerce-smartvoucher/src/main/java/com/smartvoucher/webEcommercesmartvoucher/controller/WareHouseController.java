@@ -36,6 +36,18 @@ public class WareHouseController {
         );
     }
 
+    @GetMapping("/api/{id}")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getWarehouseById(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get warehouse detail success",
+                        this.wareHouseService.getWarehouseById(id)
+                )
+        );
+    }
+
     @PostMapping ("/api/upload")
     public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
         return ResponseEntity.status(HttpStatus.OK).body(
