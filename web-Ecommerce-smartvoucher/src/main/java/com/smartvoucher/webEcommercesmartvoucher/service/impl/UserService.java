@@ -5,10 +5,9 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.exception.InputOutputException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
-import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.exception.UserNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
 import org.apache.commons.io.FilenameUtils;
@@ -17,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -35,19 +33,6 @@ public class UserService implements IUserService {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
         this.googleDrive = googleDrive;
-    }
-
-    public ResponseObject getAllUser() {
-        List<UserEntity> list = userRepository.findAll();
-        List<UserDTO> listUser = new ArrayList<>();
-        if(!list.isEmpty()) {
-            for(UserEntity data : list) {
-                listUser.add(userConverter.toUserDTO(data));
-            }
-            return new ResponseObject(200, "List User", listUser);
-        } else {
-            throw new ObjectNotFoundException(404, "List User is empty");
-        }
     }
 
     public Boolean isImageFile(MultipartFile file){
@@ -79,5 +64,21 @@ public class UserService implements IUserService {
         }catch (IOException ioException) {
             throw new InputOutputException(501, "Failed to store file", ioException);
         }
+    }
+
+    @Override
+    public List<UserDTO> getAllUser() {
+        if (userRepository.findAll().isEmpty()){
+            throw new ObjectNotFoundException(404, "List user is empty !");
+        }
+        return userConverter.toUserDTOList(userRepository.findAll());
+    }
+
+    @Override
+    public UserDTO getEmail(UserDTO userDTO) {
+        if (userRepository.findOneByEmail(userDTO.getEmail()) == null){
+            throw new UserNotFoundException(404, "User not found or not exist !");
+        }
+        return userConverter.toUserDTO(userRepository.findOneByEmail(userDTO.getEmail()));
     }
 }

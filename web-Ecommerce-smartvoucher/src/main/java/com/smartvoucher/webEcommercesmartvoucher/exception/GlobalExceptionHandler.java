@@ -39,6 +39,32 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(VerificationTokenException.class)
+    public ResponseEntity<ErrorResponse> handleVerificationTokenException(Exception ex){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        500,
+                        ex.getMessage(),
+                        "Verification token is error !",
+                        "/"
+                )
+        );
+    }
+
+    @ExceptionHandler(ResetPasswordException.class)
+    public ResponseEntity<ErrorResponse> handleChangePasswordException(Exception ex){
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        501,
+                        ex.getMessage(),
+                        "Reset password error !",
+                        "/"
+                )
+        );
+    }
+
     @ExceptionHandler(DuplicationCodeException.class)
     public ResponseEntity<ErrorResponse> handleDuplicationCodeException(Exception ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
@@ -116,6 +142,19 @@ public class GlobalExceptionHandler {
                     )
             );
         }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExistException(Exception ex){
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        406,
+                        ex.getMessage(),
+                        "User already exist !",
+                        "/"
+                )
+        );
+    }
 
     @ExceptionHandler(TokenRefreshException.class)
     public ResponseEntity<ErrorResponse> handleTokenRefreshException(Exception ex){
