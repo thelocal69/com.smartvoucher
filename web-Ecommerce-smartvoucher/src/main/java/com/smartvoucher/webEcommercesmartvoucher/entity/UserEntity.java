@@ -49,6 +49,9 @@ public class UserEntity {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "enable")
+    private boolean isEnable;
+
     @Column(name = "created_by")
     private String createdBy;
 
