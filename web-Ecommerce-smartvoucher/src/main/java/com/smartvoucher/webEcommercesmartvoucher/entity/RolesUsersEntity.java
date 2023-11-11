@@ -22,7 +22,7 @@ public class RolesUsersEntity {
 
     // Đặt PRIMARY KEY cho id_role và id_user
     @EmbeddedId
-    private RolesUsersKeys roles_usersKeys;
+    private RolesUsersKeys roleUserKeys;
     // ----
 
     @ManyToOne
