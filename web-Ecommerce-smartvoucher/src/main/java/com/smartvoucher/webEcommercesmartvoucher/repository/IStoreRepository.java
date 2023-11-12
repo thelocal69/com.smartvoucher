@@ -10,4 +10,5 @@ import java.util.List;
 public interface IStoreRepository extends JpaRepository<StoreEntity, Long> {
     List<StoreEntity> findAllByStoreCode(String storeCode);
     StoreEntity findOneById(Long id);
+    StoreEntity findOneByStoreCode(String storeCode);
 }

@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.exception;
 
+import com.google.gson.JsonSyntaxException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,6 +15,19 @@ public class GlobalExceptionHandler {
     // AOP aspect oriented programming
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        500,
+                        ex.getMessage(),
+                        "Internal Server Error",
+                        "/"
+                )
+        );
+    }
+
+    @ExceptionHandler({JsonSyntaxException.class, IllegalStateException.class})
+    public ResponseEntity<ErrorResponse> handleJsonSyntaxException(Exception ex){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new ErrorResponse(
                         new Timestamp(System.currentTimeMillis()),
@@ -102,6 +116,19 @@ public class GlobalExceptionHandler {
                     )
             );
         }
+
+    @ExceptionHandler(TokenRefreshException.class)
+    public ResponseEntity<ErrorResponse> handleTokenRefreshException(Exception ex){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        403,
+                        ex.getMessage(),
+                        "Refresh token is expired or not exist !",
+                        "/"
+                )
+        );
+    }
 
         @ExceptionHandler(JwtFilterException.class)
         public ResponseEntity<ErrorResponse> handleJwtFilterException(Exception ex){

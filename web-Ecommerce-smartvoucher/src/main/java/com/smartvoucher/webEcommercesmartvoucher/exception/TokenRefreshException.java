@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtFilterException extends RuntimeException{
+public class TokenRefreshException extends RuntimeException{
     private int statusCode;
     private String message;
     private Exception exception;

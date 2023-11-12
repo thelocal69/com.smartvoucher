@@ -6,10 +6,7 @@ import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.WareHouseConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.WareHouseDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.*;
-import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
-import com.smartvoucher.webEcommercesmartvoucher.exception.InputOutputException;
-import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
-import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.*;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
 import org.apache.commons.io.FilenameUtils;
@@ -85,6 +82,10 @@ public class WareHouseService implements IWareHouseService {
                 );
             }
             WareHouseEntity oldWareHouse = wareHouseRepository.findOneById(wareHouseDTO.getId());
+            wareHouseDTO.setDiscountTypeCode(oldWareHouse.getDiscountType().getCode());
+            if (wareHouseDTO.getCapacity() < oldWareHouse.getCapacity()){
+                throw new CheckCapacityException(500, "Not allow decrease capacity, only increase !");
+            }
             wareHouse = wareHouseConverter.toWareHouseEntity(wareHouseDTO, oldWareHouse);
         } else {
             List<WareHouseEntity> allWareHouseCode = wareHouseConverter.toWareHouseEntityList(getAllWareHouseCode(wareHouseDTO));

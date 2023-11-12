@@ -17,4 +17,5 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
     List<RoleEntity> findByNameAndId(String name, long id);
 
     RoleEntity findOneByName(String roleName);
+    RoleEntity findOneByRoleCode(String roleCode);
 }

@@ -18,6 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -52,37 +55,26 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
-            return http.csrf().disable()
+            return http.cors(cors -> cors.configurationSource(request -> {
+                CorsConfiguration corsConfig = new CorsConfiguration();
+                corsConfig.addAllowedOrigin("*");
+                corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                corsConfig.addAllowedHeader("*");
+                corsConfig.setAllowCredentials(false);
+                corsConfig.setMaxAge(3600L);
+                return corsConfig;
+            })).csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeHttpRequests()
                     .antMatchers("/account/**").permitAll()
                     .antMatchers("**/upload").permitAll()
-                    .antMatchers(HttpMethod.GET, "/merchant").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST, "/merchant").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, "/merchant").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE, "/merchant").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/chain").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST, "/chain").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, "/chain").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE, "/chain").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/category").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST, "/category").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, "/category").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE, "/category").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/discount").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST, "/discount").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, "/discount").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE, "/discount").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/warehouse").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST, "/warehouse").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, "/warehouse").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE, "/warehouse").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/store").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST, "/store").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, "/store").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE, "/store").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/label").hasRole("ADMIN")
+                    .antMatchers("/merchant/**").hasRole("ADMIN")
+                    .antMatchers("/chain/**").hasRole("ADMIN")
+                    .antMatchers("/category/**").hasRole("ADMIN")
+                    .antMatchers("/discount/**").hasRole("ADMIN")
+                    .antMatchers("/store/**").hasRole("ADMIN")
+                    .antMatchers("/warehouse/**").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/user/api/upload").hasRole("USER")
                     .antMatchers("/serial").hasRole("ADMIN")
                     .antMatchers("/role").hasRole("ADMIN")
@@ -95,17 +87,19 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.PUT, "/ticket").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/ticket").hasRole("ADMIN")*/
                     .antMatchers("/ticket/**").permitAll()
+                    .antMatchers("/ticket/**").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("USER")
+                    .antMatchers("/role_user").hasRole("ADMIN")
                     .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
                     .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                     .logout()
+                    .deleteCookies("JSESSIONID")
                     .logoutUrl("/account/api/logout")
                     .addLogoutHandler(logoutHandler)
                     .logoutSuccessHandler(((request, response, authentication) ->
                             SecurityContextHolder.clearContext()))
-                    .and()
-                    .build();
+                    .and().build();
     }
 
 }
