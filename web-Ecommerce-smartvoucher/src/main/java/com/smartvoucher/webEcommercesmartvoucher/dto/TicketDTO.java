@@ -17,7 +17,6 @@ public class TicketDTO {
 
     private long id;
 
-    @NotNull(message = "Please fill all information!")
     private SerialDTO idSerialDTO;
     @NotNull(message = "Please fill all information!")
     private WareHouseDTO idWarehouseDTO;

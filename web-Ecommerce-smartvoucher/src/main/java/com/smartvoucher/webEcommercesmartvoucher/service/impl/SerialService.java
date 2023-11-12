@@ -1,9 +1,12 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.smartvoucher.webEcommercesmartvoucher.converter.SerialConverter;
+import com.smartvoucher.webEcommercesmartvoucher.converter.WarehouseSerialConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.WarehouseSerialEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.keys.WarehouseSerialKeys;
 import com.smartvoucher.webEcommercesmartvoucher.exception.CheckCapacityException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
@@ -12,6 +15,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository
 import com.smartvoucher.webEcommercesmartvoucher.repository.SerialRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.WarehouseSerialRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
+import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -27,15 +31,22 @@ public class SerialService implements ISerialService {
     private final SerialConverter serialConverter;
     private final WarehouseSerialRepository warehouseSerialRepository;
     private final IWareHouseRepository wareHouseRepository;
+    private final RandomCodeHandler randomCodeHandler;
+    private final WarehouseSerialConverter warehouseSerialConverter;
+
     @Autowired
     public SerialService(SerialRepository serialRepository,
                          SerialConverter serialConverter,
                          WarehouseSerialRepository warehouseSerialRepository,
-                         IWareHouseRepository wareHouseRepository) {
+                         IWareHouseRepository wareHouseRepository,
+                         RandomCodeHandler randomCodeHandler,
+                         WarehouseSerialConverter warehouseSerialConverter) {
         this.serialRepository = serialRepository;
         this.serialConverter = serialConverter;
         this.warehouseSerialRepository = warehouseSerialRepository;
         this.wareHouseRepository = wareHouseRepository;
+        this.randomCodeHandler = randomCodeHandler;
+        this.warehouseSerialConverter = warehouseSerialConverter;
     }
 
     @Override
@@ -56,16 +67,20 @@ public class SerialService implements ISerialService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseObject insertSerial(SerialDTO serialDTO, long idWarehouse) {
-        SerialEntity checkSerial = serialRepository.findBySerialCode(serialDTO.getSerialCode());
+        String serialCode = randomCodeHandler.generateRandomChars(10);
+        SerialEntity checkSerial = serialRepository.findBySerialCode(serialCode);
         if(checkSerial == null){
             WareHouseEntity wareHouseEntity = wareHouseRepository.findOneById(idWarehouse);
             if(wareHouseEntity != null) {
                 int total = warehouseSerialRepository.total(wareHouseEntity);
                 if(wareHouseEntity.getCapacity() - total > 0 ) {
+                    SerialEntity serialEntity = serialRepository.save(
+                            serialConverter.generateSerial(serialDTO.getBatchCode(),serialDTO.getNumberOfSerial(),serialCode));
+                    warehouseSerialConverter.saveWarehouseSerial(serialEntity, wareHouseEntity);
                     return new ResponseObject(200,
                             "Add serial success!",
                             serialConverter.toSerialDTO(
-                                    serialRepository.save(serialConverter.insertSerial(serialDTO))) );
+                                    serialRepository.save(serialConverter.toSerialEntity(serialDTO))) );
                 } else {
                     throw new CheckCapacityException(406, "Capacity is full, pls check and try again !");
                 }

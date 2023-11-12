@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +38,13 @@ public class TicketController {
                 this.ticketService.getAllTicket());
     }
 
-    @PostMapping("/api/addVoucher")
+    @PostMapping("/api/buy-voucher")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO) {
+    public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO
+                                        ,@RequestParam String batchCode
+                                        ,@RequestParam int numberOfSerial) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.ticketService.insertTicket(ticketDTO));
+                this.ticketService.insertTicket(ticketDTO, batchCode, numberOfSerial));
     }
 
     @PutMapping("/api/updateVoucher")
@@ -58,7 +61,7 @@ public class TicketController {
                 this.ticketService.deleteTicket(id));
     }
 
-    @PutMapping("/api/useVoucher")
+    @PutMapping("/api/use-voucher")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> userUseVoucher(@RequestParam String serialCode) {
         return ResponseEntity.status(HttpStatus.OK).body(

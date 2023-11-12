@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ITicketService {
     ResponseObject getAllTicket();
-    ResponseObject insertTicket(TicketDTO ticketDTO);
+    ResponseObject insertTicket(TicketDTO ticketDTO, String batchCode, int numberOfSerial);
     ResponseObject updateTicket(TicketDTO ticketDTO);
     ResponseObject deleteTicket(long idTicket);
     ResponseObject userUseTicket(String serialCode);
