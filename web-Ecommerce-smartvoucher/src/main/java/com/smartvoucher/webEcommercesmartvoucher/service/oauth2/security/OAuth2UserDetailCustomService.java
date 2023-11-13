@@ -72,12 +72,11 @@ public class OAuth2UserDetailCustomService extends DefaultOAuth2UserService {
             ){
                 throw new OAuth2LoginException(400, "Invalid site sign-in with "+ user.getProvider());
             }
-            //userDetail = updateOAuth2UserDetail(userDetail, oAuth2UserDetail);
         }else {
             UserEntity userDetail = registerNewOAuth2UserDetail(userRequest, oAuth2UserDetail);
             RoleEntity role = roleRepository.findOneByName("ROLE_USER");
             RolesUsersDTO rolesUsersDTO = roleUsersConverter.toRoleUserDTO(userDetail, role);
-            RolesUsersEntity detail = roleUserRepository.save(roleUsersConverter.toRoleUserEntity(rolesUsersDTO));
+            this.roleUserRepository.save(roleUsersConverter.toRoleUserEntity(rolesUsersDTO));
         }
         RolesUsersEntity rolesUsers = roleUserRepository.getEmail(oAuth2UserDetail.getEmail());
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(
@@ -96,10 +95,5 @@ public class OAuth2UserDetailCustomService extends DefaultOAuth2UserService {
         RegisterNewOAuth2UserDetailDTO registerOAuth2UserDTO = registerConverter.toRegisterNewOAuth2UserDetailDTO(
                 oAuth2UserRequest, oAuth2UserDetail);
         return  userRepository.save(registerConverter.toUsersEntity(registerOAuth2UserDTO));
-    }
-
-    public UserEntity updateOAuth2UserDetail(UserEntity user, OAuth2UserDetail oAuth2UserDetail){
-        user.setEmail(oAuth2UserDetail.getEmail());
-        return userRepository.save(user);
     }
 }
