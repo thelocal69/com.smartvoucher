@@ -1,24 +1,30 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-
 import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketHistoryConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ExpiredVoucherException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+
+import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
+
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.PutMapping;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
@@ -235,4 +241,17 @@ public class TicketService implements ITicketService {
         String folderId = "1D3tkdIWmKLQuRgdabrIfLYRkDeJyrflu";
         return uploadUtil.uploadImages(fileName, folderId);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public TicketDTO getTicketDetail(UserDTO userDTO){
+        TicketEntity ticketDetail = ticketRepository.findByIdUser(userDTO.getId());
+        if(ticketDetail != null){
+            return ticketConverter.toTicketDTO(ticketDetail);
+        }else{
+            throw new ObjectNotFoundException(404, "Ticket is not exist");
+        }
+    }
+
+
 }
