@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class UserConverter {
+public class  UserConverter {
 
     private final RandomCodeHandler randomCodeHandler;
     private final PasswordEncoder passwordEncoder;
@@ -59,5 +59,6 @@ public class UserConverter {
         userEntity.setStatus(1);
         return userEntity;
     }
+
 
 }

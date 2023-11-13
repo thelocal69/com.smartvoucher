@@ -1,11 +1,10 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 
-import com.smartvoucher.webEcommercesmartvoucher.converter.StoreConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketHistoryConverter;
-import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
@@ -14,8 +13,6 @@ import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundExcepti
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
-import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
-import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
 import com.smartvoucher.webEcommercesmartvoucher.exception.InputOutputException;
 
@@ -24,8 +21,8 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -35,7 +32,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -232,4 +228,17 @@ public class TicketService implements ITicketService {
             throw new InputOutputException(501, "Failed to store file", ioException);
         }
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public TicketDTO getTicketDetail(UserDTO userDTO){
+        TicketEntity ticketDetail = ticketRepository.findByIdUser(userDTO.getId());
+        if(ticketDetail != null){
+            return ticketConverter.toTicketDTO(ticketDetail);
+        }else{
+            throw new ObjectNotFoundException(404, "Ticket is not exist");
+        }
+    }
+
+
 }
