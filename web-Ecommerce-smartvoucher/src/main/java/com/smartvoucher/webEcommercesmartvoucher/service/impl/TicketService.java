@@ -102,17 +102,15 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public ResponseObject insertTicket(TicketDTO ticketDTO, String batchCode, int numberOfSerial) {
+    public ResponseObject insertTicket(TicketDTO ticketDTO) {
         if (checkExistsObject(ticketDTO)) {
-            // tạo mới serial
-            SerialEntity serialEntity = generateSerial(ticketDTO.getIdWarehouseDTO().getId(), batchCode, numberOfSerial);
-            // kiểm tra ticket có duplicate ở database k
-            if (checkDuplicateTicket(ticketDTO, serialEntity)) {
+            // kiểm tra ticket có duplicate ở database
+            if (checkDuplicateTicket(ticketDTO)) {
                     TicketEntity ticket =
                             ticketRepository.save(
                                     ticketConverter.insertTicket(
                                             ticketDTO
-                                            ,serialEntity
+                                            ,createSerial(ticketDTO)
                                             ,createWarehouse(ticketDTO)
                                             ,createCategory(ticketDTO)
                                             ,createOrder(ticketDTO)
@@ -135,34 +133,6 @@ public class TicketService implements ITicketService {
         } else {
             throw new ObjectEmptyException(406,
                     "Serial, Warehouse, Category, Order, User, Store is empty, please check and fill all data");
-        }
-    }
-
-    public SerialEntity generateSerial(long idWarehouse, String batchCode, int numberOfSerial) {
-        String serialCode = randomCodeHandler.generateRandomChars(10);
-        // kiểm tra mã serial code có duplicate ở trong DB
-        SerialEntity checkSerial = serialRepository.findBySerialCode(serialCode);
-        if(checkSerial == null){
-            // kiểm tra warehouse có tồn tại ở trong DB
-            WareHouseEntity wareHouseEntity = iWareHouseRepository.findOneById(idWarehouse);
-            if(wareHouseEntity != null) {
-                // kiểm số lượng serial đã được gen
-                int total = warehouseSerialRepository.total(wareHouseEntity);
-            /* kiểm tra số lượng serial có thể gen tiếp tục,
-                 kiểm tra so với capacity (lấy capacity - total = total serial có thể gen tt)*/
-                if(wareHouseEntity.getCapacity() - total > 0 ) {
-                    SerialEntity serialEntity = serialRepository.save(serialConverter.generateSerial(batchCode, numberOfSerial, serialCode));
-                    // save warehouse và serial vào table WarehouseSerial ( bảng trung gian )
-                    warehouseSerialConverter.saveWarehouseSerial(serialEntity, wareHouseEntity);
-                    return serialEntity;
-                } else {
-                    throw new CheckCapacityException(406, "Ticket is sold out, pls check and try again !");
-                }
-            } else {
-                throw new ObjectNotFoundException(404, "Warehouse not found, pls check Warehouse and try again");
-            }
-        } else {
-            throw new DuplicationCodeException(400, "Serial is available, add fail!");
         }
     }
 
@@ -254,16 +224,16 @@ public class TicketService implements ITicketService {
                 storeEntity.isPresent();
     }
 
-    public boolean checkDuplicateTicket(TicketDTO ticketDTO, SerialEntity serialEntity) {
+    public boolean checkDuplicateTicket(TicketDTO ticketDTO) {
         return ticketRepository.findByIdSerialOrIdCategoryOrIdOrder(
-                serialEntity,
+                createSerial(ticketDTO),
                 createCategory(ticketDTO),
                 createOrder(ticketDTO)).isEmpty();
     }
 
-//    public SerialEntity createSerial(TicketDTO ticketDTO) {
-//        return serialRepository.findById(ticketDTO.getIdSerialDTO().getId()).orElse(null);
-//    }
+    public SerialEntity createSerial(TicketDTO ticketDTO) {
+        return serialRepository.findById(ticketDTO.getIdSerialDTO().getId()).orElse(null);
+    }
     public WareHouseEntity createWarehouse(TicketDTO ticketDTO) {
         return iWareHouseRepository.findById(ticketDTO.getIdWarehouseDTO().getId()).orElse(null);
     }

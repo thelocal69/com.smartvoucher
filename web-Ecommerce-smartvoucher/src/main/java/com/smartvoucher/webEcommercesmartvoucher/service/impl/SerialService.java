@@ -32,21 +32,18 @@ public class SerialService implements ISerialService {
     private final WarehouseSerialRepository warehouseSerialRepository;
     private final IWareHouseRepository wareHouseRepository;
     private final RandomCodeHandler randomCodeHandler;
-    private final WarehouseSerialConverter warehouseSerialConverter;
 
     @Autowired
     public SerialService(SerialRepository serialRepository,
                          SerialConverter serialConverter,
                          WarehouseSerialRepository warehouseSerialRepository,
                          IWareHouseRepository wareHouseRepository,
-                         RandomCodeHandler randomCodeHandler,
-                         WarehouseSerialConverter warehouseSerialConverter) {
+                         RandomCodeHandler randomCodeHandler) {
         this.serialRepository = serialRepository;
         this.serialConverter = serialConverter;
         this.warehouseSerialRepository = warehouseSerialRepository;
         this.wareHouseRepository = wareHouseRepository;
         this.randomCodeHandler = randomCodeHandler;
-        this.warehouseSerialConverter = warehouseSerialConverter;
     }
 
     @Override
@@ -66,31 +63,36 @@ public class SerialService implements ISerialService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseObject insertSerial(SerialDTO serialDTO, long idWarehouse) {
+    public ResponseObject insertSerial(long idWarehouse, String batchCode, int numberOfSerial) {
         String serialCode = randomCodeHandler.generateRandomChars(10);
+        // kiểm tra mã serial code có duplicate ở trong DB
         SerialEntity checkSerial = serialRepository.findBySerialCode(serialCode);
         if(checkSerial == null){
+            // kiểm tra warehouse có tồn tại ở trong DB
             WareHouseEntity wareHouseEntity = wareHouseRepository.findOneById(idWarehouse);
             if(wareHouseEntity != null) {
+                // kiểm số lượng serial đã được gen
                 int total = warehouseSerialRepository.total(wareHouseEntity);
+            /* kiểm tra số lượng serial có thể gen tiếp tục,
+                 kiểm tra so với capacity (lấy capacity - total = total serial có thể gen tt)*/
                 if(wareHouseEntity.getCapacity() - total > 0 ) {
-                    SerialEntity serialEntity = serialRepository.save(
-                            serialConverter.generateSerial(serialDTO.getBatchCode(),serialDTO.getNumberOfSerial(),serialCode));
-                    warehouseSerialConverter.saveWarehouseSerial(serialEntity, wareHouseEntity);
+                    SerialEntity serialEntity = serialRepository.save(serialConverter.generateSerial(batchCode, numberOfSerial, serialCode));
+                    // save warehouse và serial vào table WarehouseSerial ( bảng trung gian )
+                    saveWarehouseSerial(serialEntity, wareHouseEntity);
                     return new ResponseObject(200,
                             "Add serial success!",
-                            serialConverter.toSerialDTO(
-                                    serialRepository.save(serialConverter.toSerialEntity(serialDTO))) );
+                            serialConverter.toSerialDTO(serialEntity));
                 } else {
-                    throw new CheckCapacityException(406, "Capacity is full, pls check and try again !");
+                    throw new CheckCapacityException(406, "Ticket is sold out, pls check and try again !");
                 }
             } else {
-                throw new ObjectNotFoundException(404, "Warehouse not found, pls try again");
+                throw new ObjectNotFoundException(404, "Warehouse not found, pls check Warehouse and try again");
             }
         } else {
             throw new DuplicationCodeException(400, "Serial is available, add fail!");
         }
     }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -116,5 +118,14 @@ public class SerialService implements ISerialService {
             } else {
                 throw new ObjectNotFoundException(404, "Can not delete Serial id : " + id);
             }
+    }
+
+    public void saveWarehouseSerial(SerialEntity serialEntity, WareHouseEntity wareHouseEntity) {
+        WarehouseSerialKeys keys = new WarehouseSerialKeys();
+        keys.setIdSerial(serialEntity.getId());
+        keys.setIdWarehouse(wareHouseEntity.getId());
+        WarehouseSerialEntity warehouseSerialEntity = new WarehouseSerialEntity();
+        warehouseSerialEntity.setKeys(keys);
+        warehouseSerialRepository.save(warehouseSerialEntity);
     }
 }

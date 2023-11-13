@@ -40,11 +40,9 @@ public class TicketController {
 
     @PostMapping("/api/buy-voucher")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO
-                                        ,@RequestParam String batchCode
-                                        ,@RequestParam int numberOfSerial) {
+    public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.ticketService.insertTicket(ticketDTO, batchCode, numberOfSerial));
+                this.ticketService.insertTicket(ticketDTO));
     }
 
     @PutMapping("/api/updateVoucher")

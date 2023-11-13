@@ -76,7 +76,7 @@ public class SecurityConfig {
                     .antMatchers("/store/**").hasRole("ADMIN")
                     .antMatchers("/warehouse/**").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/user/api/upload").hasRole("USER")
-                    .antMatchers("/serial").hasRole("ADMIN")
+                    .antMatchers("/serial/**").permitAll()
                     .antMatchers("/role").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET,"/order").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST,"/order").hasRole("ADMIN")
@@ -87,7 +87,6 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.PUT, "/ticket").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/ticket").hasRole("ADMIN")*/
                     .antMatchers("/ticket/**").permitAll()
-                    .antMatchers("/ticket/**").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("USER")
                     .antMatchers("/role_user").hasRole("ADMIN")

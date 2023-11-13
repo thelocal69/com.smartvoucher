@@ -34,10 +34,11 @@ public class SerialController {
 
     @PostMapping("")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject> insertSerial(@Valid @RequestBody SerialDTO serialDTO,
-                                                       @RequestParam long idWarehouse){
+    public ResponseEntity<ResponseObject> insertSerial(@RequestParam long idWarehouse,
+                                                       @RequestParam String batchCode,
+                                                       @RequestParam int numberOfSerial){
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.serialService.insertSerial(serialDTO, idWarehouse));
+                this.serialService.insertSerial(idWarehouse, batchCode, numberOfSerial));
     }
 
     @PutMapping("")
