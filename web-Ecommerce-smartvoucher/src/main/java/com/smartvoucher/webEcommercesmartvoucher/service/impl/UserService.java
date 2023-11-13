@@ -54,19 +54,4 @@ public class UserService implements IUserService {
         }
         return userConverter.toUserDTO(userRepository.findOneByEmail(userDTO.getEmail()));
     }
-
-    @Override
-    public void OAuthSignIn(String userName) {
-        UserEntity existUser = userRepository.findByUsername(userName);
-        if (existUser == null){
-            UserEntity newUser = new UserEntity();
-            newUser.setUsername(userName);
-            newUser.setStatus(1);
-            newUser.setProvider(Provider.GOOGLE);
-            newUser.setEnable(true);
-            this.userRepository.save(newUser);
-        }else {
-            throw new UserAlreadyExistException(501, "User already exist !");
-        }
-    }
 }
