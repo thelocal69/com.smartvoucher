@@ -75,7 +75,7 @@ public class  UserConverter {
         userEntity.setEmail(signUpDTO.getEmail());
         userEntity.setEnable(false);
         userEntity.setStatus(1);
-        userEntity.setProvider(Provider.LOCAL);
+        userEntity.setProvider(Provider.local.name());
         return userEntity;
     }
 
