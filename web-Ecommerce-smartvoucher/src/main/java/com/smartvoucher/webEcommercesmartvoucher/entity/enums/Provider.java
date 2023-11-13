@@ -1,5 +1,5 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity.enums;
 
 public enum Provider {
-    LOCAL, GOOGLE
+    local, google
 }

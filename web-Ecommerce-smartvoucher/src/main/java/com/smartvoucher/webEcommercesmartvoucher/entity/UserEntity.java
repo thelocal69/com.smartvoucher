@@ -1,12 +1,12 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity;
 
-import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -54,8 +54,7 @@ public class UserEntity {
     private boolean isEnable;
 
     @Column(name = "provider")
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
+    private String provider;
 
     @Column(name = "created_by")
     private String createdBy;
@@ -76,6 +75,6 @@ public class UserEntity {
     @OneToMany(mappedBy = "idUser")
     private List<OrderEntity> orderEntity;
 
-    @OneToMany(mappedBy = "idUser")
-    private List<RolesUsersEntity> rolesUsersEntities;
+    @OneToMany(mappedBy = "idUser", fetch = FetchType.EAGER)
+    private Set<RolesUsersEntity> rolesUsersEntities;
 }
