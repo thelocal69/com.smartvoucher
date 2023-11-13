@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.converter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -74,6 +75,7 @@ public class UserConverter {
         userEntity.setEmail(signUpDTO.getEmail());
         userEntity.setEnable(false);
         userEntity.setStatus(1);
+        userEntity.setProvider(Provider.LOCAL);
         return userEntity;
     }
 

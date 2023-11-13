@@ -1,23 +1,20 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.google.api.client.http.InputStreamContent;
-import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
-import com.smartvoucher.webEcommercesmartvoucher.exception.InputOutputException;
+import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.UserAlreadyExistException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.UserNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
-import org.apache.commons.io.FilenameUtils;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -25,45 +22,21 @@ public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private final UserConverter userConverter;
-    private final Drive googleDrive;
+    private final UploadUtil uploadUtil;
 
-    public UserService(UserRepository userRepository,
-                       UserConverter userConverter,
-                       final Drive googleDrive) {
+    @Autowired
+    public UserService(final UserRepository userRepository,
+                       final UserConverter userConverter,
+                       final UploadUtil uploadUtil) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
-        this.googleDrive = googleDrive;
-    }
-
-    public Boolean isImageFile(MultipartFile file){
-        String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
-        assert fileExtension != null;
-        return Arrays.asList("jpg", "png", "jpeg", "bmp").contains(fileExtension.trim().toLowerCase());
+        this.uploadUtil = uploadUtil;
     }
 
     @Override
     public File uploadUserImages(MultipartFile fileName) {
-        try {
-            if (fileName.isEmpty()){
-                throw new InputOutputException(501, "Failed to store empty file", null);
-            } else if (!isImageFile(fileName)) {
-                throw new InputOutputException(500, "You can only upload image file", null);
-            }
-            float fileSizeInMegabytes = fileName.getSize() / 1_000_000.0f;
-            if (fileSizeInMegabytes > 5.0f) {
-                throw new InputOutputException(501, "File must be <= 5Mb", null);
-            }
-            File fileMetaData = new File();
-            String folderId = "1jNZ5_XieGUGKYIhNq3P2tflcKYHCwdb5";
-            fileMetaData.setParents(Collections.singletonList(folderId));
-            fileMetaData.setName(fileName.getOriginalFilename());
-            return googleDrive.files().create(fileMetaData, new InputStreamContent(
-                    fileName.getContentType(),
-                    new ByteArrayInputStream(fileName.getBytes())
-            )).setFields("id, webViewLink").execute();
-        }catch (IOException ioException) {
-            throw new InputOutputException(501, "Failed to store file", ioException);
-        }
+        String folderId = "1jNZ5_XieGUGKYIhNq3P2tflcKYHCwdb5";
+        return uploadUtil.uploadImages(fileName, folderId);
     }
 
     @Override
@@ -80,5 +53,20 @@ public class UserService implements IUserService {
             throw new UserNotFoundException(404, "User not found or not exist !");
         }
         return userConverter.toUserDTO(userRepository.findOneByEmail(userDTO.getEmail()));
+    }
+
+    @Override
+    public void OAuthSignIn(String userName) {
+        UserEntity existUser = userRepository.findByUsername(userName);
+        if (existUser == null){
+            UserEntity newUser = new UserEntity();
+            newUser.setUsername(userName);
+            newUser.setStatus(1);
+            newUser.setProvider(Provider.GOOGLE);
+            newUser.setEnable(true);
+            this.userRepository.save(newUser);
+        }else {
+            throw new UserAlreadyExistException(501, "User already exist !");
+        }
     }
 }
