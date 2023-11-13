@@ -21,7 +21,7 @@ public class OrderController {
         this.ordersService = ordersService;
     }
 
-    @GetMapping
+    @GetMapping("")
     @Transactional(readOnly = true)
     public ResponseEntity<?> getAllOrder(){
         return ResponseEntity.status(HttpStatus.OK).body(

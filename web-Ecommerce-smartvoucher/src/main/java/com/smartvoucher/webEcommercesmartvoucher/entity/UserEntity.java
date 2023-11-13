@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity;
 
+import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -51,6 +52,10 @@ public class UserEntity {
 
     @Column(name = "enable")
     private boolean isEnable;
+
+    @Column(name = "provider")
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
 
     @Column(name = "created_by")
     private String createdBy;

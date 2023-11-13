@@ -1,29 +1,22 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.google.api.client.http.InputStreamContent;
-import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.ChainConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.ChainDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.ChainEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.MerchantEntity;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
-import com.smartvoucher.webEcommercesmartvoucher.exception.InputOutputException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IChainRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IChainService;
-import org.apache.commons.io.FilenameUtils;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,17 +24,17 @@ public class ChainService implements IChainService {
     private final IChainRepository chainRepository;
     private final IMerchantRepository merchantRepository;
     private final ChainConverter chainConverter;
-    private final Drive googleDrive;
+    private final UploadUtil uploadUtil;
 
     @Autowired
     public ChainService(final IChainRepository chainRepository,
                         final ChainConverter chainConverter,
                         final IMerchantRepository merchantRepository,
-                        final Drive googleDrive){
+                        final UploadUtil uploadUtil){
         this.chainRepository = chainRepository;
         this.chainConverter = chainConverter;
         this.merchantRepository = merchantRepository;
-        this.googleDrive = googleDrive;
+        this.uploadUtil = uploadUtil;
     }
 
     @Override
@@ -123,34 +116,9 @@ public class ChainService implements IChainService {
         return merchantRepository.existsByMerchantCode(chainDTO.getMerchantCode());
     }
 
-    public Boolean isImageFile(MultipartFile file){
-        String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
-        assert fileExtension != null;
-        return Arrays.asList("jpg", "png", "jpeg", "bmp").contains(fileExtension.trim().toLowerCase());
-    }
-
     @Override
     public File uploadChainImages(MultipartFile fileName) {
-        try {
-            if (fileName.isEmpty()){
-                throw new InputOutputException(501, "Failed to store empty file", null);
-            } else if (!isImageFile(fileName)) {
-                throw new InputOutputException(500, "You can only upload image file", null);
-            }
-            float fileSizeInMegabytes = fileName.getSize() / 1_000_000.0f;
-            if (fileSizeInMegabytes > 5.0f) {
-                throw new InputOutputException(501, "File must be <= 5Mb", null);
-            }
-            File fileMetaData = new File();
-            String folderId = "1u73jDfQwDXvzlmKSVLb5CAI6DNPvylRH";
-            fileMetaData.setParents(Collections.singletonList(folderId));
-            fileMetaData.setName(fileName.getOriginalFilename());
-            return googleDrive.files().create(fileMetaData, new InputStreamContent(
-                    fileName.getContentType(),
-                    new ByteArrayInputStream(fileName.getBytes())
-            )).setFields("id, webViewLink").execute();
-        }catch (IOException ioException) {
-            throw new InputOutputException(501, "Failed to store file", ioException);
-        }
+        String folderId = "1u73jDfQwDXvzlmKSVLb5CAI6DNPvylRH";
+       return uploadUtil.uploadImages(fileName, folderId);
     }
     }
