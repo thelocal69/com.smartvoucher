@@ -76,11 +76,10 @@ public class SecurityConfig {
                 corsConfig.addAllowedOrigin("*");
                 corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                 corsConfig.addAllowedHeader("*");
-                corsConfig.setAllowCredentials(false);
-                corsConfig.setMaxAge(3600L);
+                corsConfig.setAllowCredentials(true);
                 return corsConfig;
             })).csrf().disable()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeHttpRequests()
                     .antMatchers("/account/**").permitAll()
@@ -104,6 +103,7 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("USER")
                     .antMatchers("/role_user").hasRole("ADMIN")
                     .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
+                    .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                     .and().oauth2Login()
                     .defaultSuccessUrl("/user", true)
                     .userInfoEndpoint().userService(oAuth2UserDetailCustomService)
