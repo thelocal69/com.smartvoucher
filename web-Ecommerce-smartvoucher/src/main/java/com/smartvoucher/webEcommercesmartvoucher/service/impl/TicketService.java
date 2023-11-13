@@ -1,36 +1,34 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-
+import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketHistoryConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ExpiredVoucherException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 
-import com.google.api.client.http.InputStreamContent;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
-import com.smartvoucher.webEcommercesmartvoucher.exception.InputOutputException;
 
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
-import org.apache.commons.io.FilenameUtils;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.bind.annotation.PutMapping;
+
 import org.springframework.web.multipart.MultipartFile;
 
-
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +44,7 @@ public class TicketService implements ITicketService {
     private final IStoreRepository storeRepository;
     private final TicketHistoryRepository ticketHistoryRepository;
     private final TicketHistoryConverter ticketHistoryConverter;
-    private final Drive googleDrive;
+    private final UploadUtil uploadUtil;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository
@@ -59,7 +57,7 @@ public class TicketService implements ITicketService {
                 ,IStoreRepository storeRepository
                 ,TicketHistoryRepository ticketHistoryRepository
                 ,TicketHistoryConverter ticketHistoryConverter
-                ,Drive googleDrive) {
+                ,final UploadUtil uploadUtil) {
         this.ticketRepository = ticketRepository;
         this.ticketConverter = ticketConverter;
         this.serialRepository = serialRepository;
@@ -70,7 +68,7 @@ public class TicketService implements ITicketService {
         this.storeRepository = storeRepository;
         this.ticketHistoryRepository = ticketHistoryRepository;
         this.ticketHistoryConverter = ticketHistoryConverter;
-        this.googleDrive = googleDrive;
+        this.uploadUtil = uploadUtil;
     }
 
     @Override
@@ -152,6 +150,46 @@ public class TicketService implements ITicketService {
         }
     }
 
+    @PutMapping
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseObject userUseTicket(String serialCode) {
+        TicketEntity ticketEntity = ticketRepository.findBySerialCode(serialRepository.findBySerialCode(serialCode));
+        if(ticketEntity != null) {
+            ticketEntity.setRedeemedtimeTime(presentTime());
+                if(checkExpiredVoucher(ticketEntity)){
+                        ticketEntity.setStatus(1);
+                        return new ResponseObject(200, "Used Ticket Success !", true);
+                } else {
+                    throw new ExpiredVoucherException(410, "Expired Voucher !");
+                }
+        } else {
+            throw new ObjectNotFoundException(404, "Ticket not found, pls check and try again!");
+        }
+    }
+
+    public Timestamp presentTime(){
+        return new Timestamp(System.currentTimeMillis());
+    }
+
+    public boolean checkExpiredVoucher(TicketEntity ticketEntity) {
+        // check present time so sánh với expired time của voucher
+        return presentTime().before(ticketEntity.getExpiredTime());
+    }
+
+    @Scheduled(cron = "0 0 * * * ?") // cứ mỗi 00:00 AM thì method này sẽ tự động chạy để kiểm tra hàng loạt ticket
+    public void checkExpiredAllVoucher() {
+        Timestamp presentTime = new Timestamp(System.currentTimeMillis());
+        for(TicketEntity ticketEntity : ticketRepository.findAll()) {
+            if(presentTime.equals(ticketEntity.getExpiredTime()) ||
+                    presentTime.after(ticketEntity.getExpiredTime()) ||
+                    ticketEntity.getStatus() == 1) {
+                TicketHistoryEntity ticketHistory = ticketHistoryRepository.findBySerialCode(ticketEntity.getIdSerial().getSerialCode());
+                ticketHistory.setIsLatest(2);
+                ticketEntity.setStatus(2);
+            }
+        }
+    }
+
     public boolean checkExistsObject(TicketDTO ticketDTO) {
         Optional<SerialEntity> serialEntity = serialRepository.findById(ticketDTO.getIdSerialDTO().getId());
         Optional<WareHouseEntity> wareHouseEntity = iWareHouseRepository.findById(ticketDTO.getIdWarehouseDTO().getId());
@@ -198,35 +236,10 @@ public class TicketService implements ITicketService {
         return storeRepository.findById(ticketDTO.getIdStoreDTO().getId()).orElse(null);
     }
 
-    public Boolean isImageFile(MultipartFile file) {
-        String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
-        assert fileExtension != null;
-        return Arrays.asList("jpg", "png", "jpeg", "bmp").contains(fileExtension.trim().toLowerCase());
-    }
-
     @Override
     public File uploadTicketImages(MultipartFile fileName) {
-        try {
-            if (fileName.isEmpty()){
-                throw new InputOutputException(501, "Failed to store empty file", null);
-            } else if (!isImageFile(fileName)) {
-                throw new InputOutputException(500, "You can only upload image file", null);
-            }
-            float fileSizeInMegabytes = fileName.getSize() / 1_000_000.0f;
-            if (fileSizeInMegabytes > 5.0f) {
-                throw new InputOutputException(501, "File must be <= 5Mb", null);
-            }
-            File fileMetaData = new File();
-            String folderId = "1D3tkdIWmKLQuRgdabrIfLYRkDeJyrflu";
-            fileMetaData.setParents(Collections.singletonList(folderId));
-            fileMetaData.setName(fileName.getOriginalFilename());
-            return googleDrive.files().create(fileMetaData, new InputStreamContent(
-                    fileName.getContentType(),
-                    new ByteArrayInputStream(fileName.getBytes())
-            )).setFields("id, webViewLink").execute();
-        }catch (IOException ioException) {
-            throw new InputOutputException(501, "Failed to store file", ioException);
-        }
+        String folderId = "1D3tkdIWmKLQuRgdabrIfLYRkDeJyrflu";
+        return uploadUtil.uploadImages(fileName, folderId);
     }
 
     @Override

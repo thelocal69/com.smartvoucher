@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,15 +30,18 @@ public class SecurityConfig {
     private final CustomAuthenticationProvider customAuthenticationProvider;
     private final JWTFilter jwtFilter;
     private final LogoutHandler logoutHandler;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
     public SecurityConfig(final CustomAuthenticationProvider customAuthenticationProvider,
                           final JWTFilter jwtFilter,
-                          final LogoutHandler logoutHandler
+                          final LogoutHandler logoutHandler,
+                          final UserDetailsService userDetailsService
     ) {
         this.customAuthenticationProvider = customAuthenticationProvider;
         this.jwtFilter = jwtFilter;
         this.logoutHandler = logoutHandler;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -59,7 +63,7 @@ public class SecurityConfig {
                 CorsConfiguration corsConfig = new CorsConfiguration();
                 corsConfig.addAllowedOrigin("*");
                 corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-                corsConfig.addAllowedHeader("*");
+                corsConfig.addAllowedHeader("Authorization");
                 corsConfig.setAllowCredentials(false);
                 corsConfig.setMaxAge(3600L);
                 return corsConfig;
@@ -69,6 +73,7 @@ public class SecurityConfig {
                     .authorizeHttpRequests()
                     .antMatchers("/account/**").permitAll()
                     .antMatchers("**/upload").permitAll()
+                    .antMatchers("/oauth2/**").permitAll()
                     .antMatchers("/merchant/**").hasRole("ADMIN")
                     .antMatchers("/chain/**").hasRole("ADMIN")
                     .antMatchers("/category/**").hasRole("ADMIN")
@@ -94,6 +99,8 @@ public class SecurityConfig {
                     .addLogoutHandler(logoutHandler)
                     .logoutSuccessHandler(((request, response, authentication) ->
                             SecurityContextHolder.clearContext()))
+                    .and().rememberMe().key("24215da6-3401-45bd-bbe9-f5236d4d1fbd")
+                    .userDetailsService(userDetailsService)
                     .and().build();
     }
 

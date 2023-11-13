@@ -19,4 +19,7 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
             "JOIN users u ON t.idUser.id = u.id " +
             "WHERE u.id = ?1")
     TicketEntity findByIdUser(long id);
+
+    @Query("SELECT t FROM ticket t WHERE t.idSerial = ?1")
+    TicketEntity findBySerialCode(SerialEntity serialCode);
 }
