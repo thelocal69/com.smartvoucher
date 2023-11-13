@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity;
 
+
 import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+
 
 @Setter
 @Getter

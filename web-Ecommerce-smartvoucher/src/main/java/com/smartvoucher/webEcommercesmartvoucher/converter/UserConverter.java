@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class UserConverter {
+public class  UserConverter {
 
     private final RandomCodeHandler randomCodeHandler;
     private final PasswordEncoder passwordEncoder;
@@ -78,6 +78,7 @@ public class UserConverter {
         userEntity.setProvider(Provider.LOCAL);
         return userEntity;
     }
+
 
     public SignUpDTO signUp(UserDTO userDTO) {
         SignUpDTO signUpDTO = new SignUpDTO();

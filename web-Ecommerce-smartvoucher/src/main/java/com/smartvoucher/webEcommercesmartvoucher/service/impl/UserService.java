@@ -13,7 +13,9 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.List;
 
@@ -69,4 +71,9 @@ public class UserService implements IUserService {
             throw new UserAlreadyExistException(501, "User already exist !");
         }
     }
+
+
+
+
+
 }
