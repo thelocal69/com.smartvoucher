@@ -63,7 +63,7 @@ public class SecurityConfig {
                 CorsConfiguration corsConfig = new CorsConfiguration();
                 corsConfig.addAllowedOrigin("*");
                 corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-                corsConfig.addAllowedHeader("*");
+                corsConfig.addAllowedHeader("Authorization");
                 corsConfig.setAllowCredentials(false);
                 corsConfig.setMaxAge(3600L);
                 return corsConfig;
@@ -73,6 +73,7 @@ public class SecurityConfig {
                     .authorizeHttpRequests()
                     .antMatchers("/account/**").permitAll()
                     .antMatchers("**/upload").permitAll()
+                    .antMatchers("/oauth2/**").permitAll()
                     .antMatchers("/merchant/**").hasRole("ADMIN")
                     .antMatchers("/chain/**").hasRole("ADMIN")
                     .antMatchers("/category/**").hasRole("ADMIN")
