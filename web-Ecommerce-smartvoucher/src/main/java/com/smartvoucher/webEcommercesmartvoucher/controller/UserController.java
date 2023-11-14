@@ -43,4 +43,14 @@ public class UserController {
                 )
         );
     }
+    @GetMapping("/api/{id}")
+    public ResponseEntity<ResponseObject> getUserById(@PathVariable long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get user's info successfully",
+                        userService.getUserById(id)
+                )
+        );
+    }
 }
