@@ -11,6 +11,7 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.token.RefreshTokenDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RoleEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RolesUsersEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.entity.token.Tokens;
 import com.smartvoucher.webEcommercesmartvoucher.entity.token.VerificationToken;
 import com.smartvoucher.webEcommercesmartvoucher.exception.*;
@@ -208,7 +209,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public String forgotPassword(String email) throws MessagingException, UnsupportedEncodingException {
-        UserEntity user = userRepository.findOneByEmail(email);
+        UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
         if (user == null){
             throw new UserNotFoundException(404, "User not exist !");
         }

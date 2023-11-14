@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.RolesUsersDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RoleEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RolesUsersEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.exception.OAuth2LoginException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IRoleUserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.RoleRepository;
@@ -78,7 +79,7 @@ public class OAuth2UserDetailCustomService extends DefaultOAuth2UserService {
             RolesUsersDTO rolesUsersDTO = roleUsersConverter.toRoleUserDTO(userDetail, role);
             this.roleUserRepository.save(roleUsersConverter.toRoleUserEntity(rolesUsersDTO));
         }
-        RolesUsersEntity rolesUsers = roleUserRepository.getEmail(oAuth2UserDetail.getEmail());
+        RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(oAuth2UserDetail.getEmail(), Provider.google.name());
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(
                 rolesUsers.getIdRole().getName()
         );
