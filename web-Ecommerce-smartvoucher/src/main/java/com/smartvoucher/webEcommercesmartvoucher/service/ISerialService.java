@@ -5,7 +5,7 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 
 public interface ISerialService {
     ResponseObject getAllSerial();
-    ResponseObject insertSerial(SerialDTO serialDTO, long idWarehouse);
+    ResponseObject insertSerial(long idWarehouse, String batchCode, int numberOfSerial);
     ResponseObject updateSerial(SerialDTO serialDTO);
     ResponseObject deleteSerial(long id);
 }

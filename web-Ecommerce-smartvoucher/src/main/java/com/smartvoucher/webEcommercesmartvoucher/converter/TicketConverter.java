@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Component
@@ -79,9 +80,11 @@ public class TicketConverter {
         ticket.setIdOrder(orderEntity);
         ticket.setIdUser(userEntity);
         ticket.setStatus(0);
-        ticket.setClaimedTime(ticketDTO.getClaimedTime());
+        ticket.setClaimedTime(new Timestamp(System.currentTimeMillis()));
+//        ticket.setRedeemedtimeTime(ticketDTO.getRedeemedtimeTime());
         ticket.setExpiredTime(wareHouseEntity.getAvailableTo());
-        ticket.setRedeemedtimeTime(ticketDTO.getRedeemedtimeTime());
+        ticket.setAvailbleFrom(wareHouseEntity.getAvailableFrom());
+        ticket.setAvaibleTo(wareHouseEntity.getAvailableTo());
         ticket.setDiscountType(ticketDTO.getDiscountType());
         // làm tròn số thập phân sau dấy phẩy thành 3 số
         ticket.setDiscountAmount(value.setScale(3, RoundingMode.HALF_UP));

@@ -25,29 +25,30 @@ public class SerialController {
         this.serialService = serialService;
     }
 
-    @GetMapping("")
+    @GetMapping("/api/list-serial")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllSerial(){
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.serialService.getAllSerial());
     }
 
-    @PostMapping("")
+    @PostMapping("/api/add-serial")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject> insertSerial(@Valid @RequestBody SerialDTO serialDTO,
-                                                       @RequestParam long idWarehouse){
+    public ResponseEntity<ResponseObject> insertSerial(@RequestParam long idWarehouse,
+                                                       @RequestParam String batchCode,
+                                                       @RequestParam int numberOfSerial){
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.serialService.insertSerial(serialDTO, idWarehouse));
+                this.serialService.insertSerial(idWarehouse, batchCode, numberOfSerial));
     }
 
-    @PutMapping("")
+    @PutMapping("/api/update")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> updateSerial(@Valid @RequestBody SerialDTO serialDTO){
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.serialService.updateSerial(serialDTO));
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/api/delete")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> deleteSerial(@NotNull @RequestParam long id){
         return ResponseEntity.status(HttpStatus.OK).body(

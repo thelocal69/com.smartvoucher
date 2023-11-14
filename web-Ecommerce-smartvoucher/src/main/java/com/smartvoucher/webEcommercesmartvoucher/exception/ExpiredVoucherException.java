@@ -5,12 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtFilterException extends RuntimeException{
+public class ExpiredVoucherException extends RuntimeException{
     private int statusCode;
     private String message;
-    private Exception exception;
 }

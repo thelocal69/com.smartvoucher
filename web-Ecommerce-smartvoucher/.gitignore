@@ -20,6 +20,9 @@ src/main/resources/application.properties
 ### IntelliJ IDEA ###
 .idea/
 
+### local.env ###
+.local.env/
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

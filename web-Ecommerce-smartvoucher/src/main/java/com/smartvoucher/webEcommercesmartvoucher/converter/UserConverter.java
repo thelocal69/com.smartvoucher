@@ -50,12 +50,8 @@ public class UserConverter {
         UserEntity userEntity = new UserEntity();
         userEntity.setMemberCode(randomCodeHandler.generateRandomChars(10));
         userEntity.setPwd(passwordEncoder.encode(signUpDTO.getPassword()));
-        userEntity.setLastName(signUpDTO.getLastName());
-        userEntity.setFullName(signUpDTO.getFullName());
-        userEntity.setUsername(signUpDTO.getUserName());
         userEntity.setPhone(signUpDTO.getPhone());
         userEntity.setEmail(signUpDTO.getEmail());
-        userEntity.setAddress(signUpDTO.getAddress());
         userEntity.setStatus(1);
         return userEntity;
     }

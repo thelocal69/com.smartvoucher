@@ -2,9 +2,9 @@ package com.smartvoucher.webEcommercesmartvoucher.filter;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.JwtFilterException;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseToken;
-import com.smartvoucher.webEcommercesmartvoucher.repository.token.ITokenRepository;
 import com.smartvoucher.webEcommercesmartvoucher.util.JWTHelper;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +30,12 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTHelper jwtHelper;
     private final Gson gson;
-    private final ITokenRepository tokenRepository;
 
     @Autowired
     public JWTFilter(final JWTHelper jwtHelper,
-                     final Gson gson,
-                     final ITokenRepository tokenRepository) {
+                     final Gson gson) {
         this.jwtHelper = jwtHelper;
         this.gson = gson;
-        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -47,24 +44,25 @@ public class JWTFilter extends OncePerRequestFilter {
         if (headerValue != null && headerValue.startsWith("Bearer ")){
             final String token = headerValue.substring(7);
             final String data = jwtHelper.parserToken(token);
+            String reqPath = request.getRequestURI();
             if (data != null && !data.isEmpty()){
-                boolean isValidTokens = tokenRepository.findByToken(token)
-                        .map(tokens ->
-                            !tokens.isExpired() && !tokens.isRevoke()
-                        ).orElse(false);
-                ResponseToken responseToken = gson.fromJson(data, ResponseToken.class);
-                String newData = gson.toJson(responseToken.getRoles());
-                Type listType = new TypeToken<ArrayList<SimpleGrantedAuthority>>(){}.getType();
-                List<GrantedAuthority> roles = gson.fromJson(newData, listType);
-                if (isValidTokens){
-                    UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
-                            responseToken.getUsername(), "", roles
-                    );
-                    SecurityContext contextHolder = SecurityContextHolder.getContext();
-                    contextHolder.setAuthentication(userToken);
+                if (!reqPath.equals("/account/api/refresh_token")){
+                    try {
+                        ResponseToken responseToken = gson.fromJson(data, ResponseToken.class);
+                        String newData = gson.toJson(responseToken.getRoles());
+                        Type listType = new TypeToken<ArrayList<SimpleGrantedAuthority>>(){}.getType();
+                        List<GrantedAuthority> roles = gson.fromJson(newData, listType);
+                        UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
+                                responseToken.getUsername(), "", roles
+                        );
+                        SecurityContext contextHolder = SecurityContextHolder.getContext();
+                        contextHolder.setAuthentication(userToken);
+                    }catch (JsonSyntaxException | IllegalStateException e){
+                        throw new JsonSyntaxException("Not accept type !", e);
+                    }
                 }
             }else {
-                throw new JwtFilterException(403, "Data is not exist !");
+                throw new JwtFilterException(403, "Data is not exist !", null);
             }
         }
         filterChain.doFilter(request, response);

@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,32 +31,39 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    @GetMapping
+    @GetMapping("/api/getAllVoucher")
     @Transactional(readOnly = true)
     public ResponseEntity<?> getAllTicket(){
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.getAllTicket());
     }
 
-    @PostMapping
+    @PostMapping("/api/buy-voucher")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.insertTicket(ticketDTO));
     }
 
-    @PutMapping
+    @PutMapping("/api/updateVoucher")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> updateTicket(@RequestBody @Valid TicketDTO ticketDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.updateTicket(ticketDTO));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/api/deleteVoucher")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> deleteTicket(@RequestParam long id) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.deleteTicket(id));
+    }
+
+    @PutMapping("/api/use-voucher")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> userUseVoucher(@RequestParam String serialCode) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.ticketService.userUseTicket(serialCode));
     }
 
     @PostMapping("/api/upload")
