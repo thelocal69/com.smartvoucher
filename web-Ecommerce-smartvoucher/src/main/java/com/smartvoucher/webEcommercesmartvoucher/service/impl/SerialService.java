@@ -93,7 +93,6 @@ public class SerialService implements ISerialService {
         }
     }
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseObject updateSerial(SerialDTO serialDTO) {

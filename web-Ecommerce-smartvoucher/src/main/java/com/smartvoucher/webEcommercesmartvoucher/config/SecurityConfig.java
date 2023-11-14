@@ -82,13 +82,11 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.POST,"/order").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/order").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST,"/order").hasRole("USER")
-                 /*   .antMatchers(HttpMethod.GET,"/ticket").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST,"/ticket").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET,"/ticket").hasRole("ADMIN")
                     .antMatchers(HttpMethod.PUT, "/ticket").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE,"/ticket").hasRole("ADMIN")*/
-                    .antMatchers("/ticket/**").permitAll()
-                    .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("USER")
+                    .antMatchers(HttpMethod.DELETE,"/ticket").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/ticket/buy-voucher").hasRole("USER")
+                    .antMatchers("/ticket_history/**").hasRole("ADMIN")
                     .antMatchers("/role_user").hasRole("ADMIN")
                     .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
                     .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
