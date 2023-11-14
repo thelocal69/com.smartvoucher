@@ -18,11 +18,7 @@ local.env
 .sts4-cache
 
 ### IntelliJ IDEA ###
-../idea/
-
-
-### local.env ###
-.local.env/
+.idea/
 
 ### NetBeans ###
 /nbproject/private/
