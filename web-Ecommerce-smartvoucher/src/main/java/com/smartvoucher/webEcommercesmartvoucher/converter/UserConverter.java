@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
@@ -85,6 +86,17 @@ public class  UserConverter {
         signUpDTO.setEmail(userDTO.getEmail());
         signUpDTO.setPhone(userDTO.getPhone());
         return signUpDTO;
+    }
+    public UserDetailDTO toUserDetailDTO (UserEntity userEntity) {
+        UserDetailDTO userDetailDTO = new UserDetailDTO();
+        userDetailDTO.setAvatarUrl(userEntity.getAvatarUrl());
+        userDetailDTO.setFirstName(userEntity.getFirstName());
+        userDetailDTO.setLastName(userEntity.getLastName());
+        userDetailDTO.setFullName(userEntity.getFullName());
+        userDetailDTO.setPhone(userEntity.getPhone());
+        userDetailDTO.setEmail(userEntity.getEmail());
+        userDetailDTO.setAddress(userEntity.getAddress());
+        return userDetailDTO;
     }
 
 }
