@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.UserNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
@@ -38,7 +39,7 @@ public class UserService implements IUserService {
 
     @Override
     public List<UserDTO> getAllUser() {
-        if (userRepository.findAll().isEmpty()){
+        if (userRepository.findAll().isEmpty()) {
             throw new ObjectNotFoundException(404, "List user is empty !");
         }
         return userConverter.toUserDTOList(userRepository.findAll());
@@ -46,9 +47,17 @@ public class UserService implements IUserService {
 
     @Override
     public UserDTO getEmail(UserDTO userDTO) {
-        if (userRepository.findOneByEmail(userDTO.getEmail()) == null){
+        if (userRepository.findOneByEmail(userDTO.getEmail()) == null) {
             throw new UserNotFoundException(404, "User not found or not exist !");
         }
         return userConverter.toUserDTO(userRepository.findOneByEmail(userDTO.getEmail()));
+    }
+
+    @Override
+    public UserDetailDTO getUserById(Long id) {
+        if (userRepository.findOneById(id) == null) {
+            throw new UserNotFoundException(404, "User not found or not exist !");
+        }
+        return userConverter.toUserDetailDTO(userRepository.findOneById(id));
     }
 }
