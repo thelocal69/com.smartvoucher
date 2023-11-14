@@ -1,6 +1,5 @@
 package com.smartvoucher.webEcommercesmartvoucher.dto;
 
-import jdk.jshell.Snippet;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -12,7 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class UserDTO {
 
-    private long id;
+    private Long id;
 
     private String memberCode;
     private String avatarUrl;

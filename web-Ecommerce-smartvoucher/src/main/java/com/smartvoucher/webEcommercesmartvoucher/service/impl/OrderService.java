@@ -1,7 +1,9 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.smartvoucher.webEcommercesmartvoucher.converter.OrderConverter;
+import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.OrderEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
@@ -15,7 +17,6 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,16 +31,18 @@ public class OrderService implements IOrderService {
     private final OrderConverter orderConverter;
     private final UserRepository userRepository;
     private final IWareHouseRepository iWareHouseRepository;
+    private final UserConverter userConverter;
 
     @Autowired
     public OrderService(OrderRepository orderRepository
             , OrderConverter orderConverter
             , UserRepository userRepository
-            , IWareHouseRepository iWareHouseRepository ) {
+            , IWareHouseRepository iWareHouseRepository, UserConverter userConverter) {
         this.orderRepository = orderRepository;
         this.orderConverter = orderConverter;
         this.userRepository = userRepository;
         this.iWareHouseRepository = iWareHouseRepository;
+        this.userConverter = userConverter;
     }
 
     @Override
@@ -104,5 +107,19 @@ public class OrderService implements IOrderService {
     public WareHouseEntity createWareHouse(OrderDTO orderDTO) {
         return iWareHouseRepository.findById(orderDTO.getIdWarehouseDTO().getId()).orElse(null);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<OrderDTO> getAllOrderByIdUser(UserDTO userDTO){
+        List<OrderEntity> getAllOrder = orderRepository.findByIdUser(userDTO.getId());
+        if(getAllOrder.isEmpty()){
+            throw new ObjectNotFoundException(404, "All order of user "  + userDTO.getId() + " is empty!");
+        }else {
+            return orderConverter.orderDTOList(getAllOrder);
+        }
+    }
+
+
+
 
 }

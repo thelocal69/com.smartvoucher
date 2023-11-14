@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Set;
+
 @Repository
 public interface IRoleUserRepository extends JpaRepository<RolesUsersEntity, RolesUsersKeys> {
     @Query("SELECT ru FROM roles_users ru" +
@@ -21,4 +23,10 @@ public interface IRoleUserRepository extends JpaRepository<RolesUsersEntity, Rol
     RolesUsersEntity findByIdRoleAndIdUser(long idRole, long idUser);
 
     void deleteByRoleUserKeys(RolesUsersKeys keys);
+
+    @Query("SELECT ru FROM roles_users ru" +
+            " JOIN users u ON ru.roleUserKeys.idUser = u.id" +
+            " join roles r ON ru.roleUserKeys.idRole = r.id" +
+            " WHERE r.name = :roleName")
+    Set<RolesUsersEntity> findOneByRoleName(String roleName);
 }

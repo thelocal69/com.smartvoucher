@@ -1,6 +1,5 @@
 package com.smartvoucher.webEcommercesmartvoucher.repository;
 
-import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,9 +16,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findOneByEmail(String email);
     UserEntity findOneByMemberCode(String memberCode);
     List<UserEntity> findAllByMemberCode(String memberCode);
-
-    UserEntity findOneById(@Param("id") Long id);
-
-
 
 }
