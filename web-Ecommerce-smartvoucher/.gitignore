@@ -21,7 +21,7 @@ src/main/resources/application.properties
 .idea/
 
 ### local.env ###
-.local.env.txt
+.local.env/
 
 ### NetBeans ###
 /nbproject/private/
