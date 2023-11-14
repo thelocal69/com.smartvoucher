@@ -97,7 +97,7 @@ primary key(id)
 );
 
 CREATE TABLE verification_token(
-        users_id bigint not null ,
+        users_id bigint not null auto_increment,
         token varchar(255),
         expired_time timestamp,
     primary key (users_id)
