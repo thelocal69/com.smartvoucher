@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="12185237-31df-4c91-bb79-deda5ffa055a" name="Changes" comment="removed .idea folder" />
+    <list default="true" id="12185237-31df-4c91-bb79-deda5ffa055a" name="Changes" comment="add">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-Ecommerce-smartvoucher/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/web-Ecommerce-smartvoucher/.gitignore" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -177,7 +180,7 @@
       <workItem from="1699879722631" duration="6253000" />
       <workItem from="1699936040577" duration="2610000" />
       <workItem from="1699953811860" duration="687000" />
-      <workItem from="1699957417250" duration="4475000" />
+      <workItem from="1699957417250" duration="4967000" />
     </task>
     <task id="LOCAL-00001" summary="removed .idea folder">
       <option name="closed" value="true" />
@@ -219,7 +222,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699959245721</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="add">
+      <option name="closed" value="true" />
+      <created>1699998521896</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1699998521896</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -251,7 +262,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="test" />
     <MESSAGE value="removed .idea folder" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed .idea folder" />
+    <MESSAGE value="add" />
+    <option name="LAST_COMMIT_MESSAGE" value="add" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
