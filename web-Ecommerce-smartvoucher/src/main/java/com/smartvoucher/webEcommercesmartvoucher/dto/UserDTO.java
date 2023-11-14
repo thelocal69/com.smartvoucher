@@ -1,12 +1,11 @@
 package com.smartvoucher.webEcommercesmartvoucher.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jdk.jshell.Snippet;
+import lombok.*;
 
 import java.sql.Timestamp;
 
+@Builder
 @Setter
 @Getter
 @AllArgsConstructor
@@ -43,4 +42,5 @@ public class UserDTO {
     private Timestamp createdAt;
 
     private Timestamp updatedAt;
+
 }

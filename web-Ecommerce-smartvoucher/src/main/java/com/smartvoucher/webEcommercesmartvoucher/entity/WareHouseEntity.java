@@ -87,4 +87,5 @@ public class WareHouseEntity{
     @ManyToOne
     @JoinColumn(name = "id_label")
     private LabelEntity label;
+
 }

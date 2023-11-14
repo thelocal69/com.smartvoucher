@@ -5,10 +5,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -30,6 +27,26 @@ public class UserController {
                         200,
                         "Upload images is completed !",
                         userService.uploadUserImages(fileName).getWebViewLink()
+                )
+        );
+    }
+    @GetMapping("/api/{id}")
+    public ResponseEntity<ResponseObject> getUserById(@PathVariable long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get user's info successfully",
+                        userService.getUserById(id)
+                )
+        );
+    }
+    @GetMapping("")
+    public ResponseEntity<?> getAllUser() {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get All user success !",
+                this.userService.getAllUser()
                 )
         );
     }

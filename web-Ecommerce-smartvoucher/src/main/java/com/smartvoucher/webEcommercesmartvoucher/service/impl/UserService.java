@@ -81,4 +81,11 @@ public class UserService implements IUserService {
         }
         return userConverter.toUserDTO(userRepository.findOneByEmail(userDTO.getEmail()));
     }
+    @Override
+    public UserDTO getUserById(long id) {
+        if (userRepository.findOneById(id) == null) {
+            throw new UserNotFoundException(404, "User not found or not exist !");
+        }
+        return userConverter.toUserDTO(userRepository.findOneById(id));
+    }
 }

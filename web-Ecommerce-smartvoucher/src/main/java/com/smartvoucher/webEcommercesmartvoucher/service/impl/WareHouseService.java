@@ -178,4 +178,11 @@ public class WareHouseService implements IWareHouseService {
         }
         return wareHouseConverter.toWareHouseDTO(wareHouseEntity);
     }
+    @Override
+    @Transactional(readOnly = true)
+    public List<WareHouseDTO> getAllWarehousesByLabel(int id) {
+        List<WareHouseEntity> wareHouseEntityList = wareHouseRepository.findAllByLabel(id);
+        return wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
+    }
+
 }

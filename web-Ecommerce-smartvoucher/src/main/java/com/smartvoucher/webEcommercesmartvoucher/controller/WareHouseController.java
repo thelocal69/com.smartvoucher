@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.UUID;
+import java.util.List;
 
 @RestController
 @RequestMapping("/warehouse")
@@ -101,5 +102,16 @@ public class WareHouseController {
                             "{}"
                     )
             );
+    }
+    @GetMapping("/by-label-id/{id}")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getWarehousesByLabel(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get All warehouse by label successfully !",
+                        this.wareHouseService.getAllWarehousesByLabel(id)
+                )
+        );
     }
 }

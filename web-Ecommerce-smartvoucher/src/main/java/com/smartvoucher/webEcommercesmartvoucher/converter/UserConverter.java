@@ -43,6 +43,7 @@ public class UserConverter {
         return userDTO;
     }
 
+
     public List<UserDTO> toUserDTOList(List<UserEntity> userEntityList){
         return userEntityList.stream().map(this::toUserDTO).collect(Collectors.toList());
     }

@@ -10,4 +10,5 @@ public interface IUserService {
     File uploadUserImages(MultipartFile fileName);
     List<UserDTO> getAllUser();
     UserDTO getEmail(UserDTO userDTO);
+    UserDTO getUserById(long id);
 }
