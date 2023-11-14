@@ -52,6 +52,19 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(OAuth2LoginException.class)
+    public ResponseEntity<ErrorResponse> handleOAuth2LoginException(Exception ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        400,
+                        ex.getMessage(),
+                        "OAuth 2.0 login is error !",
+                        "/"
+                )
+        );
+    }
+
     @ExceptionHandler(ResetPasswordException.class)
     public ResponseEntity<ErrorResponse> handleChangePasswordException(Exception ex){
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(

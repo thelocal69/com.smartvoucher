@@ -97,10 +97,11 @@ primary key(id)
 );
 
 CREATE TABLE verification_token(
-        users_id bigint not null ,
+	id bigint  auto_increment,
+        users_id bigint not null,
         token varchar(255),
         expired_time timestamp,
-    primary key (users_id)
+    primary key (id)
 );
 
 
@@ -258,6 +259,7 @@ CREATE TABLE users(
 	ava_url varchar(100),
 	address varchar(100),
 	enable tinyint,
+	provider varchar(50),
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
