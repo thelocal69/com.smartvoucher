@@ -18,7 +18,8 @@ local.env
 .sts4-cache
 
 ### IntelliJ IDEA ###
-..idea/
+../idea/
+
 
 ### local.env ###
 .local.env/
