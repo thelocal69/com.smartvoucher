@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 import com.google.gson.Gson;
 import com.smartvoucher.webEcommercesmartvoucher.converter.RoleUsersConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
+import com.smartvoucher.webEcommercesmartvoucher.dto.ResetPasswordDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.RolesUsersDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
@@ -10,18 +11,19 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.token.RefreshTokenDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RoleEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RolesUsersEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.entity.token.Tokens;
-import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
-import com.smartvoucher.webEcommercesmartvoucher.exception.JwtFilterException;
-import com.smartvoucher.webEcommercesmartvoucher.exception.TokenRefreshException;
+import com.smartvoucher.webEcommercesmartvoucher.entity.token.VerificationToken;
+import com.smartvoucher.webEcommercesmartvoucher.exception.*;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseAuthentication;
-import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseToken;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IRoleUserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.RoleRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.token.ITokenRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.token.IVerificationTokenRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IAccountService;
+import com.smartvoucher.webEcommercesmartvoucher.util.EmailUtil;
 import com.smartvoucher.webEcommercesmartvoucher.util.JWTHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,17 +31,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
 public class AccountService implements IAccountService {
-
     private final AuthenticationManager authenticationManager;
     private final JWTHelper jwtHelper;
     private final Gson gson;
@@ -47,8 +52,11 @@ public class AccountService implements IAccountService {
     private final RoleRepository roleRepository;
     private final IRoleUserRepository roleUserRepository;
     private final ITokenRepository tokenRepository;
+    private final IVerificationTokenRepository verificationTokenRepository;
     private final UserConverter userConverter;
     private final RoleUsersConverter roleUsersConverter;
+    private final PasswordEncoder passwordEncoder;
+    private final EmailUtil emailUtil;
 
     @Autowired
     public AccountService(final AuthenticationManager authenticationManager,
@@ -58,8 +66,11 @@ public class AccountService implements IAccountService {
                           final RoleRepository roleRepository,
                           final IRoleUserRepository roleUserRepository,
                           final ITokenRepository tokenRepository,
+                          final IVerificationTokenRepository verificationTokenRepository,
                           final UserConverter userConverter,
-                          final RoleUsersConverter roleUsersConverter
+                          final RoleUsersConverter roleUsersConverter,
+                          final PasswordEncoder passwordEncoder,
+                          final EmailUtil emailUtil
     ) {
         this.authenticationManager = authenticationManager;
         this.jwtHelper = jwtHelper;
@@ -68,8 +79,11 @@ public class AccountService implements IAccountService {
         this.roleRepository = roleRepository;
         this.roleUserRepository = roleUserRepository;
         this.tokenRepository = tokenRepository;
+        this.verificationTokenRepository = verificationTokenRepository;
         this.userConverter = userConverter;
         this.roleUsersConverter = roleUsersConverter;
+        this.passwordEncoder = passwordEncoder;
+        this.emailUtil = emailUtil;
     }
 
     @Override
@@ -132,7 +146,7 @@ public class AccountService implements IAccountService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseObject SignUp(SignUpDTO signUpDTO) {
+    public SignUpDTO SignUp(SignUpDTO signUpDTO) {
         if (userRepository.findByEmailOrPhone(
                 signUpDTO.getEmail(),
                 signUpDTO.getPhone()).isEmpty()) {
@@ -150,13 +164,68 @@ public class AccountService implements IAccountService {
             this.roleUserRepository.save(
                     roleUsersConverter.toRoleUserEntity(rolesUsersDTO)
             );
-            return new ResponseObject(
-                    200,
-                    "SignUp success!",
-                    userDTO);
+            return userConverter.signUp(userDTO);
         } else {
-            throw new DuplicationCodeException(400, "Email or Phone is available! please try again !");
+            throw new UserAlreadyExistException(406, "Email or Phone is available! please try again !");
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveUserVerificationToken(UserEntity user, String token) {
+        VerificationToken verificationToken = new VerificationToken(token, user);
+        this.verificationTokenRepository.save(verificationToken);
+    }
+
+    @Override
+    public String verifyEmail(String token) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+        if (verificationToken.getUser().isEnable()){
+            return "This account has already been verified, please, login.";
+        }
+        String verificationResult = validateToken(token);
+        if (verificationResult.equalsIgnoreCase("Valid")){
+            return "Email verified successfully. Now you can login to your account";
+        }
+        return "Invalid verification token !";
+    }
+
+    @Override
+    public String validateToken(String verifyToken) {
+        VerificationToken token = verificationTokenRepository.findByToken(verifyToken);
+        if(token == null){
+            throw new VerificationTokenException(500, "Invalid verification token !");
+        }
+        UserEntity userEntity = token.getUser();
+        Calendar calendar = Calendar.getInstance();
+        if ((token.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
+            verificationTokenRepository.delete(token);
+            throw new VerificationTokenException(500, "Token already expired !");
+        }
+        userEntity.setEnable(true);
+        userRepository.save(userEntity);
+        return "Valid";
+    }
+
+    @Override
+    public String forgotPassword(String email) throws MessagingException, UnsupportedEncodingException {
+        UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
+        if (user == null){
+            throw new UserNotFoundException(404, "User not exist !");
+        }
+        this.emailUtil.sendResetPassword(email);
+        return "Check your email to reset password if account is exist !";
+    }
+
+    @Override
+    public String setPassword(ResetPasswordDTO resetPasswordDTO) {
+        UserEntity user = userRepository.findOneByEmail(resetPasswordDTO.getEmail());
+        if (user == null){
+            throw new UserNotFoundException(404, "User not exist !");
+        }
+        user.setPwd(this.passwordEncoder.encode(resetPasswordDTO.getNewPassword()));
+        this.userRepository.save(user);
+        return "Set new password successfully !";
     }
 
     private  void saveUserToken(UserEntity user, String jwtToken){

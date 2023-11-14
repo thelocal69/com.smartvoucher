@@ -2,7 +2,7 @@ HELP.md
 target/
 .DS_Store
 com.smartvoucher/uploads
-src/main/resources/application.properties
+local.env
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -18,10 +18,7 @@ src/main/resources/application.properties
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea/
-
-### local.env ###
-.local.env/
+.idea
 
 ### NetBeans ###
 /nbproject/private/

@@ -1,7 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.WarehouseMerchantDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.keys.WarehouseMerchantKeys;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWarehouseMerchantService;
 import org.springframework.beans.factory.annotation.Autowired;

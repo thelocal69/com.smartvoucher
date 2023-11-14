@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("googleDrive")
@@ -36,17 +35,6 @@ public class GoogleDriveUploadController {
                         200,
                         "Get all files is completed !",
                         uploadFileService.createdNewFolders(folderName)
-                )
-        );
-    }
-
-    @PostMapping ("/api/upload")
-    public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName, @RequestParam String folderId){
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(
-                        200,
-                        "Upload images is completed !",
-                        uploadFileService.uploadGoogleDriveFiles(fileName, folderId).getWebViewLink()
                 )
         );
     }

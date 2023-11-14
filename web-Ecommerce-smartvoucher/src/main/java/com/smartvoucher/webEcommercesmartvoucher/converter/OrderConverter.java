@@ -7,6 +7,8 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -60,5 +62,13 @@ public class OrderConverter {
             oldOrder.setIdWarehouse(idWareHouse);
         }
         return oldOrder;
+    }
+
+    public List<OrderDTO> orderDTOList (List<OrderEntity> list){
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        for(OrderEntity data : list){
+            orderDTOList.add(toOrdersDTO(data));
+        }
+        return orderDTOList;
     }
 }

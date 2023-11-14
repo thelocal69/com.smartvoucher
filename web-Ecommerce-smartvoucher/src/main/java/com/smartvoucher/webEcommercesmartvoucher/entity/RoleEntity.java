@@ -9,10 +9,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -40,8 +39,8 @@ public class RoleEntity {
     private Timestamp updatedAt;
     // field được references
     @OneToMany(mappedBy = "idRole")
-    private List<RolesUsersEntity> rolesUsersEntities;
-    @OneToMany(mappedBy = "idRole")
+    private Set<RolesUsersEntity> rolesUsersEntities;
+    @OneToMany(mappedBy = "idRole", fetch = FetchType.EAGER)
     private List<WarehouseMerchantEntity> warehouseMerchantEntities;
 
 }

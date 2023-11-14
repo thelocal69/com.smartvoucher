@@ -1,6 +1,8 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +23,7 @@ public class OrderController {
         this.ordersService = ordersService;
     }
 
-    @GetMapping
+    @GetMapping("")
     @Transactional(readOnly = true)
     public ResponseEntity<?> getAllOrder(){
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -41,5 +43,20 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ordersService.deleteOrder(id));
     }
+
+    @GetMapping("/api/get_all_order")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getAllOrderByUser(@RequestBody @Valid UserDTO userDTO){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "All order of user " + userDTO.getId() + " is below:",
+                        this.ordersService.getAllOrderByIdUser(userDTO)
+                )
+        );
+    }
+
+
+
 
 }

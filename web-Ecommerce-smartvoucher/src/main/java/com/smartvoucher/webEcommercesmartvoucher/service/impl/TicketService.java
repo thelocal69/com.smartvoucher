@@ -1,38 +1,27 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-
-import com.smartvoucher.webEcommercesmartvoucher.converter.SerialConverter;
+import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketHistoryConverter;
-import com.smartvoucher.webEcommercesmartvoucher.converter.WarehouseSerialConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.*;
-import com.smartvoucher.webEcommercesmartvoucher.entity.keys.WarehouseSerialKeys;
-import com.smartvoucher.webEcommercesmartvoucher.exception.*;
-
-import com.google.api.client.http.InputStreamContent;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.model.File;
+import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ExpiredVoucherException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
-
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
-import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
-import org.apache.commons.io.FilenameUtils;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-
+import org.springframework.scheduling.annotation.Scheduled;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,28 +37,20 @@ public class TicketService implements ITicketService {
     private final IStoreRepository storeRepository;
     private final TicketHistoryRepository ticketHistoryRepository;
     private final TicketHistoryConverter ticketHistoryConverter;
-    private final WarehouseSerialRepository warehouseSerialRepository;
-    private final SerialConverter serialConverter;
-    private final RandomCodeHandler randomCodeHandler;
-    private final WarehouseSerialConverter warehouseSerialConverter;
-    private final Drive googleDrive;
+    private final UploadUtil uploadUtil;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository
-                ,TicketConverter ticketConverter
-                ,SerialRepository serialRepository
-                ,IWareHouseRepository iWareHouseRepository
-                ,ICategoryRepository iCategoryRepository
-                ,OrderRepository orderRepository
-                ,UserRepository userRepository
-                ,IStoreRepository storeRepository
-                ,TicketHistoryRepository ticketHistoryRepository
-                ,TicketHistoryConverter ticketHistoryConverter
-                ,Drive googleDrive
-                ,WarehouseSerialRepository warehouseSerialRepository
-                ,SerialConverter serialConverter
-                ,RandomCodeHandler randomCodeHandler
-                ,WarehouseSerialConverter warehouseSerialConverter) {
+                , TicketConverter ticketConverter
+                , SerialRepository serialRepository
+                , IWareHouseRepository iWareHouseRepository
+                , ICategoryRepository iCategoryRepository
+                , OrderRepository orderRepository
+                , UserRepository userRepository
+                , IStoreRepository storeRepository
+                , TicketHistoryRepository ticketHistoryRepository
+                , TicketHistoryConverter ticketHistoryConverter
+                , UploadUtil uploadUtil) {
         this.ticketRepository = ticketRepository;
         this.ticketConverter = ticketConverter;
         this.serialRepository = serialRepository;
@@ -80,11 +61,7 @@ public class TicketService implements ITicketService {
         this.storeRepository = storeRepository;
         this.ticketHistoryRepository = ticketHistoryRepository;
         this.ticketHistoryConverter = ticketHistoryConverter;
-        this.googleDrive = googleDrive;
-        this.warehouseSerialRepository = warehouseSerialRepository;
-        this.serialConverter = serialConverter;
-        this.randomCodeHandler = randomCodeHandler;
-        this.warehouseSerialConverter = warehouseSerialConverter;
+        this.uploadUtil = uploadUtil;
     }
 
     @Override
@@ -251,34 +228,22 @@ public class TicketService implements ITicketService {
         return storeRepository.findById(ticketDTO.getIdStoreDTO().getId()).orElse(null);
     }
 
-    public Boolean isImageFile(MultipartFile file) {
-        String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
-        assert fileExtension != null;
-        return Arrays.asList("jpg", "png", "jpeg", "bmp").contains(fileExtension.trim().toLowerCase());
+    @Override
+    public File uploadTicketImages(MultipartFile fileName) {
+        String folderId = "1D3tkdIWmKLQuRgdabrIfLYRkDeJyrflu";
+        return uploadUtil.uploadImages(fileName, folderId);
     }
 
     @Override
-    public File uploadTicketImages(MultipartFile fileName) {
-        try {
-            if (fileName.isEmpty()){
-                throw new InputOutputException(501, "Failed to store empty file", null);
-            } else if (!isImageFile(fileName)) {
-                throw new InputOutputException(500, "You can only upload image file", null);
-            }
-            float fileSizeInMegabytes = fileName.getSize() / 1_000_000.0f;
-            if (fileSizeInMegabytes > 5.0f) {
-                throw new InputOutputException(501, "File must be <= 5Mb", null);
-            }
-            File fileMetaData = new File();
-            String folderId = "1D3tkdIWmKLQuRgdabrIfLYRkDeJyrflu";
-            fileMetaData.setParents(Collections.singletonList(folderId));
-            fileMetaData.setName(fileName.getOriginalFilename());
-            return googleDrive.files().create(fileMetaData, new InputStreamContent(
-                    fileName.getContentType(),
-                    new ByteArrayInputStream(fileName.getBytes())
-            )).setFields("id, webViewLink").execute();
-        }catch (IOException ioException) {
-            throw new InputOutputException(501, "Failed to store file", ioException);
+    @Transactional(rollbackFor = Exception.class)
+    public TicketDTO getTicketDetail(UserDTO userDTO){
+        TicketEntity ticketDetail = ticketRepository.findByIdUser(userDTO.getId());
+        if(ticketDetail != null){
+            return ticketConverter.toTicketDTO(ticketDetail);
+        }else{
+            throw new ObjectNotFoundException(404, "Ticket is not exist");
         }
     }
+
 }
+
