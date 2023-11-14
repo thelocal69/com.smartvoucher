@@ -18,7 +18,10 @@ src/main/resources/application.properties
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea/
+.idea
+
+### local.env ###
+local.env.txt
 
 ### NetBeans ###
 /nbproject/private/
