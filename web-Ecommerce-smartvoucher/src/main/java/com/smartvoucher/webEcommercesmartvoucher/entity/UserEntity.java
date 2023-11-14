@@ -76,6 +76,6 @@ public class UserEntity {
     @OneToMany(mappedBy = "idUser")
     private List<OrderEntity> orderEntity;
 
-    @OneToMany(mappedBy = "idUser", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idUser")
     private Set<RolesUsersEntity> rolesUsersEntities;
 }
