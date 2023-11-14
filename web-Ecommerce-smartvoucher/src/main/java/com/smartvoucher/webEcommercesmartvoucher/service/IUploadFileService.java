@@ -8,6 +8,5 @@ import java.util.List;
 public interface IUploadFileService {
     List<File> getAllGoogleDriveFiles();
     String createdNewFolders(String folderName);
-    File uploadGoogleDriveFiles(MultipartFile fileName, String folderId);
     void deleteFiles(String fileId);
 }

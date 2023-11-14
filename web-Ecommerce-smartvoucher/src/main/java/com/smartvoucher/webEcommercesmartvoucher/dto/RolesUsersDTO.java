@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.dto;
 
+import com.smartvoucher.webEcommercesmartvoucher.entity.keys.RolesUsersKeys;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RolesUsersDTO {
+    private RolesUsersKeys keys;
     private Long idUser;
     private Long idRole;
     private String memberCode;

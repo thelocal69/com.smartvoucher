@@ -1,11 +1,10 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
-import com.smartvoucher.webEcommercesmartvoucher.config.SecurityConfig;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.WareHouseDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class UserConverter {
+public class  UserConverter {
 
     private final RandomCodeHandler randomCodeHandler;
     private final PasswordEncoder passwordEncoder;
@@ -46,14 +45,58 @@ public class UserConverter {
         return userDTO;
     }
 
+    public List<UserDTO> toUserDTOList(List<UserEntity> userEntityList){
+        return userEntityList.stream().map(this::toUserDTO).collect(Collectors.toList());
+    }
+
+    public UserEntity toUserEntity(UserDTO userDTO) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userEntity.getId());
+        userEntity.setMemberCode(userDTO.getMemberCode());
+        userEntity.setAvatarUrl(userDTO.getAvatarUrl());
+        userEntity.setFirstName(userDTO.getFirstName());
+        userEntity.setLastName(userDTO.getLastName());
+        userEntity.setFullName(userDTO.getFullName());
+        userEntity.setPhone(userDTO.getPhone());
+        userEntity.setEmail(userDTO.getEmail());
+        userEntity.setStatus(userDTO.getStatus());
+        userEntity.setAddress(userDTO.getAddress());
+        userEntity.setCreatedBy(userDTO.getCreatedBy());
+        userEntity.setUpdatedBy(userDTO.getUpdatedBy());
+        userEntity.setCreatedAt(userDTO.getCreatedAt());
+        userEntity.setUpdatedAt(userDTO.getUpdatedAt());
+        return userEntity;
+    }
+
     public UserEntity signUp(SignUpDTO signUpDTO) {
         UserEntity userEntity = new UserEntity();
         userEntity.setMemberCode(randomCodeHandler.generateRandomChars(10));
         userEntity.setPwd(passwordEncoder.encode(signUpDTO.getPassword()));
         userEntity.setPhone(signUpDTO.getPhone());
         userEntity.setEmail(signUpDTO.getEmail());
+        userEntity.setEnable(false);
         userEntity.setStatus(1);
+        userEntity.setProvider(Provider.local.name());
         return userEntity;
+    }
+
+
+    public SignUpDTO signUp(UserDTO userDTO) {
+        SignUpDTO signUpDTO = new SignUpDTO();
+        signUpDTO.setEmail(userDTO.getEmail());
+        signUpDTO.setPhone(userDTO.getPhone());
+        return signUpDTO;
+    }
+    public UserDetailDTO toUserDetailDTO (UserEntity userEntity) {
+        UserDetailDTO userDetailDTO = new UserDetailDTO();
+        userDetailDTO.setAvatarUrl(userEntity.getAvatarUrl());
+        userDetailDTO.setFirstName(userEntity.getFirstName());
+        userDetailDTO.setLastName(userEntity.getLastName());
+        userDetailDTO.setFullName(userEntity.getFullName());
+        userDetailDTO.setPhone(userEntity.getPhone());
+        userDetailDTO.setEmail(userEntity.getEmail());
+        userDetailDTO.setAddress(userEntity.getAddress());
+        return userDetailDTO;
     }
 
 }

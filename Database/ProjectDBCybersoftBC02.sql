@@ -96,6 +96,15 @@ id_user bigint not null,
 primary key(id)
 );
 
+CREATE TABLE verification_token(
+	id bigint  auto_increment,
+        users_id bigint not null,
+        token varchar(255),
+        expired_time timestamp,
+    primary key (id)
+);
+
+
 CREATE TABLE label(
 id int auto_increment,
 name varchar(50),
@@ -249,6 +258,8 @@ CREATE TABLE users(
 	status int NOT null,
 	ava_url varchar(100),
 	address varchar(100),
+	enable tinyint,
+	provider varchar(50),
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
@@ -317,3 +328,5 @@ ALTER TABLE roles_users ADD CONSTRAINT FK_id_role_roles_users FOREIGN KEY (id_ro
 ALTER TABLE roles_users ADD CONSTRAINT FK_id_user_roles_users FOREIGN KEY (id_user) REFERENCES users (id);
 
 ALTER TABLE token ADD CONSTRAINT FK_id_user_token FOREIGN KEY (id_user) REFERENCES users(id);
+
+ALTER TABLE verification_token ADD CONSTRAINT FK_user_verification_token FOREIGN KEY (users_id) REFERENCES users(id);

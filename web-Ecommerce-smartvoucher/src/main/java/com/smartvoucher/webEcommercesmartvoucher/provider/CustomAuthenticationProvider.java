@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.provider;
 
 import com.smartvoucher.webEcommercesmartvoucher.entity.RolesUsersEntity;
 import com.smartvoucher.webEcommercesmartvoucher.exception.UserNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.VerificationTokenException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IRoleUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -38,19 +39,23 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
         RolesUsersEntity users = roleUserRepository.getEmail(username);
         if (users != null){
-            if (passwordEncoder.matches(password, users.getIdUser().getPwd())){
-                List<GrantedAuthority> roles = new ArrayList<>();
-                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(
-                       users.getIdRole().getName()
-                );
-                roles.add(grantedAuthority);
-                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                        username, users.getIdUser().getPwd(), roles
-                );
-                SecurityContextHolder.getContext().setAuthentication(token);
-                return token;
+            if (users.getIdUser().isEnable()){
+                if (passwordEncoder.matches(password, users.getIdUser().getPwd())){
+                    List<GrantedAuthority> roles = new ArrayList<>();
+                    GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(
+                            users.getIdRole().getName()
+                    );
+                    roles.add(grantedAuthority);
+                    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                            username, users.getIdUser().getPwd(), roles
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(token);
+                    return token;
+                }else {
+                    throw new UserNotFoundException(404, "Username or password not exist !");
+                }
             }else {
-                throw new UserNotFoundException(404, "Username or password not exist !");
+                throw new VerificationTokenException(401, "User is disabled !");
             }
         }else {
             throw new UserNotFoundException(404, "User not found or not exist !");
