@@ -100,7 +100,7 @@ public class AccountService implements IAccountService {
         data.setRoles(roles);
         String token = jwtHelper.generateToken(gson.toJson(data));
         String refreshToken = jwtHelper.generateRefreshToken(email);
-        UserEntity user = userRepository.findOneByEmail(email);
+        UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
         revokeAllUserTokens(user);
         saveUserToken(user, refreshToken);
         return ResponseAuthentication.builder()
@@ -122,7 +122,7 @@ public class AccountService implements IAccountService {
                                 !tokens.isExpired() && !tokens.isRevoke()
                         ).orElse(false);
                 if (isValidTokens){
-                    RolesUsersEntity rolesUsers = roleUserRepository.getEmail(data);
+                    RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(data, Provider.local.name());
                     SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(
                             rolesUsers.getIdRole().getName()
                     );
@@ -147,8 +147,9 @@ public class AccountService implements IAccountService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public SignUpDTO SignUp(SignUpDTO signUpDTO) {
-        if (userRepository.findByEmailOrPhone(
+        if (userRepository.findByEmailAndProviderOrPhone(
                 signUpDTO.getEmail(),
+                Provider.local.name(),
                 signUpDTO.getPhone()).isEmpty()) {
             //save user trước
             UserDTO userDTO = userConverter.toUserDTO(
