@@ -76,7 +76,7 @@ public class SecurityConfig {
                 corsConfig.addAllowedOrigin("*");
                 corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                 corsConfig.addAllowedHeader("*");
-                corsConfig.setAllowCredentials(true);
+                corsConfig.setAllowCredentials(false);
                 return corsConfig;
             })).csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
