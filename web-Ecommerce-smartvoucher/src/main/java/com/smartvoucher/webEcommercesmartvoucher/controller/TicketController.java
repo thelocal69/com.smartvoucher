@@ -3,16 +3,21 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
 import com.smartvoucher.webEcommercesmartvoucher.service.impl.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,35 +36,36 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    @GetMapping("/api/getAllVoucher")
+    @GetMapping("/api/list-ticket")
     @Transactional(readOnly = true)
     public ResponseEntity<?> getAllTicket(){
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.getAllTicket());
     }
 
-    @PostMapping("/api/addVoucher")
+
+    @PostMapping("/api/buy-ticket")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO) {
+    public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO, @RequestParam String userEmail) throws MessagingException, UnsupportedEncodingException {
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.ticketService.insertTicket(ticketDTO));
+                this.ticketService.insertTicket(ticketDTO, userEmail));
     }
 
-    @PutMapping("/api/updateVoucher")
+    @PutMapping("/api/update-ticket")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> updateTicket(@RequestBody @Valid TicketDTO ticketDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.updateTicket(ticketDTO));
     }
 
-    @DeleteMapping("/api/deleteVoucher")
+    @DeleteMapping("/api/delete-ticket")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> deleteTicket(@RequestParam long id) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.deleteTicket(id));
     }
 
-    @PutMapping("/api/useVoucher")
+    @PutMapping("/api/use-ticket")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> userUseVoucher(@RequestParam String serialCode) {
         return ResponseEntity.status(HttpStatus.OK).body(
