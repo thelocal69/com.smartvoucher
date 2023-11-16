@@ -1,4 +1,3 @@
-
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.WarehouseSerialDTO;
@@ -61,6 +60,4 @@ public class WarehouseSerialConverter {
         entity.setUpdateAt(dto.getUpdatedAt());
         return entity;
     }
-
-
 }

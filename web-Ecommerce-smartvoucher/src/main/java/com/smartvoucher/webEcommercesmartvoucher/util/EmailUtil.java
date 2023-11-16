@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -13,9 +14,13 @@ import java.io.UnsupportedEncodingException;
 public class EmailUtil {
     private final JavaMailSender javaMailSender;
 
+    private final MailProperties mailProperties;
+
     @Autowired
-    public EmailUtil(final JavaMailSender javaMailSender) {
+    public EmailUtil(final JavaMailSender javaMailSender
+            , final MailProperties mailProperties) {
         this.javaMailSender = javaMailSender;
+        this.mailProperties = mailProperties;
     }
 
     public void sendResetPassword(String email) throws MessagingException, UnsupportedEncodingException{
@@ -32,5 +37,21 @@ public class EmailUtil {
         messageHelper.setSubject(subject);
         messageHelper.setText(mailContent, true);
         javaMailSender.send(message);
+    }
+
+    public void sendTicketCode(String mail, String voucherCode) throws MessagingException, UnsupportedEncodingException {
+            String senderName = "Cổng dịch vụ thanh toán mua voucher của người dùng Smartvoucher.com";
+            String subject = "Thanh toán Voucher thành công";
+            String text = " <p> Xin chào, người dùng " + mail +
+                "       <br> Đây là mã voucher : <span style='font-size: 17px; font-weight: 700;'> " + voucherCode + " </span>" +
+                "       <br> Xin cảm ơn bạn đã sử dụng dịch vụ bên <a href='#'>Smartvoucher.com</a> của chúng tôi. </p>";
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
+            messageHelper.setFrom(mailProperties.getUsername(), senderName);
+            messageHelper.setTo(mail);
+            messageHelper.setSubject(subject);
+            messageHelper.setText(text, true);
+            javaMailSender.send(message);
+            System.out.println("Send mail success!");
     }
 }
