@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.util;
 
+import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,6 +22,23 @@ public class EmailUtil {
             , final MailProperties mailProperties) {
         this.javaMailSender = javaMailSender;
         this.mailProperties = mailProperties;
+    }
+
+    public void sendVerificationEmail(String url, UserEntity user) throws MessagingException, UnsupportedEncodingException {
+        String subject = "Email xác nhận";
+        String senderName = "Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";
+        String mailContent = "<p> Xin chào, "+ user.getEmail().substring(0,10)+ ", </p>"+
+                "<p>Cảm ơn bạn đã đăng ký. "+
+                "Xin hãy, Bấm vào đường link bên dưới để hoàn thành xác nhận.</p>"+
+                "<a href=\"" +url+ "\">Xác nhận email để kích hoạt tài khoản</a>"+
+                "<p> Xin cảm ơn <br> Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(message);
+        messageHelper.setFrom("cybersoftprojectvoucher@gmail.com", senderName);
+        messageHelper.setTo(user.getEmail());
+        messageHelper.setSubject(subject);
+        messageHelper.setText(mailContent, true);
+        javaMailSender.send(message);
     }
 
     public void sendResetPassword(String email) throws MessagingException, UnsupportedEncodingException{
