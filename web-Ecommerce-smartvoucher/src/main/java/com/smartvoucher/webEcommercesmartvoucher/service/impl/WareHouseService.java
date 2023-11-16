@@ -54,7 +54,7 @@ public class WareHouseService implements IWareHouseService {
     @Override
     @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWareHouse() {
-        List<WareHouseEntity> wareHouseEntityList = wareHouseRepository.findAll();
+        List<WareHouseEntity> wareHouseEntityList = wareHouseRepository.findAllByStatus(1);
         if (wareHouseEntityList.isEmpty()) {
             throw new ObjectEmptyException(
                     404, "List warehouse is empty !"

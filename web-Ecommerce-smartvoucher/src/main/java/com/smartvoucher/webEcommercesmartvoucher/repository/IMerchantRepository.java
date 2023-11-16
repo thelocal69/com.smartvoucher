@@ -12,4 +12,5 @@ public interface IMerchantRepository extends JpaRepository<MerchantEntity, Long>
     List<MerchantEntity> findAllByMerchantCode(String merchantCode);
     MerchantEntity findOneById(Long id);
     Boolean existsByMerchantCode(String merchantCode);
+    List<MerchantEntity> findAllByStatus(int status);
 }

@@ -12,4 +12,5 @@ public interface IChainRepository extends JpaRepository<ChainEntity, Long> {
     ChainEntity findOneByChainCode(String chainCode);
     ChainEntity findOneById(Long id);
     Boolean existsByChainCode(String chainCode);
+    List<ChainEntity> findAllByStatus(int status);
 }

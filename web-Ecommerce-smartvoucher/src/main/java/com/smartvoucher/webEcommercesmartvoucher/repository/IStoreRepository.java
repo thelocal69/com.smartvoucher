@@ -11,4 +11,5 @@ public interface IStoreRepository extends JpaRepository<StoreEntity, Long> {
     List<StoreEntity> findAllByStoreCode(String storeCode);
     StoreEntity findOneById(Long id);
     StoreEntity findOneByStoreCode(String storeCode);
+    List<StoreEntity> findAllByStatus(int status);
 }

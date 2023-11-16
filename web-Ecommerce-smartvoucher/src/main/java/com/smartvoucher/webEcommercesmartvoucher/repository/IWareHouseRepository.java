@@ -11,4 +11,6 @@ public interface IWareHouseRepository extends JpaRepository<WareHouseEntity, Lon
     List<WareHouseEntity> findAllByWarehouseCode(String wareHouseCode);
     WareHouseEntity findOneById(Long id);
     WareHouseEntity findOneByWarehouseCode(String warehouseCode);
+    List<WareHouseEntity> findAllByStatus(int status);
+
 }
