@@ -35,7 +35,7 @@ public class MerchantService implements IMerchantService {
     @Override
     @Transactional(readOnly = true)
     public List<MerchantDTO> getAllMerchant() {
-        List<MerchantEntity> merchantEntityList = merchantRepository.findAll();
+        List<MerchantEntity> merchantEntityList = merchantRepository.findAllByStatus(1);
         if (merchantEntityList.isEmpty()){
             throw new ObjectNotFoundException(
                     404, "List merchant is empty !"

@@ -29,7 +29,7 @@ public class DiscountTypeService implements IDiscountTypeService {
     @Override
     @Transactional(readOnly = true)
     public List<DiscountTypeDTO> getAllDiscount() {
-        List<DiscountTypeEntity> discountTypeEntityList = discountTypeRepository.findAll();
+        List<DiscountTypeEntity> discountTypeEntityList = discountTypeRepository.findAllByStatus(1);
         if (discountTypeEntityList.isEmpty()){
             throw new ObjectEmptyException(
                     404, "List category is empty !"

@@ -41,7 +41,7 @@ public class StoreService implements IStoreService {
     @Override
     @Transactional(readOnly = true)
     public List<StoreDTO> getAllStore() {
-        List<StoreEntity> storeEntityList = storeRepository.findAll();
+        List<StoreEntity> storeEntityList = storeRepository.findAllByStatus(1);
         if (storeEntityList.isEmpty()){
             throw new ObjectEmptyException(
                     404, "List store is empty !"
