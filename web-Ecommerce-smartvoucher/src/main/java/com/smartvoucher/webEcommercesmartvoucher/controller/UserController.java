@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
+import com.smartvoucher.webEcommercesmartvoucher.dto.ChangePasswordDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.security.Principal;
 
 
 @RestController
@@ -51,6 +54,16 @@ public class UserController {
                         "Get user's info successfully",
                         userService.getUserById(id)
                 )
+        );
+    }
+
+    @PutMapping("/api/change_pwd")
+    public ResponseEntity<ResponseObject> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO,
+                                                         Principal connectedUser){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(200,
+                        "Change password is completed !",
+                        this.userService.changePassword(changePasswordDTO, connectedUser))
         );
     }
 }
