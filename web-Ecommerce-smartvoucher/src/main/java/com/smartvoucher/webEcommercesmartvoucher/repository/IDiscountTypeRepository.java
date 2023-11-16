@@ -12,4 +12,5 @@ public interface IDiscountTypeRepository extends JpaRepository<DiscountTypeEntit
     DiscountTypeEntity findOneByCode(String code);
     DiscountTypeEntity findOneById(Long id);
     Boolean existsByCode(String code);
+    List<DiscountTypeEntity> findAllByStatus(int status);
 }

@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.provider;
 
 import com.smartvoucher.webEcommercesmartvoucher.entity.RolesUsersEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.exception.UserNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.VerificationTokenException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IRoleUserRepository;
@@ -37,7 +38,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
-        RolesUsersEntity users = roleUserRepository.getEmail(username);
+        RolesUsersEntity users = roleUserRepository.findOneByEmailAndProvider(username, Provider.local.name());
         if (users != null){
             if (users.getIdUser().isEnable()){
                 if (passwordEncoder.matches(password, users.getIdUser().getPwd())){
