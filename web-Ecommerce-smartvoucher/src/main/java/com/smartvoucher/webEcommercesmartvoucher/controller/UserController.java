@@ -31,7 +31,7 @@ public class UserController {
                 new ResponseObject(
                         200,
                         "Success !",
-                        oAuth2User.getAttributes()
+                        oAuth2User.getName()
                 )
         );
     }
