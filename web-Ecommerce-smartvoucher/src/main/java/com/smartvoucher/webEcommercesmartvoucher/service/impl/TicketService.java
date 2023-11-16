@@ -14,18 +14,24 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
+import com.smartvoucher.webEcommercesmartvoucher.util.EmailUtil;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.scheduling.annotation.Scheduled;
+
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@EnableScheduling
 public class TicketService implements ITicketService {
     private final TicketRepository ticketRepository;
     private final SerialRepository serialRepository;
@@ -38,6 +44,7 @@ public class TicketService implements ITicketService {
     private final TicketHistoryRepository ticketHistoryRepository;
     private final TicketHistoryConverter ticketHistoryConverter;
     private final UploadUtil uploadUtil;
+    private final EmailUtil emailUtil;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository
@@ -50,7 +57,8 @@ public class TicketService implements ITicketService {
                 , IStoreRepository storeRepository
                 , TicketHistoryRepository ticketHistoryRepository
                 , TicketHistoryConverter ticketHistoryConverter
-                , UploadUtil uploadUtil) {
+                , UploadUtil uploadUtil
+                , EmailUtil emailUtil) {
         this.ticketRepository = ticketRepository;
         this.ticketConverter = ticketConverter;
         this.serialRepository = serialRepository;
@@ -62,6 +70,7 @@ public class TicketService implements ITicketService {
         this.ticketHistoryRepository = ticketHistoryRepository;
         this.ticketHistoryConverter = ticketHistoryConverter;
         this.uploadUtil = uploadUtil;
+        this.emailUtil = emailUtil;
     }
 
     @Override
@@ -79,7 +88,7 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public ResponseObject insertTicket(TicketDTO ticketDTO) {
+    public ResponseObject insertTicket(TicketDTO ticketDTO,String userEmail) throws MessagingException, UnsupportedEncodingException {
         if (checkExistsObject(ticketDTO)) {
             // kiểm tra ticket có duplicate ở database
             if (checkDuplicateTicket(ticketDTO)) {
@@ -99,6 +108,7 @@ public class TicketService implements ITicketService {
                                     ticket.getStatus(),
                                     ticket.getStatus(),
                                     ticket.getIdSerial().getSerialCode()));
+                    this.emailUtil.sendTicketCode(userEmail,ticket.getIdSerial().getSerialCode());
                     // phía fe get mã serial code trả về cho user thấy
                     return new ResponseObject(200,
                             "Buy Ticket success",

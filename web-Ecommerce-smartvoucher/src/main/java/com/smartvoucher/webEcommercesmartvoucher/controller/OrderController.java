@@ -23,21 +23,21 @@ public class OrderController {
         this.ordersService = ordersService;
     }
 
-    @GetMapping("")
+    @GetMapping("/api/list-order")
     @Transactional(readOnly = true)
     public ResponseEntity<?> getAllOrder(){
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ordersService.getAllOrder());
     }
 
-    @PostMapping
+    @PostMapping("/api/add-order")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> insertOrder(@RequestBody @Valid OrderDTO orderDTO){
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ordersService.insertOrder(orderDTO));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/api/delete-order")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> deleteOrder(@RequestParam long id){
         return ResponseEntity.status(HttpStatus.OK).body(
