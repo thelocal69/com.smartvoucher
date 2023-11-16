@@ -8,9 +8,12 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
+
 public interface ITicketService {
     ResponseObject getAllTicket();
-    ResponseObject insertTicket(TicketDTO ticketDTO);
+    ResponseObject insertTicket(TicketDTO ticketDTO,String userEmail) throws MessagingException, UnsupportedEncodingException;
     ResponseObject updateTicket(TicketDTO ticketDTO);
     ResponseObject deleteTicket(long idTicket);
     ResponseObject userUseTicket(String serialCode);

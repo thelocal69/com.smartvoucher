@@ -76,7 +76,7 @@ public class SecurityConfig {
                 corsConfig.addAllowedOrigin("*");
                 corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                 corsConfig.addAllowedHeader("*");
-                corsConfig.setAllowCredentials(true);
+                corsConfig.setAllowCredentials(false);
                 return corsConfig;
             })).csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -92,15 +92,24 @@ public class SecurityConfig {
                     .antMatchers("/store/**").hasRole("ADMIN")
                     .antMatchers("/warehouse/**").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/user/api/upload").hasRole("USER")
-                    .antMatchers("/serial").hasRole("ADMIN")
-                    .antMatchers("/role").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET,"/order").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST,"/order").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE,"/order").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST,"/order").hasRole("USER")
-                    .antMatchers("/ticket/**").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET,"/ticket_history").hasRole("USER")
+                    .antMatchers(HttpMethod.GET,"/serial/api/list-serial").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/serial/api/add-serial").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT,"/serial/api/update-serial").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE,"/serial/api/delete-serial").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/serial/api/add-serial").hasRole("USER")
+                    .antMatchers("/role/**").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET,"/order/api/list-order").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/order/api/add-order").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE,"/order/api/delete-order").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/order/api/add-order").hasRole("USER")
+                    .antMatchers(HttpMethod.GET,"/order/api/get_all_order").hasRole("USER")
+                    .antMatchers(HttpMethod.GET,"/ticket/api/list-ticket").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/ticket/api/buy-ticket").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/ticket/api/update-ticket").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE,"/ticket/api/delete-ticket").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/ticket/api/buy-ticket").hasRole("USER")
+                    .antMatchers(HttpMethod.GET,"/ticket/api/ticket_detail").hasRole("USER")
+                    .antMatchers("/ticket_history/**").hasRole("ADMIN")
                     .antMatchers("/role_user").hasRole("ADMIN")
                     .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
                     .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)

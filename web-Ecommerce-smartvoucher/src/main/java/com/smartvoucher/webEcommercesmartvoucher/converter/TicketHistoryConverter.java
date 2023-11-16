@@ -35,11 +35,11 @@ public class TicketHistoryConverter {
         return ticketHistoryDTO;
     }
 
-    public TicketHistoryEntity updateStatusTicketHistory(TicketHistoryEntity oldTicketHistory, int statusOldTicket) {
+    public TicketHistoryEntity updateStatusTicketHistory(TicketHistoryEntity oldTicketHistory, int isLatestStatus) {
         if (!Objects.equals(oldTicketHistory.getPrevStatus(), oldTicketHistory.getIsLatest())) {
             oldTicketHistory.setPrevStatus(oldTicketHistory.getIsLatest());
         }
-        oldTicketHistory.setIsLatest(statusOldTicket);
+        oldTicketHistory.setIsLatest(isLatestStatus);
         return oldTicketHistory;
     }
 }

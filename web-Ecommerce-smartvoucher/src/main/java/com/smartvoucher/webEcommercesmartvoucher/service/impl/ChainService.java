@@ -40,7 +40,7 @@ public class ChainService implements IChainService {
     @Override
     @Transactional(readOnly = true)
     public List<ChainDTO> getAllChain() {
-        List<ChainEntity> chainEntityList = chainRepository.findAll();
+        List<ChainEntity> chainEntityList = chainRepository.findAllByStatus(1);
         if (chainEntityList.isEmpty()){
             throw new ObjectEmptyException(
                     404, "List chain is empty !"

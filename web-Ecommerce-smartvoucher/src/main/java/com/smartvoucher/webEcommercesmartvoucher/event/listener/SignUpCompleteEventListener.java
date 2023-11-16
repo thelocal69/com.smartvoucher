@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.event.listener;
 
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.event.SignUpCompleteEvent;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IAccountService;
@@ -34,7 +35,7 @@ public class SignUpCompleteEventListener implements ApplicationListener<SignUpCo
     @Override
     public void onApplicationEvent(@NonNull SignUpCompleteEvent event) {
             //nhan 1 tai khoan dang ky
-        UserEntity user = userRepository.findOneByEmail(event.getSignUpDTO().getEmail());
+        UserEntity user = userRepository.findByEmailAndProvider(event.getSignUpDTO().getEmail(), Provider.local.name());
         //tao verification token cho user dang ky
         String verificationToken = UUID.randomUUID().toString().replace("-", "");
         //save verificaton token xuong db

@@ -10,29 +10,28 @@ import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeExcept
 import com.smartvoucher.webEcommercesmartvoucher.exception.ExpiredVoucherException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
-
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
-
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
+import com.smartvoucher.webEcommercesmartvoucher.util.EmailUtil;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.PutMapping;
-
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.scheduling.annotation.Scheduled;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@EnableScheduling
 public class TicketService implements ITicketService {
     private final TicketRepository ticketRepository;
     private final SerialRepository serialRepository;
@@ -45,19 +44,21 @@ public class TicketService implements ITicketService {
     private final TicketHistoryRepository ticketHistoryRepository;
     private final TicketHistoryConverter ticketHistoryConverter;
     private final UploadUtil uploadUtil;
+    private final EmailUtil emailUtil;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository
-                ,TicketConverter ticketConverter
-                ,SerialRepository serialRepository
-                ,IWareHouseRepository iWareHouseRepository
-                ,ICategoryRepository iCategoryRepository
-                ,OrderRepository orderRepository
-                ,UserRepository userRepository
-                ,IStoreRepository storeRepository
-                ,TicketHistoryRepository ticketHistoryRepository
-                ,TicketHistoryConverter ticketHistoryConverter
-                ,final UploadUtil uploadUtil) {
+                , TicketConverter ticketConverter
+                , SerialRepository serialRepository
+                , IWareHouseRepository iWareHouseRepository
+                , ICategoryRepository iCategoryRepository
+                , OrderRepository orderRepository
+                , UserRepository userRepository
+                , IStoreRepository storeRepository
+                , TicketHistoryRepository ticketHistoryRepository
+                , TicketHistoryConverter ticketHistoryConverter
+                , UploadUtil uploadUtil
+                , EmailUtil emailUtil) {
         this.ticketRepository = ticketRepository;
         this.ticketConverter = ticketConverter;
         this.serialRepository = serialRepository;
@@ -69,26 +70,28 @@ public class TicketService implements ITicketService {
         this.ticketHistoryRepository = ticketHistoryRepository;
         this.ticketHistoryConverter = ticketHistoryConverter;
         this.uploadUtil = uploadUtil;
+        this.emailUtil = emailUtil;
     }
 
     @Override
     public ResponseObject getAllTicket() {
         List<TicketDTO> listTicket = new ArrayList<>();
         List<TicketEntity> list = ticketRepository.findAll();
-            if(!list.isEmpty()) {
-                for (TicketEntity data : list) {
-                    listTicket.add(ticketConverter.toTicketDTO(data));
-                }
-                return new ResponseObject(200, "List Ticket", listTicket );
-            } else {
-                throw new ObjectNotFoundException(404, "List Ticket is empty");
+        if(!list.isEmpty()) {
+            for (TicketEntity data : list) {
+                listTicket.add(ticketConverter.toTicketDTO(data));
             }
+            return new ResponseObject(200, "List Ticket", listTicket );
+        } else {
+            throw new ObjectNotFoundException(404, "List Ticket is empty");
+        }
     }
 
     @Override
-    public ResponseObject insertTicket(TicketDTO ticketDTO) {
+    public ResponseObject insertTicket(TicketDTO ticketDTO,String userEmail) throws MessagingException, UnsupportedEncodingException {
         if (checkExistsObject(ticketDTO)) {
-                if (checkDuplicateTicket(ticketDTO)) {
+            // kiểm tra ticket có duplicate ở database
+            if (checkDuplicateTicket(ticketDTO)) {
                     TicketEntity ticket =
                             ticketRepository.save(
                                     ticketConverter.insertTicket(
@@ -99,20 +102,21 @@ public class TicketService implements ITicketService {
                                             ,createOrder(ticketDTO)
                                             ,createUser(ticketDTO)
                                             ,createStore(ticketDTO)));
-
                     ticketHistoryRepository.save(
                             new TicketHistoryEntity(
                                     ticket,
                                     ticket.getStatus(),
                                     ticket.getStatus(),
                                     ticket.getIdSerial().getSerialCode()));
+                    this.emailUtil.sendTicketCode(userEmail,ticket.getIdSerial().getSerialCode());
+                    // phía fe get mã serial code trả về cho user thấy
                     return new ResponseObject(200,
-                            "Add Ticket success",
+                            "Buy Ticket success",
                             ticketConverter.toTicketDTO(ticket));
-                } else {
-                    throw new DuplicationCodeException(400,
-                            "Duplicate Serial or Category or Order");
-                }
+            } else {
+                throw new DuplicationCodeException(400,
+                        "Duplicate Serial or Category or Order");
+            }
         } else {
             throw new ObjectEmptyException(406,
                     "Serial, Warehouse, Category, Order, User, Store is empty, please check and fill all data");
@@ -150,14 +154,19 @@ public class TicketService implements ITicketService {
         }
     }
 
-    @PutMapping
     @Transactional(rollbackFor = Exception.class)
     public ResponseObject userUseTicket(String serialCode) {
+        // kiểm tra mã serial của ticket có tồn tại trong csdl hay không
         TicketEntity ticketEntity = ticketRepository.findBySerialCode(serialRepository.findBySerialCode(serialCode));
         if(ticketEntity != null) {
-            ticketEntity.setRedeemedtimeTime(presentTime());
                 if(checkExpiredVoucher(ticketEntity)){
-                        ticketEntity.setStatus(1);
+                    ticketHistoryRepository.save(
+                            ticketHistoryConverter.updateStatusTicketHistory(
+                                    ticketHistoryRepository.findBySerialCode(serialCode),2));
+                        ticketEntity.setStatus(2);
+                        ticketEntity.setRedeemedtimeTime(presentTime());
+                        ticketRepository.save(ticketEntity);
+                        // Khi user bấm mua rồi thì ticket này không thể sử dụng được nữa
                         return new ResponseObject(200, "Used Ticket Success !", true);
                 } else {
                     throw new ExpiredVoucherException(410, "Expired Voucher !");
@@ -181,24 +190,21 @@ public class TicketService implements ITicketService {
         Timestamp presentTime = new Timestamp(System.currentTimeMillis());
         for(TicketEntity ticketEntity : ticketRepository.findAll()) {
             if(presentTime.equals(ticketEntity.getExpiredTime()) ||
-                    presentTime.after(ticketEntity.getExpiredTime()) ||
-                    ticketEntity.getStatus() == 1) {
+                    presentTime.after(ticketEntity.getExpiredTime())) {
                 TicketHistoryEntity ticketHistory = ticketHistoryRepository.findBySerialCode(ticketEntity.getIdSerial().getSerialCode());
-                ticketHistory.setIsLatest(2);
-                ticketEntity.setStatus(2);
+                ticketHistory.setIsLatest(3);
+                ticketEntity.setStatus(3);
             }
         }
     }
 
     public boolean checkExistsObject(TicketDTO ticketDTO) {
-        Optional<SerialEntity> serialEntity = serialRepository.findById(ticketDTO.getIdSerialDTO().getId());
         Optional<WareHouseEntity> wareHouseEntity = iWareHouseRepository.findById(ticketDTO.getIdWarehouseDTO().getId());
         Optional<CategoryEntity> categoryEntity = iCategoryRepository.findById(ticketDTO.getIdCategoryDTO().getId());
         Optional<OrderEntity> orderEntity = orderRepository.findById(ticketDTO.getIdOrderDTO().getId());
         Optional<UserEntity> userEntity = userRepository.findById(ticketDTO.getIdUserDTO().getId());
         Optional<StoreEntity> storeEntity = storeRepository.findById(ticketDTO.getIdStoreDTO().getId());
-        return serialEntity.isPresent() &&
-                wareHouseEntity.isPresent() &&
+        return  wareHouseEntity.isPresent() &&
                 categoryEntity.isPresent() &&
                 orderEntity.isPresent() &&
                 userEntity.isPresent() &&
@@ -215,19 +221,15 @@ public class TicketService implements ITicketService {
     public SerialEntity createSerial(TicketDTO ticketDTO) {
         return serialRepository.findById(ticketDTO.getIdSerialDTO().getId()).orElse(null);
     }
-
     public WareHouseEntity createWarehouse(TicketDTO ticketDTO) {
         return iWareHouseRepository.findById(ticketDTO.getIdWarehouseDTO().getId()).orElse(null);
     }
-
     public CategoryEntity createCategory(TicketDTO ticketDTO) {
         return iCategoryRepository.findById(ticketDTO.getIdCategoryDTO().getId()).orElse(null);
     }
-
     public OrderEntity createOrder(TicketDTO ticketDTO) {
         return orderRepository.findById(ticketDTO.getIdOrderDTO().getId()).orElse(null);
     }
-
     public UserEntity createUser(TicketDTO ticketDTO) {
         return userRepository.findById(ticketDTO.getIdUserDTO().getId()).orElse(null);
     }
@@ -253,5 +255,5 @@ public class TicketService implements ITicketService {
         }
     }
 
-
 }
+
