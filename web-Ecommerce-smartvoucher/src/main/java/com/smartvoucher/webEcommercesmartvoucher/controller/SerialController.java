@@ -41,14 +41,14 @@ public class SerialController {
                 this.serialService.insertSerial(idWarehouse, batchCode, numberOfSerial));
     }
 
-    @PutMapping("/api/update")
+    @PutMapping("/api/update-serial")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> updateSerial(@Valid @RequestBody SerialDTO serialDTO){
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.serialService.updateSerial(serialDTO));
     }
 
-    @DeleteMapping("/api/delete")
+    @DeleteMapping("/api/delete-serial")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> deleteSerial(@NotNull @RequestParam long id){
         return ResponseEntity.status(HttpStatus.OK).body(
