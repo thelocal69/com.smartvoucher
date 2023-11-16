@@ -102,4 +102,15 @@ public class WareHouseController {
                     )
             );
     }
+    @GetMapping("/by-label-id/{id}")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getWarehousesByLabel(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get All warehouse by label successfully !",
+                        this.wareHouseService.getAllWarehousesByLabel(id)
+                )
+        );
+    }
 }
