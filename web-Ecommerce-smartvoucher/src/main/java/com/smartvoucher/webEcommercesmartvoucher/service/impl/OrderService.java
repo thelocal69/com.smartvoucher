@@ -111,15 +111,12 @@ public class OrderService implements IOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<OrderDTO> getAllOrderByIdUser(UserDTO userDTO){
-        List<OrderEntity> getAllOrder = orderRepository.findByIdUser(userDTO.getId());
+        List<OrderEntity> getAllOrder = orderRepository.findByEmail(userDTO.getEmail());
         if(getAllOrder.isEmpty()){
-            throw new ObjectNotFoundException(404, "All order of user "  + userDTO.getId() + " is empty!");
+            throw new ObjectNotFoundException(404, "All order of user "  + userDTO.getEmail() + " is empty!");
         }else {
             return orderConverter.orderDTOList(getAllOrder);
         }
     }
-
-
-
 
 }
