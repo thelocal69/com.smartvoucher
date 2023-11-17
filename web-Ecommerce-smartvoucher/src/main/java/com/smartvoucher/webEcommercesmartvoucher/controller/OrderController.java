@@ -50,7 +50,7 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
-                        "All order of user " + userDTO.getId() + " is below:",
+                        "All order of user " + userDTO.getEmail() + " is below:",
                         this.ordersService.getAllOrderByIdUser(userDTO)
                 )
         );
