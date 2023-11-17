@@ -220,7 +220,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public String setPassword(ResetPasswordDTO resetPasswordDTO) {
-        UserEntity user = userRepository.findOneByEmail(resetPasswordDTO.getEmail());
+        UserEntity user = userRepository.findByEmailAndProvider(resetPasswordDTO.getEmail(), Provider.local.name());
         if (user == null){
             throw new UserNotFoundException(404, "User not exist !");
         }
