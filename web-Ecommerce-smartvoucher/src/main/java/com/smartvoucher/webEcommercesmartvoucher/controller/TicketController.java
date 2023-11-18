@@ -46,9 +46,12 @@ public class TicketController {
 
     @PostMapping("/api/buy-ticket")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO, @RequestParam String userEmail) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO,
+                                          @RequestParam String userEmail,
+                                          @RequestParam String batchCode,
+                                          @RequestParam int numberOfSerial) throws MessagingException, UnsupportedEncodingException {
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.ticketService.insertTicket(ticketDTO, userEmail));
+                this.ticketService.insertTicket(ticketDTO, userEmail, batchCode, numberOfSerial));
     }
 
     @PutMapping("/api/update-ticket")

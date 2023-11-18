@@ -95,26 +95,6 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.GET, "/warehouse/api/{id}").permitAll()
                     .antMatchers(HttpMethod.GET, "/by-label-id/{id}").permitAll()
                     .antMatchers("/warehouse/**").hasRole("ADMIN")
-                    //warehouse
-                    //user
-                    .antMatchers("/user/**").hasRole("USER")
-                    .antMatchers(HttpMethod.GET, "/user/api/all").hasRole("ADMIN")
-                    //user
-                    //serial
-                    .antMatchers("/serial/**").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST,"/serial/api/add-serial").hasRole("USER")
-                    //serial
-                    .antMatchers("/role/**").hasRole("ADMIN")
-                    //order
-                    .antMatchers("/order/**").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST,"/order/api/add-order").hasRole("USER")
-//                    .antMatchers(HttpMethod.GET,"/order/api/get_all_order").hasRole("USER")
-                    .antMatchers(HttpMethod.GET,"/order/**").permitAll()
-                    //order
-                    .antMatchers(HttpMethod.GET,"/ticket/**").permitAll()
-                    .antMatchers("/ticket/**").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST,"/ticket/api/buy-ticket").hasRole("USER")
-//                    .antMatchers(HttpMethod.GET,"/ticket/api/ticket_detail").hasRole("USER")
                     .antMatchers("/ticket_history/**").hasRole("ADMIN")
                     .antMatchers("/role_user/**").hasRole("ADMIN")
                     .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
