@@ -52,6 +52,19 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(InputPhoneException.class)
+    public ResponseEntity<ErrorResponse> handleInputPhoneException(Exception ex){
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        501,
+                        ex.getMessage(),
+                        "Phone number must be 10 digit or not blank, white space or un correct format !",
+                        "/"
+                )
+        );
+    }
+
     @ExceptionHandler(OAuth2LoginException.class)
     public ResponseEntity<ErrorResponse> handleOAuth2LoginException(Exception ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
