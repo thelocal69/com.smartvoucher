@@ -13,8 +13,8 @@ import java.util.Optional;
 @Repository
 public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
 
-    @Query("SELECT t FROM ticket t WHERE t.idSerial = ?1 OR t.idCategory = ?2 OR t.idOrder = ?3")
-    Optional<TicketEntity> findByIdSerialOrIdCategoryOrIdOrder(SerialEntity idSerial, CategoryEntity idCategory, OrderEntity idOrder);
+    @Query("SELECT t FROM ticket t WHERE t.idSerial = ?1")
+    Optional<TicketEntity> findByIdSerial(SerialEntity idSerial);
     @Query("SELECT t FROM ticket t " +
             "JOIN users u ON t.idUser.id = u.id " +
             "WHERE u.id = ?1")
