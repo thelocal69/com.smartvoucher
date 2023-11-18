@@ -46,6 +46,8 @@ public class UserService implements IUserService {
         return uploadUtil.uploadImages(fileName, folderId);
     }
 
+
+
     @Override
     public List<UserDTO> getAllUser() {
         if (userRepository.findAll().isEmpty()) {
@@ -64,10 +66,10 @@ public class UserService implements IUserService {
 
     @Override
     public UserDetailDTO getUserById(Long id) {
-        if (userRepository.findOneById(id) == null) {
+        if (userRepository.findOneByIdAndProvider(id, Provider.local.name()) == null) {
             throw new UserNotFoundException(404, "User not found or not exist !");
         }
-        return userConverter.toUserDetailDTO(userRepository.findOneById(id));
+        return userConverter.toUserDetailDTO(userRepository.findOneByIdAndProvider(id, Provider.local.name()));
     }
 
     @Override
@@ -85,5 +87,17 @@ public class UserService implements IUserService {
         user.setPwd(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
         this.userRepository.save(user);
         return "Change password successfully !";
+    }
+
+    @Override
+    public UserDetailDTO getInformationLoginUser(Principal connectedUser) {
+        UserEntity user;
+        String email = connectedUser.getName();
+        if (this.userRepository.findByEmailAndProvider(email, Provider.local.name()) != null) {
+            user = userRepository.findByEmailAndProvider(email, Provider.local.name());
+            return userConverter.toUserDetailDTO(user);
+        }else {
+            throw new UserNotFoundException(404, "User not found data");
+        }
     }
 }

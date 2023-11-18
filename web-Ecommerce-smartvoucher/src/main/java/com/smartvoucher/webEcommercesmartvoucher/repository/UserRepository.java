@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findOneByEmail(String email);
     UserEntity findOneByMemberCode(String memberCode);
     List<UserEntity> findAllByMemberCode(String memberCode);
-    UserEntity findOneById(long id);
+    UserEntity findOneByIdAndProvider(long id, String provider);
    UserEntity findByEmailAndProvider(String email, String provider);
 }
