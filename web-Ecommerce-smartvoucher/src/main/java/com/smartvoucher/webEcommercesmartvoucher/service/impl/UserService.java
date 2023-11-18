@@ -12,6 +12,7 @@ import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundExcepti
 import com.smartvoucher.webEcommercesmartvoucher.exception.UserNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
+import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustom;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,6 +47,8 @@ public class UserService implements IUserService {
         return uploadUtil.uploadImages(fileName, folderId);
     }
 
+
+
     @Override
     public List<UserDTO> getAllUser() {
         if (userRepository.findAll().isEmpty()) {
@@ -64,10 +67,10 @@ public class UserService implements IUserService {
 
     @Override
     public UserDetailDTO getUserById(Long id) {
-        if (userRepository.findOneById(id) == null) {
+        if (userRepository.findOneByIdAndProvider(id, Provider.local.name()) == null) {
             throw new UserNotFoundException(404, "User not found or not exist !");
         }
-        return userConverter.toUserDetailDTO(userRepository.findOneById(id));
+        return userConverter.toUserDetailDTO(userRepository.findOneByIdAndProvider(id, Provider.local.name()));
     }
 
     @Override
@@ -85,5 +88,29 @@ public class UserService implements IUserService {
         user.setPwd(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
         this.userRepository.save(user);
         return "Change password successfully !";
+    }
+
+    @Override
+    public UserDetailDTO getInformationLoginUser(Principal connectedUser) {
+        UserEntity user;
+        String email = connectedUser.getName();
+        if (this.userRepository.findByEmailAndProvider(email, Provider.local.name()) != null) {
+            user = userRepository.findByEmailAndProvider(email, Provider.local.name());
+            return userConverter.toUserDetailDTO(user);
+        }else {
+            throw new UserNotFoundException(404, "User not found data");
+        }
+    }
+
+    @Override
+    public UserDetailDTO getInformationOauth2User(OAuth2UserDetailCustom oAuth2UserDetail) {
+        UserEntity user;
+        String email = oAuth2UserDetail.getUsername();
+        if (this.userRepository.findByEmailAndProvider(email, Provider.google.name()) != null) {
+            user = userRepository.findByEmailAndProvider(email, Provider.google.name());
+            return userConverter.toUserDetailDTO(user);
+        }else {
+            throw new UserNotFoundException(404, "User not found data");
+        }
     }
 }

@@ -15,5 +15,5 @@ public interface IWareHouseService {
     Boolean existCategoryAndDiscountAndLabel(WareHouseDTO wareHouseDTO);
     File uploadWarehouseImages(MultipartFile fileName);
     WareHouseDTO getWarehouseById(Long id);
-
+    List<WareHouseDTO> getAllWarehousesByLabel(int id);
 }
