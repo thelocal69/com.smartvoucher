@@ -29,6 +29,8 @@ public class WareHouseDTO{
     @NotBlank(message = "Please fill all data !")
     private String thumbnailUrl;
     @NotNull
+    private Double price;
+    @NotNull
     private Double discountAmount;
     @NotNull
     private Double maxDiscountAmount;
