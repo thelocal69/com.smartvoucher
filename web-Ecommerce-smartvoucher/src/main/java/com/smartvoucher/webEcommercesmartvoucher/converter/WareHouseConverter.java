@@ -1,7 +1,12 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.WareHouseDTO;
+import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.WarehouseSerialEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.keys.WarehouseSerialKeys;
+import com.smartvoucher.webEcommercesmartvoucher.repository.WarehouseSerialRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,6 +14,14 @@ import java.util.stream.Collectors;
 
 @Component
 public class WareHouseConverter {
+
+    private final WarehouseSerialRepository warehouseSerialRepository;
+
+    @Autowired
+    public WareHouseConverter(WarehouseSerialRepository warehouseSerialRepository) {
+        this.warehouseSerialRepository = warehouseSerialRepository;
+    }
+
     public WareHouseDTO toWareHouseDTO(WareHouseEntity wareHouseEntity){
         return WareHouseDTO.builder()
                 .id(wareHouseEntity.getId())
@@ -80,5 +93,14 @@ public class WareHouseConverter {
 
     public List<WareHouseEntity> toWareHouseEntityList(List<WareHouseDTO> wareHouseDTOList){
         return wareHouseDTOList.stream().map(this::toWareHouseEntity).collect(Collectors.toList());
+    }
+
+    public void saveWarehouseSerial(SerialEntity serialEntity, WareHouseEntity wareHouseEntity) {
+        WarehouseSerialKeys keys = new WarehouseSerialKeys();
+        keys.setIdSerial(serialEntity.getId());
+        keys.setIdWarehouse(wareHouseEntity.getId());
+        WarehouseSerialEntity warehouseSerialEntity = new WarehouseSerialEntity();
+        warehouseSerialEntity.setKeys(keys);
+        warehouseSerialRepository.save(warehouseSerialEntity);
     }
 }
