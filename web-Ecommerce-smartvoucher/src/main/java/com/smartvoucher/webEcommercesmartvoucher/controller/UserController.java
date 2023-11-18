@@ -77,6 +77,30 @@ public class UserController {
         );
     }
 
+    @PutMapping("/api/edit")
+    public ResponseEntity<ResponseObject>editProfile(
+            @RequestParam MultipartFile avatar,
+            @RequestParam String firsName,
+            @RequestParam String lastName,
+            @RequestParam String fullName,
+            @RequestParam String userName,
+            @RequestParam String phone,
+            @RequestParam String address,
+            Principal connectedUser
+    ){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Update profile is completed !",
+                        userService.editUserProfile(
+                                avatar, firsName, lastName,
+                                fullName, userName, phone,
+                                address, connectedUser
+                        )
+                )
+        );
+    }
+
     @PutMapping("/api/change_pwd")
     public ResponseEntity<ResponseObject> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO,
                                                          Principal connectedUser){

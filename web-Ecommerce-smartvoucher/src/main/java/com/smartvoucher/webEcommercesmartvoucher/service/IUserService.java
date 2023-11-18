@@ -19,4 +19,7 @@ public interface IUserService {
 
     UserDetailDTO getInformationLoginUser(Principal connectedUser);
     UserDetailDTO getInformationOauth2User(OAuth2UserDetailCustom oAuth2UserDetail);
+    String editUserProfile(MultipartFile file, String firstName, String lastName,
+                           String fullName, String userName, String phone,
+                           String address, Principal connectedUser);
 }
