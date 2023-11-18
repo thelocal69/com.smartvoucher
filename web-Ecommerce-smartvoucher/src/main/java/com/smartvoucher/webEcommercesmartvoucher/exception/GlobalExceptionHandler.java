@@ -221,4 +221,30 @@ public class GlobalExceptionHandler {
                     )
             );
         }
+
+    @ExceptionHandler(UsedVoucherException.class)
+    public ResponseEntity<ErrorResponse> handleUsedVoucherException(Exception ex){
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        405,
+                        ex.getMessage(),
+                        "Voucher used !",
+                        "/"
+                )
+        );
+    }
+
+    @ExceptionHandler(CheckStatusWarehouseException.class)
+    public ResponseEntity<ErrorResponse> handleCheckStatusWarehouseException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        405,
+                        ex.getMessage(),
+                        "Warehouse inactive !",
+                        "/"
+                )
+        );
+    }
 }

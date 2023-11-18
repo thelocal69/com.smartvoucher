@@ -79,7 +79,7 @@ public class TicketConverter {
         ticket.setIdCategory(categoryEntity);
         ticket.setIdOrder(orderEntity);
         ticket.setIdUser(userEntity);
-        ticket.setStatus(0);
+        ticket.setStatus(1);
         ticket.setClaimedTime(new Timestamp(System.currentTimeMillis()));
 //        ticket.setRedeemedtimeTime(ticketDTO.getRedeemedtimeTime());
         ticket.setExpiredTime(wareHouseEntity.getAvailableTo());
