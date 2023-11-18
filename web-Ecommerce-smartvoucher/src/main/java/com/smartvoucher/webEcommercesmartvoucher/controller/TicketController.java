@@ -48,10 +48,9 @@ public class TicketController {
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO,
                                           @RequestParam String userEmail,
-                                          @RequestParam String batchCode,
                                           @RequestParam int numberOfSerial) throws MessagingException, UnsupportedEncodingException {
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.ticketService.insertTicket(ticketDTO, userEmail, batchCode, numberOfSerial));
+                this.ticketService.insertTicket(ticketDTO, userEmail, numberOfSerial));
     }
 
     @PutMapping("/api/update-ticket")
