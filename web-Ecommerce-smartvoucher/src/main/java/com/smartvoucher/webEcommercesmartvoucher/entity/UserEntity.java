@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
