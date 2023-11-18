@@ -24,7 +24,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("")
+    @GetMapping("/api/all")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllCategory() {
         return ResponseEntity.status(HttpStatus.OK).body(

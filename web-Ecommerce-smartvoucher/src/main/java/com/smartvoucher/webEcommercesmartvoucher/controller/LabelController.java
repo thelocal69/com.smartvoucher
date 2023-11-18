@@ -21,13 +21,13 @@ public class LabelController {
         this.labelService = labelService;
     }
 
-    @GetMapping("/api/getAll")
+    @GetMapping("/api/all")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllLabel(){
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
-                        "Get all label name succesfully !",
+                        "Get all label name successfully !",
                         labelService.getAllLabel()
                 )
         );

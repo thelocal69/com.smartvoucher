@@ -24,7 +24,7 @@ public class WareHouseController {
         this.wareHouseService = wareHouseService;
     }
 
-    @GetMapping("")
+    @GetMapping("/api/all")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllWareHouse() {
         return ResponseEntity.status(HttpStatus.OK).body(
