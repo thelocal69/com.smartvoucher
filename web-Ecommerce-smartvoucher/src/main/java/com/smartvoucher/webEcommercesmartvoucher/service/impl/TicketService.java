@@ -104,12 +104,10 @@ public class TicketService implements ITicketService {
     @Override
     public ResponseObject insertTicket(@NotNull TicketDTO ticketDTO
             ,@NotNull String userEmail
-            ,@NotNull String batchCode
             ,@NotNull int numberOfSerial) throws MessagingException, UnsupportedEncodingException {
         List<TicketDTO> listVoucher = new ArrayList<>();
         List<SerialEntity> listSerial =
                 generateSerial(ticketDTO.getIdWarehouseDTO().getId()
-                            ,batchCode
                             ,numberOfSerial);
         if (checkExistsObject(ticketDTO)) {
             for (SerialEntity serialEntity : listSerial) {
@@ -149,7 +147,7 @@ public class TicketService implements ITicketService {
                 listVoucher);
     }
 
-    public List<SerialEntity> generateSerial(long idWarehouse, String batchCode, int numberOfSerial) {
+    public List<SerialEntity> generateSerial(long idWarehouse, int numberOfSerial) {
         // list serial
         List<SerialEntity> listSerial = new ArrayList<>();
         // kiểm tra warehouse có tồn tại ở trong DB
@@ -163,6 +161,7 @@ public class TicketService implements ITicketService {
                 kiểm tra so với capacity (lấy capacity - total = total serial có thể gen tt)*/
                 if(numberOfSerial <= (wareHouseEntity.getCapacity() - total)
                         && numberOfSerial <= wareHouseEntity.getCapacity() ) {
+                    String batchCode = randomCodeHandler.generateRandomChars(10);
                     // generate số lượng Serial = numberOfSerial
                     for (int i = 0; i < numberOfSerial; i++ ) {
                         String serialCode = randomCodeHandler.generateRandomChars(10);
