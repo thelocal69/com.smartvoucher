@@ -160,6 +160,11 @@ public class WareHouseService implements IWareHouseService {
     @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWarehousesByLabel(int id) {
         List<WareHouseEntity> wareHouseEntityList = wareHouseRepository.findAllByLabel(id);
+        if (wareHouseEntityList == null) {
+            throw new ObjectNotFoundException(
+                    404, "List warehouse not found !"
+            );
+        }
         return wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
     }
 }
