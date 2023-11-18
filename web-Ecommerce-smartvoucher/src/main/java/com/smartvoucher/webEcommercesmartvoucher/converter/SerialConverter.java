@@ -36,7 +36,7 @@ public class SerialConverter {
             serialEntity.setBatchCode(serialDTO.getBatchCode());
             serialEntity.setNumberOfSerial(serialDTO.getNumberOfSerial());
             serialEntity.setSerialCode(randomCodeHandler.generateRandomChars(10));
-            serialEntity.setStatus(0);
+            serialEntity.setStatus(1);
         return serialEntity;
     }
 
@@ -45,7 +45,7 @@ public class SerialConverter {
         serialEntity.setBatchCode(batchCode);
         serialEntity.setNumberOfSerial(numberOfSerial);
         serialEntity.setSerialCode(serialCode);
-        serialEntity.setStatus(0);
+        serialEntity.setStatus(1);
         return serialEntity;
     }
 
