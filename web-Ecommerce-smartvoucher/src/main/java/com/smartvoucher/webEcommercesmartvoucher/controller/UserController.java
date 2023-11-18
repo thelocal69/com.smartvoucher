@@ -31,7 +31,7 @@ public class UserController {
                 new ResponseObject(
                         200,
                         "Success !",
-                        oAuth2User.getName()
+                        oAuth2User.getAttributes()
                 )
         );
     }
@@ -53,6 +53,17 @@ public class UserController {
                         200,
                         "Get user's info successfully",
                         userService.getUserById(id)
+                )
+        );
+    }
+
+    @GetMapping("/api/infor")
+    public ResponseEntity<ResponseObject>getLoginInfor(Principal connectedUser){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "get Information is completed !",
+                        userService.getInformationLoginUser(connectedUser)
                 )
         );
     }
