@@ -12,6 +12,7 @@ import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundExcepti
 import com.smartvoucher.webEcommercesmartvoucher.exception.UserNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
+import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustom;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -95,6 +96,18 @@ public class UserService implements IUserService {
         String email = connectedUser.getName();
         if (this.userRepository.findByEmailAndProvider(email, Provider.local.name()) != null) {
             user = userRepository.findByEmailAndProvider(email, Provider.local.name());
+            return userConverter.toUserDetailDTO(user);
+        }else {
+            throw new UserNotFoundException(404, "User not found data");
+        }
+    }
+
+    @Override
+    public UserDetailDTO getInformationOauth2User(OAuth2UserDetailCustom oAuth2UserDetail) {
+        UserEntity user;
+        String email = oAuth2UserDetail.getUsername();
+        if (this.userRepository.findByEmailAndProvider(email, Provider.google.name()) != null) {
+            user = userRepository.findByEmailAndProvider(email, Provider.google.name());
             return userConverter.toUserDetailDTO(user);
         }else {
             throw new UserNotFoundException(404, "User not found data");

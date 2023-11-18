@@ -4,7 +4,7 @@ import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.dto.ChangePasswordDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustom;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
@@ -18,4 +18,5 @@ public interface IUserService {
     String changePassword(ChangePasswordDTO changePasswordDTO, Principal connectedUser);
 
     UserDetailDTO getInformationLoginUser(Principal connectedUser);
+    UserDetailDTO getInformationOauth2User(OAuth2UserDetailCustom oAuth2UserDetail);
 }
