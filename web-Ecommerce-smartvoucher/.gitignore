@@ -1,6 +1,7 @@
 HELP.md
 target/
 .DS_Store
+Database/.DS_Store
 com.smartvoucher/uploads
 local.env
 !.mvn/wrapper/maven-wrapper.jar
