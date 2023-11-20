@@ -12,10 +12,12 @@ import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundExcepti
 import com.smartvoucher.webEcommercesmartvoucher.exception.UserNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
+import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustom;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
@@ -41,12 +43,25 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public File uploadUserImages(MultipartFile fileName) {
+    @Transactional(rollbackFor = Exception.class)
+    public String uploadUserImages(MultipartFile fileName, Principal connectedUser) {
         String folderId = "1jNZ5_XieGUGKYIhNq3P2tflcKYHCwdb5";
-        return uploadUtil.uploadImages(fileName, folderId);
+        String email = connectedUser.getName();
+        UserEntity userEntity = userRepository.findByEmailAndProvider(email, Provider.local.name());
+        if (userEntity != null){
+            File file = uploadUtil.uploadImages(fileName, folderId);
+            userEntity.setAvatarUrl(file.getWebViewLink());
+            this.userRepository.save(userEntity);
+        }else {
+            throw new UserNotFoundException(404, "User not found data");
+        }
+        return "Your avatar upload successfully !";
     }
 
+
+
     @Override
+    @Transactional(readOnly = true)
     public List<UserDTO> getAllUser() {
         if (userRepository.findAll().isEmpty()) {
             throw new ObjectNotFoundException(404, "List user is empty !");
@@ -55,6 +70,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDTO getEmail(UserDTO userDTO) {
         if (userRepository.findOneByEmail(userDTO.getEmail()) == null) {
             throw new UserNotFoundException(404, "User not found or not exist !");
@@ -63,14 +79,16 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetailDTO getUserById(Long id) {
-        if (userRepository.findOneById(id) == null) {
+        if (userRepository.findOneByIdAndProvider(id, Provider.local.name()) == null) {
             throw new UserNotFoundException(404, "User not found or not exist !");
         }
-        return userConverter.toUserDetailDTO(userRepository.findOneById(id));
+        return userConverter.toUserDetailDTO(userRepository.findOneByIdAndProvider(id, Provider.local.name()));
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String changePassword(ChangePasswordDTO changePasswordDTO, Principal connectedUser) {
         String email =  connectedUser.getName();
         UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
@@ -85,5 +103,46 @@ public class UserService implements IUserService {
         user.setPwd(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
         this.userRepository.save(user);
         return "Change password successfully !";
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetailDTO getInformationLoginUser(Principal connectedUser) {
+        UserEntity user;
+        String email = connectedUser.getName();
+        if (this.userRepository.findByEmailAndProvider(email, Provider.local.name()) != null) {
+            user = userRepository.findByEmailAndProvider(email, Provider.local.name());
+            return userConverter.toUserDetailDTO(user);
+        }else {
+            throw new UserNotFoundException(404, "User not found data");
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetailDTO getInformationOauth2User(OAuth2UserDetailCustom oAuth2UserDetail) {
+        UserEntity user;
+        String email = oAuth2UserDetail.getUsername();
+        if (this.userRepository.findByEmailAndProvider(email, Provider.google.name()) != null) {
+            user = userRepository.findByEmailAndProvider(email, Provider.google.name());
+            return userConverter.toUserDetailDTO(user);
+        }else {
+            throw new UserNotFoundException(404, "User not found data");
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String editUserProfile(UserDetailDTO userDetailDTO,
+                                  Principal connectedUser) {
+        String email = connectedUser.getName();
+        UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
+        if (user != null){
+            UserEntity newUser = userConverter.toUserDetailEntity(userDetailDTO, user);
+            this.userRepository.save(newUser);
+        }else {
+            throw new UserNotFoundException(404, "User not found data");
+        }
+        return "Update your profile is successfully !";
     }
 }

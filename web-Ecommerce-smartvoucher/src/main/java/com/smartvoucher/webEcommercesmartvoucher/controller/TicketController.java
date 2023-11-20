@@ -3,26 +3,17 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
-import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
-import com.smartvoucher.webEcommercesmartvoucher.service.impl.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -46,9 +37,11 @@ public class TicketController {
 
     @PostMapping("/api/buy-ticket")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO, @RequestParam String userEmail) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO,
+                                          @RequestParam String userEmail,
+                                          @RequestParam int numberOfSerial) throws MessagingException, UnsupportedEncodingException {
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.ticketService.insertTicket(ticketDTO, userEmail));
+                this.ticketService.insertTicket(ticketDTO, userEmail, numberOfSerial));
     }
 
     @PutMapping("/api/update-ticket")

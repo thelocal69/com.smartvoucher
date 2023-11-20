@@ -215,12 +215,12 @@ public class AccountService implements IAccountService {
             throw new UserNotFoundException(404, "User not exist !");
         }
         this.emailUtil.sendResetPassword(email);
-        return "Check your email to reset password if account is exist !";
+        return "Check your email to reset password if account was register !";
     }
 
     @Override
     public String setPassword(ResetPasswordDTO resetPasswordDTO) {
-        UserEntity user = userRepository.findOneByEmail(resetPasswordDTO.getEmail());
+        UserEntity user = userRepository.findByEmailAndProvider(resetPasswordDTO.getEmail(), Provider.local.name());
         if (user == null){
             throw new UserNotFoundException(404, "User not exist !");
         }

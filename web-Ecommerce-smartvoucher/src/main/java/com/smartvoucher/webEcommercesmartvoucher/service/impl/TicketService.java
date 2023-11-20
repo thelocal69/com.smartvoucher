@@ -1,20 +1,20 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.google.api.services.drive.model.File;
+import com.smartvoucher.webEcommercesmartvoucher.converter.SerialConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketHistoryConverter;
+import com.smartvoucher.webEcommercesmartvoucher.converter.WareHouseConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.*;
-import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
-import com.smartvoucher.webEcommercesmartvoucher.exception.ExpiredVoucherException;
-import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
-import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.*;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
 import com.smartvoucher.webEcommercesmartvoucher.util.EmailUtil;
+import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -24,11 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.mail.MessagingException;
+import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @EnableScheduling
@@ -45,6 +44,11 @@ public class TicketService implements ITicketService {
     private final TicketHistoryConverter ticketHistoryConverter;
     private final UploadUtil uploadUtil;
     private final EmailUtil emailUtil;
+    private final SerialConverter serialConverter;
+    private final WarehouseSerialRepository warehouseSerialRepository;
+    private final IWareHouseRepository wareHouseRepository;
+    private final RandomCodeHandler randomCodeHandler;
+    private final WareHouseConverter wareHouseConverter;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository
@@ -58,7 +62,12 @@ public class TicketService implements ITicketService {
                 , TicketHistoryRepository ticketHistoryRepository
                 , TicketHistoryConverter ticketHistoryConverter
                 , UploadUtil uploadUtil
-                , EmailUtil emailUtil) {
+                , EmailUtil emailUtil
+                , SerialConverter serialConverter
+                ,  WarehouseSerialRepository warehouseSerialRepository
+                , IWareHouseRepository wareHouseRepository
+                , RandomCodeHandler randomCodeHandler
+                , WareHouseConverter wareHouseConverter) {
         this.ticketRepository = ticketRepository;
         this.ticketConverter = ticketConverter;
         this.serialRepository = serialRepository;
@@ -71,6 +80,11 @@ public class TicketService implements ITicketService {
         this.ticketHistoryConverter = ticketHistoryConverter;
         this.uploadUtil = uploadUtil;
         this.emailUtil = emailUtil;
+        this.serialConverter = serialConverter;
+        this.warehouseSerialRepository = warehouseSerialRepository;
+        this.wareHouseRepository = wareHouseRepository;
+        this.randomCodeHandler = randomCodeHandler;
+        this.wareHouseConverter = wareHouseConverter;
     }
 
     @Override
@@ -88,39 +102,90 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public ResponseObject insertTicket(TicketDTO ticketDTO,String userEmail) throws MessagingException, UnsupportedEncodingException {
+    public ResponseObject insertTicket(@NotNull TicketDTO ticketDTO
+            ,@NotNull String userEmail
+            ,@NotNull int numberOfSerial) throws MessagingException, UnsupportedEncodingException {
+        List<TicketDTO> listVoucher = new ArrayList<>();
+        List<SerialEntity> listSerial =
+                generateSerial(ticketDTO.getIdWarehouseDTO().getId()
+                            ,numberOfSerial);
         if (checkExistsObject(ticketDTO)) {
-            // kiểm tra ticket có duplicate ở database
-            if (checkDuplicateTicket(ticketDTO)) {
-                    TicketEntity ticket =
-                            ticketRepository.save(
-                                    ticketConverter.insertTicket(
-                                            ticketDTO
-                                            ,createSerial(ticketDTO)
-                                            ,createWarehouse(ticketDTO)
-                                            ,createCategory(ticketDTO)
-                                            ,createOrder(ticketDTO)
-                                            ,createUser(ticketDTO)
-                                            ,createStore(ticketDTO)));
-                    ticketHistoryRepository.save(
-                            new TicketHistoryEntity(
-                                    ticket,
-                                    ticket.getStatus(),
-                                    ticket.getStatus(),
-                                    ticket.getIdSerial().getSerialCode()));
-                    this.emailUtil.sendTicketCode(userEmail,ticket.getIdSerial().getSerialCode());
-                    // phía fe get mã serial code trả về cho user thấy
-                    return new ResponseObject(200,
-                            "Buy Ticket success",
-                            ticketConverter.toTicketDTO(ticket));
-            } else {
-                throw new DuplicationCodeException(400,
-                        "Duplicate Serial or Category or Order");
+            for (SerialEntity serialEntity : listSerial) {
+                    // kiểm tra ticket có duplicate ở database
+                    if (checkDuplicateTicket(serialEntity)) {
+                        TicketEntity ticket =
+                                ticketRepository.save(
+                                        ticketConverter.insertTicket(
+                                                ticketDTO
+                                                ,serialEntity
+                                                ,createWarehouse(ticketDTO)
+                                                ,createCategory(ticketDTO)
+                                                ,createOrder(ticketDTO)
+                                                ,createUser(ticketDTO)
+                                                ,createStore(ticketDTO)));
+                        ticketHistoryRepository.save(
+                                new TicketHistoryEntity(
+                                        ticket,
+                                        ticket.getStatus(),
+                                        ticket.getStatus(),
+                                        ticket.getIdSerial().getSerialCode()));
+
+                        // save list voucher
+                        listVoucher.add(ticketConverter.toTicketDTO(ticket));
+                    } else {
+                        throw new DuplicationCodeException(400,
+                                "Duplicate Serial or Order");
+                    }
             }
         } else {
             throw new ObjectEmptyException(406,
                     "Serial, Warehouse, Category, Order, User, Store is empty, please check and fill all data");
         }
+        this.emailUtil.sendTicketCode(userEmail,listVoucher);
+        return new ResponseObject(200,
+                "Buy Ticket success",
+                listVoucher);
+    }
+
+    public List<SerialEntity> generateSerial(long idWarehouse, int numberOfSerial) {
+        // list serial
+        List<SerialEntity> listSerial = new ArrayList<>();
+        // kiểm tra warehouse có tồn tại ở trong DB
+        WareHouseEntity wareHouseEntity = wareHouseRepository.findOneById(idWarehouse);
+        if(wareHouseEntity != null) {
+            // kiểm tra status Warehouse = 1 (active) thì mới gen
+            if(wareHouseEntity.getStatus() == 1) {
+                // kiểm số lượng serial đã được gen
+                int total = warehouseSerialRepository.total(wareHouseEntity);
+                /* kiểm tra số lượng serial có thể gen tiếp tục,
+                kiểm tra so với capacity (lấy capacity - total = total serial có thể gen tt)*/
+                if(numberOfSerial <= (wareHouseEntity.getCapacity() - total)
+                        && numberOfSerial <= wareHouseEntity.getCapacity() ) {
+                    String batchCode = randomCodeHandler.generateRandomChars(10);
+                    // generate số lượng Serial = numberOfSerial
+                    for (int i = 0; i < numberOfSerial; i++ ) {
+                        String serialCode = randomCodeHandler.generateRandomChars(10);
+                        // kiểm tra mã serial code có duplicate ở trong DB
+                        SerialEntity checkSerial = serialRepository.findBySerialCode(serialCode);
+                        if(checkSerial == null){
+                                SerialEntity serialEntity = serialRepository.save(serialConverter.generateSerial(batchCode, numberOfSerial, serialCode));
+                                // save warehouse và serial vào table WarehouseSerial ( bảng trung gian )
+                                wareHouseConverter.saveWarehouseSerial(serialEntity, wareHouseEntity);
+                                listSerial.add(serialEntity);
+                        } else {
+                            throw new DuplicationCodeException(400, "Serial is available, add fail!");
+                        }
+                    }
+                } else {
+                    throw new CheckCapacityException(406, "Current quantity is "+ (wareHouseEntity.getCapacity() - total) +" vouchers, pls check and try again !");
+                }
+            } else {
+                throw new CheckStatusWarehouseException(405, "Warehouse inactive !");
+            }
+        }else {
+            throw new ObjectNotFoundException(404, "Warehouse not found, pls check Warehouse and try again");
+        }
+        return listSerial;
     }
 
     @Override
@@ -160,19 +225,23 @@ public class TicketService implements ITicketService {
         TicketEntity ticketEntity = ticketRepository.findBySerialCode(serialRepository.findBySerialCode(serialCode));
         if(ticketEntity != null) {
                 if(checkExpiredVoucher(ticketEntity)){
-                    ticketHistoryRepository.save(
-                            ticketHistoryConverter.updateStatusTicketHistory(
-                                    ticketHistoryRepository.findBySerialCode(serialCode),2));
+                    if(ticketEntity.getStatus() == 1) {
+                        ticketHistoryRepository.save(
+                                ticketHistoryConverter.updateStatusTicketHistory(
+                                        ticketHistoryRepository.findBySerialCode(serialCode),2));
                         ticketEntity.setStatus(2);
                         ticketEntity.setRedeemedtimeTime(presentTime());
                         ticketRepository.save(ticketEntity);
                         // Khi user bấm mua rồi thì ticket này không thể sử dụng được nữa
                         return new ResponseObject(200, "Used Ticket Success !", true);
+                    } else {
+                        throw new UsedVoucherException(405, "Voucher used !");
+                    }
                 } else {
                     throw new ExpiredVoucherException(410, "Expired Voucher !");
                 }
         } else {
-            throw new ObjectNotFoundException(404, "Ticket not found, pls check and try again!");
+            throw new ObjectNotFoundException(404, "Voucher code is wrong, pls check and try again!");
         }
     }
 
@@ -199,28 +268,32 @@ public class TicketService implements ITicketService {
     }
 
     public boolean checkExistsObject(TicketDTO ticketDTO) {
-        Optional<WareHouseEntity> wareHouseEntity = iWareHouseRepository.findById(ticketDTO.getIdWarehouseDTO().getId());
-        Optional<CategoryEntity> categoryEntity = iCategoryRepository.findById(ticketDTO.getIdCategoryDTO().getId());
-        Optional<OrderEntity> orderEntity = orderRepository.findById(ticketDTO.getIdOrderDTO().getId());
-        Optional<UserEntity> userEntity = userRepository.findById(ticketDTO.getIdUserDTO().getId());
-        Optional<StoreEntity> storeEntity = storeRepository.findById(ticketDTO.getIdStoreDTO().getId());
-        return  wareHouseEntity.isPresent() &&
-                categoryEntity.isPresent() &&
-                orderEntity.isPresent() &&
-                userEntity.isPresent() &&
-                storeEntity.isPresent();
+        List<String> listName = Arrays.asList("Warehouse", "Category" , "Order", "User", "Store");
+        List<Optional<?>> listObject = Arrays.asList(
+                            iWareHouseRepository.findById(ticketDTO.getIdWarehouseDTO().getId()),
+                                iCategoryRepository.findById(ticketDTO.getIdCategoryDTO().getId()),
+                                orderRepository.findById(ticketDTO.getIdOrderDTO().getId()),
+                                userRepository.findById(ticketDTO.getIdUserDTO().getId()),
+                                storeRepository.findById(ticketDTO.getIdStoreDTO().getId()));
+        for(int i = 0; i < listObject.size(); i++ ) {
+            if(listObject.get(i).isEmpty()) {
+                throw new ObjectEmptyException(406, listName.get(i) + " is empty, pls check and try again !");
+            }
+        }
+        if (listObject.get(0).isPresent()) {
+            Optional<WareHouseEntity> wareHouseEntity = (Optional<WareHouseEntity>) listObject.get(0);
+            // kiểm tra warehouseEntity nếu null trả về null nếu k null thì trả về đúng giá trị của nó
+            if (Objects.requireNonNull(wareHouseEntity.orElse(null)).getStatus() != 1) {
+                throw new CheckStatusWarehouseException(405, "Warehouse inactive !");
+            }
+        }
+        return true;
     }
 
-    public boolean checkDuplicateTicket(TicketDTO ticketDTO) {
-        return ticketRepository.findByIdSerialOrIdCategoryOrIdOrder(
-                createSerial(ticketDTO),
-                createCategory(ticketDTO),
-                createOrder(ticketDTO)).isEmpty();
+    public boolean checkDuplicateTicket(SerialEntity serialEntity) {
+        return ticketRepository.findByIdSerial(serialEntity).isEmpty();
     }
 
-    public SerialEntity createSerial(TicketDTO ticketDTO) {
-        return serialRepository.findById(ticketDTO.getIdSerialDTO().getId()).orElse(null);
-    }
     public WareHouseEntity createWarehouse(TicketDTO ticketDTO) {
         return iWareHouseRepository.findById(ticketDTO.getIdWarehouseDTO().getId()).orElse(null);
     }

@@ -13,7 +13,7 @@ import java.io.UnsupportedEncodingException;
 
 public interface ITicketService {
     ResponseObject getAllTicket();
-    ResponseObject insertTicket(TicketDTO ticketDTO,String userEmail) throws MessagingException, UnsupportedEncodingException;
+    ResponseObject insertTicket(TicketDTO ticketDTO,String userEmail,int numberOfSerial) throws MessagingException, UnsupportedEncodingException;
     ResponseObject updateTicket(TicketDTO ticketDTO);
     ResponseObject deleteTicket(long idTicket);
     ResponseObject userUseTicket(String serialCode);
