@@ -11,7 +11,7 @@ import java.security.Principal;
 import java.util.List;
 
 public interface IUserService {
-    File uploadUserImages(MultipartFile fileName);
+    String uploadUserImages(MultipartFile fileName, Principal connectedUser);
     List<UserDTO> getAllUser();
     UserDTO getEmail(UserDTO userDTO);
     UserDetailDTO getUserById(Long id);
@@ -19,7 +19,5 @@ public interface IUserService {
 
     UserDetailDTO getInformationLoginUser(Principal connectedUser);
     UserDetailDTO getInformationOauth2User(OAuth2UserDetailCustom oAuth2UserDetail);
-    String editUserProfile(MultipartFile file, String firstName, String lastName,
-                           String fullName, String userName, String phone,
-                           String address, Principal connectedUser);
+    String editUserProfile(UserDetailDTO userDetailDTO, Principal connectedUser);
 }
