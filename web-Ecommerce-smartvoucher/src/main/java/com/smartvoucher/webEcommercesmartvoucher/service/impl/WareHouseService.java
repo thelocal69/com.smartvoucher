@@ -160,6 +160,14 @@ public class WareHouseService implements IWareHouseService {
     @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWarehousesByLabel(int id) {
         List<WareHouseEntity> wareHouseEntityList = wareHouseRepository.findAllByLabel(id);
-        return wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
+
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        wareHouseEntityList = wareHouseEntityList.stream()
+                .filter(warehouse -> warehouse.getAvailableTo() == null || currentTime.before(warehouse.getAvailableTo()))
+                .collect(Collectors.toList());
+        if (wareHouseEntityList.isEmpty()) {
+            throw new ObjectEmptyException(
+                    404, "List warehouse is empty !"
+            );}return wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
     }
 }
