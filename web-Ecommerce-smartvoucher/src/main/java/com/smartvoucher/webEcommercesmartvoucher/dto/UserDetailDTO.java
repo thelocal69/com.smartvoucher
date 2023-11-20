@@ -1,6 +1,5 @@
 package com.smartvoucher.webEcommercesmartvoucher.dto;
 
-import jdk.jshell.Snippet;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -34,7 +33,7 @@ public class UserDetailDTO {
     private String email;
 
     private String address;
-    
+
     private Timestamp createdAt;
 
 }

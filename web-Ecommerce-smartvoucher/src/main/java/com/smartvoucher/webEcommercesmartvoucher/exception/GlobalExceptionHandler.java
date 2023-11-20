@@ -13,7 +13,7 @@ import java.util.Objects;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     // AOP aspect oriented programming
-    @ExceptionHandler(Exception.class)
+    /*@ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new ErrorResponse(
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
                         "/"
                 )
         );
-    }
+    }*/
 
     @ExceptionHandler({JsonSyntaxException.class, IllegalStateException.class})
     public ResponseEntity<ErrorResponse> handleJsonSyntaxException(Exception ex){
@@ -137,7 +137,7 @@ public class GlobalExceptionHandler {
                         new Timestamp(System.currentTimeMillis()),
                         501,
                         ex.getMessage(),
-                        "Input or Ouput is error !",
+                        "Input or Output is error !",
                         "/"
                 )
         );
