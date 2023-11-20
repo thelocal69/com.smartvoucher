@@ -83,6 +83,7 @@ public class  UserConverter {
         userEntity.setEnable(false);
         userEntity.setStatus(1);
         userEntity.setProvider(Provider.local.name());
+        userEntity.setCreatedAt(signUpDTO.getCreatedAt());
         return userEntity;
     }
 
@@ -102,6 +103,7 @@ public class  UserConverter {
         userDetailDTO.setPhone(userEntity.getPhone());
         userDetailDTO.setEmail(userEntity.getEmail());
         userDetailDTO.setAddress(userEntity.getAddress());
+        userDetailDTO.setCreatedAt(userEntity.getCreatedAt());
         return userDetailDTO;
     }
 
@@ -112,7 +114,6 @@ public class  UserConverter {
         userEntity.setUsername(userDetailDTO.getUserName());
         userEntity.setPhone(userDetailDTO.getPhone());
         userEntity.setAddress(userDetailDTO.getAddress());
-        userDetailDTO.setCreatedAt(userEntity.getCreatedAt());
         return userEntity;
     }
 

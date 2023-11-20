@@ -3,7 +3,7 @@ target/
 .DS_Store
 Database/.DS_Store
 com.smartvoucher/uploads
-local.env
+src/main/resources/local.env
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

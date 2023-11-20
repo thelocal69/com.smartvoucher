@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.sql.Timestamp;
 
 @Component
 @Setter
@@ -32,4 +33,5 @@ public class SignUpDTO {
     private String phone;
     private String roleName;
     private boolean isEnable;
+    private Timestamp createdAt;
 }
