@@ -84,6 +84,7 @@ public class SecurityConfig {
                     .antMatchers("/merchant/**").hasRole("ADMIN")
                     .antMatchers("/chain/**").hasRole("ADMIN")
                     .antMatchers("/label/api/all").permitAll()
+                    .antMatchers("/user/**").hasRole("USER")
                     //category
                     .antMatchers(HttpMethod.GET, "/category/api/all").permitAll()
                     .antMatchers("/category/**").hasRole("ADMIN")

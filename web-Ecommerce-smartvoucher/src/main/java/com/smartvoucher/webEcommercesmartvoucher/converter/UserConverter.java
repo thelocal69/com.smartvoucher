@@ -105,4 +105,14 @@ public class  UserConverter {
         return userDetailDTO;
     }
 
+    public UserEntity toUserDetailEntity (UserDetailDTO userDetailDTO, UserEntity userEntity) {
+        userEntity.setFirstName(userDetailDTO.getFirstName());
+        userEntity.setLastName(userDetailDTO.getLastName());
+        userEntity.setFullName(userDetailDTO.getFullName());
+        userEntity.setUsername(userDetailDTO.getUserName());
+        userEntity.setPhone(userDetailDTO.getPhone());
+        userEntity.setAddress(userDetailDTO.getAddress());
+        return userEntity;
+    }
+
 }

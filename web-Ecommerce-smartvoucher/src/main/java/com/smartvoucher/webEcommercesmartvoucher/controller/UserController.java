@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.ChangePasswordDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustom;
@@ -11,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.security.Principal;
 
 
@@ -46,12 +48,12 @@ public class UserController {
     }
 
     @PostMapping("/api/upload")
-    public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
+    public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName, Principal connectedUser){
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
                         "Upload images is completed !",
-                        userService.uploadUserImages(fileName).getWebViewLink()
+                        userService.uploadUserImages(fileName, connectedUser)
                 )
         );
     }
@@ -79,13 +81,7 @@ public class UserController {
 
     @PutMapping("/api/edit")
     public ResponseEntity<ResponseObject>editProfile(
-            @RequestParam MultipartFile avatar,
-            @RequestParam String firsName,
-            @RequestParam String lastName,
-            @RequestParam String fullName,
-            @RequestParam String userName,
-            @RequestParam String phone,
-            @RequestParam String address,
+            @RequestBody @Valid UserDetailDTO userDetailDTO,
             Principal connectedUser
     ){
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -93,9 +89,7 @@ public class UserController {
                         200,
                         "Update profile is completed !",
                         userService.editUserProfile(
-                                avatar, firsName, lastName,
-                                fullName, userName, phone,
-                                address, connectedUser
+                                userDetailDTO, connectedUser
                         )
                 )
         );
