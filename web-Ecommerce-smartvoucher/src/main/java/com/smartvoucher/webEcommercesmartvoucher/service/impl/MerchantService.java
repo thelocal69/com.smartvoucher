@@ -39,7 +39,7 @@ public class MerchantService implements IMerchantService {
     public List<MerchantDTO> getAllMerchant() {
         List<MerchantEntity> merchantEntityList = merchantRepository.findAllByStatus(1);
         if (merchantEntityList.isEmpty()){
-            log.warn("List merchant is empty !");
+            log.info("List merchant is empty !");
             throw new ObjectNotFoundException(
                     404, "List merchant is empty !"
             );
@@ -70,7 +70,7 @@ public class MerchantService implements IMerchantService {
         if (merchantDTO.getId() != null){
             boolean exist = existMerchant(merchantDTO);
             if (!exist){
-                log.warn("Cannot update merchant id: "+merchantDTO.getId());
+                log.info("Cannot update merchant id: "+merchantDTO.getId());
                 throw new ObjectNotFoundException(
                         404, "Cannot update merchant id: "+merchantDTO.getId()
                 );
@@ -81,7 +81,7 @@ public class MerchantService implements IMerchantService {
         }else{
             List<MerchantEntity> merchantEntityList = merchantConverter.toMerchantEntityList(getAllMerchantCode(merchantDTO));
             if (!merchantEntityList.isEmpty()){
-                log.warn("Merchant code is duplicated !");
+                log.info("Merchant code is duplicated !");
                 throw new DuplicationCodeException(
                         400, "Merchant code is duplicated !"
                 );
@@ -97,7 +97,7 @@ public class MerchantService implements IMerchantService {
     public void deleteMerchant(MerchantDTO merchantDTO) {
         boolean exist = merchantRepository.existsById(merchantDTO.getId());
         if (!exist){
-            log.warn("Cannot delete id: "+merchantDTO.getId());
+            log.info("Cannot delete id: "+merchantDTO.getId());
             throw new ObjectNotFoundException(
                     404, "Cannot delete id: "+merchantDTO.getId()
             );

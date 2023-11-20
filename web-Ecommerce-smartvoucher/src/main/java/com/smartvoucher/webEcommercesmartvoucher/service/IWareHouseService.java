@@ -16,4 +16,5 @@ public interface IWareHouseService {
     File uploadWarehouseImages(MultipartFile fileName);
     WareHouseDTO getWarehouseById(Long id);
     List<WareHouseDTO> getAllWarehousesByLabel(int id);
+    List<WareHouseDTO> getAllWarehouseByCategoryCode(WareHouseDTO wareHouseDTO);
 }

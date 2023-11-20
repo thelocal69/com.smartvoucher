@@ -43,7 +43,7 @@ public class RoleService implements IRoleService {
             log.info("Get all role is completed !");
             return new ResponseObject(200, "List Roles", listRole);
         } else {
-            log.warn("List Role is empty");
+            log.info("List Role is empty");
             throw new ObjectEmptyException(406, "List Role is empty");
         }
     }
@@ -59,7 +59,7 @@ public class RoleService implements IRoleService {
                     "Add Role success!",
                     roleConverter.toRoleDTO(roleRepository.save(roleConverter.insertRole(roleDTO))) );
         } else {
-            log.warn("Role is available, add role fail");
+            log.info("Role is available, add role fail");
             throw new DuplicationCodeException(400, "Role is available, add role fail");
         }
     }
@@ -77,11 +77,11 @@ public class RoleService implements IRoleService {
                             "Update Role success",
                             roleConverter.toRoleDTO(roleRepository.save(roleConverter.updateRole(roleDTO, oldRole))));
                 } else {
-                    log.warn("Role is available, please fill again");
+                    log.info("Role is available, please fill again");
                     throw new DuplicationCodeException(400, "Role is available, please fill again");
                 }
             } else {
-                log.warn("Role not found, update Role fail");
+                log.info("Role not found, update Role fail");
                 throw new ObjectNotFoundException(404, "Role not found, update Role fail");
             }
     }
@@ -95,7 +95,7 @@ public class RoleService implements IRoleService {
             log.info("Delete Role Success");
             return new ResponseObject(200, "Delete Role Success", true);
         } else {
-            log.warn("Can not delete Role id : " + id);
+            log.info("Can not delete Role id : " + id);
             throw new ObjectNotFoundException(404, "Can not delete Role id : " + id);
         }
 

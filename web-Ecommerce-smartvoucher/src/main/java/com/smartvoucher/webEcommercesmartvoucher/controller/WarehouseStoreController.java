@@ -2,9 +2,9 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.WarehouseStoreDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.keys.WarehouseStoreKeys;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWarehouseStoreService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +13,19 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("/warehouse_store")
 public class WarehouseStoreController {
-    private IWarehouseStoreService warehouseStoreService;
+    private final IWarehouseStoreService warehouseStoreService;
     @Autowired
-    public WarehouseStoreController(IWarehouseStoreService warehouseStoreService) {
+    public WarehouseStoreController(final IWarehouseStoreService warehouseStoreService) {
         this.warehouseStoreService = warehouseStoreService;
     }
     @GetMapping("")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllWarehouseStore(){
+        log.info("Get all WarehouseStore");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -35,6 +37,7 @@ public class WarehouseStoreController {
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertWarehouseStore(@Valid @RequestBody WarehouseStoreDTO warehouseStoreDTO){
+        log.info("Insert completed");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -50,6 +53,7 @@ public class WarehouseStoreController {
         warehouseStoreDTO.getIdWarehouse();
         warehouseStoreDTO.getIdStore();
         warehouseStoreService.delete(warehouseStoreDTO);
+        log.info("Delete completed");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,

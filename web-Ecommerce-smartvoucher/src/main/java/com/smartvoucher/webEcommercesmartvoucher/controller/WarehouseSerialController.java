@@ -2,9 +2,9 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.WarehouseSerialDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.keys.WarehouseSerialKeys;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWarehouseSerialService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +13,19 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("/warehouse_serial")
 public class WarehouseSerialController {
-    private IWarehouseSerialService warehouseSerialService;
+    private final IWarehouseSerialService warehouseSerialService;
     @Autowired
-    public WarehouseSerialController(IWarehouseSerialService warehouseSerialService) {
+    public WarehouseSerialController(final IWarehouseSerialService warehouseSerialService) {
         this.warehouseSerialService = warehouseSerialService;
     }
     @GetMapping("")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllWarehouseSerial(){
+        log.info("Get all WarehouseSerial");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -35,6 +37,7 @@ public class WarehouseSerialController {
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertWarehouseSerial(@Valid @RequestBody WarehouseSerialDTO warehouseSerialDTO){
+        log.info("Insert completed");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -50,6 +53,7 @@ public class WarehouseSerialController {
         warehouseSerialDTO.getIdWarehouse();
         warehouseSerialDTO.getIdSerial();
         warehouseSerialService.delete(warehouseSerialDTO);
+        log.info("Delete completed");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,

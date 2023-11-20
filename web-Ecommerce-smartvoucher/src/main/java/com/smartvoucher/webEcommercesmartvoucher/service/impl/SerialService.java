@@ -61,7 +61,7 @@ public class SerialService implements ISerialService {
             log.info("Get all serial is completed !");
             return new ResponseObject(200, "List Serial", listSerial);
         } else{
-            log.warn("List Serial is empty");
+            log.info("List Serial is empty");
             throw new ObjectNotFoundException(404, "List Serial is empty");
         }
     }
@@ -93,20 +93,20 @@ public class SerialService implements ISerialService {
                             wareHouseConverter.saveWarehouseSerial(serialEntity, wareHouseEntity);
                             listSerial.add(serialEntity);
                         } else {
-                            log.warn("Serial is available, add fail!");
+                            log.info("Serial is available, add fail!");
                             throw new DuplicationCodeException(400, "Serial is available, add fail!");
                         }
                     }
                 } else {
-                    log.warn("Current quantity is "+ (wareHouseEntity.getCapacity() - total) +" vouchers, pls check and try again !");
+                    log.info("Current quantity is "+ (wareHouseEntity.getCapacity() - total) +" vouchers, pls check and try again !");
                     throw new CheckCapacityException(406, "Current quantity is "+ (wareHouseEntity.getCapacity() - total) +" vouchers, pls check and try again !");
                 }
             } else {
-                log.warn("Warehouse inactive !");
+                log.info("Warehouse inactive !");
                 throw new CheckStatusWarehouseException(405, "Warehouse inactive !");
             }
         }else {
-            log.warn("Warehouse not found, pls check Warehouse and try again");
+            log.info("Warehouse not found, pls check Warehouse and try again");
             throw new ObjectNotFoundException(404, "Warehouse not found, pls check Warehouse and try again");
         }
         log.info("Insert serial is completed !");
@@ -126,7 +126,7 @@ public class SerialService implements ISerialService {
                                 serialConverter.toSerialDTO(
                                         serialRepository.save(serialConverter.updateSerial(serialDTO, oldSerial))) );
             } else {
-                log.warn("Serial not found, update Serial fail!");
+                log.info("Serial not found, update Serial fail!");
                 throw new ObjectNotFoundException(404, "Serial not found, update Serial fail!");
             }
     }
@@ -140,7 +140,7 @@ public class SerialService implements ISerialService {
                 log.info("Delete Serial Success");
                 return new ResponseObject(200, "Delete Serial Success", true);
             } else {
-                log.warn("Can not delete Serial id : " + id);
+                log.info("Can not delete Serial id : " + id);
                 throw new ObjectNotFoundException(404, "Can not delete Serial id : " + id);
             }
     }

@@ -50,13 +50,13 @@ public class WarehouseStoreService implements IWarehouseStoreService {
         if(warehouseStoreDTO.getKeys()!=null){
             if(wareHouseRepository.findAllByWarehouseCode(warehouseStoreDTO.getWarehouseCode()).size()<1
             || storeRepository.findAllByStoreCode(warehouseStoreDTO.getStoreCode()).size()<1){
-                log.warn("WarehouseCode or StoreCode is not exist!");
+                log.info("WarehouseCode or StoreCode is not exist!");
                 throw new ObjectNotFoundException(
                         404, "WarehouseCode or StoreCode is not exist!"
                 );
             }else if(wareHouseRepository.findAllByWarehouseCode(warehouseStoreDTO.getWarehouseCode()).size()<1
             && storeRepository.findAllByStoreCode(warehouseStoreDTO.getStoreCode()).size()<1){
-                log.warn("WarehouseCode and StoreCode is not exist!");
+                log.info("WarehouseCode and StoreCode is not exist!");
                 throw new ObjectNotFoundException(
                         404, "WarehouseCode and StoreCode is not exist!"
                 );
@@ -83,7 +83,7 @@ public class WarehouseStoreService implements IWarehouseStoreService {
     public void delete(WarehouseStoreDTO warehouseStoreDTO){
         WarehouseStoreEntity warehouseStoreCheck = warehouseStoreRepository.getByWarehouseCodeAndStoreCode(warehouseStoreDTO.getWarehouseCode(), warehouseStoreDTO.getStoreCode());
         if(warehouseStoreCheck==null){
-            log.warn("Cannot delete keys " + warehouseStoreDTO.getKeys());
+            log.info("Cannot delete keys " + warehouseStoreDTO.getKeys());
             throw new ObjectNotFoundException(
                     404, "Cannot delete keys " + warehouseStoreDTO.getKeys()
             );
