@@ -29,9 +29,12 @@ public class JpaAuditingConfig {
             //tracking user
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
-            int index = username.indexOf("@");
-            String nickName = username.substring(0 ,index);
-            if (!authentication.isAuthenticated()){
+            String nickName = username;
+            if (username.contains("@")){
+                int index = username.indexOf("@");
+                nickName = username.substring(0 ,index);
+            }
+            if (authentication.getName() == null || !authentication.isAuthenticated()){
                 return Optional.empty();
             }
             return Optional.of(nickName);
