@@ -10,6 +10,7 @@ import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundExcepti
 import com.smartvoucher.webEcommercesmartvoucher.repository.ICategoryRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.ICategoryService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class CategoryService implements ICategoryService {
 
@@ -38,10 +40,12 @@ public class CategoryService implements ICategoryService {
     public List<CategoryDTO> getAllCategory() {
         List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
         if (categoryEntityList.isEmpty()){
+            log.warn("List category is empty !");
             throw new ObjectEmptyException(
                     404, "List category is empty !"
             );
         }
+        log.info("Get all category successfully !");
         return categoryConverter.toCategoryDTOList(categoryEntityList);
     }
 
@@ -59,20 +63,24 @@ public class CategoryService implements ICategoryService {
         if (categoryDTO.getId() != null){
             boolean exist = exitsCategory(categoryDTO);
             if (!exist){
+                log.warn("Cannot update category id: "+categoryDTO.getId());
                 throw new ObjectNotFoundException(
                         404, "Cannot update category id: "+categoryDTO.getId()
                 );
             }
             CategoryEntity oldCategory = categoryRepository.findOneById(categoryDTO.getId());
             categoryEntity = categoryConverter.toCategoryEntity(categoryDTO, oldCategory);
+            log.info("Update category is completed !");
         }else {
             List<CategoryEntity> categoryEntityList = categoryConverter.toCategoryEntityList(getAllCategoryCode(categoryDTO));
             if (!categoryEntityList.isEmpty()){
+                log.warn("Category code is duplicated !");
                 throw new DuplicationCodeException(
                         400, "Category code is duplicated !"
                 );
             }
             categoryEntity = categoryConverter.toCategoryEntity(categoryDTO);
+            log.info("Insert category is completed !");
         }
         return categoryConverter.toCategoryDTO(categoryRepository.save(categoryEntity));
     }
@@ -82,11 +90,13 @@ public class CategoryService implements ICategoryService {
     public void deleteCategory(CategoryDTO categoryDTO) {
         boolean exists = categoryRepository.existsById(categoryDTO.getId());
         if (!exists){
+            log.warn("Cannot delete id: "+categoryDTO.getId());
             throw new ObjectNotFoundException(
                     404, "Cannot delete id: "+categoryDTO.getId()
             );
         }
         this.categoryRepository.deleteById(categoryDTO.getId());
+        log.info("Delete category is completed !");
     }
 
     @Override

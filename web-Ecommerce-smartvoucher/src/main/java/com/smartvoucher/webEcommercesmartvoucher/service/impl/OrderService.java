@@ -54,10 +54,12 @@ public class OrderService implements IOrderService {
             for (OrderEntity data : list) {
                 listOrder.add(orderConverter.toOrdersDTO(data));
             }
+            log.info("Get all order successfully!");
             return new ResponseObject(200,
                     "List Order",
                             listOrder);
         } else {
+            log.warn("List Order is empty");
             throw new ObjectNotFoundException(404, "List Order is empty");
         }
     }
@@ -68,6 +70,7 @@ public class OrderService implements IOrderService {
         OrderEntity order = orderRepository.findByOrderNo(orderDTO.getOrderNo());
         if (order == null) {
                 if(existsUserAndWarehouse(orderDTO)) {
+                    log.info("Add Order success");
                     return new ResponseObject(200,
                             "Add Order success",
                             orderConverter.toOrdersDTO(orderRepository.save(
@@ -76,10 +79,12 @@ public class OrderService implements IOrderService {
                                             ,createUser(orderDTO)
                                             ,createWareHouse(orderDTO)))) );
                 }else {
+                    log.warn("User Or Warehouse is empty, please fill all data, add order fail");
                     throw new ObjectEmptyException(406,
                             "User Or Warehouse is empty, please fill all data, add order fail");
                 }
         } else {
+            log.warn("Order is available, add order fail");
             throw new DuplicationCodeException(400, "Order is available, add order fail");
         }
     }
@@ -90,8 +95,10 @@ public class OrderService implements IOrderService {
         OrderEntity role = orderRepository.findById(id).orElse(null);
         if(role != null) {
             orderRepository.deleteById(id);
+            log.info("Delete Order Success");
             return new ResponseObject(200, "Delete Order Success", true);
         } else {
+            log.warn("Can not delete Order id : " + id);
             throw new ObjectNotFoundException(404, "Can not delete Order id : " + id);
         }
     }
@@ -113,8 +120,10 @@ public class OrderService implements IOrderService {
     public List<OrderDTO> getAllOrderByIdUser(UserDTO userDTO){
         List<OrderEntity> getAllOrder = orderRepository.findByEmail(userDTO.getEmail());
         if(getAllOrder.isEmpty()){
-            throw new ObjectNotFoundException(404, "All order of user "  + userDTO.getEmail() + " is empty!");
+            log.warn("All orders of user "  + userDTO.getEmail() + " is empty!");
+            throw new ObjectNotFoundException(404, "All orders of user "  + userDTO.getEmail() + " is empty!");
         }else {
+            log.info("Get all orders of user " +  userDTO.getEmail() + " is completed  !");
             return orderConverter.orderDTOList(getAllOrder);
         }
     }

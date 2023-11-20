@@ -21,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 @RestController
 @RequestMapping("/account")
 public class AccountController {
-
     private final IAccountService accountService;
     private final ApplicationEventPublisher applicationEventPublisher;
 

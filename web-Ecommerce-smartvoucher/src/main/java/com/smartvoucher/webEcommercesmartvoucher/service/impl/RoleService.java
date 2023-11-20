@@ -9,6 +9,7 @@ import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundExcepti
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.RoleRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IRoleService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class RoleService implements IRoleService {
     private final RoleRepository roleRepository;
@@ -38,8 +40,10 @@ public class RoleService implements IRoleService {
             for (RoleEntity data : list) {
                 listRole.add(roleConverter.toRoleDTO(data));
             }
+            log.info("Get all role is completed !");
             return new ResponseObject(200, "List Roles", listRole);
         } else {
+            log.warn("List Role is empty");
             throw new ObjectEmptyException(406, "List Role is empty");
         }
     }
@@ -50,10 +54,12 @@ public class RoleService implements IRoleService {
         roleDTO = updateRoleName(roleDTO);
         Optional<RoleEntity> role = roleRepository.findByNameOrRoleCode(roleDTO.getName(), roleDTO.getRoleCode());
         if (role.isEmpty()) {
+            log.info("Add Role success!");
             return new ResponseObject(200,
                     "Add Role success!",
                     roleConverter.toRoleDTO(roleRepository.save(roleConverter.insertRole(roleDTO))) );
         } else {
+            log.warn("Role is available, add role fail");
             throw new DuplicationCodeException(400, "Role is available, add role fail");
         }
     }
@@ -66,13 +72,16 @@ public class RoleService implements IRoleService {
             if (oldRole != null) {
                 List<RoleEntity> checkRoleName = roleRepository.findByNameAndId(roleDTO.getName(), roleDTO.getId());
                 if (checkRoleName.isEmpty()) {
+                    log.info("Update Role success");
                     return new ResponseObject(200,
-                            "update Role success",
+                            "Update Role success",
                             roleConverter.toRoleDTO(roleRepository.save(roleConverter.updateRole(roleDTO, oldRole))));
                 } else {
+                    log.warn("Role is available, please fill again");
                     throw new DuplicationCodeException(400, "Role is available, please fill again");
                 }
             } else {
+                log.warn("Role not found, update Role fail");
                 throw new ObjectNotFoundException(404, "Role not found, update Role fail");
             }
     }
@@ -83,8 +92,10 @@ public class RoleService implements IRoleService {
         RoleEntity role = roleRepository.findById(id).orElse(null);
         if(role != null) {
             roleRepository.deleteById(id);
+            log.info("Delete Role Success");
             return new ResponseObject(200, "Delete Role Success", true);
         } else {
+            log.warn("Can not delete Role id : " + id);
             throw new ObjectNotFoundException(404, "Can not delete Role id : " + id);
         }
 

@@ -1,0 +1,84 @@
+2023-11-21 01:26:12.249  INFO 18328 --- [main] .s.w.WebEcommerceSmartvoucherApplication : Starting WebEcommerceSmartvoucherApplication using Java 20 on DESKTOP-DKDTGTC with PID 18328 (C:\Users\DELL\Desktop\capstone\com.smartvoucher\web-Ecommerce-smartvoucher\target\classes started by DELL in C:\Users\DELL\Desktop\capstone\com.smartvoucher)
+2023-11-21 01:26:12.253  INFO 18328 --- [main] .s.w.WebEcommerceSmartvoucherApplication : No active profile set, falling back to 1 default profile: "default"
+2023-11-21 01:26:13.268  WARN 18328 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [com.smartvoucher.webEcommercesmartvoucher.WebEcommerceSmartvoucherApplication]; nested exception is java.lang.IllegalStateException: Error processing condition on org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
+2023-11-21 01:26:13.289  INFO 18328 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-11-21 01:26:13.350 ERROR 18328 --- [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [com.smartvoucher.webEcommercesmartvoucher.WebEcommerceSmartvoucherApplication]; nested exception is java.lang.IllegalStateException: Error processing condition on org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
+	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:609) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.annotation.ConfigurationClassParser.access$800(ConfigurationClassParser.java:110) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.lambda$processGroupImports$1(ConfigurationClassParser.java:812) ~[spring-context-5.3.29.jar:5.3.29]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511) ~[na:na]
+	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.processGroupImports(ConfigurationClassParser.java:809) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorHandler.process(ConfigurationClassParser.java:780) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:192) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:331) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:247) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:311) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:112) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:748) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:564) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at com.smartvoucher.webEcommercesmartvoucher.WebEcommerceSmartvoucherApplication.main(WebEcommerceSmartvoucherApplication.java:16) ~[classes/:na]
+Caused by: java.lang.IllegalStateException: Error processing condition on org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
+	at org.springframework.boot.autoconfigure.condition.SpringBootCondition.matches(SpringBootCondition.java:60) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.context.annotation.ConditionEvaluator.shouldSkip(ConditionEvaluator.java:108) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:225) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:599) ~[spring-context-5.3.29.jar:5.3.29]
+	... 19 common frames omitted
+Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'HOST_MAIL' in value "${HOST_MAIL}"
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:180) ~[spring-core-5.3.29.jar:5.3.29]
+	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:126) ~[spring-core-5.3.29.jar:5.3.29]
+	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:239) ~[spring-core-5.3.29.jar:5.3.29]
+	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:210) ~[spring-core-5.3.29.jar:5.3.29]
+	at org.springframework.core.env.AbstractPropertyResolver.resolveNestedPlaceholders(AbstractPropertyResolver.java:230) ~[spring-core-5.3.29.jar:5.3.29]
+	at org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertyResolver.getProperty(ConfigurationPropertySourcesPropertyResolver.java:79) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertyResolver.getProperty(ConfigurationPropertySourcesPropertyResolver.java:60) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.core.env.AbstractEnvironment.getProperty(AbstractEnvironment.java:594) ~[spring-core-5.3.29.jar:5.3.29]
+	at org.springframework.boot.autoconfigure.condition.OnPropertyCondition$Spec.collectProperties(OnPropertyCondition.java:122) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.condition.OnPropertyCondition$Spec.access$000(OnPropertyCondition.java:87) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.condition.OnPropertyCondition.determineOutcome(OnPropertyCondition.java:72) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.condition.OnPropertyCondition.getMatchOutcome(OnPropertyCondition.java:59) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.condition.AbstractNestedCondition$MemberOutcomes.getConditionOutcome(AbstractNestedCondition.java:194) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.condition.AbstractNestedCondition$MemberOutcomes.<init>(AbstractNestedCondition.java:188) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.condition.AbstractNestedCondition$MemberConditions.lambda$getMatchOutcomes$0(AbstractNestedCondition.java:168) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at java.base/java.util.Map.forEach(Map.java:716) ~[na:na]
+	at java.base/java.util.Collections$UnmodifiableMap.forEach(Collections.java:1553) ~[na:na]
+	at org.springframework.boot.autoconfigure.condition.AbstractNestedCondition$MemberConditions.getMatchOutcomes(AbstractNestedCondition.java:168) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.condition.AbstractNestedCondition$MemberMatchOutcomes.<init>(AbstractNestedCondition.java:78) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.condition.AbstractNestedCondition.getMatchOutcome(AbstractNestedCondition.java:63) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.condition.SpringBootCondition.matches(SpringBootCondition.java:47) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	... 22 common frames omitted
+
+2023-11-21 01:47:16.651  INFO 19524 --- [main] .s.w.WebEcommerceSmartvoucherApplication : Starting WebEcommerceSmartvoucherApplication using Java 20 on DESKTOP-DKDTGTC with PID 19524 (C:\Users\DELL\Desktop\capstone\com.smartvoucher\web-Ecommerce-smartvoucher\target\classes started by DELL in C:\Users\DELL\Desktop\capstone\com.smartvoucher)
+2023-11-21 01:47:16.657  INFO 19524 --- [main] .s.w.WebEcommerceSmartvoucherApplication : No active profile set, falling back to 1 default profile: "default"
+2023-11-21 01:47:18.410  INFO 19524 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-21 01:47:18.609  INFO 19524 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 184 ms. Found 19 JPA repository interfaces.
+2023-11-21 01:47:19.942  INFO 19524 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8082 (http)
+2023-11-21 01:47:19.957  INFO 19524 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-11-21 01:47:19.958  INFO 19524 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.79]
+2023-11-21 01:47:20.149  INFO 19524 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-11-21 01:47:20.150  INFO 19524 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3372 ms
+2023-11-21 01:47:20.544  INFO 19524 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-21 01:47:20.617  INFO 19524 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-11-21 01:47:20.893  INFO 19524 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-11-21 01:47:21.044  INFO 19524 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-11-21 01:47:21.522  INFO 19524 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-11-21 01:47:21.545  INFO 19524 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-11-21 01:47:23.108  INFO 19524 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-11-21 01:47:23.121  INFO 19524 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-21 01:47:25.821  INFO 19524 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@2e549515, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2c34ce24, org.springframework.security.web.context.SecurityContextPersistenceFilter@3dfe2797, org.springframework.security.web.header.HeaderWriterFilter@564e9c0b, org.springframework.web.filter.CorsFilter@58f8ce0f, org.springframework.security.web.authentication.logout.LogoutFilter@e196238, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@747476f1, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@6238b10a, com.smartvoucher.webEcommercesmartvoucher.filter.JWTFilter@9301672, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@64c1a76e, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@31406eab, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@34c050a1, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4505ec36, org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter@26c494d7, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3bb6b9ab, org.springframework.security.web.session.SessionManagementFilter@21d478f3, org.springframework.security.web.access.ExceptionTranslationFilter@5367d46f, org.springframework.security.web.access.intercept.AuthorizationFilter@597a5ead]
+2023-11-21 01:47:26.465  INFO 19524 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8082 (http) with context path ''
+2023-11-21 01:47:26.484  INFO 19524 --- [main] .s.w.WebEcommerceSmartvoucherApplication : Started WebEcommerceSmartvoucherApplication in 10.535 seconds (JVM running for 11.486)
+2023-11-21 02:12:20.436  INFO 19524 --- [http-nio-8082-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-11-21 02:12:20.437  INFO 19524 --- [http-nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-11-21 02:12:20.440  INFO 19524 --- [http-nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2023-11-21 02:12:21.152  INFO 19524 --- [http-nio-8082-exec-1] c.s.w.service.impl.AccountService        : Sign-in is successfully !
+2023-11-21 02:12:22.028  WARN 19524 --- [http-nio-8082-exec-1] o.a.c.util.SessionIdGeneratorBase        : Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [401] milliseconds.
