@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/web-Ecommerce-smartvoucher/web-Ecommerce-smartvoucher.iml" filepath="$PROJECT_DIR$/web-Ecommerce-smartvoucher/web-Ecommerce-smartvoucher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/com.smartvoucher.iml" filepath="$PROJECT_DIR$/.idea/com.smartvoucher.iml" />
     </modules>
   </component>
 </project>
