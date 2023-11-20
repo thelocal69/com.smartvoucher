@@ -44,14 +44,14 @@ public class RoleUserService implements IRoleUserService {
             if(rolesUsersDTO.getKeys()!= null){
             if(roleRepository.findAllByName(rolesUsersDTO.getRoleName()).isEmpty()
                     || userRepository.findAllByMemberCode(rolesUsersDTO.getMemberCode()).isEmpty()){
-                log.warn("Role code is not exist or user code is not exist!");
+                log.info("Role code is not exist or user code is not exist!");
                 throw new ObjectNotFoundException(
                         406,"Role code is not exist or user code is not exist!"
                 );
             }
             else if(roleRepository.findAllByName(rolesUsersDTO.getRoleName()).isEmpty()
                     && userRepository.findAllByMemberCode(rolesUsersDTO.getMemberCode()).isEmpty()){
-                log.warn("Role code and user code is not exist");
+                log.info("Role code and user code is not exist");
                 throw new ObjectNotFoundException(
                         406, "Role code and user code is not exist"
                 );
@@ -78,7 +78,7 @@ public class RoleUserService implements IRoleUserService {
                 rolesUsersDTO.getIdRole(), rolesUsersDTO.getIdUser()
         );
         if (rolesUsersEntity == null){
-            log.warn("Cannot delete roleUser because id is null !");
+            log.info("Cannot delete roleUser because id is null !");
             throw new ObjectNotFoundException(406, "Cannot delete id = null !");
         }
         log.info("Delete roleUser is completed !");

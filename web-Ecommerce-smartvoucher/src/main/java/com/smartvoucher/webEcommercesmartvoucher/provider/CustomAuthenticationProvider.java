@@ -55,15 +55,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                     SecurityContextHolder.getContext().setAuthentication(token);
                     return token;
                 }else {
-                    log.warn("Username or password not exist !");
+                    log.info("Username or password not exist !");
                     throw new UserNotFoundException(404, "Username or password not exist !");
                 }
             }else {
-                log.warn("User is disabled !");
+                log.info("User is disabled !");
                 throw new VerificationTokenException(401, "User is disabled !");
             }
         }else {
-            log.warn("User not found or not exist !");
+            log.info("User not found or not exist !");
             throw new UserNotFoundException(404, "User not found or not exist !");
         }
     }

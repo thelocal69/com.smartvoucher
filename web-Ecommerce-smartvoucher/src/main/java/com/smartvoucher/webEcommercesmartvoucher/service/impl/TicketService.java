@@ -100,7 +100,7 @@ public class TicketService implements ITicketService {
             log.info("Get all ticket is completed !");
             return new ResponseObject(200, "List Ticket", listTicket );
         } else {
-            log.warn("List Ticket is empty");
+            log.info("List Ticket is empty");
             throw new ObjectNotFoundException(404, "List Ticket is empty");
         }
     }
@@ -137,13 +137,13 @@ public class TicketService implements ITicketService {
                         // save list voucher
                         listVoucher.add(ticketConverter.toTicketDTO(ticket));
                     } else {
-                        log.warn("Duplicate Serial or Order");
+                        log.info("Duplicate Serial or Order");
                         throw new DuplicationCodeException(400,
                                 "Duplicate Serial or Order");
                     }
             }
         } else {
-            log.warn("Serial, Warehouse, Category, Order, User, Store is empty, please check and fill all data");
+            log.info("Serial, Warehouse, Category, Order, User, Store is empty, please check and fill all data");
             throw new ObjectEmptyException(406,
                     "Serial, Warehouse, Category, Order, User, Store is empty, please check and fill all data");
         }
@@ -180,20 +180,20 @@ public class TicketService implements ITicketService {
                                 wareHouseConverter.saveWarehouseSerial(serialEntity, wareHouseEntity);
                                 listSerial.add(serialEntity);
                         } else {
-                            log.warn("Serial is available, add fail!");
+                            log.info("Serial is available, add fail!");
                             throw new DuplicationCodeException(400, "Serial is available, add fail!");
                         }
                     }
                 } else {
-                    log.warn("Current quantity is "+ (wareHouseEntity.getCapacity() - total) +" vouchers, pls check and try again !");
+                    log.info("Current quantity is "+ (wareHouseEntity.getCapacity() - total) +" vouchers, pls check and try again !");
                     throw new CheckCapacityException(406, "Current quantity is "+ (wareHouseEntity.getCapacity() - total) +" vouchers, pls check and try again !");
                 }
             } else {
-                log.warn("Warehouse inactive !");
+                log.info("Warehouse inactive !");
                 throw new CheckStatusWarehouseException(405, "Warehouse inactive !");
             }
         }else {
-            log.warn("Warehouse not found, pls check Warehouse and try again");
+            log.info("Warehouse not found, pls check Warehouse and try again");
             throw new ObjectNotFoundException(404, "Warehouse not found, pls check Warehouse and try again");
         }
         log.info("Generate list serial is completed !");
@@ -215,7 +215,7 @@ public class TicketService implements ITicketService {
                                     ticketDTO.getStatus(),
                                     oldTicket))));
         } else {
-            log.warn("Ticket not found, update Ticket fail");
+            log.info("Ticket not found, update Ticket fail");
             throw new ObjectNotFoundException(404, "Ticket not found, update Ticket fail");
         }
     }
@@ -230,7 +230,7 @@ public class TicketService implements ITicketService {
             log.info("Delete Ticket Success");
             return new ResponseObject(200, "Delete Ticket Success", true);
         } else {
-            log.warn("Can not delete Ticket id : " + id);
+            log.info("Can not delete Ticket id : " + id);
             throw new ObjectNotFoundException(404, "Can not delete Ticket id : " + id);
         }
     }
@@ -252,15 +252,15 @@ public class TicketService implements ITicketService {
                         log.info("Used Ticket Success !");
                         return new ResponseObject(200, "Used Ticket Success !", true);
                     } else {
-                        log.warn("Voucher used !");
+                        log.info("Voucher used !");
                         throw new UsedVoucherException(405, "Voucher used !");
                     }
                 } else {
-                    log.warn("Expired Voucher !");
+                    log.info("Expired Voucher !");
                     throw new ExpiredVoucherException(410, "Expired Voucher !");
                 }
         } else {
-            log.warn("Voucher code is wrong, pls check and try again!");
+            log.info("Voucher code is wrong, pls check and try again!");
             throw new ObjectNotFoundException(404, "Voucher code is wrong, pls check and try again!");
         }
     }
@@ -345,7 +345,7 @@ public class TicketService implements ITicketService {
             log.info("Get ticket detail of user " + userDTO.getUserName() + " is completed !");
             return ticketConverter.toTicketDTO(ticketDetail);
         }else{
-            log.warn("Ticket is not exist");
+            log.info("Ticket is not exist");
             throw new ObjectNotFoundException(404, "Ticket is not exist");
         }
     }

@@ -117,30 +117,32 @@ public class AccountService implements IAccountService {
         String accessToken = "";
         if (headerValue != null && headerValue.startsWith("Bearer ")){
             final String token = headerValue.substring(7);
-            final String data = jwtHelper.parserToken(token);
-            if (data != null && !data.isEmpty()){
-                boolean isValidTokens = tokenRepository.findByToken(token)
-                        .map(tokens ->
-                                !tokens.isExpired() && !tokens.isRevoke()
-                        ).orElse(false);
-                if (isValidTokens){
-                    RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(data, Provider.local.name());
-                    SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(
-                            rolesUsers.getIdRole().getName()
-                    );
-                    List<SimpleGrantedAuthority> roles = new ArrayList<>();
-                    roles.add(simpleGrantedAuthority);
-                    ResponseToken resource = new ResponseToken();
-                    resource.setUsername(rolesUsers.getIdUser().getEmail());
-                    resource.setRoles(roles);
-                    accessToken = jwtHelper.generateToken(gson.toJson(resource));
+            if (jwtHelper.validationToke(token)){
+                final String data = jwtHelper.parserToken(token);
+                if (data != null && !data.isEmpty()){
+                    boolean isValidTokens = tokenRepository.findByToken(token)
+                            .map(tokens ->
+                                    !tokens.isExpired() && !tokens.isRevoke()
+                            ).orElse(false);
+                    if (isValidTokens){
+                        RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(data, Provider.local.name());
+                        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(
+                                rolesUsers.getIdRole().getName()
+                        );
+                        List<SimpleGrantedAuthority> roles = new ArrayList<>();
+                        roles.add(simpleGrantedAuthority);
+                        ResponseToken resource = new ResponseToken();
+                        resource.setUsername(rolesUsers.getIdUser().getEmail());
+                        resource.setRoles(roles);
+                        accessToken = jwtHelper.generateToken(gson.toJson(resource));
+                    }else {
+                        log.info("Refresh token is expired or not exist !");
+                        throw new TokenRefreshException(403,"Refresh token is expired or not exist !", null);
+                    }
                 }else {
-                    log.warn("Refresh token is expired or not exist !");
-                    throw new TokenRefreshException(403,"Refresh token is expired or not exist !", null);
+                    log.info("Data is not exist !");
+                    throw new JwtFilterException(403, "Data is not exist !", null);
                 }
-            }else {
-                log.warn("Data is not exist !");
-                throw new JwtFilterException(403, "Data is not exist !", null);
             }
         }
         log.info("Refresh token is completed !");
@@ -173,7 +175,7 @@ public class AccountService implements IAccountService {
             log.info("Success!  Please, check your email for to complete your registration");
             return userConverter.signUp(userDTO);
         } else {
-            log.warn("Email or Phone is available! Please try again !");
+            log.info("Email or Phone is available! Please try again !");
             throw new UserAlreadyExistException(406, "Email or Phone is available! Please try again !");
         }
     }
@@ -189,7 +191,7 @@ public class AccountService implements IAccountService {
     public String verifyEmail(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
         if (verificationToken.getUser().isEnable()){
-            log.warn("This account has already been verified, please login!");
+            log.info("This account has already been verified, please login!");
             return "This account has already been verified, please, login.";
         }
         String verificationResult = validateToken(token);
@@ -197,7 +199,7 @@ public class AccountService implements IAccountService {
             log.info("Email verified successfully. Now you can login to your account");
             return "Email verified successfully. Now you can login to your account";
         }
-        log.warn("Invalid verification token !");
+        log.info("Invalid verification token !");
         return "Invalid verification token !";
     }
 
@@ -205,14 +207,14 @@ public class AccountService implements IAccountService {
     public String validateToken(String verifyToken) {
         VerificationToken token = verificationTokenRepository.findByToken(verifyToken);
         if(token == null){
-            log.warn("Invalid verification token !");
+            log.info("Invalid verification token !");
             throw new VerificationTokenException(500, "Invalid verification token !");
         }
         UserEntity userEntity = token.getUser();
         Calendar calendar = Calendar.getInstance();
         if ((token.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
             verificationTokenRepository.delete(token);
-            log.warn("Token already expired !");
+            log.info("Token already expired !");
             throw new VerificationTokenException(500, "Token already expired !");
         }
         userEntity.setEnable(true);
@@ -225,7 +227,7 @@ public class AccountService implements IAccountService {
     public String forgotPassword(String email) throws MessagingException, UnsupportedEncodingException {
         UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
         if (user == null){
-            log.warn("User not exist !");
+            log.info("User not exist !");
             throw new UserNotFoundException(404, "User not exist !");
         }
         this.emailUtil.sendResetPassword(email);
@@ -237,7 +239,7 @@ public class AccountService implements IAccountService {
     public String setPassword(ResetPasswordDTO resetPasswordDTO) {
         UserEntity user = userRepository.findByEmailAndProvider(resetPasswordDTO.getEmail(), Provider.local.name());
         if (user == null){
-            log.warn("User not exist !");
+            log.info("User not exist !");
             throw new UserNotFoundException(404, "User not exist !");
         }
         user.setPwd(this.passwordEncoder.encode(resetPasswordDTO.getNewPassword()));

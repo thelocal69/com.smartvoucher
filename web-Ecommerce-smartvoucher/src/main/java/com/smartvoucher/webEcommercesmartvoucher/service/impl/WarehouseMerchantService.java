@@ -57,14 +57,14 @@ public class WarehouseMerchantService implements IWarehouseMerchantService {
         if(warehouseMerchantDTO.getKeys()!= null){
             if(wareHouseRepository.findAllByWarehouseCode(warehouseMerchantDTO.getWarehouseCode()).isEmpty()
                     || merchantRepository.findAllByMerchantCode(warehouseMerchantDTO.getMerchantCode()).isEmpty()){
-                log.warn("WarehouseCode is not exist or MerchantCode is not exist!");
+                log.info("WarehouseCode is not exist or MerchantCode is not exist!");
                 throw new ObjectNotFoundException(
                         406,"WarehouseCode is not exist or MerchantCode is not exist!"
                 );
             }
             else if(wareHouseRepository.findAllByWarehouseCode(warehouseMerchantDTO.getWarehouseCode()).isEmpty()
                     && merchantRepository.findAllByMerchantCode(warehouseMerchantDTO.getMerchantCode()).isEmpty()){
-                log.warn("WarehouseCode and MerchantCode is not exist");
+                log.info("WarehouseCode and MerchantCode is not exist");
                 throw new ObjectNotFoundException(
                         406, "WarehouseCode and MerchantCode is not exist"
                 );
@@ -94,7 +94,7 @@ public class WarehouseMerchantService implements IWarehouseMerchantService {
         WarehouseMerchantEntity warehouseMerchantCheck = warehouseMerchantRepository.getByWarehouseCodeAndMerchantCode(warehouseMerchantDTO.getWarehouseCode(),
                 warehouseMerchantDTO.getMerchantCode());
         if(warehouseMerchantCheck == null){
-            log.warn("Cannot delete keys " + warehouseMerchantDTO.getKeys());
+            log.info("Cannot delete keys " + warehouseMerchantDTO.getKeys());
             throw new ObjectNotFoundException(
                     404, "Cannot delete keys " + warehouseMerchantDTO.getKeys()
             );

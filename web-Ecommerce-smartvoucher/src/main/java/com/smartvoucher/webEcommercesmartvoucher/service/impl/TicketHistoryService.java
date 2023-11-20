@@ -42,7 +42,7 @@ public class TicketHistoryService implements ITicketHistoryService {
             log.info("Get all ticket history is completed !");
             return new ResponseObject(200, "List Ticket History", listTicketHistory);
         } else {
-            log.warn("List TicketHistory is empty");
+            log.info("List TicketHistory is empty");
             throw new ObjectEmptyException(406, "List TicketHistory is empty");
         }
 
