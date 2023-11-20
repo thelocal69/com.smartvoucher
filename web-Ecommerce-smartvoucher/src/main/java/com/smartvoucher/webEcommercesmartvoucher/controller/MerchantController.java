@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.dto.MerchantDTO;
 import com.smartvoucher.webEcommercesmartvoucher.service.IMerchantService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/merchant")
 public class MerchantController {
@@ -27,6 +29,7 @@ public class MerchantController {
     @GetMapping("")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllMerchant() {
+        log.info("Get All merchant success !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -38,6 +41,7 @@ public class MerchantController {
 
     @PostMapping ("/api/upload")
     public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
+        log.info("Upload images is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -56,6 +60,7 @@ public class MerchantController {
                         .replace("-","")
                         .substring(0,20)
         );
+        log.info("Insert is completed !");
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,
@@ -70,6 +75,7 @@ public class MerchantController {
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> updateMerchant(@Valid @RequestBody MerchantDTO merchantDTO, @PathVariable Long id) {
         merchantDTO.setId(id);
+        log.info("Update is complete !");
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,
@@ -84,6 +90,7 @@ public class MerchantController {
     public ResponseEntity<ResponseObject> deleteMerchant(@RequestBody MerchantDTO merchantDTO, @PathVariable Long id) {
         merchantDTO.setId(id);
         this.merchantService.deleteMerchant(merchantDTO);
+        log.info("Delete is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,

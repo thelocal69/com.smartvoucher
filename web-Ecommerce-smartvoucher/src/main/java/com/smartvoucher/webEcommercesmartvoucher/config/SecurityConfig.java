@@ -96,6 +96,7 @@ public class SecurityConfig {
                     .antMatchers("/discount/**").hasRole("ADMIN")
                     .antMatchers("/store/**").hasRole("ADMIN")
                     //warehouse
+                    .antMatchers(HttpMethod.GET, "/warehouse/CategoryCode/{categoryCode}").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/all").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/{id}").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/by-label-id/{id}").permitAll()

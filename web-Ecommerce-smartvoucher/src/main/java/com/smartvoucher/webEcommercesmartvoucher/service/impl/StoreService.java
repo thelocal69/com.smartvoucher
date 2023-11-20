@@ -45,7 +45,7 @@ public class StoreService implements IStoreService {
     public List<StoreDTO> getAllStore() {
         List<StoreEntity> storeEntityList = storeRepository.findAllByStatus(1);
         if (storeEntityList.isEmpty()){
-            log.warn("List store is empty !");
+            log.info("List store is empty !");
             throw new ObjectEmptyException(
                     404, "List store is empty !"
             );
@@ -69,12 +69,12 @@ public class StoreService implements IStoreService {
         if (storeDTO.getId() != null){
             boolean exist = existStore(storeDTO);
             if (!exist){
-                log.warn("Cannot update store id: "+storeDTO.getId());
+                log.info("Cannot update store id: "+storeDTO.getId());
                 throw new ObjectNotFoundException(
                         404, "Cannot update store id: "+storeDTO.getId()
                 );
             } else if (!existStoreCode) {
-                log.warn("Merchant code or chain code is empty or not exist !");
+                log.info("Merchant code or chain code is empty or not exist !");
                 throw new ObjectEmptyException(
                         406, "Merchant code or chain code is empty or not exist !"
                 );
@@ -85,12 +85,12 @@ public class StoreService implements IStoreService {
         }else {
             List<StoreEntity> allStoreCode = storeConverter.toStoreEntityList(getAllStoreCode(storeDTO));
             if (!(allStoreCode).isEmpty()){
-                log.warn("Store code is duplicated !");
+                log.info("Store code is duplicated !");
                 throw new DuplicationCodeException(
                         400, "Store code is duplicated !"
                 );
             }else if (!existStoreCode) {
-                log.warn("Merchant code or chain code is empty or not exist !");
+                log.info("Merchant code or chain code is empty or not exist !");
                 throw new ObjectEmptyException(
                         406, "Merchant code or chain code is empty or not exist !"
                 );
@@ -110,7 +110,7 @@ public class StoreService implements IStoreService {
     public void deleteStore(StoreDTO storeDTO) {
         boolean exists = storeRepository.existsById(storeDTO.getId());
         if (!exists){
-            log.warn("Cannot delete store id: "+storeDTO.getId());
+            log.info("Cannot delete store id: "+storeDTO.getId());
             throw new ObjectNotFoundException(
                     404, "Cannot delete store id: "+storeDTO.getId()
             );

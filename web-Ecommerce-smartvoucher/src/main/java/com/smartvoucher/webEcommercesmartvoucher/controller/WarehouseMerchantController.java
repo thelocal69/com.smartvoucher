@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 import com.smartvoucher.webEcommercesmartvoucher.dto.WarehouseMerchantDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWarehouseMerchantService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("/warehouse_merchant")
 public class WarehouseMerchantController {
@@ -24,6 +26,7 @@ public class WarehouseMerchantController {
     @GetMapping("")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllWarehouseMerchant(){
+        log.info("Get All WarehouseMerchant");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -35,6 +38,7 @@ public class WarehouseMerchantController {
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertWarehouseMerchant(@Valid @RequestBody WarehouseMerchantDTO warehouseMerchantDTO){
+        log.info("Insert completed");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -50,6 +54,7 @@ public class WarehouseMerchantController {
         warehouseMerchantDTO.getIdMerchant();
         warehouseMerchantDTO.getIdWarehouse();
         this.warehouseMerchantService.delete(warehouseMerchantDTO);
+        log.info("Delete completed");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,

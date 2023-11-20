@@ -66,7 +66,7 @@ public class WareHouseService implements IWareHouseService {
                 .collect(Collectors.toList());
         
         if (wareHouseEntityList.isEmpty()) {
-            log.warn("List warehouse is empty !");
+            log.info("List warehouse is empty !");
             throw new ObjectEmptyException(
                     404, "List warehouse is empty !"
             );
@@ -88,12 +88,12 @@ public class WareHouseService implements IWareHouseService {
         WareHouseEntity wareHouse;
         if (wareHouseDTO.getId() != null) {
             if (!existWareHouse(wareHouseDTO)) {
-                log.warn("Cannot update warehouse id: " + wareHouseDTO.getId());
+                log.info("Cannot update warehouse id: " + wareHouseDTO.getId());
                 throw new ObjectNotFoundException(
                         404, "Cannot update warehouse id: " + wareHouseDTO.getId()
                 );
             } else if (!existCategoryAndDiscountAndLabel(wareHouseDTO)) {
-                log.warn("Category code or discount code or label name is empty or not exist !");
+                log.info("Category code or discount code or label name is empty or not exist !");
                 throw new ObjectEmptyException(
                         406, "Category code or discount code or label name is empty or not exist !"
                 );
@@ -108,12 +108,12 @@ public class WareHouseService implements IWareHouseService {
         } else {
             List<WareHouseEntity> allWareHouseCode = wareHouseConverter.toWareHouseEntityList(getAllWareHouseCode(wareHouseDTO));
             if (!(allWareHouseCode).isEmpty()) {
-                log.warn("Warehouse code is duplicated !");
+                log.info("Warehouse code is duplicated !");
                 throw new DuplicationCodeException(
                         400, "Warehouse code is duplicated !"
                 );
             } else if (!existCategoryAndDiscountAndLabel(wareHouseDTO)) {
-                log.warn("Category code or discount code or label name is empty or not exist !");
+                log.info("Category code or discount code or label name is empty or not exist !");
                 throw new ObjectEmptyException(
                         406, "Category code or discount code or label name is empty or not exist !"
                 );
@@ -135,7 +135,7 @@ public class WareHouseService implements IWareHouseService {
     public void deleteWareHouse(WareHouseDTO wareHouseDTO) {
         boolean exits = wareHouseRepository.existsById(wareHouseDTO.getId());
         if (!exits) {
-            log.warn("Cannot delete id: " + wareHouseDTO.getId());
+            log.info("Cannot delete id: " + wareHouseDTO.getId());
             throw new ObjectNotFoundException(
                     404, "Cannot delete id: " + wareHouseDTO.getId()
             );
@@ -170,7 +170,7 @@ public class WareHouseService implements IWareHouseService {
     public WareHouseDTO getWarehouseById(Long id) {
         WareHouseEntity wareHouseEntity = wareHouseRepository.findOneById(id);
         if (wareHouseEntity == null) {
-            log.warn("Warehouse by id "+ id + " is not found !");
+            log.info("Warehouse by id "+ id + " is not found !");
             throw new ObjectNotFoundException(
                     404, "Warehouse not found !"
             );
@@ -189,14 +189,27 @@ public class WareHouseService implements IWareHouseService {
                 .collect(Collectors.toList());
         
         if (wareHouseEntityList.isEmpty()) {
-            log.warn("List warehouse is empty !");
+            log.info("List warehouse is empty !");
             throw new ObjectEmptyException(
                     404, "List warehouse is empty !"
             );
         }
         log.info("Get all warehouse by lable is completed !");
         return wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
+        }
 
-        }return wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
+    @Override
+    @Transactional(readOnly = true)
+    public List<WareHouseDTO> getAllWarehouseByCategoryCode(WareHouseDTO wareHouseDTO) {
+        List<WareHouseEntity>wareHouseEntities = wareHouseRepository.findAllByCategoryCode(wareHouseDTO.getCategoryCode());
+        if (wareHouseEntities.isEmpty()){
+            log.info("List warehouse is empty !");
+            throw new ObjectEmptyException(
+                    404, "List warehouse is empty !"
+            );
+        }
+        log.info("Get all warehouse by category code is completed !");
+        return wareHouseConverter.toWareHouseDTOList(wareHouseEntities);
     }
 }
+

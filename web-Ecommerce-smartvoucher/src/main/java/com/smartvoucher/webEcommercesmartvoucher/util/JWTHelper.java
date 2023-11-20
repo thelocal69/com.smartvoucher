@@ -1,14 +1,17 @@
 package com.smartvoucher.webEcommercesmartvoucher.util;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JWTHelper {
 
@@ -49,5 +52,16 @@ public class JWTHelper {
                 .setSigningKey(getKeys()).build()
                 .parseClaimsJws(token).getBody()
                 .getSubject();
+    }
+
+    public boolean validationToke(String token){
+        try {
+            Jwts.parserBuilder().setSigningKey(getKeys()).build()
+                    .parseClaimsJws(token);
+            return true;
+        }catch (ExpiredJwtException exception){
+            log.info("Expired token", exception);
+        }
+        return false;
     }
 }
