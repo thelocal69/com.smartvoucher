@@ -7,7 +7,9 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
-import com.smartvoucher.webEcommercesmartvoucher.exception.*;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ChangePasswordException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.UserNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustom;
@@ -20,8 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class UserService implements IUserService {
@@ -43,9 +43,19 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public File uploadUserImages(MultipartFile fileName) {
+    @Transactional(rollbackFor = Exception.class)
+    public String uploadUserImages(MultipartFile fileName, Principal connectedUser) {
         String folderId = "1jNZ5_XieGUGKYIhNq3P2tflcKYHCwdb5";
-        return uploadUtil.uploadImages(fileName, folderId);
+        String email = connectedUser.getName();
+        UserEntity userEntity = userRepository.findByEmailAndProvider(email, Provider.local.name());
+        if (userEntity != null){
+            File file = uploadUtil.uploadImages(fileName, folderId);
+            userEntity.setAvatarUrl(file.getWebViewLink());
+            this.userRepository.save(userEntity);
+        }else {
+            throw new UserNotFoundException(404, "User not found data");
+        }
+        return "Your avatar upload successfully !";
     }
 
 
@@ -123,39 +133,16 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String editUserProfile(MultipartFile file,
-                                  String firstName,
-                                  String lastName,
-                                  String fullName,
-                                  String userName,
-                                  String phone,
-                                  String address,
+    public String editUserProfile(UserDetailDTO userDetailDTO,
                                   Principal connectedUser) {
         String email = connectedUser.getName();
-        validPhoneNUmber(phone);
         UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
         if (user != null){
-                String avatar = uploadUserImages(file).getWebViewLink();
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                user.setFullName(fullName);
-                user.setUsername(userName);
-                user.setAvatarUrl(avatar);
-                user.setPhone(phone);
-                user.setAddress(address);
-                this.userRepository.save(user);
+            UserEntity newUser = userConverter.toUserDetailEntity(userDetailDTO, user);
+            this.userRepository.save(newUser);
         }else {
             throw new UserNotFoundException(404, "User not found data");
         }
         return "Update your profile is successfully !";
-    }
-
-    public void validPhoneNUmber(String phone){
-
-        Pattern pattern = Pattern.compile("(84|0[3|5|7|8|9])+([0-9]{8})\\b");
-        Matcher matcher = pattern.matcher(phone);
-        if (!matcher.matches()){
-            throw new InputPhoneException(501, "Input un correct phone number !");
-        }
     }
 }
