@@ -14,12 +14,14 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository
 import com.smartvoucher.webEcommercesmartvoucher.repository.SerialRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.WarehouseSerialRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWarehouseSerialService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class WarehouseSerialService implements IWarehouseSerialService {
     private WarehouseSerialRepository warehouseSerialRepository;
@@ -42,6 +44,7 @@ public class WarehouseSerialService implements IWarehouseSerialService {
     @Transactional(readOnly = true)
     public List<WarehouseSerialDTO> getAllWarehouseSerial(){
         List<WarehouseSerialEntity> list = warehouseSerialRepository.getAllWarehouseSerial();
+        log.info("Get all warehouseSerial is completed !");
         return warehouseSerialConverter.toWarehouseSerialDTOList(list);
     }
 
@@ -52,12 +55,14 @@ public class WarehouseSerialService implements IWarehouseSerialService {
         if(warehouseSerialDTO.getKeys()!=null){
             if(wareHouseRepository.findAllByWarehouseCode(warehouseSerialDTO.getWarehouseCode()).size()<1
                 || serialRepository.findBySerialCode(warehouseSerialDTO.getSerialCode())==null){
+                log.warn("WarehouseCode or SerialCode is not exist!");
                 throw new ObjectNotFoundException(
                         406, "WarehouseCode or SerialCode is not exist!"
                 );
             }
             else if(wareHouseRepository.findAllByWarehouseCode(warehouseSerialDTO.getWarehouseCode()).size()<1
                 && serialRepository.findBySerialCode(warehouseSerialDTO.getSerialCode())==null){
+                log.warn("WarehouseCode and SerialCode is not exist!");
                 throw new ObjectNotFoundException(
                         406, "WarehouseCode and SerialCode is not exist!"
                 );
@@ -75,6 +80,7 @@ public class WarehouseSerialService implements IWarehouseSerialService {
             keys.setIdWarehouse(wareHouseEntity.getId());
             keys.setIdSerial(serialEntity.getId());
             warehouseSerialEntity.setKeys(keys);
+            log.info("Insert warehouseSerial is completed !");
         }
         return warehouseSerialConverter.toWarehouseSerialDTO(warehouseSerialRepository.save(warehouseSerialEntity));
     }
@@ -84,10 +90,12 @@ public class WarehouseSerialService implements IWarehouseSerialService {
         WarehouseSerialEntity warehouseSerialCheck = warehouseSerialRepository.getByWarehouseCodeAndSerialCode(warehouseSerialDTO.getWarehouseCode(),
                 warehouseSerialDTO.getSerialCode());
         if(warehouseSerialCheck==null){
+            log.warn("Cannot delete keys " + warehouseSerialDTO.getKeys());
             throw new ObjectNotFoundException(
                     404, "Cannot delete keys " + warehouseSerialDTO.getKeys()
             );
         }
+        log.info("Delete warehouseSerial is completed !");
         this.warehouseSerialRepository.deleteByKeys(warehouseSerialCheck.getKeys());
     }
 

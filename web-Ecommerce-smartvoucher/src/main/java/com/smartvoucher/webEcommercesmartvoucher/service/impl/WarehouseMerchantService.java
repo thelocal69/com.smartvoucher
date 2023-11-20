@@ -13,12 +13,14 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository
 import com.smartvoucher.webEcommercesmartvoucher.repository.RoleRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.WarehouseMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWarehouseMerchantService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class WarehouseMerchantService implements IWarehouseMerchantService {
     private final WarehouseMerchantRepository warehouseMerchantRepository;
@@ -44,6 +46,7 @@ public class WarehouseMerchantService implements IWarehouseMerchantService {
     @Transactional(readOnly = true)
     public List<WarehouseMerchantDTO> getAllWarehouseMerchant(){
         List<WarehouseMerchantEntity> list = warehouseMerchantRepository.getAllWarehouseMerchant();
+        log.info("Get all warehouseMerchant completed !");
         return warehouseMerchantConverter.toWarehouseMerchantDTOList(list);
     }
 
@@ -54,12 +57,14 @@ public class WarehouseMerchantService implements IWarehouseMerchantService {
         if(warehouseMerchantDTO.getKeys()!= null){
             if(wareHouseRepository.findAllByWarehouseCode(warehouseMerchantDTO.getWarehouseCode()).isEmpty()
                     || merchantRepository.findAllByMerchantCode(warehouseMerchantDTO.getMerchantCode()).isEmpty()){
+                log.warn("WarehouseCode is not exist or MerchantCode is not exist!");
                 throw new ObjectNotFoundException(
                         406,"WarehouseCode is not exist or MerchantCode is not exist!"
                 );
             }
             else if(wareHouseRepository.findAllByWarehouseCode(warehouseMerchantDTO.getWarehouseCode()).isEmpty()
                     && merchantRepository.findAllByMerchantCode(warehouseMerchantDTO.getMerchantCode()).isEmpty()){
+                log.warn("WarehouseCode and MerchantCode is not exist");
                 throw new ObjectNotFoundException(
                         406, "WarehouseCode and MerchantCode is not exist"
                 );
@@ -77,7 +82,7 @@ public class WarehouseMerchantService implements IWarehouseMerchantService {
             keys.setIdWarehouse(wareHouseEntity.getId());
             warehouseMerchantEntity.setKeys(keys);
             warehouseMerchantEntity.setIdRole(roleEntity);
-
+            log.info("Insert warehouseMerchant is completed !");
         }
         return warehouseMerchantConverter.toWarehouseMerchantDTO(warehouseMerchantRepository.save(warehouseMerchantEntity));
     }
@@ -89,12 +94,13 @@ public class WarehouseMerchantService implements IWarehouseMerchantService {
         WarehouseMerchantEntity warehouseMerchantCheck = warehouseMerchantRepository.getByWarehouseCodeAndMerchantCode(warehouseMerchantDTO.getWarehouseCode(),
                 warehouseMerchantDTO.getMerchantCode());
         if(warehouseMerchantCheck == null){
+            log.warn("Cannot delete keys " + warehouseMerchantDTO.getKeys());
             throw new ObjectNotFoundException(
                     404, "Cannot delete keys " + warehouseMerchantDTO.getKeys()
             );
         }
         //this.warehouseMerchantRepository.deleteById(warehouseMerchantDTO.getKeys());
-
+        log.info("Delete warehouseMerchant is completed !");
         this.warehouseMerchantRepository.deleteByKeys(warehouseMerchantCheck.getKeys());
     }
 

@@ -5,6 +5,8 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
 import com.smartvoucher.webEcommercesmartvoucher.event.SignUpCompleteEvent;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IAccountService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -21,7 +23,7 @@ import java.io.UnsupportedEncodingException;
 @RestController
 @RequestMapping("/account")
 public class AccountController {
-
+    private Logger logger = LoggerFactory.getLogger(AccountController.class);
     private final IAccountService accountService;
     private final ApplicationEventPublisher applicationEventPublisher;
 

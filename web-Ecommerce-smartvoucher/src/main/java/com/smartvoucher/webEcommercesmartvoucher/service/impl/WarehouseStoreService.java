@@ -13,12 +13,14 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IStoreRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.WarehouseStoreRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWarehouseStoreService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class WarehouseStoreService implements IWarehouseStoreService {
     private WarehouseStoreRepository warehouseStoreRepository;
@@ -48,11 +50,13 @@ public class WarehouseStoreService implements IWarehouseStoreService {
         if(warehouseStoreDTO.getKeys()!=null){
             if(wareHouseRepository.findAllByWarehouseCode(warehouseStoreDTO.getWarehouseCode()).size()<1
             || storeRepository.findAllByStoreCode(warehouseStoreDTO.getStoreCode()).size()<1){
+                log.warn("WarehouseCode or StoreCode is not exist!");
                 throw new ObjectNotFoundException(
                         404, "WarehouseCode or StoreCode is not exist!"
                 );
             }else if(wareHouseRepository.findAllByWarehouseCode(warehouseStoreDTO.getWarehouseCode()).size()<1
             && storeRepository.findAllByStoreCode(warehouseStoreDTO.getStoreCode()).size()<1){
+                log.warn("WarehouseCode and StoreCode is not exist!");
                 throw new ObjectNotFoundException(
                         404, "WarehouseCode and StoreCode is not exist!"
                 );
@@ -70,6 +74,7 @@ public class WarehouseStoreService implements IWarehouseStoreService {
             keys.setIdStore(storeEntity.getId());
             keys.setIdWarehouse(wareHouseEntity.getId());
             warehouseStoreEntity.setKeys(keys);
+            log.info("Insert warehouseStore is completed !");
         }
         return warehouseStoreConverter.toWarehouseStoreDTO(warehouseStoreRepository.save(warehouseStoreEntity));
     }
@@ -78,10 +83,12 @@ public class WarehouseStoreService implements IWarehouseStoreService {
     public void delete(WarehouseStoreDTO warehouseStoreDTO){
         WarehouseStoreEntity warehouseStoreCheck = warehouseStoreRepository.getByWarehouseCodeAndStoreCode(warehouseStoreDTO.getWarehouseCode(), warehouseStoreDTO.getStoreCode());
         if(warehouseStoreCheck==null){
+            log.warn("Cannot delete keys " + warehouseStoreDTO.getKeys());
             throw new ObjectNotFoundException(
                     404, "Cannot delete keys " + warehouseStoreDTO.getKeys()
             );
         }
+        log.info("Delete warehouseStore is completed !");
         this.warehouseStoreRepository.deleteByKeys(warehouseStoreCheck.getKeys());
     }
 
