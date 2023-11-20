@@ -34,5 +34,7 @@ public class UserDetailDTO {
     private String email;
 
     private String address;
+    
+    private Timestamp createdAt;
 
 }
