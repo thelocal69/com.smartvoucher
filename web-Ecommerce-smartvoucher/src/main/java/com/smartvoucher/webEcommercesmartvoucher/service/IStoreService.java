@@ -9,7 +9,7 @@ public interface IStoreService {
     List<StoreDTO> getAllStore();
     List<StoreDTO> getAllStoreCode(StoreDTO storeDTO);
     StoreDTO upsert(StoreDTO storeDTO);
-    void deleteStore(StoreDTO storeDTO);
+    void deleteStore(long id);
     Boolean existStore(StoreDTO storeDTO);
     Boolean existMerchantCodeAndChainCode(StoreDTO storeDTO);
 }

@@ -2,15 +2,11 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.smartvoucher.webEcommercesmartvoucher.converter.StoreConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.StoreDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.ChainEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.MerchantEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.StoreEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
-import com.smartvoucher.webEcommercesmartvoucher.repository.IChainRepository;
-import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
-import com.smartvoucher.webEcommercesmartvoucher.repository.IStoreRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.IStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,17 +21,32 @@ public class StoreService implements IStoreService {
     private final StoreConverter storeConverter;
     private final IChainRepository chainRepository;
     private final IMerchantRepository merchantRepository;
+    private final WarehouseSerialRepository warehouseSerialRepository;
+    private final SerialRepository serialRepository;
+    private final TicketRepository ticketRepository;
+    private final TicketHistoryRepository ticketHistoryRepository;
+    private final WarehouseStoreRepository warehouseStoreRepository;
 
     @Autowired
     public StoreService(final IStoreRepository storeRepository,
                         final StoreConverter storeConverter,
                         final IChainRepository chainRepository,
-                        final IMerchantRepository merchantRepository
+                        final IMerchantRepository merchantRepository,
+                        final WarehouseSerialRepository warehouseSerialRepository,
+                        final SerialRepository serialRepository,
+                        final TicketRepository ticketRepository,
+                        final TicketHistoryRepository ticketHistoryRepository,
+                        final WarehouseStoreRepository warehouseStoreRepository
     ) {
         this.storeRepository = storeRepository;
         this.storeConverter = storeConverter;
         this.chainRepository = chainRepository;
         this.merchantRepository = merchantRepository;
+        this.warehouseSerialRepository = warehouseSerialRepository;
+        this.serialRepository = serialRepository;
+        this.ticketRepository = ticketRepository;
+        this.ticketHistoryRepository = ticketHistoryRepository;
+        this.warehouseStoreRepository = warehouseStoreRepository;
     }
 
     @Override
@@ -97,14 +108,22 @@ public class StoreService implements IStoreService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteStore(StoreDTO storeDTO) {
-        boolean exists = storeRepository.existsById(storeDTO.getId());
-        if (!exists){
+    public void deleteStore(long id) {
+        StoreEntity store = storeRepository.findOneById(id);
+        if (store == null){
             throw new ObjectNotFoundException(
-                    404, "Cannot delete store id: "+storeDTO.getId()
+                    404, "Cannot delete store id: "+id
             );
         }
-        this.storeRepository.deleteById(storeDTO.getId());
+        List<TicketEntity> listTicketEntity = ticketRepository.findByIdStore(store);
+        for(TicketEntity ticketEntity : listTicketEntity){
+            ticketHistoryRepository.deleteByIdTicket(ticketEntity);
+            ticketRepository.delete(ticketEntity);
+            warehouseSerialRepository.deleteByIdSerial(ticketEntity.getIdSerial());
+            serialRepository.deleteById(ticketEntity.getIdSerial().getId());
+        }
+        warehouseStoreRepository.deleteByIdStore(store);
+        this.storeRepository.deleteById(id);
     }
 
     @Override

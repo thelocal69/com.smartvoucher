@@ -65,11 +65,11 @@ public class StoreController {
             );
     }
 
-    @DeleteMapping("/api/{id}")
+    @DeleteMapping("/api/delete-store")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject> deleteStore(@RequestBody StoreDTO storeDTO, @PathVariable Long id){
-        storeDTO.setId(id);
-        this.storeService.deleteStore(storeDTO);
+    public ResponseEntity<ResponseObject> deleteStore(@RequestParam Long id){
+//        storeDTO.setId(id);
+        this.storeService.deleteStore(id);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,

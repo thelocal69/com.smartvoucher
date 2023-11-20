@@ -210,8 +210,7 @@ public class TicketService implements ITicketService {
     public ResponseObject deleteTicket(long id) {
         TicketEntity ticket = ticketRepository.findById(id).orElse(null);
         if(ticket != null) {
-            ticketHistoryRepository.delete(
-                    ticketHistoryRepository.findBySerialCode(ticket.getIdSerial().getSerialCode()));
+            ticketHistoryRepository.deleteByIdTicket(ticket);
             ticketRepository.deleteById(id);
             return new ResponseObject(200, "Delete Ticket Success", true);
         } else {
