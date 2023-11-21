@@ -41,6 +41,19 @@ public class OrderController {
                 this.ordersService.insertOrder(orderDTO));
     }
 
+    @PostMapping("/api/insert")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<ResponseObject>insertOder1(@RequestBody OrderDTO orderDTO){
+        log.info("Add is completed !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Add is completed !",
+                        this.ordersService.insertOder(orderDTO)
+                )
+                );
+    }
+
     @DeleteMapping("/api/delete-order")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> deleteOrder(@RequestParam long id){

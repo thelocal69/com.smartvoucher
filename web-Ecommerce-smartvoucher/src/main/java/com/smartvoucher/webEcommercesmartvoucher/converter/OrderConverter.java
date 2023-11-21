@@ -1,9 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.OrderEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,11 +33,25 @@ public class OrderConverter {
             orderDTO.setOrderNo(orderEntity.getOrderNo());
             orderDTO.setStatus(orderEntity.getStatus());
             orderDTO.setQuantity(orderEntity.getQuantity());
+            orderDTO.setDiscountName(orderEntity.getIdWarehouse().getDiscountType().getName());
             orderDTO.setCreatedAt(orderEntity.getCreatedAt());
             orderDTO.setUpdatedAt(orderEntity.getUpdatedAt());
             orderDTO.setCreatedBy(orderEntity.getCreatedBy());
             orderDTO.setUpdatedBy(orderEntity.getUpdatedBy());
             orderDTO.setDiscountName(orderEntity.getIdWarehouse().getDiscountType().getName());
+        return orderDTO;
+    }
+
+    public OrderDTO toOrderDTO(OrderEntity order, StoreEntity store, DiscountTypeEntity discountType){
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setId(order.getId());
+        orderDTO.setOrderNo(order.getOrderNo());
+        orderDTO.setIdUser(order.getIdUser().getId());
+        orderDTO.setIdWarehouse(order.getIdWarehouse().getId());
+        orderDTO.setIdStore(store.getId());
+        orderDTO.setDiscountName(discountType.getName());
+        orderDTO.setQuantity(order.getQuantity());
+        orderDTO.setStatus(order.getStatus());
         return orderDTO;
     }
 
