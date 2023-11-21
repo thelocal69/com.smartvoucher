@@ -16,6 +16,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
 import com.smartvoucher.webEcommercesmartvoucher.util.EmailUtil;
 import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ import java.util.*;
 
 @Service
 @EnableScheduling
+@Slf4j
 public class TicketService implements ITicketService {
     private final TicketRepository ticketRepository;
     private final SerialRepository serialRepository;

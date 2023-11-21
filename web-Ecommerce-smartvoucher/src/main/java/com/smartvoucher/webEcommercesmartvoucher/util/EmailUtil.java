@@ -1,5 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.util;
 
+import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
+import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.mail.javamail.JavaMailSender;

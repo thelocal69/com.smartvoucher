@@ -14,8 +14,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class OrderDTO {
     private long id;
-    @NotNull(message = "Please fill all information!")
-    @NotBlank(message = "Please fill all information!")
     private String orderNo;
     @NotNull(message = "Please fill all information!")
     @Min(value = 1)

@@ -15,6 +15,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository
 import com.smartvoucher.webEcommercesmartvoucher.repository.OrderRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IOrderService;
+import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,17 +33,21 @@ public class OrderService implements IOrderService {
     private final UserRepository userRepository;
     private final IWareHouseRepository iWareHouseRepository;
     private final UserConverter userConverter;
+    private final RandomCodeHandler randomCodeHandler;
 
     @Autowired
     public OrderService(OrderRepository orderRepository
             , OrderConverter orderConverter
             , UserRepository userRepository
-            , IWareHouseRepository iWareHouseRepository, UserConverter userConverter) {
+            , IWareHouseRepository iWareHouseRepository
+            , UserConverter userConverter
+            , RandomCodeHandler randomCodeHandler) {
         this.orderRepository = orderRepository;
         this.orderConverter = orderConverter;
         this.userRepository = userRepository;
         this.iWareHouseRepository = iWareHouseRepository;
         this.userConverter = userConverter;
+        this.randomCodeHandler = randomCodeHandler;
     }
 
     @Override
@@ -65,7 +70,8 @@ public class OrderService implements IOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseObject insertOrder(OrderDTO orderDTO){
-        OrderEntity order = orderRepository.findByOrderNo(orderDTO.getOrderNo());
+        String orderNoRandom = randomCodeHandler.generateRandomChars(10);
+        OrderEntity order = orderRepository.findByOrderNo(orderNoRandom);
         if (order == null) {
                 if(existsUserAndWarehouse(orderDTO)) {
                     return new ResponseObject(200,
@@ -74,7 +80,8 @@ public class OrderService implements IOrderService {
                                     orderConverter.insertOrder(
                                             orderDTO
                                             ,createUser(orderDTO)
-                                            ,createWareHouse(orderDTO)))) );
+                                            ,createWareHouse(orderDTO)
+                                            ,orderNoRandom))) );
                 }else {
                     throw new ObjectEmptyException(406,
                             "User Or Warehouse is empty, please fill all data, add order fail");
