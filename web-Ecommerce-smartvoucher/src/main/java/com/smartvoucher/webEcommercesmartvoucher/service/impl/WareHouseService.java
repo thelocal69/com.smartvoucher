@@ -197,7 +197,6 @@ public class WareHouseService implements IWareHouseService {
         log.info("Get all warehouse by lable is completed !");
         return wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
         }
-
     @Override
     @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWarehouseByCategoryCode(WareHouseDTO wareHouseDTO) {
@@ -211,5 +210,6 @@ public class WareHouseService implements IWareHouseService {
         log.info("Get all warehouse by category code is completed !");
         return wareHouseConverter.toWareHouseDTOList(wareHouseEntities);
     }
-}
 
+
+}

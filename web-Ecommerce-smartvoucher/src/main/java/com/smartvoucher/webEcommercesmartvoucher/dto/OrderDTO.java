@@ -7,6 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,4 +31,5 @@ public class OrderDTO {
     private String updatedBy;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private String discountName;
 }
