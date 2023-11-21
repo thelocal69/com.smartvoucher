@@ -38,7 +38,7 @@ public class OrderConverter {
         return orderDTO;
     }
 
-    public OrderEntity insertOrder(OrderDTO orderDTO, UserEntity idUser, WareHouseEntity idWareHouse) {
+    public OrderEntity insertOrder(OrderDTO orderDTO, UserEntity idUser, WareHouseEntity idWareHouse, String orderNoRandom) {
         OrderEntity order = new OrderEntity();
         order.setOrderNo(orderDTO.getOrderNo());
         order.setStatus(1);
