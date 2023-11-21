@@ -4,16 +4,12 @@ import com.smartvoucher.webEcommercesmartvoucher.converter.OrderConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.OrderEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
-import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
-import com.smartvoucher.webEcommercesmartvoucher.repository.OrderRepository;
-import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.IOrderService;
 import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -34,6 +31,8 @@ public class OrderService implements IOrderService {
     private final IWareHouseRepository iWareHouseRepository;
     private final UserConverter userConverter;
     private final RandomCodeHandler randomCodeHandler;
+    private final IStoreRepository iStoreRepository;
+    private final IDiscountTypeRepository iDiscountTypeRepository;
 
     @Autowired
     public OrderService(OrderRepository orderRepository
@@ -41,13 +40,17 @@ public class OrderService implements IOrderService {
             , UserRepository userRepository
             , IWareHouseRepository iWareHouseRepository
             , UserConverter userConverter
-            , RandomCodeHandler randomCodeHandler) {
+            , RandomCodeHandler randomCodeHandler,
+                        IStoreRepository istoreRepository,
+                        IDiscountTypeRepository iDiscountTypeRepository) {
         this.orderRepository = orderRepository;
         this.orderConverter = orderConverter;
         this.userRepository = userRepository;
         this.iWareHouseRepository = iWareHouseRepository;
         this.userConverter = userConverter;
         this.randomCodeHandler = randomCodeHandler;
+        this.iStoreRepository =istoreRepository;
+        this.iDiscountTypeRepository = iDiscountTypeRepository;
     }
 
     @Override
@@ -97,6 +100,36 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public OrderDTO insertOder(OrderDTO orderDTO) {
+        String oderCode = UUID.randomUUID().toString().substring(0, 20).replace("-","");
+        OrderEntity order = orderRepository.findByOrderNo(oderCode);
+        if (order==null){
+            if (existsUserAndWarehouseAndStoreAndDiscount(orderDTO)){
+                log.info("Add Order success");
+                UserEntity user = userRepository.findOneById(orderDTO.getIdUser());
+                WareHouseEntity wareHouse = iWareHouseRepository.findOneById(orderDTO.getIdWarehouse());
+                StoreEntity store = iStoreRepository.findOneById(orderDTO.getIdStore());
+                DiscountTypeEntity discountType = iDiscountTypeRepository.findOneByName(orderDTO.getDiscountName());
+                OrderEntity order1 = new OrderEntity();
+                order1.setOrderNo(oderCode);
+                order1.setIdUser(user);
+                order1.setIdWarehouse(wareHouse);
+                order1.setStatus(orderDTO.getStatus());
+                order1.setQuantity(orderDTO.getQuantity());
+                this.orderRepository.save(order1);
+                return orderConverter.toOrderDTO(order1, store, discountType);
+            }else {
+                log.info("User Or Warehouse is empty, please fill all data, add order fail");
+                throw new ObjectEmptyException(406,
+                        "User Or Warehouse is empty, please fill all data, add order fail");
+            }
+        }else {
+            log.info("Order is available, add order fail");
+            throw new DuplicationCodeException(400, "Order is available, add order fail");
+        }
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseObject deleteOrder(long id){
         OrderEntity role = orderRepository.findById(id).orElse(null);
@@ -114,6 +147,13 @@ public class OrderService implements IOrderService {
         Optional<UserEntity> usersEntity = userRepository.findById(orderDTO.getIdUserDTO().getId());
         Optional<WareHouseEntity> wareHouseEntity = iWareHouseRepository.findById(orderDTO.getIdWarehouseDTO().getId());
         return usersEntity.isPresent() && wareHouseEntity.isPresent();
+    }
+    public boolean existsUserAndWarehouseAndStoreAndDiscount(OrderDTO orderDTO) {
+        boolean usersEntity = userRepository.existsById(orderDTO.getIdUser());
+        boolean wareHouseEntity = iWareHouseRepository.existsById(orderDTO.getIdWarehouse());
+        boolean store = iStoreRepository.existsById(orderDTO.getIdStore());
+        boolean discount = iDiscountTypeRepository.existsByName(orderDTO.getDiscountName());
+        return usersEntity && wareHouseEntity && store && discount;
     }
     public UserEntity createUser(OrderDTO orderDTO) {
         return userRepository.findById(orderDTO.getIdUserDTO().getId()).orElse(null);

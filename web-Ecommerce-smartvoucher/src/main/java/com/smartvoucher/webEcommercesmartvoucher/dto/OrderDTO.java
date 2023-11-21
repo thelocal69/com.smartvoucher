@@ -27,9 +27,12 @@ public class OrderDTO {
     private int quantity;
     @NotNull(message = "Please fill all information!")
     private WareHouseDTO idWarehouseDTO;
+    private String discountName;
+    private Long idStore;
+    private Long idUser;
+    private Long idWarehouse;
     private String createdBy;
     private String updatedBy;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private String discountName;
 }
