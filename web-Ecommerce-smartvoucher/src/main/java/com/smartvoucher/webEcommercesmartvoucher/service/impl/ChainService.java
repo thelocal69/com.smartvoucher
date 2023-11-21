@@ -44,7 +44,7 @@ public class ChainService implements IChainService {
     public List<ChainDTO> getAllChain() {
         List<ChainEntity> chainEntityList = chainRepository.findAllByStatus(1);
         if (chainEntityList.isEmpty()){
-            log.warn("List chain is empty !");
+            log.info("List chain is empty !");
             throw new ObjectEmptyException(
                     404, "List chain is empty !"
             );
@@ -61,12 +61,12 @@ public class ChainService implements IChainService {
         if (chainDTO.getId() != null){
             boolean exist = existChain(chainDTO);
             if (!exist){
-                log.warn("Cannot update chain id: "+chainDTO.getId());
+                log.info("Cannot update chain id: "+chainDTO.getId());
                 throw new ObjectNotFoundException(
                         404, "Cannot update chain id: "+chainDTO.getId()
                 );
             } else if (!existMerchantCode) {
-                log.warn("Merchant code is empty or not exist !");
+                log.info("Merchant code is empty or not exist !");
                 throw new ObjectEmptyException(
                         406, "Merchant code is empty or not exist !"
                 );
@@ -77,12 +77,12 @@ public class ChainService implements IChainService {
         }else {
             List<ChainEntity> allChainCode = chainConverter.toChainEntityList(getAllChainCode(chainDTO));
             if (!(allChainCode).isEmpty()){
-                log.warn("Chain code is duplicated !");
+                log.info("Chain code is duplicated !");
                 throw new DuplicationCodeException(
                         400, "Chain code is duplicated !"
                 );
             }else if (!existMerchantCode) {
-                log.warn("Merchant code is empty or not exist !");
+                log.info("Merchant code is empty or not exist !");
                 throw new ObjectEmptyException(
                         406, "Merchant code is empty or not exist !"
                 );
@@ -107,7 +107,7 @@ public class ChainService implements IChainService {
     public void deleteChain(ChainDTO chainDTO) {
         boolean exists = chainRepository.existsById(chainDTO.getId());
         if (!exists){
-            log.warn("Cannot delete id: "+chainDTO.getId());
+            log.info("Cannot delete id: "+chainDTO.getId());
             throw new ObjectNotFoundException(
                     404, "Cannot delete id: "+chainDTO.getId()
             );

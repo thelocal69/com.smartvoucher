@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IAccountService;
 import com.smartvoucher.webEcommercesmartvoucher.util.EmailUtil;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
+@Slf4j
 @Component
 public class SignUpCompleteEventListener implements ApplicationListener<SignUpCompleteEvent> {
     private final IAccountService accountService;
@@ -44,6 +46,7 @@ public class SignUpCompleteEventListener implements ApplicationListener<SignUpCo
         try {
             emailUtil.sendVerificationEmail(url, user);
         }catch (MessagingException | UnsupportedEncodingException e) {
+            log.info(e.getMessage());
             throw new RuntimeException(e);
         }
     }

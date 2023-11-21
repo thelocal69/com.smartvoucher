@@ -21,16 +21,17 @@ public class JpaAuditingConfig {
 
     public static class AuditorAwareImpl implements AuditorAware<String> {
 
-        public AuditorAwareImpl(){}
-
         //use nested class
         @Override
         public @NonNull Optional<String> getCurrentAuditor() {
             //tracking user
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
-            int index = username.indexOf("@");
-            String nickName = username.substring(0 ,index);
+            String nickName = username;
+            if (username.contains("@")){
+                int index = username.indexOf("@");
+                nickName = username.substring(0 ,index);
+            }
             if (!authentication.isAuthenticated()){
                 return Optional.empty();
             }

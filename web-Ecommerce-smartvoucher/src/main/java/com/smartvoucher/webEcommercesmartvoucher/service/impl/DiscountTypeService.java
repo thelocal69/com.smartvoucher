@@ -33,7 +33,7 @@ public class DiscountTypeService implements IDiscountTypeService {
     public List<DiscountTypeDTO> getAllDiscount() {
         List<DiscountTypeEntity> discountTypeEntityList = discountTypeRepository.findAllByStatus(1);
         if (discountTypeEntityList.isEmpty()){
-            log.warn("List category is empty !");
+            log.info("List category is empty !");
             throw new ObjectEmptyException(
                     404, "List category is empty !"
             );
@@ -56,7 +56,7 @@ public class DiscountTypeService implements IDiscountTypeService {
         if (discountTypeDTO.getId() != null){
             boolean exist = existDiscount(discountTypeDTO);
             if (!exist){
-                log.warn("Cannot update discount id: "+discountTypeDTO.getId());
+                log.info("Cannot update discount id: "+discountTypeDTO.getId());
                 throw new ObjectNotFoundException(
                         404, "Cannot update discount id: "+discountTypeDTO.getId()
                 );
@@ -67,7 +67,7 @@ public class DiscountTypeService implements IDiscountTypeService {
         }else {
             List<DiscountTypeEntity> discountTypeEntityList = discountTypeConverter.toDiscountTypeEntityList(getAllDiscountTypeCode(discountTypeDTO));
             if (!discountTypeEntityList.isEmpty()){
-                log.warn("Discount type code is duplicated !");
+                log.info("Discount type code is duplicated !");
                 throw new DuplicationCodeException(
                         400, "Discount type code is duplicated !"
                 );
@@ -83,7 +83,7 @@ public class DiscountTypeService implements IDiscountTypeService {
     public void deleteDiscountType(DiscountTypeDTO discountTypeDTO) {
         boolean exists = discountTypeRepository.existsById(discountTypeDTO.getId());
         if (!exists){
-            log.warn("Cannot delete id: "+discountTypeDTO.getId());
+            log.info("Cannot delete id: "+discountTypeDTO.getId());
             throw new ObjectNotFoundException(
                     404, "Cannot delete id: "+discountTypeDTO.getId()
             );

@@ -84,7 +84,15 @@ public class SecurityConfig {
                     .antMatchers("/merchant/**").hasRole("ADMIN")
                     .antMatchers("/chain/**").hasRole("ADMIN")
                     .antMatchers("/label/api/all").permitAll()
-                    .antMatchers("/user/**").hasRole("USER")
+                    //user
+                    .antMatchers(HttpMethod.GET,"/user/api/infor").hasRole("USER")
+                    .antMatchers(HttpMethod.GET,"/user/api/auth2/infor").hasRole("USER")
+                    .antMatchers(HttpMethod.PUT,"/user/api/edit").hasRole("USER")
+                    .antMatchers(HttpMethod.POST,"/user/api/upload").hasRole("USER")
+                    .antMatchers(HttpMethod.PUT,"/user/api/change_pwd").hasRole("USER")
+                    .antMatchers(HttpMethod.GET, "/user/api/{id}").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/user/api/all").hasRole("ADMIN")
+                    //user
                     //category
                     .antMatchers(HttpMethod.GET, "/category/api/all").permitAll()
                     .antMatchers("/category/**").hasRole("ADMIN")
@@ -92,10 +100,14 @@ public class SecurityConfig {
                     .antMatchers("/discount/**").hasRole("ADMIN")
                     .antMatchers("/store/**").hasRole("ADMIN")
                     //warehouse
+                    .antMatchers(HttpMethod.GET, "/warehouse/CategoryCode/{categoryCode}").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/all").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/{id}").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/by-label-id/{id}").permitAll()
-                    .antMatchers("/warehouse/**").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/warehouse/api/upload").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/warehouse/api/insert").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE,"/warehouse/api/{id}").hasRole("ADMIN")
+                    //warehouse
                     .antMatchers("/ticket_history/**").hasRole("ADMIN")
                     .antMatchers("/role_user/**").hasRole("ADMIN")
                     .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực

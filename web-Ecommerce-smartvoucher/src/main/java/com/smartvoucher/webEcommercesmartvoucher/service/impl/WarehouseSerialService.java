@@ -55,14 +55,14 @@ public class WarehouseSerialService implements IWarehouseSerialService {
         if(warehouseSerialDTO.getKeys()!=null){
             if(wareHouseRepository.findAllByWarehouseCode(warehouseSerialDTO.getWarehouseCode()).size()<1
                 || serialRepository.findBySerialCode(warehouseSerialDTO.getSerialCode())==null){
-                log.warn("WarehouseCode or SerialCode is not exist!");
+                log.info("WarehouseCode or SerialCode is not exist!");
                 throw new ObjectNotFoundException(
                         406, "WarehouseCode or SerialCode is not exist!"
                 );
             }
             else if(wareHouseRepository.findAllByWarehouseCode(warehouseSerialDTO.getWarehouseCode()).size()<1
                 && serialRepository.findBySerialCode(warehouseSerialDTO.getSerialCode())==null){
-                log.warn("WarehouseCode and SerialCode is not exist!");
+                log.info("WarehouseCode and SerialCode is not exist!");
                 throw new ObjectNotFoundException(
                         406, "WarehouseCode and SerialCode is not exist!"
                 );
@@ -90,7 +90,7 @@ public class WarehouseSerialService implements IWarehouseSerialService {
         WarehouseSerialEntity warehouseSerialCheck = warehouseSerialRepository.getByWarehouseCodeAndSerialCode(warehouseSerialDTO.getWarehouseCode(),
                 warehouseSerialDTO.getSerialCode());
         if(warehouseSerialCheck==null){
-            log.warn("Cannot delete keys " + warehouseSerialDTO.getKeys());
+            log.info("Cannot delete keys " + warehouseSerialDTO.getKeys());
             throw new ObjectNotFoundException(
                     404, "Cannot delete keys " + warehouseSerialDTO.getKeys()
             );

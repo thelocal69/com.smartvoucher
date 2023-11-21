@@ -40,7 +40,7 @@ public class CategoryService implements ICategoryService {
     public List<CategoryDTO> getAllCategory() {
         List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
         if (categoryEntityList.isEmpty()){
-            log.warn("List category is empty !");
+            log.info("List category is empty !");
             throw new ObjectEmptyException(
                     404, "List category is empty !"
             );
@@ -63,7 +63,7 @@ public class CategoryService implements ICategoryService {
         if (categoryDTO.getId() != null){
             boolean exist = exitsCategory(categoryDTO);
             if (!exist){
-                log.warn("Cannot update category id: "+categoryDTO.getId());
+                log.info("Cannot update category id: "+categoryDTO.getId());
                 throw new ObjectNotFoundException(
                         404, "Cannot update category id: "+categoryDTO.getId()
                 );
@@ -74,7 +74,7 @@ public class CategoryService implements ICategoryService {
         }else {
             List<CategoryEntity> categoryEntityList = categoryConverter.toCategoryEntityList(getAllCategoryCode(categoryDTO));
             if (!categoryEntityList.isEmpty()){
-                log.warn("Category code is duplicated !");
+                log.info("Category code is duplicated !");
                 throw new DuplicationCodeException(
                         400, "Category code is duplicated !"
                 );
@@ -90,7 +90,7 @@ public class CategoryService implements ICategoryService {
     public void deleteCategory(CategoryDTO categoryDTO) {
         boolean exists = categoryRepository.existsById(categoryDTO.getId());
         if (!exists){
-            log.warn("Cannot delete id: "+categoryDTO.getId());
+            log.info("Cannot delete id: "+categoryDTO.getId());
             throw new ObjectNotFoundException(
                     404, "Cannot delete id: "+categoryDTO.getId()
             );

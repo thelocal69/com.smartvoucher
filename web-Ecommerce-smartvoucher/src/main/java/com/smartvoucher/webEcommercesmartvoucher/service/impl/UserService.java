@@ -55,7 +55,7 @@ public class UserService implements IUserService {
             userEntity.setAvatarUrl(file.getWebViewLink());
             this.userRepository.save(userEntity);
         }else {
-            log.warn("User not found data");
+            log.info("User not found data");
             throw new UserNotFoundException(404, "User not found data");
         }
         log.info("Your avatar upload successfully !");
@@ -68,7 +68,7 @@ public class UserService implements IUserService {
     @Transactional(readOnly = true)
     public List<UserDTO> getAllUser() {
         if (userRepository.findAll().isEmpty()) {
-            log.warn("List user is empty !");
+            log.info("List user is empty !");
             throw new ObjectNotFoundException(404, "List user is empty !");
         }
         log.info("Get all user completed !");
@@ -79,7 +79,7 @@ public class UserService implements IUserService {
     @Transactional(readOnly = true)
     public UserDTO getEmail(UserDTO userDTO) {
         if (userRepository.findOneByEmail(userDTO.getEmail()) == null) {
-            log.warn("User not found or not exist !");
+            log.info("User not found or not exist !");
             throw new UserNotFoundException(404, "User not found or not exist !");
         }
         log.info("Get email of user " + userDTO.getUserName() + " is completed !");
@@ -90,7 +90,7 @@ public class UserService implements IUserService {
     @Transactional(readOnly = true)
     public UserDetailDTO getUserById(Long id) {
         if (userRepository.findOneByIdAndProvider(id, Provider.local.name()) == null) {
-            log.warn("User not found or not exist !");
+            log.info("User not found or not exist !");
             throw new UserNotFoundException(404, "User not found or not exist !");
         }
         log.info("Get user by id " + id + " is completed !");
@@ -104,11 +104,11 @@ public class UserService implements IUserService {
         UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
         //check MK user trong database
         if (!(passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPwd()))){
-            log.warn("Wrong password !");
+            log.info("Wrong password !");
             throw new ChangePasswordException(501, "Wrong password !");
         }
         if (!(changePasswordDTO.getNewPassword().equals(changePasswordDTO.getConfirmPassword()))){
-            log.warn("Password won't match !");
+            log.info("Password won't match !");
             throw new ChangePasswordException(501, "Password won't match !");
         }
         //update new password
@@ -128,7 +128,7 @@ public class UserService implements IUserService {
             log.info("Get information login user completed !");
             return userConverter.toUserDetailDTO(user);
         }else {
-            log.warn("Get information login user failed, User not found data");
+            log.info("Get information login user failed, User not found data");
             throw new UserNotFoundException(404, "User not found data");
         }
     }
@@ -143,7 +143,7 @@ public class UserService implements IUserService {
             log.info("Get information oAuth2User completed !");
             return userConverter.toUserDetailDTO(user);
         }else {
-            log.warn("Get information oAuth2User failed, User not found data");
+            log.info("Get information oAuth2User failed, User not found data");
             throw new UserNotFoundException(404, "User not found data");
         }
     }
@@ -158,7 +158,7 @@ public class UserService implements IUserService {
             UserEntity newUser = userConverter.toUserDetailEntity(userDetailDTO, user);
             this.userRepository.save(newUser);
         }else {
-            log.warn("Edit user profile failed, User not found data");
+            log.info("Edit user profile failed, User not found data");
             throw new UserNotFoundException(404, "User not found data");
         }
         log.info("Update your profile is successfully !");

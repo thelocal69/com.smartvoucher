@@ -32,7 +32,7 @@ public class LabelService implements ILabelService {
     public List<LabelDTO> getAllLabel() {
         List<LabelEntity> labelEntityList = labelRepository.findAll();
         if (labelEntityList.isEmpty()){
-            log.warn("List label is empty !");
+            log.info("List label is empty !");
             throw new ObjectNotFoundException(404, "List label is empty !");
         }
         log.info("Get all lable is completed !");

@@ -5,6 +5,7 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
 import com.smartvoucher.webEcommercesmartvoucher.event.SignUpCompleteEvent;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IAccountService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 
+@Slf4j
 @RestController
 @RequestMapping("/account")
 public class AccountController {
@@ -33,6 +35,7 @@ public class AccountController {
 
     @GetMapping("/api/verify_email")
     public ResponseEntity<ResponseObject> verifyEmail(@RequestParam("token") String token){
+        log.info("Verify email is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -45,8 +48,7 @@ public class AccountController {
     @PostMapping("/api/signin")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> signin(@RequestParam String email, @RequestParam String password) {
-//        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-//        String secretString = Encoders.BASE64.encode(key.getEncoded());
+        log.info("Sign-in is successfully !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -59,6 +61,7 @@ public class AccountController {
     @PostMapping("/api/refresh_token")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> refreshToken(HttpServletRequest request, HttpServletResponse response){
+        log.info("Refresh token is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -74,6 +77,7 @@ public class AccountController {
         signUpDTO.setRoleName("ROLE_USER");
         String applicationURL = "http://" +request.getServerName()+":"+request.getServerPort()+request.getContextPath();
         this.applicationEventPublisher.publishEvent(new SignUpCompleteEvent(this.accountService.SignUp(signUpDTO), applicationURL));
+        log.info("Success!  Please, check your email for to complete your registration");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -86,6 +90,7 @@ public class AccountController {
     @PostMapping("/api/forgot_password")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> forgotPassword(@RequestParam String email) throws MessagingException, UnsupportedEncodingException {
+        log.info("Send reset password is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -97,7 +102,8 @@ public class AccountController {
 
     @PutMapping("/api/set_password")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject> setPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<ResponseObject> setPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
+        log.info("Send reset password is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,

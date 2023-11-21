@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.smartvoucher</groupId>
 	<artifactId>web-Ecommerce-smartvoucher</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0_RELEASE</version>
 	<name>web-Ecommerce-smartvoucher</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
