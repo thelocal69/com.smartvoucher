@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 import com.smartvoucher.webEcommercesmartvoucher.dto.CategoryDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.ICategoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
@@ -24,9 +26,10 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("")
+    @GetMapping("/api/all")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getAllCategory() {
+        log.info("Get All category success !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -38,6 +41,7 @@ public class CategoryController {
 
     @PostMapping ("/api/upload")
     public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
+        log.info("Upload images is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -56,6 +60,7 @@ public class CategoryController {
                         .replace("-","")
                         .substring(0, 20)
         );
+        log.info("Insert is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,
@@ -69,6 +74,7 @@ public class CategoryController {
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> updateCategory(@Valid @RequestBody CategoryDTO categoryDTO, @PathVariable Long id){
         categoryDTO.setId(id);
+        log.info("Update is completed !");
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(
                             200,
@@ -83,6 +89,7 @@ public class CategoryController {
     public ResponseEntity<ResponseObject> deleteCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable Long id) {
         categoryDTO.setId(id);
         this.categoryService.deleteCategory(categoryDTO);
+        log.info("Delete is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,

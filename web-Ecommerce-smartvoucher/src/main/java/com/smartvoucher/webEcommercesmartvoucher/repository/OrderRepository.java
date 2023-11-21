@@ -20,4 +20,9 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
             "JOIN users u ON o.idUser.id = u.id " +
             "WHERE u.id = ?1 ")
     List<OrderEntity> findByIdUser(long id);
+
+    @Query("SELECT o FROM orders o " +
+            "JOIN users u ON o.idUser.id = u.id " +
+            "WHERE u.email = ?1 ")
+    List<OrderEntity> findByEmail(String email);
 }

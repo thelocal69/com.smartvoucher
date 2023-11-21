@@ -20,15 +20,22 @@ public class JpaAuditingConfig {
     }
 
     public static class AuditorAwareImpl implements AuditorAware<String> {
+
         //use nested class
         @Override
         public @NonNull Optional<String> getCurrentAuditor() {
             //tracking user
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated()){
+            String username = authentication.getName();
+            String nickName = username;
+            if (username.contains("@")){
+                int index = username.indexOf("@");
+                nickName = username.substring(0 ,index);
+            }
+            if (!authentication.isAuthenticated()){
                 return Optional.empty();
             }
-            return Optional.of(authentication.getName().substring(0, 10));
+            return Optional.of(nickName);
         }
     }
 }

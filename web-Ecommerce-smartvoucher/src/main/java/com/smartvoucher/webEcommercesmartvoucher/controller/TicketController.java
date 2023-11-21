@@ -3,28 +3,21 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
-import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
-import com.smartvoucher.webEcommercesmartvoucher.service.impl.TicketService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
+@Slf4j
 @RestController
 @RequestMapping("/ticket")
 public class TicketController {
@@ -76,6 +69,7 @@ public class TicketController {
 
     @PostMapping("/api/upload")
     public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
+        log.info("Upload images is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
@@ -86,6 +80,7 @@ public class TicketController {
     }
     @GetMapping("/api/ticket_detail")
     public ResponseEntity<ResponseObject> getTicketDetail(@RequestBody @Valid UserDTO userDTO){
+        log.info("Ticket detail of user " + userDTO.getUserName() + " is below:");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,

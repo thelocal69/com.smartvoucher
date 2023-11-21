@@ -11,10 +11,12 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IRoleUserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.RoleRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IRoleUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class RoleUserService implements IRoleUserService {
 
@@ -42,12 +44,14 @@ public class RoleUserService implements IRoleUserService {
             if(rolesUsersDTO.getKeys()!= null){
             if(roleRepository.findAllByName(rolesUsersDTO.getRoleName()).isEmpty()
                     || userRepository.findAllByMemberCode(rolesUsersDTO.getMemberCode()).isEmpty()){
+                log.info("Role code is not exist or user code is not exist!");
                 throw new ObjectNotFoundException(
                         406,"Role code is not exist or user code is not exist!"
                 );
             }
             else if(roleRepository.findAllByName(rolesUsersDTO.getRoleName()).isEmpty()
                     && userRepository.findAllByMemberCode(rolesUsersDTO.getMemberCode()).isEmpty()){
+                log.info("Role code and user code is not exist");
                 throw new ObjectNotFoundException(
                         406, "Role code and user code is not exist"
                 );
@@ -62,6 +66,7 @@ public class RoleUserService implements IRoleUserService {
                 keys.setIdRole(role.getId());
                 keys.setIdUser(user.getId());
                 rolesUsersEntity.setRoleUserKeys(keys);
+                log.info("Insert roleUser completed !");
         }
         return roleUsersConverter.toRoleUserDTO(roleUserRepository.save(rolesUsersEntity));
     }
@@ -73,8 +78,10 @@ public class RoleUserService implements IRoleUserService {
                 rolesUsersDTO.getIdRole(), rolesUsersDTO.getIdUser()
         );
         if (rolesUsersEntity == null){
+            log.info("Cannot delete roleUser because id is null !");
             throw new ObjectNotFoundException(406, "Cannot delete id = null !");
         }
+        log.info("Delete roleUser is completed !");
         this.roleUserRepository.deleteByRoleUserKeys(rolesUsersEntity.getRoleUserKeys());
     }
 }

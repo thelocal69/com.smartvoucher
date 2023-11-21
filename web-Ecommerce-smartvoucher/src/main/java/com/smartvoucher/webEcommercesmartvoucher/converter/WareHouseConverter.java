@@ -25,12 +25,15 @@ public class WareHouseConverter {
     public WareHouseDTO toWareHouseDTO(WareHouseEntity wareHouseEntity){
         return WareHouseDTO.builder()
                 .id(wareHouseEntity.getId())
+                .idCategory(wareHouseEntity.getCategory().getId())
+                .idDiscountType(wareHouseEntity.getDiscountType().getId())
                 .createdBy(wareHouseEntity.getCreatedBy())
                 .createdAt(wareHouseEntity.getCreatedAt())
                 .updatedBy(wareHouseEntity.getUpdateBy())
                 .updatedAt(wareHouseEntity.getUpdateAt())
                 .warehouseCode(wareHouseEntity.getWarehouseCode())
                 .name(wareHouseEntity.getName())
+                .price(wareHouseEntity.getPrice())
                 .description(wareHouseEntity.getDescription())
                 .availableFrom(wareHouseEntity.getAvailableFrom())
                 .availableTo(wareHouseEntity.getAvailableTo())
@@ -65,6 +68,7 @@ public class WareHouseConverter {
                 .description(wareHouseDTO.getDescription())
                 .maxDiscountAmount(wareHouseDTO.getMaxDiscountAmount())
                 .name(wareHouseDTO.getName())
+                .price(wareHouseDTO.getPrice())
                 .showOnWeb(wareHouseDTO.getShowOnWeb())
                 .termOfUse(wareHouseDTO.getTermOfUse())
                 .thumbnailUrl(wareHouseDTO.getThumbnailUrl())
@@ -80,6 +84,7 @@ public class WareHouseConverter {
         wareHouseEntity.setDiscountAmount(wareHouseDTO.getDiscountAmount());
         wareHouseEntity.setMaxDiscountAmount(wareHouseDTO.getMaxDiscountAmount());
         wareHouseEntity.setName(wareHouseDTO.getName());
+        wareHouseEntity.setPrice(wareHouseDTO.getPrice());
         wareHouseEntity.setTermOfUse(wareHouseDTO.getTermOfUse());
         wareHouseEntity.setDescription(wareHouseDTO.getDescription());
         wareHouseEntity.setStatus(wareHouseDTO.getStatus());

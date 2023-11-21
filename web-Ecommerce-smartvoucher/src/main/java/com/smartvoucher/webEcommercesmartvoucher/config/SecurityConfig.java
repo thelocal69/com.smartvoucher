@@ -5,7 +5,6 @@ import com.smartvoucher.webEcommercesmartvoucher.filter.JWTFilter;
 import com.smartvoucher.webEcommercesmartvoucher.provider.CustomAuthenticationProvider;
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustomService;
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.handler.OAuth2FailureHandlerCustom;
-import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.handler.OAuth2SuccessHandlerCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +34,6 @@ public class SecurityConfig {
     private final LogoutHandler logoutHandler;
     private final UserDetailsService userDetailsService;
     private final OAuth2UserDetailCustomService oAuth2UserDetailCustomService;
-    private final OAuth2SuccessHandlerCustom oAuth2SuccessHandlerCustom;
     private final OAuth2FailureHandlerCustom oAuth2FailureHandlerCustom;
 
     @Autowired
@@ -44,7 +42,6 @@ public class SecurityConfig {
                           final LogoutHandler logoutHandler,
                           final UserDetailsService userDetailsService,
                           final OAuth2UserDetailCustomService oAuth2UserDetailCustomService,
-                          final OAuth2SuccessHandlerCustom oAuth2SuccessHandlerCustom,
                           final OAuth2FailureHandlerCustom oAuth2FailureHandlerCustom
     ) {
         this.customAuthenticationProvider = customAuthenticationProvider;
@@ -52,7 +49,6 @@ public class SecurityConfig {
         this.logoutHandler = logoutHandler;
         this.userDetailsService = userDetailsService;
         this.oAuth2UserDetailCustomService = oAuth2UserDetailCustomService;
-        this.oAuth2SuccessHandlerCustom = oAuth2SuccessHandlerCustom;
         this.oAuth2FailureHandlerCustom = oAuth2FailureHandlerCustom;
     }
 
@@ -84,36 +80,42 @@ public class SecurityConfig {
                     .authorizeHttpRequests()
                     .antMatchers("/account/**").permitAll()
                     .antMatchers("**/upload").permitAll()
-                    .antMatchers("/oauth/**").permitAll()
+                    .antMatchers("/oauth2/**").permitAll()
                     .antMatchers("/merchant/**").hasRole("ADMIN")
                     .antMatchers("/chain/**").hasRole("ADMIN")
+                    .antMatchers("/label/api/all").permitAll()
+                    //user
+                    .antMatchers(HttpMethod.GET,"/user/api/infor").hasRole("USER")
+                    .antMatchers(HttpMethod.GET,"/user/api/auth2/infor").hasRole("USER")
+                    .antMatchers(HttpMethod.PUT,"/user/api/edit").hasRole("USER")
+                    .antMatchers(HttpMethod.POST,"/user/api/upload").hasRole("USER")
+                    .antMatchers(HttpMethod.PUT,"/user/api/change_pwd").hasRole("USER")
+                    .antMatchers(HttpMethod.GET, "/user/api/{id}").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/user/api/all").hasRole("ADMIN")
+                    //user
+                    //category
+                    .antMatchers(HttpMethod.GET, "/category/api/all").permitAll()
                     .antMatchers("/category/**").hasRole("ADMIN")
+                    //category
                     .antMatchers("/discount/**").hasRole("ADMIN")
                     .antMatchers("/store/**").hasRole("ADMIN")
-                    .antMatchers("/warehouse/**").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST, "/user/api/upload").hasRole("USER")
-                    .antMatchers(HttpMethod.GET,"/serial/api/list-serial").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST,"/serial/api/add-serial").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT,"/serial/api/update-serial").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE,"/serial/api/delete-serial").hasRole("ADMIN")
-                    .antMatchers("/role/**").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET,"/order/api/list-order").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST,"/order/api/add-order").hasAnyRole("ADMIN", "USER")
-                    .antMatchers(HttpMethod.DELETE,"/order/api/delete-order").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET,"/order/api/get_all_order").hasRole("USER")
-                    .antMatchers(HttpMethod.GET,"/ticket/api/list-ticket").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST,"/ticket/api/buy-ticket").hasAnyRole("ADMIN", "USER")
-                    .antMatchers(HttpMethod.PUT, "/ticket/api/update-ticket").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE,"/ticket/api/delete-ticket").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET,"/ticket/api/ticket_detail").hasRole("USER")
+                    //warehouse
+                    .antMatchers(HttpMethod.GET, "/warehouse/CategoryCode/{categoryCode}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/warehouse/api/all").permitAll()
+                    .antMatchers(HttpMethod.GET, "/warehouse/api/{id}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/warehouse/by-label-id/{id}").permitAll()
+                    .antMatchers(HttpMethod.POST,"/warehouse/api/upload").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/warehouse/api/insert").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE,"/warehouse/api/{id}").hasRole("ADMIN")
+                    //warehouse
                     .antMatchers("/ticket_history/**").hasRole("ADMIN")
-                    .antMatchers("/role_user").hasRole("ADMIN")
+                    .antMatchers("/role_user/**").hasRole("ADMIN")
                     .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
                     .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                     .and().oauth2Login()
-                    .defaultSuccessUrl("/user", true)
+                    .defaultSuccessUrl("/user/api/auth2/infor", true)
                     .userInfoEndpoint().userService(oAuth2UserDetailCustomService)
-                    .and().successHandler(oAuth2SuccessHandlerCustom).failureHandler(oAuth2FailureHandlerCustom)
+                    .and().failureHandler(oAuth2FailureHandlerCustom)
                     .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                     .logout()
                     .deleteCookies("JSESSIONID")

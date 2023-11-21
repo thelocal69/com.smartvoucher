@@ -13,6 +13,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class WareHouseDTO{
     private Long id;
+    private Long idCategory;
+    private Long idDiscountType;
     private String createdBy;
     private Timestamp createdAt;
     private String updatedBy;
@@ -28,6 +30,8 @@ public class WareHouseDTO{
     private String bannerUrl;
     @NotBlank(message = "Please fill all data !")
     private String thumbnailUrl;
+    @NotNull
+    private Double price;
     @NotNull
     private Double discountAmount;
     @NotNull

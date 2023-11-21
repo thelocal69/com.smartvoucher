@@ -25,6 +25,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.token.IVerificationT
 import com.smartvoucher.webEcommercesmartvoucher.service.IAccountService;
 import com.smartvoucher.webEcommercesmartvoucher.util.EmailUtil;
 import com.smartvoucher.webEcommercesmartvoucher.util.JWTHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,7 +43,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
+@Slf4j
 @Service
 public class AccountService implements IAccountService {
     private final AuthenticationManager authenticationManager;
@@ -103,6 +104,7 @@ public class AccountService implements IAccountService {
         UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
         revokeAllUserTokens(user);
         saveUserToken(user, refreshToken);
+        log.info("Sign-in is successfully !");
         return ResponseAuthentication.builder()
                 .accessToken(token)
                 .refreshToken(refreshToken)
@@ -115,30 +117,35 @@ public class AccountService implements IAccountService {
         String accessToken = "";
         if (headerValue != null && headerValue.startsWith("Bearer ")){
             final String token = headerValue.substring(7);
-            final String data = jwtHelper.parserToken(token);
-            if (data != null && !data.isEmpty()){
-                boolean isValidTokens = tokenRepository.findByToken(token)
-                        .map(tokens ->
-                                !tokens.isExpired() && !tokens.isRevoke()
-                        ).orElse(false);
-                if (isValidTokens){
-                    RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(data, Provider.local.name());
-                    SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(
-                            rolesUsers.getIdRole().getName()
-                    );
-                    List<SimpleGrantedAuthority> roles = new ArrayList<>();
-                    roles.add(simpleGrantedAuthority);
-                    ResponseToken resource = new ResponseToken();
-                    resource.setUsername(rolesUsers.getIdUser().getEmail());
-                    resource.setRoles(roles);
-                    accessToken = jwtHelper.generateToken(gson.toJson(resource));
+            if (jwtHelper.validationToke(token)){
+                final String data = jwtHelper.parserToken(token);
+                if (data != null && !data.isEmpty()){
+                    boolean isValidTokens = tokenRepository.findByToken(token)
+                            .map(tokens ->
+                                    !tokens.isExpired() && !tokens.isRevoke()
+                            ).orElse(false);
+                    if (isValidTokens){
+                        RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(data, Provider.local.name());
+                        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(
+                                rolesUsers.getIdRole().getName()
+                        );
+                        List<SimpleGrantedAuthority> roles = new ArrayList<>();
+                        roles.add(simpleGrantedAuthority);
+                        ResponseToken resource = new ResponseToken();
+                        resource.setUsername(rolesUsers.getIdUser().getEmail());
+                        resource.setRoles(roles);
+                        accessToken = jwtHelper.generateToken(gson.toJson(resource));
+                    }else {
+                        log.info("Refresh token is expired or not exist !");
+                        throw new TokenRefreshException(403,"Refresh token is expired or not exist !", null);
+                    }
                 }else {
-                    throw new TokenRefreshException(403,"Refresh token is expired or not exist !", null);
+                    log.info("Data is not exist !");
+                    throw new JwtFilterException(403, "Data is not exist !", null);
                 }
-            }else {
-                throw new JwtFilterException(403, "Data is not exist !", null);
             }
         }
+        log.info("Refresh token is completed !");
         return RefreshTokenDTO.builder()
                 .accessToken(accessToken)
                 .build();
@@ -165,9 +172,11 @@ public class AccountService implements IAccountService {
             this.roleUserRepository.save(
                     roleUsersConverter.toRoleUserEntity(rolesUsersDTO)
             );
+            log.info("Success!  Please, check your email for to complete your registration");
             return userConverter.signUp(userDTO);
         } else {
-            throw new UserAlreadyExistException(406, "Email or Phone is available! please try again !");
+            log.info("Email or Phone is available! Please try again !");
+            throw new UserAlreadyExistException(406, "Email or Phone is available! Please try again !");
         }
     }
 
@@ -182,12 +191,15 @@ public class AccountService implements IAccountService {
     public String verifyEmail(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
         if (verificationToken.getUser().isEnable()){
+            log.info("This account has already been verified, please login!");
             return "This account has already been verified, please, login.";
         }
         String verificationResult = validateToken(token);
         if (verificationResult.equalsIgnoreCase("Valid")){
+            log.info("Email verified successfully. Now you can login to your account");
             return "Email verified successfully. Now you can login to your account";
         }
+        log.info("Invalid verification token !");
         return "Invalid verification token !";
     }
 
@@ -195,16 +207,19 @@ public class AccountService implements IAccountService {
     public String validateToken(String verifyToken) {
         VerificationToken token = verificationTokenRepository.findByToken(verifyToken);
         if(token == null){
+            log.info("Invalid verification token !");
             throw new VerificationTokenException(500, "Invalid verification token !");
         }
         UserEntity userEntity = token.getUser();
         Calendar calendar = Calendar.getInstance();
         if ((token.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
             verificationTokenRepository.delete(token);
+            log.info("Token already expired !");
             throw new VerificationTokenException(500, "Token already expired !");
         }
         userEntity.setEnable(true);
         userRepository.save(userEntity);
+        log.info("Token valid");
         return "Valid";
     }
 
@@ -212,20 +227,24 @@ public class AccountService implements IAccountService {
     public String forgotPassword(String email) throws MessagingException, UnsupportedEncodingException {
         UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
         if (user == null){
+            log.info("User not exist !");
             throw new UserNotFoundException(404, "User not exist !");
         }
         this.emailUtil.sendResetPassword(email);
-        return "Check your email to reset password if account is exist !";
+        log.info("Check your email to reset password if account was registered !");
+        return "Check your email to reset password if account was register !";
     }
 
     @Override
     public String setPassword(ResetPasswordDTO resetPasswordDTO) {
-        UserEntity user = userRepository.findOneByEmail(resetPasswordDTO.getEmail());
+        UserEntity user = userRepository.findByEmailAndProvider(resetPasswordDTO.getEmail(), Provider.local.name());
         if (user == null){
+            log.info("User not exist !");
             throw new UserNotFoundException(404, "User not exist !");
         }
         user.setPwd(this.passwordEncoder.encode(resetPasswordDTO.getNewPassword()));
         this.userRepository.save(user);
+        log.info("Set new password successfully !");
         return "Set new password successfully !";
     }
 

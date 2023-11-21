@@ -6,6 +6,7 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
+import com.smartvoucher.webEcommercesmartvoucher.util.StringsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -18,11 +19,14 @@ public class  UserConverter {
 
     private final RandomCodeHandler randomCodeHandler;
     private final PasswordEncoder passwordEncoder;
+    private final StringsUtil stringsUtil;
     @Autowired
     public UserConverter( RandomCodeHandler randomCodeHandler,
-                          PasswordEncoder passwordEncoder){
+                          PasswordEncoder passwordEncoder,
+                          final StringsUtil stringsUtil){
         this.randomCodeHandler = randomCodeHandler;
         this.passwordEncoder = passwordEncoder;
+        this.stringsUtil = stringsUtil;
     }
 
     public UserDTO toUserDTO(UserEntity userEntity) {
@@ -72,11 +76,14 @@ public class  UserConverter {
         UserEntity userEntity = new UserEntity();
         userEntity.setMemberCode(randomCodeHandler.generateRandomChars(10));
         userEntity.setPwd(passwordEncoder.encode(signUpDTO.getPassword()));
+        userEntity.setAvatarUrl("https://drive.google.com/file/d/1rdcr4ukMLFU2CNmLyrCIixanHu4y31JY/view?usp=drive_link");
         userEntity.setPhone(signUpDTO.getPhone());
         userEntity.setEmail(signUpDTO.getEmail());
+        userEntity.setUsername(stringsUtil.getUserNameFormDomain(signUpDTO.getEmail()));
         userEntity.setEnable(false);
         userEntity.setStatus(1);
         userEntity.setProvider(Provider.local.name());
+        userEntity.setCreatedAt(signUpDTO.getCreatedAt());
         return userEntity;
     }
 
@@ -89,6 +96,7 @@ public class  UserConverter {
     }
     public UserDetailDTO toUserDetailDTO (UserEntity userEntity) {
         UserDetailDTO userDetailDTO = new UserDetailDTO();
+        userDetailDTO.setId(userEntity.getId());
         userDetailDTO.setAvatarUrl(userEntity.getAvatarUrl());
         userDetailDTO.setFirstName(userEntity.getFirstName());
         userDetailDTO.setLastName(userEntity.getLastName());
@@ -96,7 +104,18 @@ public class  UserConverter {
         userDetailDTO.setPhone(userEntity.getPhone());
         userDetailDTO.setEmail(userEntity.getEmail());
         userDetailDTO.setAddress(userEntity.getAddress());
+        userDetailDTO.setCreatedAt(userEntity.getCreatedAt());
         return userDetailDTO;
+    }
+
+    public UserEntity toUserDetailEntity (UserDetailDTO userDetailDTO, UserEntity userEntity) {
+        userEntity.setFirstName(userDetailDTO.getFirstName());
+        userEntity.setLastName(userDetailDTO.getLastName());
+        userEntity.setFullName(userDetailDTO.getFullName());
+        userEntity.setUsername(userDetailDTO.getUserName());
+        userEntity.setPhone(userDetailDTO.getPhone());
+        userEntity.setAddress(userDetailDTO.getAddress());
+        return userEntity;
     }
 
 }

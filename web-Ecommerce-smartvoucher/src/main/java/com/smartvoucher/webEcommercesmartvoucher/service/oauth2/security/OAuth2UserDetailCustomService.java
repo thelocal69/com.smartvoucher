@@ -14,6 +14,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.RoleRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.OAuth2UserDetail;
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.OAuth2UserDetailFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,6 +28,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class OAuth2UserDetailCustomService extends DefaultOAuth2UserService {
 
@@ -62,6 +64,7 @@ public class OAuth2UserDetailCustomService extends DefaultOAuth2UserService {
                 userRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes()
         );
         if (ObjectUtils.isEmpty(oAuth2UserDetail)){
+            log.info("Cannot found oauth 2.0 from user properties !");
             throw new OAuth2LoginException(400, "Cannot found oauth 2.0 from user properties !");
         }
         UserEntity user = userRepository.findByEmailAndProvider(
@@ -71,6 +74,7 @@ public class OAuth2UserDetailCustomService extends DefaultOAuth2UserService {
         if (user != null){
             if (!user.getProvider().equals(userRequest.getClientRegistration().getRegistrationId())
             ){
+                log.info("Invalid site sign-in with "+ user.getProvider());
                 throw new OAuth2LoginException(400, "Invalid site sign-in with "+ user.getProvider());
             }
         }else {
