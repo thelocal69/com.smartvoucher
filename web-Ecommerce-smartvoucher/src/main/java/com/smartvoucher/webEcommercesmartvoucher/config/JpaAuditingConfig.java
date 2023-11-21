@@ -21,8 +21,6 @@ public class JpaAuditingConfig {
 
     public static class AuditorAwareImpl implements AuditorAware<String> {
 
-        public AuditorAwareImpl(){}
-
         //use nested class
         @Override
         public @NonNull Optional<String> getCurrentAuditor() {
@@ -34,7 +32,7 @@ public class JpaAuditingConfig {
                 int index = username.indexOf("@");
                 nickName = username.substring(0 ,index);
             }
-            if (authentication.getName() == null || !authentication.isAuthenticated()){
+            if (!authentication.isAuthenticated()){
                 return Optional.empty();
             }
             return Optional.of(nickName);
