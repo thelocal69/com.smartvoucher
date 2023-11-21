@@ -124,8 +124,8 @@ public class WareHouseController {
     }
 
     @GetMapping("/CategoryCode/{categoryCode}")
-    public ResponseEntity<ResponseObject>getWarhouseByCategoryCode(@RequestBody WareHouseDTO wareHouseDTO,
-                                                                   @PathVariable String categoryCode){
+    public ResponseEntity<ResponseObject> getWarehouseByCategoryCode(@RequestBody WareHouseDTO wareHouseDTO,
+                                                                     @PathVariable String categoryCode){
         wareHouseDTO.setCategoryCode(categoryCode);
         log.info("Get all Warehouse by category code is successfully !");
         return ResponseEntity.status(HttpStatus.OK).body(

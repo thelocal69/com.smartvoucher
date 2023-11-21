@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDetailDTO {
-
+    private long id;
     private String avatarUrl;
 
     private String firstName;

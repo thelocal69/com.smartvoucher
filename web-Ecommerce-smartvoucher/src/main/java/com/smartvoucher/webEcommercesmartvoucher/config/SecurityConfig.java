@@ -85,9 +85,13 @@ public class SecurityConfig {
                     .antMatchers("/chain/**").hasRole("ADMIN")
                     .antMatchers("/label/api/all").permitAll()
                     //user
+                    .antMatchers(HttpMethod.GET,"/user/api/infor").hasRole("USER")
+                    .antMatchers(HttpMethod.GET,"/user/api/auth2/infor").hasRole("USER")
+                    .antMatchers(HttpMethod.PUT,"/user/api/edit").hasRole("USER")
+                    .antMatchers(HttpMethod.POST,"/user/api/upload").hasRole("USER")
+                    .antMatchers(HttpMethod.PUT,"/user/api/change_pwd").hasRole("USER")
                     .antMatchers(HttpMethod.GET, "/user/api/{id}").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/user/api/all").hasRole("ADMIN")
-                    .antMatchers("/user/**").hasRole("USER")
                     //user
                     //category
                     .antMatchers(HttpMethod.GET, "/category/api/all").permitAll()
