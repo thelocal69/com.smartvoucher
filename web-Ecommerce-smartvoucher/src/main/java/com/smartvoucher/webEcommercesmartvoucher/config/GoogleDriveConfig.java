@@ -11,10 +11,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.security.GeneralSecurityException;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -48,14 +47,15 @@ public class GoogleDriveConfig {
                 .setJsonFactory(jacksonFactory)
                 .setServiceAccountId("com-smartvoucher@smartvoucher-403009.iam.gserviceaccount.com")
                 .setServiceAccountScopes(stringCollection)
-                .setServiceAccountPrivateKeyFromP12File(new File(getGooglePrivateKeyFile()))
+                .setServiceAccountPrivateKey(googlePrivateKey())
                 .build();
     }
 
-    public String getGooglePrivateKeyFile(){
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        URL resource = loader.getResource("keys/smartvoucher-403009-ea2ab27e93c2.p12");
-        assert resource != null;
-        return resource.getFile();
+    public PrivateKey googlePrivateKey() throws KeyStoreException,
+            CertificateException, IOException, NoSuchAlgorithmException, UnrecoverableKeyException {
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        keyStore.load(this.getClass().getClassLoader().getResourceAsStream("smartvoucher-403009-ea2ab27e93c2.p12")
+                , "notasecret".toCharArray());
+        return (PrivateKey) keyStore.getKey("privatekey", "notasecret".toCharArray());
     }
 }
