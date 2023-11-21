@@ -104,7 +104,10 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.GET, "/warehouse/api/all").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/{id}").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/by-label-id/{id}").permitAll()
-                    .antMatchers("/warehouse/**").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/warehouse/api/upload").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/warehouse/api/insert").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE,"/warehouse/api/{id}").hasRole("ADMIN")
+                    //warehouse
                     .antMatchers("/ticket_history/**").hasRole("ADMIN")
                     .antMatchers("/role_user/**").hasRole("ADMIN")
                     .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
