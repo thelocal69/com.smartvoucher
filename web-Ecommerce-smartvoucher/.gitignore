@@ -23,6 +23,9 @@ writelog/logger.log
 ### IntelliJ IDEA ###
 .idea
 
+###loggin###
+projectgitcom.smartvoucherweb-Ecommerce-smartvoucherloggingloggingInfor
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
