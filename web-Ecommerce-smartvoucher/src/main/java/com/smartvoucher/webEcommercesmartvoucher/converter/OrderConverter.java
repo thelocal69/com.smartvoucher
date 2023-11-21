@@ -14,11 +14,15 @@ public class OrderConverter {
 
     private final WareHouseConverter wareHouseConverter;
     private final UserConverter userConverter;
+    private final WarehouseStoreConverter warehouseStoreConverter;
+    private final StoreConverter storeConverter;
 
     @Autowired
-    public OrderConverter(WareHouseConverter wareHouseConverter, UserConverter userConverter) {
+    public OrderConverter(WareHouseConverter wareHouseConverter, UserConverter userConverter, WarehouseStoreConverter warehouseStoreConverter, StoreConverter storeConverter) {
         this.wareHouseConverter = wareHouseConverter;
         this.userConverter = userConverter;
+        this.warehouseStoreConverter = warehouseStoreConverter;
+        this.storeConverter = storeConverter;
     }
 
     public OrderDTO toOrdersDTO (OrderEntity orderEntity) {
@@ -34,6 +38,7 @@ public class OrderConverter {
             orderDTO.setUpdatedAt(orderEntity.getUpdatedAt());
             orderDTO.setCreatedBy(orderEntity.getCreatedBy());
             orderDTO.setUpdatedBy(orderEntity.getUpdatedBy());
+            orderDTO.setDiscountName(orderEntity.getIdWarehouse().getDiscountType().getName());
         return orderDTO;
     }
 
