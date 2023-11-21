@@ -35,5 +35,4 @@ public class OrderDTO {
     private String updatedBy;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private String discountName;
 }

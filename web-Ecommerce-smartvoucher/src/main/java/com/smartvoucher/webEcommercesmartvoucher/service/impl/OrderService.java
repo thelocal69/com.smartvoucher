@@ -114,6 +114,8 @@ public class OrderService implements IOrderService {
                 order1.setOrderNo(oderCode);
                 order1.setIdUser(user);
                 order1.setIdWarehouse(wareHouse);
+                order1.setStatus(orderDTO.getStatus());
+                order1.setQuantity(orderDTO.getQuantity());
                 this.orderRepository.save(order1);
                 return orderConverter.toOrderDTO(order1, store, discountType);
             }else {
