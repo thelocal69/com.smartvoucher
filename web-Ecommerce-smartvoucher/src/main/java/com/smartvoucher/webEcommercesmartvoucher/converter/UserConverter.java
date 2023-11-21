@@ -96,6 +96,7 @@ public class  UserConverter {
     }
     public UserDetailDTO toUserDetailDTO (UserEntity userEntity) {
         UserDetailDTO userDetailDTO = new UserDetailDTO();
+        userDetailDTO.setId(userEntity.getId());
         userDetailDTO.setAvatarUrl(userEntity.getAvatarUrl());
         userDetailDTO.setFirstName(userEntity.getFirstName());
         userDetailDTO.setLastName(userEntity.getLastName());

@@ -13,6 +13,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class WareHouseDTO{
     private Long id;
+    private Long idCategory;
+    private Long idDiscountType;
     private String createdBy;
     private Timestamp createdAt;
     private String updatedBy;

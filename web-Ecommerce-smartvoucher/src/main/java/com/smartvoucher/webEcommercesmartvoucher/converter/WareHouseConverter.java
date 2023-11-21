@@ -25,6 +25,8 @@ public class WareHouseConverter {
     public WareHouseDTO toWareHouseDTO(WareHouseEntity wareHouseEntity){
         return WareHouseDTO.builder()
                 .id(wareHouseEntity.getId())
+                .idCategory(wareHouseEntity.getCategory().getId())
+                .idDiscountType(wareHouseEntity.getDiscountType().getId())
                 .createdBy(wareHouseEntity.getCreatedBy())
                 .createdAt(wareHouseEntity.getCreatedAt())
                 .updatedBy(wareHouseEntity.getUpdateBy())
