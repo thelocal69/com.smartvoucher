@@ -5,7 +5,7 @@ Database/.DS_Store
 com.smartvoucher/uploads
 src/main/resources/local.env
 local.env
-com.smartvoucher/writelog/logger.log
+writelog/logger.log
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
