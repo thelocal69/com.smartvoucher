@@ -43,7 +43,7 @@ public class OrderController {
 
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject>insertOder1(@RequestBody OrderDTO orderDTO){
+    public ResponseEntity<ResponseObject>insertOder1(@RequestBody @Valid OrderDTO orderDTO){
         log.info("Add is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
