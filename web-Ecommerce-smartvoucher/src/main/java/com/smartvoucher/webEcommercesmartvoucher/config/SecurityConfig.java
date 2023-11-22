@@ -5,6 +5,8 @@ import com.smartvoucher.webEcommercesmartvoucher.filter.JWTFilter;
 import com.smartvoucher.webEcommercesmartvoucher.provider.CustomAuthenticationProvider;
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustomService;
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.handler.OAuth2FailureHandlerCustom;
+import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.handler.OAuth2SuccessHandlerCustom;
+import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +37,8 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final OAuth2UserDetailCustomService oAuth2UserDetailCustomService;
     private final OAuth2FailureHandlerCustom oAuth2FailureHandlerCustom;
+    private final OAuth2SuccessHandlerCustom oAuth2SuccessHandlerCustom;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Autowired
     public SecurityConfig(final CustomAuthenticationProvider customAuthenticationProvider,
@@ -42,7 +46,9 @@ public class SecurityConfig {
                           final LogoutHandler logoutHandler,
                           final UserDetailsService userDetailsService,
                           final OAuth2UserDetailCustomService oAuth2UserDetailCustomService,
-                          final OAuth2FailureHandlerCustom oAuth2FailureHandlerCustom
+                          final OAuth2FailureHandlerCustom oAuth2FailureHandlerCustom,
+                          final OAuth2SuccessHandlerCustom oAuth2SuccessHandlerCustom,
+                          final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository
     ) {
         this.customAuthenticationProvider = customAuthenticationProvider;
         this.jwtFilter = jwtFilter;
@@ -50,6 +56,8 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
         this.oAuth2UserDetailCustomService = oAuth2UserDetailCustomService;
         this.oAuth2FailureHandlerCustom = oAuth2FailureHandlerCustom;
+        this.oAuth2SuccessHandlerCustom = oAuth2SuccessHandlerCustom;
+        this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
     }
 
     @Bean
@@ -63,6 +71,11 @@ public class SecurityConfig {
         return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
                 .authenticationProvider(customAuthenticationProvider)
                 .build();
+    }
+
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository(){
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
     }
 
     @Bean
@@ -80,7 +93,7 @@ public class SecurityConfig {
                     .authorizeHttpRequests()
                     .antMatchers("/account/**").permitAll()
                     .antMatchers("**/upload").permitAll()
-                    .antMatchers("/oauth2/**").permitAll()
+                    .antMatchers("/auth/**", "/oauth2/**").permitAll()
                     .antMatchers("/merchant/**").hasRole("ADMIN")
                     .antMatchers("/chain/**").hasRole("ADMIN")
                     .antMatchers("/label/api/all").permitAll()
@@ -111,11 +124,18 @@ public class SecurityConfig {
                     .antMatchers("/ticket_history/**").hasRole("ADMIN")
                     .antMatchers("/role_user/**").hasRole("ADMIN")
                     .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
-                    .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                     .and().oauth2Login()
-                    .defaultSuccessUrl("/user/api/auth2/infor", true)
+                    .authorizationEndpoint()
+                    //.baseUri("/oauth2/authorize")
+                    .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+                    .and()
+                    .redirectionEndpoint()
+                    //.baseUri("/oauth2/callback/*")
+                    .and()
                     .userInfoEndpoint().userService(oAuth2UserDetailCustomService)
-                    .and().failureHandler(oAuth2FailureHandlerCustom)
+                    .and()
+                    .successHandler(oAuth2SuccessHandlerCustom)
+                    .failureHandler(oAuth2FailureHandlerCustom)
                     .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                     .logout()
                     .deleteCookies("JSESSIONID")

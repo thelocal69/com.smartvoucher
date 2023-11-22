@@ -10,7 +10,7 @@ import java.util.Map;
 public class OAuth2UserDetailFactory {
 
     public static OAuth2UserDetail getOAuth2UserDetail(String registrationId, Map<String, Object> attributes){
-        if (registrationId.equals(Provider.google.name())){
+        if (registrationId.equalsIgnoreCase(Provider.google.name())){
             return new OAuth2GoogleUser(attributes);
         }else {
             log.info("Sorry ! sign-in with "+registrationId+" is not supported !");

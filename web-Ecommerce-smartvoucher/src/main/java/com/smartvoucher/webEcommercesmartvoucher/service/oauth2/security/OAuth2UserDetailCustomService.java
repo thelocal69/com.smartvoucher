@@ -5,7 +5,6 @@ import com.smartvoucher.webEcommercesmartvoucher.converter.RoleUsersConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.RegisterNewOAuth2UserDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.RolesUsersDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RoleEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.RolesUsersEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.exception.OAuth2LoginException;
@@ -16,17 +15,14 @@ import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.OAuth2UserDetail
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.OAuth2UserDetailFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
@@ -54,51 +50,57 @@ public class OAuth2UserDetailCustomService extends DefaultOAuth2UserService {
     }
 
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = super.loadUser(userRequest);
-        return checkingOAuth2User(userRequest, oAuth2User);
+    public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
+        OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
+
+        try {
+            return processOAuth2User(oAuth2UserRequest, oAuth2User);
+        } catch (AuthenticationException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
+        }
     }
 
-    private OAuth2User checkingOAuth2User(OAuth2UserRequest userRequest, OAuth2User oAuth2User){
-        OAuth2UserDetail oAuth2UserDetail = OAuth2UserDetailFactory.getOAuth2UserDetail(
-                userRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes()
-        );
-        if (ObjectUtils.isEmpty(oAuth2UserDetail)){
-            log.info("Cannot found oauth 2.0 from user properties !");
-            throw new OAuth2LoginException(400, "Cannot found oauth 2.0 from user properties !");
+    private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
+        OAuth2UserDetail oAuth2UserDetail = OAuth2UserDetailFactory.getOAuth2UserDetail(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
+        if(StringUtils.isEmpty(oAuth2UserDetail.getEmail())) {
+            log.info("Email not found from OAuth2 provider");
+            throw new OAuth2LoginException(403, "Email not found from OAuth2 provider");
         }
-        UserEntity user = userRepository.findByEmailAndProvider(
-                oAuth2UserDetail.getEmail(), userRequest.getClientRegistration().getRegistrationId()
-        );
-        List<GrantedAuthority> roles = new ArrayList<>();
-        if (user != null){
-            if (!user.getProvider().equals(userRequest.getClientRegistration().getRegistrationId())
-            ){
-                log.info("Invalid site sign-in with "+ user.getProvider());
-                throw new OAuth2LoginException(400, "Invalid site sign-in with "+ user.getProvider());
+        UserEntity user = userRepository.findByEmailAndProvider(oAuth2UserDetail.getEmail(), Provider.google.name());
+        UserEntity userEntity;
+        if(user != null) {
+            if(!user.getProvider().equals(oAuth2UserRequest.getClientRegistration().getRegistrationId())) {
+                log.info("Looks like you're signed up with " +
+                        user.getProvider() + " account. Please use your " + user.getProvider() +
+                        " account to login.");
+                throw new OAuth2LoginException(403, "Looks like you're signed up with " +
+                        user.getProvider() + " account. Please use your " + user.getProvider() +
+                        " account to login.");
             }
-        }else {
-            UserEntity userDetail = registerNewOAuth2UserDetail(userRequest, oAuth2UserDetail);
-            RoleEntity role = roleRepository.findOneByName("ROLE_USER");
-            RolesUsersDTO rolesUsersDTO = roleUsersConverter.toRoleUserDTO(userDetail, role);
+            userEntity = updateExistingUser(user, oAuth2UserDetail);
+        } else {
+            userEntity = registerNewUser(oAuth2UserRequest, oAuth2UserDetail);
+            UserEntity newUSer = userRepository.findByEmailAndProvider(userEntity.getEmail(), Provider.google.name());
+            RoleEntity roleEntity = roleRepository.findOneByName("ROLE_USER");
+            RolesUsersDTO rolesUsersDTO = roleUsersConverter.toRoleUserDTO(newUSer, roleEntity);
             this.roleUserRepository.save(roleUsersConverter.toRoleUserEntity(rolesUsersDTO));
         }
-        RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(oAuth2UserDetail.getEmail(), Provider.google.name());
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(
-                rolesUsers.getIdRole().getName()
-        );
-        roles.add(grantedAuthority);
-        return new OAuth2UserDetailCustom(
-                rolesUsers.getIdUser().getId(),
-                rolesUsers.getIdUser().getEmail(),
-                rolesUsers.getIdUser().getPwd(),
-                roles
-        );
+
+        return OAuth2UserDetailCustom.create(userEntity, oAuth2User.getAttributes());
     }
 
-    public UserEntity registerNewOAuth2UserDetail(OAuth2UserRequest oAuth2UserRequest, OAuth2UserDetail oAuth2UserDetail){
-        RegisterNewOAuth2UserDetailDTO registerOAuth2UserDTO = registerConverter.toRegisterNewOAuth2UserDetailDTO(
-                oAuth2UserRequest, oAuth2UserDetail);
-        return  userRepository.save(registerConverter.toUsersEntity(registerOAuth2UserDTO));
+    private UserEntity registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserDetail oAuth2UserDetail) {
+        RegisterNewOAuth2UserDetailDTO registerNewOAuth2UserDetailDTO = registerConverter.toRegisterNewOAuth2UserDetailDTO(
+                oAuth2UserRequest, oAuth2UserDetail
+        );
+        return userRepository.save(registerConverter.toUsersEntity(registerNewOAuth2UserDetailDTO));
+    }
+
+    private UserEntity updateExistingUser(UserEntity existingUser, OAuth2UserDetail oAuth2UserDetail) {
+        existingUser.setEmail(oAuth2UserDetail.getEmail());
+        existingUser.setAvatarUrl(oAuth2UserDetail.getAvatarURL());
+        return userRepository.save(existingUser);
     }
 }
