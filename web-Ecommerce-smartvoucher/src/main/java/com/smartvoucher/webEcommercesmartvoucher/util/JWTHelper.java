@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.util;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -45,6 +46,26 @@ public class JWTHelper {
                 .signWith(getKeys())
                 .setExpiration(newExpiredTime)
                 .compact();
+    }
+
+    public String createdGoogleToken(String data){
+        long expiredTime = System.currentTimeMillis() + accessTokenExpired;
+        Date newExpiredTime = new Date(expiredTime);
+        return Jwts.builder()
+                .setSubject(data)
+                .setIssuedAt(new Date())
+                .setExpiration(newExpiredTime)
+                .signWith(getKeys())
+                .compact();
+    }
+
+    public String getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getKeys()).build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
     }
 
     public String parserToken(String token){

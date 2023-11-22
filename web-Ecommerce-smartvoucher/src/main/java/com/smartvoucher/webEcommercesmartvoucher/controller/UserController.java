@@ -54,6 +54,17 @@ public class UserController {
         );
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<ResponseObject>profile(Principal principal){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "OK",
+                        principal.getName()
+                )
+        );
+    }
+
     @PostMapping("/api/upload")
     public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName, Principal connectedUser){
         log.info("Upload images is completed !");
