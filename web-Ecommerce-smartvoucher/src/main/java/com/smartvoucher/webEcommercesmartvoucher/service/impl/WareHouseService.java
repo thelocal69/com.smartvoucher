@@ -1,6 +1,8 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.google.api.services.drive.model.File;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.smartvoucher.webEcommercesmartvoucher.converter.WareHouseConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.WareHouseDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.CategoryEntity;
@@ -19,12 +21,16 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.lang.reflect.Type;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,6 +43,8 @@ public class WareHouseService implements IWareHouseService {
     private final ICategoryRepository categoryRepository;
     private final ILabelRepository labelRepository;
     private final UploadUtil uploadUtil;
+    private final Gson gson;
+    private final RedisTemplate<String ,String> redisTemplate;
 
 
     @Autowired
@@ -45,7 +53,9 @@ public class WareHouseService implements IWareHouseService {
                             final IDiscountTypeRepository discountTypeRepository,
                             final ICategoryRepository categoryRepository,
                             final UploadUtil uploadUtil,
-                            final ILabelRepository labelRepository
+                            final ILabelRepository labelRepository,
+                            final Gson gson,
+                            final RedisTemplate<String, String> redisTemplate
     ) {
         this.wareHouseRepository = wareHouseRepository;
         this.wareHouseConverter = wareHouseConverter;
@@ -53,26 +63,36 @@ public class WareHouseService implements IWareHouseService {
         this.categoryRepository = categoryRepository;
         this.uploadUtil = uploadUtil;
         this.labelRepository = labelRepository;
+        this.gson = gson;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWareHouse() {
-        List<WareHouseEntity> wareHouseEntityList = wareHouseRepository.findAllByStatus(1);
-        
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-        wareHouseEntityList = wareHouseEntityList.stream()
-                .filter(warehouse -> warehouse.getAvailableTo() == null || currentTime.before(warehouse.getAvailableTo()))
-                .collect(Collectors.toList());
-        
-        if (wareHouseEntityList.isEmpty()) {
-            log.info("List warehouse is empty !");
-            throw new ObjectEmptyException(
-                    404, "List warehouse is empty !"
-            );
+        List<WareHouseEntity> wareHouseEntityList;
+        List<WareHouseDTO> wareHouseDTOList;
+        if (Boolean.TRUE.equals(this.redisTemplate.hasKey("listWareHouse"))){
+            String data = redisTemplate.opsForValue().get("listWareHouse");
+            Type listType = new TypeToken<ArrayList<WareHouseDTO>>(){}.getType();
+            wareHouseDTOList = gson.fromJson(data, listType);
+        }else {
+            wareHouseEntityList = wareHouseRepository.findAllByStatus(1);
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            wareHouseEntityList = wareHouseEntityList.stream()
+                    .filter(warehouse -> warehouse.getAvailableTo() == null || currentTime.before(warehouse.getAvailableTo()))
+                    .collect(Collectors.toList());
+            if (wareHouseEntityList.isEmpty()) {
+                log.info("List warehouse is empty !");
+                throw new ObjectEmptyException(
+                        404, "List warehouse is empty !"
+                );
+            }
+            wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
+            this.redisTemplate.opsForValue().set("listWareHouse", gson.toJson(wareHouseDTOList), 60, TimeUnit.MINUTES);
         }
         log.info("Get all warehouse is completed !");
-        return wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
+        return wareHouseDTOList;
     }
 
     @Override
@@ -112,7 +132,7 @@ public class WareHouseService implements IWareHouseService {
                 throw new DuplicationCodeException(
                         400, "Warehouse code is duplicated !"
                 );
-            } else if (!existCategoryAndDiscountAndLabel(wareHouseDTO)) {
+            }if (!existCategoryAndDiscountAndLabel(wareHouseDTO)) {
                 log.info("Category code or discount code or label name is empty or not exist !");
                 throw new ObjectEmptyException(
                         406, "Category code or discount code or label name is empty or not exist !"
@@ -181,34 +201,55 @@ public class WareHouseService implements IWareHouseService {
     @Override
     @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWarehousesByLabel(int id) {
-        List<WareHouseEntity> wareHouseEntityList = wareHouseRepository.findAllByLabel(id);
+        List<WareHouseEntity> wareHouseEntityList;
+        List<WareHouseDTO> wareHouseDTOList;
+        if (Boolean.TRUE.equals(this.redisTemplate.hasKey("listWareHouseByLable"))){
+            String data = redisTemplate.opsForValue().get("listWareHouseByLable");
+            Type listData = new TypeToken<ArrayList<WareHouseDTO>>(){}.getType();
+            wareHouseDTOList = gson.fromJson(data, listData);
+        }else {
+            wareHouseEntityList = wareHouseRepository.findAllByLabel(id);
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            wareHouseEntityList = wareHouseEntityList.stream()
+                    .filter(warehouse -> warehouse.getAvailableTo() == null || currentTime.before(warehouse.getAvailableTo()))
+                    .collect(Collectors.toList());
 
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-        wareHouseEntityList = wareHouseEntityList.stream()
-                .filter(warehouse -> warehouse.getAvailableTo() == null || currentTime.before(warehouse.getAvailableTo()))
-                .collect(Collectors.toList());
-        
-        if (wareHouseEntityList.isEmpty()) {
-            log.info("List warehouse is empty !");
-            throw new ObjectEmptyException(
-                    404, "List warehouse is empty !"
-            );
+            if (wareHouseEntityList.isEmpty()) {
+                log.info("List warehouse is empty !");
+                throw new ObjectEmptyException(
+                        404, "List warehouse is empty !"
+                );
+            }
+            wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
+            String data = gson.toJson(wareHouseDTOList);
+            this.redisTemplate.opsForValue().set("listWareHouseByLable", data, 60, TimeUnit.MINUTES);
         }
         log.info("Get all warehouse by lable is completed !");
-        return wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
+        return wareHouseDTOList;
         }
     @Override
     @Transactional(readOnly = true)
-    public List<WareHouseDTO> getAllWarehouseByCategoryCode(WareHouseDTO wareHouseDTO) {
-        List<WareHouseEntity>wareHouseEntities = wareHouseRepository.findAllByCategoryCode(wareHouseDTO.getCategoryCode());
-        if (wareHouseEntities.isEmpty()){
-            log.info("List warehouse is empty !");
-            throw new ObjectEmptyException(
-                    404, "List warehouse is empty !"
-            );
+    public List<WareHouseDTO> getAllWarehouseByCategoryId(long id) {
+        List<WareHouseEntity>wareHouseEntities;
+        List<WareHouseDTO> wareHouseDTOList;
+        if (Boolean.TRUE.equals(this.redisTemplate.hasKey("listWareHouseByCategoryId"))){
+            String data = redisTemplate.opsForValue().get("listWareHouseByCategoryId");
+            Type listType = new TypeToken<ArrayList<WareHouseDTO>>(){}.getType();
+            wareHouseDTOList = gson.fromJson(data, listType);
+        }else {
+            wareHouseEntities = wareHouseRepository.findAllByCategoryId(id);
+            if (wareHouseEntities.isEmpty()){
+                log.info("List warehouse is empty !");
+                throw new ObjectEmptyException(
+                        404, "List warehouse is empty !"
+                );
+            }
+            wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(wareHouseEntities);
+            String data = gson.toJson(wareHouseDTOList);
+            this.redisTemplate.opsForValue().set("listWareHouseByCategoryId", data, 60, TimeUnit.MINUTES);
         }
         log.info("Get all warehouse by category code is completed !");
-        return wareHouseConverter.toWareHouseDTOList(wareHouseEntities);
+        return wareHouseDTOList;
     }
 
 
