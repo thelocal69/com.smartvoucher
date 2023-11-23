@@ -114,6 +114,12 @@ public class SecurityConfig {
                     //category
                     .antMatchers("/discount/**").hasRole("ADMIN")
                     .antMatchers("/store/**").hasRole("ADMIN")
+                    //order
+                    .antMatchers(HttpMethod.GET, "/api/list-order").hasRole("USER")
+                    .antMatchers(HttpMethod.GET, "/api/get_all_oder_user/{id}").hasRole("USER")
+                    .antMatchers(HttpMethod.POST, "/api/add-order").hasRole("USER")
+                    .antMatchers(HttpMethod.DELETE, "/api/delete-order").hasRole("USER")
+                    //order
                     //warehouse
                     .antMatchers(HttpMethod.GET, "/warehouse/CategoryId/{id}").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/all").permitAll()

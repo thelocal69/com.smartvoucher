@@ -1,5 +1,5 @@
 
-# SMART VOUCHER PROJECT INTRODUCTION 
+# SMART VOUCHER PROJECT INTRODUCTION
 Welcome to our cutting-edge e-commerce platform designed to revolutionize your shopping experience for electronic vouchers (e-vouchers). Our project focuses on providing users with a seamless platform to discover, purchase, and utilize e-vouchers efficiently. Once a user buys a voucher, they gain the flexibility to redeem it offline, coupled with a comprehensive overview of their voucher activity upon logging into the website. This project is collaboratively developed by four talented backend engineers 
 - Trần Khánh Thiện
 - Võ Đình Nhân

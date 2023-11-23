@@ -11,5 +11,5 @@ public interface IOrderService {
     ResponseObject insertOrder(OrderDTO orderDTO);
 //    ResponseObject updateOrder(OrderDTO orderDTO);
     ResponseObject deleteOrder(long id);
-    List<OrderDTO> getAllOrderByIdUser(UserDTO userDTO);
+    List<OrderDTO> getAllOrderByIdUser(long id);
 }
