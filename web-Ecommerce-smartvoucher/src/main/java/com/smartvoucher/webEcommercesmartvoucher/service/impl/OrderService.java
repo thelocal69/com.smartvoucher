@@ -100,36 +100,6 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderDTO insertOder(OrderDTO orderDTO) {
-        String oderCode = UUID.randomUUID().toString().substring(0, 20).replace("-","");
-        OrderEntity order = orderRepository.findByOrderNo(oderCode);
-        if (order==null){
-            if (existsUserAndWarehouseAndStoreAndDiscount(orderDTO)){
-                log.info("Add Order success");
-                UserEntity user = userRepository.findOneById(orderDTO.getIdUser());
-                WareHouseEntity wareHouse = iWareHouseRepository.findOneById(orderDTO.getIdWarehouse());
-                StoreEntity store = iStoreRepository.findOneById(orderDTO.getIdStore());
-                DiscountTypeEntity discountType = iDiscountTypeRepository.findOneByName(orderDTO.getDiscountName());
-                OrderEntity order1 = new OrderEntity();
-                order1.setOrderNo(oderCode);
-                order1.setIdUser(user);
-                order1.setIdWarehouse(wareHouse);
-                order1.setStatus(orderDTO.getStatus());
-                order1.setQuantity(orderDTO.getQuantity());
-                this.orderRepository.save(order1);
-                return orderConverter.toOrderDTO(order1, store, discountType);
-            }else {
-                log.info("User Or Warehouse is empty, please fill all data, add order fail");
-                throw new ObjectEmptyException(406,
-                        "User Or Warehouse is empty, please fill all data, add order fail");
-            }
-        }else {
-            log.info("Order is available, add order fail");
-            throw new DuplicationCodeException(400, "Order is available, add order fail");
-        }
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseObject deleteOrder(long id){
         OrderEntity role = orderRepository.findById(id).orElse(null);
