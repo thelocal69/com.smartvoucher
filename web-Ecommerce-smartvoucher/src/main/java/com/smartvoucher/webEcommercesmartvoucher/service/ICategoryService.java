@@ -13,5 +13,5 @@ public interface ICategoryService {
     CategoryDTO upsert(CategoryDTO categoryDTO);
     void deleteCategory(CategoryDTO categoryDTO);
     Boolean exitsCategory(CategoryDTO categoryDTO);
-    File uploadCategoryImages(MultipartFile fileName);
+    String uploadCategoryImages(MultipartFile fileName);
 }

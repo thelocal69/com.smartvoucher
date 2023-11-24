@@ -46,7 +46,7 @@ public class MerchantController {
                 new ResponseObject(
                         200,
                         "Upload images is completed !",
-                        merchantService.uploadMerchantImages(fileName).getWebViewLink()
+                        merchantService.uploadMerchantImages(fileName)
                 )
         );
     }
