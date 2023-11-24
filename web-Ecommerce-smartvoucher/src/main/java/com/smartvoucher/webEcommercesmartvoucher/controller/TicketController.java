@@ -74,7 +74,7 @@ public class TicketController {
                 new ResponseObject(
                         200,
                         "Upload images is completed !",
-                        ticketService.uploadTicketImages(fileName).getWebViewLink()
+                        ticketService.uploadTicketImages(fileName)
                 )
         );
     }

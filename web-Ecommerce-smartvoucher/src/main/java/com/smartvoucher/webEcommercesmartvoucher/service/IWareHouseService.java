@@ -13,7 +13,7 @@ public interface IWareHouseService {
     void deleteWareHouse(WareHouseDTO wareHouseDTO);
     Boolean existWareHouse(WareHouseDTO wareHouseDTO);
     Boolean existCategoryAndDiscountAndLabel(WareHouseDTO wareHouseDTO);
-    File uploadWarehouseImages(MultipartFile fileName);
+    String uploadWarehouseImages(MultipartFile fileName);
     WareHouseDTO getWarehouseById(Long id);
     List<WareHouseDTO> getAllWarehousesByLabel(int id);
     List<WareHouseDTO> getAllWarehouseByCategoryId(long id);

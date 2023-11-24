@@ -13,5 +13,5 @@ public interface IChainService {
     void deleteChain(ChainDTO chainDTO);
     Boolean existChain(ChainDTO chainDTO);
     Boolean existMerchantCode(ChainDTO chainDTO);
-    File uploadChainImages(MultipartFile fileName);
+    String uploadChainImages(MultipartFile fileName);
 }
