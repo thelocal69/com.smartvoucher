@@ -57,27 +57,18 @@ public class OrderService implements IOrderService {
     @Override
     @Transactional(readOnly = true)
     public ResponseObject getAllOrder(){
-        List<OrderDTO> listOrder;
-        List<OrderEntity> list;
-        if (Boolean.TRUE.equals(this.redisTemplate.hasKey("listOrder"))){
-            String data = redisTemplate.opsForValue().get("listOrder");
-            Type listType = new  TypeToken< ArrayList<OrderDTO>>(){}.getType();
-            listOrder = gson.fromJson(data, listType);
-        }else {
-            list = orderRepository.findAll();
-            if(!list.isEmpty()) {
-                listOrder = orderConverter.orderDTOList(list);
-            } else {
-                log.info("List Order is empty");
-                throw new ObjectNotFoundException(404, "List Order is empty");
+        List<OrderDTO> listOrder = new ArrayList<>();
+        List<OrderEntity> list = orderRepository.findAll();
+        if(!list.isEmpty()) {
+            for (OrderEntity data : list) {
+                listOrder.add(orderConverter.toOrdersDTO(data));
             }
-            String data = gson.toJson(listOrder);
-            this.redisTemplate.opsForValue().set("listOrder", data,10, TimeUnit.MINUTES);
+            return new ResponseObject(200,
+                    "List Order",
+                    listOrder);
+        } else {
+            throw new ObjectNotFoundException(404, "List Order is empty");
         }
-        log.info("Get all order successfully!");
-        return new ResponseObject(200,
-                "List Order",
-                listOrder);
     }
 
     @Override

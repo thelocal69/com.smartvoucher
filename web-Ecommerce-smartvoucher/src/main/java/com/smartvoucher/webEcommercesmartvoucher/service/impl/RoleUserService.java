@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class RoleUserService implements IRoleUserService {
@@ -35,6 +37,13 @@ public class RoleUserService implements IRoleUserService {
         this.roleUsersConverter = roleUsersConverter;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RolesUsersDTO> getAllRoleUser() {
+        List<RolesUsersEntity> rolesUsersEntityList = roleUserRepository.findAll();
+        return roleUsersConverter.toRoleUserDTOList(rolesUsersEntityList);
     }
 
     @Override
