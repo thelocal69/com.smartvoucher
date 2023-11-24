@@ -59,7 +59,7 @@ public class WareHouseController {
                 new ResponseObject(
                         200,
                         "Upload images is completed !",
-                        wareHouseService.uploadWarehouseImages(fileName).getWebViewLink()
+                        wareHouseService.uploadWarehouseImages(fileName)
                 )
         );
     }

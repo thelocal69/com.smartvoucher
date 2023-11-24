@@ -180,9 +180,10 @@ public class WareHouseService implements IWareHouseService {
     }
 
     @Override
-    public File uploadWarehouseImages(MultipartFile fileName) {
+    public String uploadWarehouseImages(MultipartFile fileName) {
         String folderId = "101aTGIyIgR4tIq88tT3lCE3_QWZcVP03";
-        return uploadUtil.uploadImages(fileName, folderId);
+        File file = uploadUtil.uploadImages(fileName, folderId);
+        return "https://drive.google.com/uc?export=view&id="+file.getId();
     }
 
     @Override

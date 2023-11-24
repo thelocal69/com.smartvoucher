@@ -21,6 +21,19 @@ public class RoleUserController {
         this.roleUserService = roleUserService;
     }
 
+    @GetMapping("")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getAllRoleUser(){
+        log.info("Get all list role_user is completed");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get all list Role_User is complete",
+                        roleUserService.getAllRoleUser()
+                )
+        );
+    }
+
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertRoleUser(@RequestBody RolesUsersDTO rolesUsersDTO){

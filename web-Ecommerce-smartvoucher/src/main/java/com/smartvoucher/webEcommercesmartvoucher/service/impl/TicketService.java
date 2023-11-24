@@ -330,9 +330,10 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public File uploadTicketImages(MultipartFile fileName) {
+    public String uploadTicketImages(MultipartFile fileName) {
         String folderId = "1D3tkdIWmKLQuRgdabrIfLYRkDeJyrflu";
-        return uploadUtil.uploadImages(fileName, folderId);
+        File file = uploadUtil.uploadImages(fileName, folderId);
+        return "https://drive.google.com/uc?export=view&id="+file.getId();
     }
 
     @Override
