@@ -8,6 +8,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.handler
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.handler.OAuth2SuccessHandlerCustom;
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -39,7 +40,8 @@ public class SecurityConfig {
     private final OAuth2FailureHandlerCustom oAuth2FailureHandlerCustom;
     private final OAuth2SuccessHandlerCustom oAuth2SuccessHandlerCustom;
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-
+    @Value("${frontend_utl}")
+    private String frontEndURL;
     @Autowired
     public SecurityConfig(final CustomAuthenticationProvider customAuthenticationProvider,
                           final JWTFilter jwtFilter,
@@ -82,7 +84,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
             return http.cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration corsConfig = new CorsConfiguration();
-                corsConfig.addAllowedOrigin("*");
+                corsConfig.addAllowedOrigin(frontEndURL);
                 corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                 corsConfig.addAllowedHeader("*");
                 corsConfig.setAllowCredentials(false);
@@ -112,8 +114,14 @@ public class SecurityConfig {
                     //category
                     .antMatchers("/discount/**").hasRole("ADMIN")
                     .antMatchers("/store/**").hasRole("ADMIN")
+                    //order
+                    .antMatchers(HttpMethod.GET, "/api/list-order").hasRole("USER")
+                    .antMatchers(HttpMethod.GET, "/api/get_all_oder_user/{id}").hasRole("USER")
+                    .antMatchers(HttpMethod.POST, "/api/add-order").hasRole("USER")
+                    .antMatchers(HttpMethod.DELETE, "/api/delete-order").hasRole("USER")
+                    //order
                     //warehouse
-                    .antMatchers(HttpMethod.GET, "/warehouse/CategoryCode/{categoryCode}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/warehouse/CategoryId/{id}").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/all").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/{id}").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/by-label-id/{id}").permitAll()
@@ -121,12 +129,15 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.POST,"/warehouse/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/warehouse/api/{id}").hasRole("ADMIN")
                     //warehouse
+                    .antMatchers(HttpMethod.GET, "/warehouse_store").permitAll()
+                    .antMatchers(HttpMethod.POST,"/warehouse_store/api/insert").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE,"/warehouse_store/api/delete").hasRole("ADMIN")
                     .antMatchers("/ticket_history/**").hasRole("ADMIN")
                     .antMatchers("/role_user/**").hasRole("ADMIN")
                     .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
                     .and().oauth2Login()
                     .authorizationEndpoint()
-                    //.baseUri("/oauth2/authorize")
+                    .baseUri("/oauth2/authorize")
                     .authorizationRequestRepository(cookieAuthorizationRequestRepository())
                     .and()
                     .redirectionEndpoint()

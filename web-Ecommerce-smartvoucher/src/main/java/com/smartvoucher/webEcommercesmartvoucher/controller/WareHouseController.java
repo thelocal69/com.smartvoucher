@@ -123,16 +123,14 @@ public class WareHouseController {
         );
     }
 
-    @GetMapping("/CategoryCode/{categoryCode}")
-    public ResponseEntity<ResponseObject> getWarehouseByCategoryCode(@RequestBody WareHouseDTO wareHouseDTO,
-                                                                     @PathVariable String categoryCode){
-        wareHouseDTO.setCategoryCode(categoryCode);
+    @GetMapping("/CategoryId/{id}")
+    public ResponseEntity<ResponseObject> getWarehouseByCategoryCode(@PathVariable long id){
         log.info("Get all Warehouse by category code is successfully !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
                         "Get all Warehouse by category code is successfully !",
-                        this.wareHouseService.getAllWarehouseByCategoryCode(wareHouseDTO)
+                        this.wareHouseService.getAllWarehouseByCategoryId(id)
                 )
         );
     }

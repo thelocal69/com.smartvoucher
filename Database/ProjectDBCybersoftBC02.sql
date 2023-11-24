@@ -191,7 +191,7 @@ CREATE TABLE ticket(
 	id bigint auto_increment,
 	id_serial bigint unique NOT null,
 	id_warehouse bigint NOT null,
-	id_category bigint unique NOT null,
+	id_category bigint NOT null,
 	status int NOT null, -- giá trị 0:chưa phát hành, giá trị 1:đã phát hành, giá trị 2: đã sử dụng, giá trị 3: đã hết hạn
 	id_order bigint NOT null, 
 	claimed_time timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss

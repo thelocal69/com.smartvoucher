@@ -1,7 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.service.IOrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,18 +40,6 @@ public class OrderController {
                 this.ordersService.insertOrder(orderDTO));
     }
 
-    @PostMapping("/api/insert")
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject>insertOder1(@RequestBody @Valid OrderDTO orderDTO){
-        log.info("Add is completed !");
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(
-                        200,
-                        "Add is completed !",
-                        this.ordersService.insertOder(orderDTO)
-                )
-                );
-    }
 
     @DeleteMapping("/api/delete-order")
     @Transactional(rollbackFor = Exception.class)
@@ -62,15 +49,15 @@ public class OrderController {
                 this.ordersService.deleteOrder(id));
     }
 
-    @GetMapping("/api/get_all_order")
+    @GetMapping("/api/get_all_oder_user/{id}")
     @Transactional(readOnly = true)
-    public ResponseEntity<ResponseObject> getAllOrderByUser(@RequestBody @Valid UserDTO userDTO){
-        log.info("All order of user " + userDTO.getEmail() + " is below:");
+    public ResponseEntity<ResponseObject> getAllOrderByUser(@PathVariable long id){
+        log.info("All order of user  is below: ");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
-                        "All order of user " + userDTO.getEmail() + " is below:",
-                        this.ordersService.getAllOrderByIdUser(userDTO)
+                        "All order of user  is below: ",
+                        this.ordersService.getAllOrderByIdUser(id)
                 )
         );
     }
