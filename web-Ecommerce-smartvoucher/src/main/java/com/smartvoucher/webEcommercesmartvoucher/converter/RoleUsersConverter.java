@@ -7,6 +7,9 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.keys.RolesUsersKeys;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class RoleUsersConverter {
     public RolesUsersDTO toRoleUserDTO(UserEntity user, RoleEntity role){
@@ -46,5 +49,9 @@ public class RoleUsersConverter {
         rolesUsersEntity.setUpdateBy(rolesUsersDTO.getUpdatedBy());
         rolesUsersEntity.setUpdateAt(rolesUsersDTO.getUpdatedAt());
         return rolesUsersEntity;
+    }
+
+    public List<RolesUsersDTO> toRoleUserDTOList(List<RolesUsersEntity> rolesUsersEntityList){
+        return rolesUsersEntityList.stream().map(this::toRoleUserDTO).collect(Collectors.toList());
     }
 }
