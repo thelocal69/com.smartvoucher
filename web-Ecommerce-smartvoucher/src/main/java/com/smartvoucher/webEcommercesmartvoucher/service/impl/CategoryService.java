@@ -106,8 +106,9 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public File uploadCategoryImages(MultipartFile fileName) {
+    public String uploadCategoryImages(MultipartFile fileName) {
         String folderId = "17pJEY12p30od5F0aw2BETsguQZK5sTCZ";
-        return uploadUtil.uploadImages(fileName, folderId);
+        File file = uploadUtil.uploadImages(fileName, folderId);
+        return "https://drive.google.com/uc?export=view&id="+file.getId();
     }
 }

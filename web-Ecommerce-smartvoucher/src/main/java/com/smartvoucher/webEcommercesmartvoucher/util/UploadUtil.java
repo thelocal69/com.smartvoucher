@@ -78,7 +78,7 @@ public class UploadUtil {
             return googleDrive.files().create(fileMetaData, new InputStreamContent(
                     fileName.getContentType(),
                     new ByteArrayInputStream(fileName.getBytes())
-            )).setFields("id, webViewLink").execute();
+            )).setFields("id").execute();
         }catch (IOException ioException) {
             log.info("Failed to store file");
             throw new InputOutputException(501, "Failed to store file", ioException);
