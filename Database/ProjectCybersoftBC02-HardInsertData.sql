@@ -9,16 +9,16 @@ INSERT INTO label (name) VALUES
 
 INSERT INTO category (category_code, name, status, created_by, created_at, banner_url)
 VALUES
-('cat_travel', 'Du lịch', 1, 'ADMIN', NOW(), 'https://drive.google.com/file/d/1pLSJ_K3i7MULkQf9qWGox_uYRyEvXVpg/view?usp=drivesdk'),
-('cat_electronics', 'Điện tử', 1, 'ADMIN', NOW(), 'https://drive.google.com/file/d/1aclxsrK4N9nmwi75fKrjMLbRwugU9iZE/view?usp=drivesdk'),
-('cat_fashion', 'Thời trang', 1, 'ADMIN', NOW(), 'https://drive.google.com/file/d/1mDZ52hL_fQxNCaft_Fb8FTzmBveLVdsm/view?usp=drivesdk'),
-('cat_food', 'Ẩm thực', 1, 'ADMIN', NOW(), 'https://drive.google.com/file/d/1_iF6YjCNI-m_J_m280J0KsVoAMFkByo5/view?usp=drivesdk'),
-('cat_books', 'Sách và Học nghệ thuật', 1, 'ADMIN', NOW(), 'https://drive.google.com/file/d/1I-EGotvTISIgdUrzx6klMHENa-oWBprR/view?usp=drivesdk'),
-('cat_health', 'Sức khỏe và Làm đẹp', 1, 'ADMIN', NOW(), 'https://drive.google.com/file/d/1DWGu6FSpy0ZC8dKY_GkA1qV5973Xoi54/view?usp=drivesdk'),
-('cat_home', 'Nội thất và Gia đình', 1, 'ADMIN', NOW(), 'https://drive.google.com/file/d/14SNDRynnaWw8cfeZl0GdITf287rJr6H_/view?usp=drivesdk'),
-('cat_technology', 'Công nghệ', 1, 'ADMIN', NOW(), 'https://drive.google.com/file/d/1kRUQplQ4y1gudv19AAbk3rj5pBD04SsG/view?usp=drivesdk'),
-('cat_sports', 'Thể thao và Hoạt động ngoại ô', 1, 'ADMIN', NOW(), 'https://drive.google.com/file/d/1wds5PbgmbkNb3zcJF-IjrzEQp0m_AMmb/view?usp=drivesdk'),
-('cat_game', 'Trò chơi', 1, 'ADMIN', NOW(), 'https://drive.google.com/file/d/1VcV1D6llffCHYTDOAZtlnZ0zSsBLO3V5/view?usp=drivesdk');
+('cat_travel', 'Du lịch', 1, 'ADMIN', NOW(), 'https://drive.google.com/uc?export=view&id=1pLSJ_K3i7MULkQf9qWGox_uYRyEvXVpg'),
+('cat_electronics', 'Điện tử', 1, 'ADMIN', NOW(), 'https://drive.google.com/uc?export=view&id=1aclxsrK4N9nmwi75fKrjMLbRwugU9iZE'),
+('cat_fashion', 'Thời trang', 1, 'ADMIN', NOW(), 'https://drive.google.com/uc?export=view&id=1mDZ52hL_fQxNCaft_Fb8FTzmBveLVdsm'),
+('cat_food', 'Ẩm thực', 1, 'ADMIN', NOW(), 'https://drive.google.com/uc?export=view&id=1_iF6YjCNI-m_J_m280J0KsVoAMFkByo5'),
+('cat_books', 'Sách và Học nghệ thuật', 1, 'ADMIN', NOW(), 'https://drive.google.com/uc?export=view&id=1I-EGotvTISIgdUrzx6klMHENa-oWBprR'),
+('cat_health', 'Sức khỏe và Làm đẹp', 1, 'ADMIN', NOW(), 'https://drive.google.com/uc?export=view&id=1DWGu6FSpy0ZC8dKY_GkA1qV5973Xoi54'),
+('cat_home', 'Nội thất và Gia đình', 1, 'ADMIN', NOW(), 'https://drive.google.com/uc?export=view&id=14SNDRynnaWw8cfeZl0GdITf287rJr6H_'),
+('cat_technology', 'Công nghệ', 1, 'ADMIN', NOW(), 'https://drive.google.com/uc?export=view&id=1kRUQplQ4y1gudv19AAbk3rj5pBD04SsG'),
+('cat_sports', 'Thể thao và Hoạt động ngoại ô', 1, 'ADMIN', NOW(), 'https://drive.google.com/uc?export=view&id=1wds5PbgmbkNb3zcJF-IjrzEQp0m_AMmb'),
+('cat_game', 'Trò chơi', 1, 'ADMIN', NOW(), 'https://drive.google.com/uc?export=view&id=1VcV1D6llffCHYTDOAZtlnZ0zSsBLO3V5');
 
 INSERT INTO discount_type (code, name, status, created_by, created_at)
 VALUES 
@@ -132,22 +132,3 @@ VALUES
 	('W14', 2, 'Giảm 50.000đ thẻ nạp Game', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'https://drive.google.com/uc?export=view&id=1trE3cFwDovjrgDLJeydVyqjaGvcbDBSc', 'https://drive.google.com/uc?export=view&id=1lKs8dBv9ZsVj-NI2LL5Ga_ggcTqujq8X', 20.000, 1, 50.000, 50.000, '2023-02-01 23:00:00', '2024-02-10 23:00:00', 1, 1, 750, 1, 10, 'Admin', '2024-02-01 23:00:00'),
 	('W15', 3, 'Giảm 50.000đ trên tổng hóa đơn', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'https://drive.google.com/uc?export=view&id=16fy6FOM3xWawB5siUIdpoz8byXEutvmK', 'https://drive.google.com/uc?export=view&id=1APDAJDso1zStLJATNPGe2WAiYP7LYUyZ', 18.000, 1, 50.000, 50.000, '2023-03-01 00:00:00', '2024-03-10 00:00:00', 1, 1, 800, 1, 3, 'Admin', '2024-03-01 00:00:00');
 	
-INSERT INTO roles (name, role_code) VALUES ('ROLE_MERCHANT','MERCHANT');
-
-INSERT INTO warehouse_merchant (id_warehouse, id_merchant, id_role, created_by, created_at)
-VALUES 
-(1,1,3,'Admin','2023-05-01 14:00:00'),
-(2,4,3,'Admin','2023-05-01 14:00:00'), 
-(3,8,3,'Admin','2023-05-01 14:00:00'),
-(4,12,3,'Admin','2023-05-01 14:00:00'),
-(5,5,3,'Admin','2023-05-01 14:00:00'),
-(6,14,3,'Admin','2023-05-01 14:00:00'),
-(7,6,3,'Admin','2023-05-01 14:00:00'),
-(8,15,3,'Admin','2023-05-01 14:00:00'),
-(9,13,3,'Admin','2023-05-01 14:00:00'),
-(10,16,3,'Admin','2023-05-01 14:00:00'),
-(11,11,3,'Admin','2023-05-01 14:00:00'),
-(12,2,3,'Admin','2023-05-01 14:00:00'),
-(13,8,3,'Admin','2023-05-01 14:00:00'),
-(14,10,3,'Admin','2023-05-01 14:00:00'),
-(15,3,3,'Admin','2023-05-01 14:00:00');
