@@ -49,16 +49,15 @@ public class EmailUtil {
         String url = "http://localhost:3000/set-password";
         String subject = "Đặt lại mật khẩu";
         String senderName = "Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";
-        String mailContent = "<img align=\"none\" alt=\"Epic Games\" border=\"0\" hspace=\"0\"" +
+        String mailContent =
+                "<img align=\"center\" border=\"0\" hspace=\"0\"" +
                 " src=\"https://drive.google.com/uc?export=view&id=1xAwgI8uhaZCfwQflIIgwTLnomJaPcs0k\"" +
-                " style=\"max-width:70px;height:auto;display:block;margin:0px\" title=\"Epic Games\" vspace=\"0\" width=\"70px\" class=\"CToWUd\" data-bit=\"iit\">" +
-                "<p> Xin chào, "+ stringsUtil.getUserNameFormDomain(email)+", </p>"+
-                "<a href=\"" +url+ "\" style=\"padding:10px;width:104px;height:16px;display:block;margin:8;" +
-                "text-decoration:none;border:1px solid #ef5b25;" +
-                "text-align:center;font-size:12px;font-style:normal;font-weight:600;font-family:'Open Sans',sans-serif;" +
-                "color:#fff;background:#ef5b25;border-radius:5px;line-height:16px\">" +
-                "Đặt lại mật khẩu</a>"+
-                "<p> Xin cảm ơn <br> Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";
+                " style=\"max-width:70px;margin-left:auto;display:block;margin-right:auto\" vspace=\"0\" width=\"70px\" data-bit=\"iit\">"+
+                        " <h1 style=\"text-align:center\">Xin chào "+ stringsUtil.getUserNameFormDomain(email)+" </h1>" +
+                        "<p align=\"center\">"+"<a href=\"" +url+ "\" style=\"padding:10px;width:104px;height:16px;display:block;margin:8;" +
+                        "text-decoration:none;border:1px solid #ef5b25;text-align:center;font-size:12px;font-style:normal;font-weight:600;font-family:'Open Sans',sans-serif;color:#fff;background:#ef5b25;border-radius:5px;line-height:16px\">" +
+                        "Đặt lại mật khẩu</a>" +"</p>"+
+        "<p align=\"center\"> Xin cảm ơn <br> Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";;
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(message);
         messageHelper.setFrom(mailProperties.getUsername(), senderName);
