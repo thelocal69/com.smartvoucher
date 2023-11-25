@@ -1,7 +1,9 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.*;
+import com.smartvoucher.webEcommercesmartvoucher.entity.OrderEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,15 +16,11 @@ public class OrderConverter {
 
     private final WareHouseConverter wareHouseConverter;
     private final UserConverter userConverter;
-    private final WarehouseStoreConverter warehouseStoreConverter;
-    private final StoreConverter storeConverter;
 
     @Autowired
-    public OrderConverter(WareHouseConverter wareHouseConverter, UserConverter userConverter, WarehouseStoreConverter warehouseStoreConverter, StoreConverter storeConverter) {
+    public OrderConverter(WareHouseConverter wareHouseConverter, UserConverter userConverter) {
         this.wareHouseConverter = wareHouseConverter;
         this.userConverter = userConverter;
-        this.warehouseStoreConverter = warehouseStoreConverter;
-        this.storeConverter = storeConverter;
     }
 
     public OrderDTO toOrdersDTO (OrderEntity orderEntity) {
@@ -38,22 +36,9 @@ public class OrderConverter {
             orderDTO.setUpdatedAt(orderEntity.getUpdatedAt());
             orderDTO.setCreatedBy(orderEntity.getCreatedBy());
             orderDTO.setUpdatedBy(orderEntity.getUpdatedBy());
-            orderDTO.setDiscountName(orderEntity.getIdWarehouse().getDiscountType().getName());
         return orderDTO;
     }
 
-    public OrderDTO toOrderDTO(OrderEntity order, StoreEntity store, DiscountTypeEntity discountType){
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setId(order.getId());
-        orderDTO.setOrderNo(order.getOrderNo());
-        orderDTO.setIdUser(order.getIdUser().getId());
-        orderDTO.setIdWarehouse(order.getIdWarehouse().getId());
-        orderDTO.setIdStore(store.getId());
-        orderDTO.setDiscountName(discountType.getName());
-        orderDTO.setQuantity(order.getQuantity());
-        orderDTO.setStatus(order.getStatus());
-        return orderDTO;
-    }
 
     public OrderEntity insertOrder(OrderDTO orderDTO, UserEntity idUser, WareHouseEntity idWareHouse, String orderNoRandom) {
         OrderEntity order = new OrderEntity();

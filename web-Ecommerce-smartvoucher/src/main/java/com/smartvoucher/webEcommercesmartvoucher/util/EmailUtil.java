@@ -31,11 +31,15 @@ public class EmailUtil {
     public void sendVerificationEmail(String url, UserEntity user) throws MessagingException, UnsupportedEncodingException {
         String subject = "Email xác nhận";
         String senderName = "Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";
-        String mailContent = "<p> Xin chào, "+ stringsUtil.getUserNameFormDomain(user.getEmail())+ ", </p>"+
-                "<p>Cảm ơn bạn đã đăng ký. "+
-                "Xin hãy, Bấm vào đường link bên dưới để hoàn thành xác nhận.</p>"+
-                "<a href=\"" +url+ "\">Xác nhận email để kích hoạt tài khoản</a>"+
-                "<p> Xin cảm ơn <br> Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";
+        String mailContent =
+                "<img align=\"center\" border=\"0\" hspace=\"0\"" +
+                        " src=\"https://drive.google.com/uc?export=view&id=1xAwgI8uhaZCfwQflIIgwTLnomJaPcs0k\"" +
+                        " style=\"max-width:70px;margin-left:auto;display:block;margin-right:auto\" vspace=\"0\" width=\"70px\" data-bit=\"iit\">"+
+                        " <h1 style=\"text-align:center\">Xin chào "+ stringsUtil.getUserNameFormDomain(user.getEmail())+" </h1>" +
+                        "<p align=\"center\">"+"<a href=\"" +url+ "\" style=\"padding:10px;width:104px;height:16px;display:block;margin:8;" +
+                        "text-decoration:none;border:1px solid #ef5b25;text-align:center;font-size:12px;font-style:normal;font-weight:600;font-family:'Open Sans',sans-serif;color:#fff;background:#ef5b25;border-radius:5px;line-height:16px\">" +
+                        "Xác nhận email</a>" +"</p>"+
+                        "<p align=\"center\"> Xin cảm ơn <br> Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(message);
         messageHelper.setFrom(mailProperties.getUsername(), senderName);
@@ -57,7 +61,7 @@ public class EmailUtil {
                         "<p align=\"center\">"+"<a href=\"" +url+ "\" style=\"padding:10px;width:104px;height:16px;display:block;margin:8;" +
                         "text-decoration:none;border:1px solid #ef5b25;text-align:center;font-size:12px;font-style:normal;font-weight:600;font-family:'Open Sans',sans-serif;color:#fff;background:#ef5b25;border-radius:5px;line-height:16px\">" +
                         "Đặt lại mật khẩu</a>" +"</p>"+
-        "<p align=\"center\"> Xin cảm ơn <br> Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";;
+        "<p align=\"center\"> Xin cảm ơn <br> Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(message);
         messageHelper.setFrom(mailProperties.getUsername(), senderName);
@@ -86,6 +90,5 @@ public class EmailUtil {
             messageHelper.setSubject(subject);
             messageHelper.setText(String.valueOf(textBuilder), true);
             javaMailSender.send(message);
-            System.out.println("Send mail success!");
     }
 }
