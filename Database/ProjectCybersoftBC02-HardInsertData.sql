@@ -132,35 +132,22 @@ VALUES
 	('W14', 2, 'Giảm 50.000đ thẻ nạp Game', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'https://drive.google.com/uc?export=view&id=1trE3cFwDovjrgDLJeydVyqjaGvcbDBSc', 'https://drive.google.com/uc?export=view&id=1lKs8dBv9ZsVj-NI2LL5Ga_ggcTqujq8X', 20.000, 1, 50.000, 50.000, '2023-02-01 23:00:00', '2024-02-10 23:00:00', 1, 1, 750, 1, 10, 'Admin', '2024-02-01 23:00:00'),
 	('W15', 3, 'Giảm 50.000đ trên tổng hóa đơn', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'https://drive.google.com/uc?export=view&id=16fy6FOM3xWawB5siUIdpoz8byXEutvmK', 'https://drive.google.com/uc?export=view&id=1APDAJDso1zStLJATNPGe2WAiYP7LYUyZ', 18.000, 1, 50.000, 50.000, '2023-03-01 00:00:00', '2024-03-10 00:00:00', 1, 1, 800, 1, 3, 'Admin', '2024-03-01 00:00:00');
 	
-INSERT INTO warehouse_merchant (id_warehouse, id_merchant, id_role, created_by, updated_by, created_at, updated_at)
+INSERT INTO roles (name, role_code) VALUES ('ROLE_ACQUIRER','ACQUIRER'), ('ROLE_ISSUER', 'ISSUER');
+
+INSERT INTO warehouse_merchant (id_warehouse, id_merchant, id_role, created_by, created_at)
 VALUES 
-(1,1,0,'Admin','2023-05-01 14:00:00'),
-(1,1,1,'Admin','2023-05-01 14:00:00'),
-(2,4,0,'Admin','2023-05-01 14:00:00'), 
-(2,4,1,'Admin','2023-05-01 14:00:00'),
-(3,8,0,'Admin','2023-05-01 14:00:00'),
-(3,8,1,'Admin','2023-05-01 14:00:00'),
-(4,12,0,'Admin','2023-05-01 14:00:00'),
-(4,12,1,'Admin','2023-05-01 14:00:00'),
-(5,5,0,'Admin','2023-05-01 14:00:00'),
-(5,5,1,'Admin','2023-05-01 14:00:00'),
-(6,14,0,'Admin','2023-05-01 14:00:00'),
-(6,14,1,'Admin','2023-05-01 14:00:00'),
-(7,6,0,'Admin','2023-05-01 14:00:00'),
-(7,6,1,'Admin','2023-05-01 14:00:00'),
-(8,15,0,'Admin','2023-05-01 14:00:00'),
-(8,15,1,'Admin','2023-05-01 14:00:00'),
-(9,13,0,'Admin','2023-05-01 14:00:00'),
-(9,13,1,'Admin','2023-05-01 14:00:00'),
-(10,16,0,'Admin','2023-05-01 14:00:00'),
-(10,16,1,'Admin','2023-05-01 14:00:00'),
-(11,11,0,'Admin','2023-05-01 14:00:00'),
-(11,11,1,'Admin','2023-05-01 14:00:00'),
-(12,2,0,'Admin','2023-05-01 14:00:00'),
-(12,2,1,'Admin','2023-05-01 14:00:00'),
-(13,8,0,'Admin','2023-05-01 14:00:00'),
-(13,8,1,'Admin','2023-05-01 14:00:00'),
-(14,10,0,'Admin','2023-05-01 14:00:00'),
-(14,10,1,'Admin','2023-05-01 14:00:00'),
-(15,3,0,'Admin','2023-05-01 14:00:00'),
-(15,3,1,'Admin','2023-05-01 14:00:00');
+(1,1,3,'Admin','2023-05-01 14:00:00'),
+(2,4,3,'Admin','2023-05-01 14:00:00'), 
+(3,8,3,'Admin','2023-05-01 14:00:00'),
+(4,12,3,'Admin','2023-05-01 14:00:00'),
+(5,5,3,'Admin','2023-05-01 14:00:00'),
+(6,14,3,'Admin','2023-05-01 14:00:00'),
+(7,6,3,'Admin','2023-05-01 14:00:00'),
+(8,15,3,'Admin','2023-05-01 14:00:00'),
+(9,13,3,'Admin','2023-05-01 14:00:00'),
+(10,16,3,'Admin','2023-05-01 14:00:00'),
+(11,11,3,'Admin','2023-05-01 14:00:00'),
+(12,2,3,'Admin','2023-05-01 14:00:00'),
+(13,8,3,'Admin','2023-05-01 14:00:00'),
+(14,10,3,'Admin','2023-05-01 14:00:00'),
+(15,3,3,'Admin','2023-05-01 14:00:00');
