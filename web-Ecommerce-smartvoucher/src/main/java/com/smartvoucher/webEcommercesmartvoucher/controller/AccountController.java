@@ -73,7 +73,7 @@ public class AccountController {
 
     @PostMapping("/api/signup")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject> SignUp(@RequestBody @Valid SignUpDTO signUpDTO, final HttpServletRequest request) {
+    public ResponseEntity<ResponseObject> SignUp(@RequestBody @Valid SignUpDTO signUpDTO) {
         signUpDTO.setRoleName("ROLE_USER");
         String applicationURL = "http://localhost:3000/email-verification?token=";
         this.applicationEventPublisher.publishEvent(new SignUpCompleteEvent(this.accountService.SignUp(signUpDTO), applicationURL));

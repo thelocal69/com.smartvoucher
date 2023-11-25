@@ -41,7 +41,7 @@ public class SignUpCompleteEventListener implements ApplicationListener<SignUpCo
         //save verificaton token xuong db
         this.accountService.saveUserVerificationToken(user, verificationToken);
         //tao ra url verification de gui cho user
-        String url = event.getApplicationURL()+"/account/api/verify_email?token="+verificationToken;
+        String url = event.getApplicationURL()+verificationToken;
         //gui email xac nhan
         try {
             emailUtil.sendVerificationEmail(url, user);

@@ -39,7 +39,7 @@ public class EmailUtil {
                         "<p align=\"center\">"+"<a href=\"" +url+ "\" style=\"padding:10px;width:104px;height:16px;display:block;margin:8;" +
                         "text-decoration:none;border:1px solid #ef5b25;text-align:center;font-size:12px;font-style:normal;font-weight:600;font-family:'Open Sans',sans-serif;color:#fff;background:#ef5b25;border-radius:5px;line-height:16px\">" +
                         "Xác nhận email</a>" +"</p>"+
-                        "<p align=\"center\"> Xin cảm ơn <br> Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";
+                        "<p align=\"center\"> Xin cảm ơn ! Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(message);
         messageHelper.setFrom(mailProperties.getUsername(), senderName);
@@ -61,7 +61,7 @@ public class EmailUtil {
                         "<p align=\"center\">"+"<a href=\"" +url+ "\" style=\"padding:10px;width:104px;height:16px;display:block;margin:8;" +
                         "text-decoration:none;border:1px solid #ef5b25;text-align:center;font-size:12px;font-style:normal;font-weight:600;font-family:'Open Sans',sans-serif;color:#fff;background:#ef5b25;border-radius:5px;line-height:16px\">" +
                         "Đặt lại mật khẩu</a>" +"</p>"+
-        "<p align=\"center\"> Xin cảm ơn <br> Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";
+        "<p align=\"center\"> Xin cảm ơn ! Cổng dịch vụ đăng ký tài khoản người dùng Smartvoucher.com";
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(message);
         messageHelper.setFrom(mailProperties.getUsername(), senderName);
