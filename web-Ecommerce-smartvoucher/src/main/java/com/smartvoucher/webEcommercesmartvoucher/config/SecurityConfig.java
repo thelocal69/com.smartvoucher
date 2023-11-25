@@ -96,7 +96,13 @@ public class SecurityConfig {
                     .antMatchers("/account/**").permitAll()
                     .antMatchers("**/upload").permitAll()
                     .antMatchers("/auth/**", "/oauth2/**").permitAll()
-                    .antMatchers("/merchant/**").hasRole("ADMIN")
+                    //merchant
+                    .antMatchers(HttpMethod.GET, "/merchant").permitAll()
+                    .antMatchers(HttpMethod.POST, "/merchant/api/insert").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/merchant/api/upload").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/merchant/api/{id}").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, "/merchant/api/{id}").hasRole("ADMIN")
+                    //merchant
                     .antMatchers("/chain/**").hasRole("ADMIN")
                     .antMatchers("/label/api/all").permitAll()
                     //user
