@@ -113,8 +113,9 @@ public class MerchantService implements IMerchantService {
     }
 
     @Override
-    public File uploadMerchantImages(MultipartFile fileName) {
+    public String uploadMerchantImages(MultipartFile fileName) {
         String folderId = "1z6B_EyGuGN5AJX8tqrGnZkT6XMiKuTg5";
-        return uploadUtil.uploadImages(fileName, folderId);
+        File file = uploadUtil.uploadImages(fileName, folderId);
+        return "https://drive.google.com/uc?export=view&id="+file.getId();
     }
 }

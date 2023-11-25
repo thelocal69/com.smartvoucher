@@ -129,8 +129,9 @@ public class ChainService implements IChainService {
     }
 
     @Override
-    public File uploadChainImages(MultipartFile fileName) {
+    public String uploadChainImages(MultipartFile fileName) {
         String folderId = "1u73jDfQwDXvzlmKSVLb5CAI6DNPvylRH";
-       return uploadUtil.uploadImages(fileName, folderId);
+        File file = uploadUtil.uploadImages(fileName, folderId);
+       return "https://drive.google.com/uc?export=view&id="+file.getId();
     }
     }

@@ -52,7 +52,7 @@ public class UserService implements IUserService {
         UserEntity userEntity = userRepository.findByEmailAndProvider(email, Provider.local.name());
         if (userEntity != null){
             File file = uploadUtil.uploadImages(fileName, folderId);
-            userEntity.setAvatarUrl(file.getWebViewLink());
+            userEntity.setAvatarUrl("https://drive.google.com/uc?export=view&id="+file.getId());
             this.userRepository.save(userEntity);
         }else {
             log.info("User not found data");
