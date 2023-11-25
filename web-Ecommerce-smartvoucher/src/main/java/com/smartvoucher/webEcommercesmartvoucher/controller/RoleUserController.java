@@ -47,16 +47,6 @@ public class RoleUserController {
         );
     }
 
-    @PutMapping("/api/update")
-    public ResponseEntity<ResponseObject> updateRoleUser(@RequestBody RolesUsersDTO rolesUsersDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(
-                        200,
-                        "Update role success !",
-                        this.roleUserService.update(rolesUsersDTO)
-                ));
-    }
-
     @DeleteMapping("/api/delete")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> delete(@RequestBody RolesUsersDTO rolesUsersDTO){

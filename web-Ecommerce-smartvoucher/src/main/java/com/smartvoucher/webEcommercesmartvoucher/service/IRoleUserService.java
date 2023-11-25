@@ -8,6 +8,5 @@ import java.util.List;
 public interface IRoleUserService {
     List<RolesUsersDTO> getAllRoleUser();
     RolesUsersDTO insert(RolesUsersDTO rolesUsersDTO);
-    ResponseObject update(RolesUsersDTO rolesUsersDTO);
     void delete(RolesUsersDTO rolesUsersDTO);
 }

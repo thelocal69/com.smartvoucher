@@ -82,18 +82,6 @@ public class RoleUserService implements IRoleUserService {
     }
 
     @Override
-    public ResponseObject update(RolesUsersDTO rolesUsersDTO) {
-        RolesUsersEntity rolesUsersEntity = roleUserRepository.findByIdUser(rolesUsersDTO.getIdUser());
-        if (rolesUsersEntity != null) {
-
-        } else {
-            throw new ObjectNotFoundException(404, "User not found in table RoleUser");
-        }
-        return null;
-    }
-
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(RolesUsersDTO rolesUsersDTO) {
         RolesUsersEntity rolesUsersEntity = roleUserRepository.findByIdRoleAndIdUser(
