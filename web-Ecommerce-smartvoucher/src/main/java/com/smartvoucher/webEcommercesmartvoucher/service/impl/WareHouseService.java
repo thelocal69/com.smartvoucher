@@ -89,7 +89,7 @@ public class WareHouseService implements IWareHouseService {
                 );
             }
             wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
-            this.redisTemplate.opsForValue().set("listWareHouse", gson.toJson(wareHouseDTOList), 60, TimeUnit.MINUTES);
+            this.redisTemplate.opsForValue().set("listWareHouse", gson.toJson(wareHouseDTOList), 30, TimeUnit.MINUTES);
         }
         log.info("Get all warehouse is completed !");
         return wareHouseDTOList;
@@ -223,7 +223,7 @@ public class WareHouseService implements IWareHouseService {
             }
             wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
             String data = gson.toJson(wareHouseDTOList);
-            this.redisTemplate.opsForValue().set("listWareHouseByLable", data, 60, TimeUnit.MINUTES);
+            this.redisTemplate.opsForValue().set("listWareHouseByLable", data, 30, TimeUnit.MINUTES);
         }
         log.info("Get all warehouse by lable is completed !");
         return wareHouseDTOList;
@@ -247,7 +247,7 @@ public class WareHouseService implements IWareHouseService {
             }
             wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(wareHouseEntities);
             String data = gson.toJson(wareHouseDTOList);
-            this.redisTemplate.opsForValue().set("listWareHouseByCategoryId", data, 60, TimeUnit.MINUTES);
+            this.redisTemplate.opsForValue().set("listWareHouseByCategoryId", data, 30, TimeUnit.MINUTES);
         }
         log.info("Get all warehouse by category code is completed !");
         return wareHouseDTOList;
