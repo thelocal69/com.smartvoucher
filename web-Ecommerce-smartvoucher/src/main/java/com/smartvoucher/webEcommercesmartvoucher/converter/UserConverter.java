@@ -76,7 +76,7 @@ public class  UserConverter {
         UserEntity userEntity = new UserEntity();
         userEntity.setMemberCode(randomCodeHandler.generateRandomChars(10));
         userEntity.setPwd(passwordEncoder.encode(signUpDTO.getPassword()));
-        userEntity.setAvatarUrl("https://drive.google.com/file/d/1rdcr4ukMLFU2CNmLyrCIixanHu4y31JY/view?usp=drive_link");
+        userEntity.setAvatarUrl("https://drive.google.com/uc?export=view&id=1rdcr4ukMLFU2CNmLyrCIixanHu4y31JY");
         userEntity.setPhone(signUpDTO.getPhone());
         userEntity.setEmail(signUpDTO.getEmail());
         userEntity.setUsername(stringsUtil.getUserNameFormDomain(signUpDTO.getEmail()));
