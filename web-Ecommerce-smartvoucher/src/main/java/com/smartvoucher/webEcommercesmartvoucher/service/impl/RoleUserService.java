@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.RolesUsersEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.keys.RolesUsersKeys;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IRoleUserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.RoleRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
@@ -79,6 +80,18 @@ public class RoleUserService implements IRoleUserService {
         }
         return roleUsersConverter.toRoleUserDTO(roleUserRepository.save(rolesUsersEntity));
     }
+
+    @Override
+    public ResponseObject update(RolesUsersDTO rolesUsersDTO) {
+        RolesUsersEntity rolesUsersEntity = roleUserRepository.findByIdUser(rolesUsersDTO.getIdUser());
+        if (rolesUsersEntity != null) {
+
+        } else {
+            throw new ObjectNotFoundException(404, "User not found in table RoleUser");
+        }
+        return null;
+    }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)

@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
+    OrderEntity findOneById(Long id);
     OrderEntity findByOrderNo(String orderNo);
 
     @Query("SELECT o FROM orders o WHERE o.orderNo = ?1 AND o.id != ?2")

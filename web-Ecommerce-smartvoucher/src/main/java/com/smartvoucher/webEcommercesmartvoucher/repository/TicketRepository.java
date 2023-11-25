@@ -23,5 +23,5 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
 
     void deleteByIdSerial(SerialEntity serialEntity);
 
-    List<TicketEntity> findByIdStore(StoreEntity store);
+    List<TicketEntity> findByIdOrder(OrderEntity order);
 }
