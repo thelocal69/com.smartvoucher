@@ -3,8 +3,11 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.smartvoucher.webEcommercesmartvoucher.converter.OrderConverter;
+import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.OrderEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
@@ -23,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +40,8 @@ public class OrderService implements IOrderService {
     private final RandomCodeHandler randomCodeHandler;
     private final Gson gson;
     private final RedisTemplate<String, String> redisTemplate;
+    private final TicketRepository ticketRepository;
+    private final TicketConverter ticketConverter;
 
     @Autowired
     public OrderService(OrderRepository orderRepository
@@ -44,7 +50,9 @@ public class OrderService implements IOrderService {
             , IWareHouseRepository iWareHouseRepository
             , RandomCodeHandler randomCodeHandler,
                         Gson gson,
-                        RedisTemplate<String, String> redisTemplate) {
+                        RedisTemplate<String, String> redisTemplate
+            ,TicketRepository ticketRepository
+            ,TicketConverter ticketConverter) {
         this.orderRepository = orderRepository;
         this.orderConverter = orderConverter;
         this.userRepository = userRepository;
@@ -52,6 +60,8 @@ public class OrderService implements IOrderService {
         this.randomCodeHandler = randomCodeHandler;
         this.gson = gson;
         this.redisTemplate = redisTemplate;
+        this.ticketRepository = ticketRepository;
+        this.ticketConverter = ticketConverter;
     }
 
     @Override
@@ -141,10 +151,39 @@ public class OrderService implements IOrderService {
                 log.info("All orders of user is empty!");
                 throw new ObjectNotFoundException(404, "All orders of user is empty!");
             }
+            orderDTOList = addTicketInListOrder(orderDTOList, id);
             String data = gson.toJson(orderDTOList);
             this.redisTemplate.opsForValue().set("listOrderByUser", data, 10, TimeUnit.MINUTES);
         }
         log.info("Get all orders of user is completed  !");
+        return orderDTOList;
+    }
+
+    public List<OrderDTO> addTicketInListOrder(List<OrderDTO> orderDTOList, Long idUser) {
+        // Kiểm tra orderDTOList không được null
+        if (!Objects.requireNonNull(orderDTOList).isEmpty()) {
+            for (OrderDTO orderDTO : orderDTOList) {
+                // tìm list ticketByIdOrder
+                List<TicketEntity> listTicket =
+                        ticketRepository.findByIdOrder(
+                                orderRepository.findOneById(orderDTO.getId()));
+                if (!listTicket.isEmpty()) {
+                    // khởi tạo listTicketDTO
+                    List<TicketDTO> listTicketDTO = new ArrayList<>();
+                    for (TicketEntity ticketEntity : listTicket) {
+                        // add từng ticket đã tìm được bằng idOrder vào listTicketDTO
+                        listTicketDTO.add(ticketConverter.toTicketDTO(ticketEntity));
+                    }
+                    // set listTicketDTO vào trong OrderDTO
+                    orderDTO.setListTicketDTO(listTicketDTO);
+                } else {
+                    throw new ObjectEmptyException(406, "Ticket in list order is empty");
+                }
+            }
+        } else {
+            throw new ObjectEmptyException(406, "User's order has id " + idUser +
+                    " which is empty, please check and try again");
+        }
         return orderDTOList;
     }
 

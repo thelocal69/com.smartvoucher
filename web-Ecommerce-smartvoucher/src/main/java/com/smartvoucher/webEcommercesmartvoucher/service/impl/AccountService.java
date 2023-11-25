@@ -248,7 +248,7 @@ public class AccountService implements IAccountService {
         return "Set new password successfully !";
     }
 
-    private  void saveUserToken(UserEntity user, String jwtToken){
+    private void saveUserToken(UserEntity user, String jwtToken){
         Tokens tokens = Tokens.builder()
                 .user(user)
                 .token(jwtToken)

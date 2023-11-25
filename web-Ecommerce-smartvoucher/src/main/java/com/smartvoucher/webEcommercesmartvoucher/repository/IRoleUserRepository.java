@@ -20,6 +20,11 @@ public interface IRoleUserRepository extends JpaRepository<RolesUsersEntity, Rol
             " WHERE r.id = :idRole AND u.id = :idUser")
     RolesUsersEntity findByIdRoleAndIdUser(long idRole, long idUser);
 
+    @Query("SELECT ru FROM roles_users ru " +
+            "JOIN users u ON ru.roleUserKeys.idUser = u.id " +
+            "WHERE u.id = :idUser")
+    RolesUsersEntity findByIdUser (long idUser);
+
     void deleteByRoleUserKeys(RolesUsersKeys keys);
 
     @Query("SELECT ru FROM roles_users ru" +

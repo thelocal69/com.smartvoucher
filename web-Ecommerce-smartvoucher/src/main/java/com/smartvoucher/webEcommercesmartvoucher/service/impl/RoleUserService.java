@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.RolesUsersEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.keys.RolesUsersKeys;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IRoleUserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.RoleRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
