@@ -1,7 +1,5 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.smartvoucher.webEcommercesmartvoucher.converter.OrderConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
@@ -14,21 +12,21 @@ import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeExcept
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
-import com.smartvoucher.webEcommercesmartvoucher.repository.*;
+import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.OrderRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.TicketRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IOrderService;
 import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -38,8 +36,6 @@ public class OrderService implements IOrderService {
     private final UserRepository userRepository;
     private final IWareHouseRepository iWareHouseRepository;
     private final RandomCodeHandler randomCodeHandler;
-    private final Gson gson;
-    private final RedisTemplate<String, String> redisTemplate;
     private final TicketRepository ticketRepository;
     private final TicketConverter ticketConverter;
 
@@ -48,9 +44,7 @@ public class OrderService implements IOrderService {
             , OrderConverter orderConverter
             , UserRepository userRepository
             , IWareHouseRepository iWareHouseRepository
-            , RandomCodeHandler randomCodeHandler,
-                        Gson gson,
-                        RedisTemplate<String, String> redisTemplate
+            , RandomCodeHandler randomCodeHandler
             ,TicketRepository ticketRepository
             ,TicketConverter ticketConverter) {
         this.orderRepository = orderRepository;
@@ -58,8 +52,6 @@ public class OrderService implements IOrderService {
         this.userRepository = userRepository;
         this.iWareHouseRepository = iWareHouseRepository;
         this.randomCodeHandler = randomCodeHandler;
-        this.gson = gson;
-        this.redisTemplate = redisTemplate;
         this.ticketRepository = ticketRepository;
         this.ticketConverter = ticketConverter;
     }
@@ -138,23 +130,13 @@ public class OrderService implements IOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<OrderDTO> getAllOrderByIdUser(long id){
-        List<OrderEntity> getAllOrder;
-        List<OrderDTO> orderDTOList;
-        if (Boolean.TRUE.equals(this.redisTemplate.hasKey("listOrderByUser"))){
-            String data = redisTemplate.opsForValue().get("listOrderByUser");
-            Type listType = new  TypeToken<ArrayList<OrderDTO>>(){}.getType();
-            orderDTOList = gson.fromJson(data, listType);
-        }else {
-            getAllOrder = orderRepository.findAllOrderByIdUser(id);
-            orderDTOList = orderConverter.orderDTOList(getAllOrder);
+        List<OrderEntity> getAllOrder = orderRepository.findAllOrderByIdUser(id);
+        List<OrderDTO> orderDTOList = orderConverter.orderDTOList(getAllOrder);
             if(getAllOrder.isEmpty()){
                 log.info("All orders of user is empty!");
                 throw new ObjectNotFoundException(404, "All orders of user is empty!");
             }
             orderDTOList = addTicketInListOrder(orderDTOList, id);
-            String data = gson.toJson(orderDTOList);
-            this.redisTemplate.opsForValue().set("listOrderByUser", data, 10, TimeUnit.MINUTES);
-        }
         log.info("Get all orders of user is completed  !");
         return orderDTOList;
     }
