@@ -1,13 +1,11 @@
 package com.smartvoucher.webEcommercesmartvoucher.repository;
 
-import com.smartvoucher.webEcommercesmartvoucher.entity.CategoryEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.OrderEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,4 +20,8 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
 
     @Query("SELECT t FROM ticket t WHERE t.idSerial = ?1")
     TicketEntity findBySerialCode(SerialEntity serialCode);
+
+    void deleteByIdSerial(SerialEntity serialEntity);
+
+    List<TicketEntity> findByIdOrder(OrderEntity order);
 }
