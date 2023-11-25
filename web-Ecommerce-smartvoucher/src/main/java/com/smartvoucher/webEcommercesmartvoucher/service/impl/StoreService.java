@@ -2,15 +2,11 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.smartvoucher.webEcommercesmartvoucher.converter.StoreConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.StoreDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.ChainEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.MerchantEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.StoreEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
-import com.smartvoucher.webEcommercesmartvoucher.repository.IChainRepository;
-import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
-import com.smartvoucher.webEcommercesmartvoucher.repository.IStoreRepository;
+import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.IStoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +23,32 @@ public class StoreService implements IStoreService {
     private final StoreConverter storeConverter;
     private final IChainRepository chainRepository;
     private final IMerchantRepository merchantRepository;
+    private final WarehouseSerialRepository warehouseSerialRepository;
+    private final SerialRepository serialRepository;
+    private final TicketRepository ticketRepository;
+    private final TicketHistoryRepository ticketHistoryRepository;
+    private final WarehouseStoreRepository warehouseStoreRepository;
 
     @Autowired
     public StoreService(final IStoreRepository storeRepository,
                         final StoreConverter storeConverter,
                         final IChainRepository chainRepository,
-                        final IMerchantRepository merchantRepository
+                        final IMerchantRepository merchantRepository,
+                        final WarehouseSerialRepository warehouseSerialRepository,
+                        final SerialRepository serialRepository,
+                        final TicketRepository ticketRepository,
+                        final TicketHistoryRepository ticketHistoryRepository,
+                        final WarehouseStoreRepository warehouseStoreRepository
     ) {
         this.storeRepository = storeRepository;
         this.storeConverter = storeConverter;
         this.chainRepository = chainRepository;
         this.merchantRepository = merchantRepository;
+        this.warehouseSerialRepository = warehouseSerialRepository;
+        this.serialRepository = serialRepository;
+        this.ticketRepository = ticketRepository;
+        this.ticketHistoryRepository = ticketHistoryRepository;
+        this.warehouseStoreRepository = warehouseStoreRepository;
     }
 
     @Override

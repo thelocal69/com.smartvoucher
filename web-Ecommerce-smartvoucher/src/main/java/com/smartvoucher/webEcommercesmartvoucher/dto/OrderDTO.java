@@ -27,6 +27,7 @@ public class OrderDTO {
     private int quantity;
     @NotNull(message = "Please fill all information!")
     private WareHouseDTO idWarehouseDTO;
+    private List<TicketDTO> listTicketDTO;
     private String discountName;
     private Long idStore;
     private Long idUser;

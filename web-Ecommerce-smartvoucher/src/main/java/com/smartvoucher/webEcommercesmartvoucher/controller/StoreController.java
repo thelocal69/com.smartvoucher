@@ -76,12 +76,12 @@ public class StoreController {
         storeDTO.setId(id);
         this.storeService.deleteStore(storeDTO);
         log.info("Delete is completed !");
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(
-                            200,
-                            "Delete is completed !",
-                            "{}"
-                    )
-            );
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Delete is completed !",
+                        "{}"
+                )
+        );
     }
 }
