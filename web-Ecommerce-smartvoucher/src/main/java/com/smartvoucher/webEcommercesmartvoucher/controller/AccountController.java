@@ -75,7 +75,7 @@ public class AccountController {
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> SignUp(@RequestBody @Valid SignUpDTO signUpDTO, final HttpServletRequest request) {
         signUpDTO.setRoleName("ROLE_USER");
-        String applicationURL = "http://localhost:3000/email-verification";
+        String applicationURL = "http://localhost:3000/email-verification?token=";
         this.applicationEventPublisher.publishEvent(new SignUpCompleteEvent(this.accountService.SignUp(signUpDTO), applicationURL));
         log.info("Success!  Please, check your email for to complete your registration");
         return ResponseEntity.status(HttpStatus.OK).body(
