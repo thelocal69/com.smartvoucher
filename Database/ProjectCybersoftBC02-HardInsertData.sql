@@ -132,7 +132,7 @@ VALUES
 	('W14', 2, 'Giảm 50.000đ thẻ nạp Game', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'https://drive.google.com/uc?export=view&id=1trE3cFwDovjrgDLJeydVyqjaGvcbDBSc', 'https://drive.google.com/uc?export=view&id=1lKs8dBv9ZsVj-NI2LL5Ga_ggcTqujq8X', 20.000, 1, 50.000, 50.000, '2023-02-01 23:00:00', '2024-02-10 23:00:00', 1, 1, 750, 1, 10, 'Admin', '2024-02-01 23:00:00'),
 	('W15', 3, 'Giảm 50.000đ trên tổng hóa đơn', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'https://drive.google.com/uc?export=view&id=16fy6FOM3xWawB5siUIdpoz8byXEutvmK', 'https://drive.google.com/uc?export=view&id=1APDAJDso1zStLJATNPGe2WAiYP7LYUyZ', 18.000, 1, 50.000, 50.000, '2023-03-01 00:00:00', '2024-03-10 00:00:00', 1, 1, 800, 1, 3, 'Admin', '2024-03-01 00:00:00');
 	
-INSERT INTO roles (name, role_code) VALUES ('ROLE_ACQUIRER','ACQUIRER'), ('ROLE_ISSUER', 'ISSUER');
+INSERT INTO roles (name, role_code) VALUES ('ROLE_MERCHANT','MERCHANT');
 
 INSERT INTO warehouse_merchant (id_warehouse, id_merchant, id_role, created_by, created_at)
 VALUES 
