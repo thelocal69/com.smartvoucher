@@ -167,20 +167,6 @@ public class EmailUtil {
                     "    </tbody>\n" +
                     "</table>"
                     +
-                    "<table style=\"color: rgb(49, 49, 49); font-family: arial, helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; width: 540px; border-spacing: 0px; margin-bottom: 20px; border-top: 1px solid rgb(226, 227, 228); table-layout: fixed; word-break: break-all;\">\n" +
-                    "    <thead>\n" +
-                    "        <tr style=\"background-color: rgb(241, 241, 241); line-height: 40px;\">\n" +
-                    "            <th style=\"text-align: left; min-width: 120px; padding-left: 10px;\">Discounts:</th>\n" +
-                    "            <th style=\"text-align: right; padding-right: 10px;\"><br></th>\n" +
-                    "        </tr>\n" +
-                    "    </thead>\n" +
-                    "    <tbody>\n" +
-                    "        <tr>\n" +
-                    "            <td style=\"margin: 0px; padding-top: 15px; padding-left: 10px;\">Sale Discount</td>\n" +
-                    "            <td style=\"margin: 0px; text-align: right; padding-top: 15px; padding-right: 10px;\">- ₫"+warehouseStore.getIdWarehouse().getMaxDiscountAmount()+"&nbsp;VND</td>\n" +
-                    "        </tr>\n" +
-                    "    </tbody>\n" +
-                    "</table>\n" +
                     "<table style=\"color: rgb(49, 49, 49); font-family: arial, helvetica, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; width: 540px; border-spacing: 0px; border-top: 1px solid rgb(226, 227, 228); margin-bottom: 20px; text-align: right; line-height: 26px;\">\n" +
                     "    <thead>\n" +
                     "        <tr>\n" +
@@ -191,7 +177,7 @@ public class EmailUtil {
                     "    <tbody>\n" +
                     "        <tr>\n" +
                     "            <td style=\"margin: 0px; padding-top: 15px;\"><span style=\"font-weight: bold; text-transform: uppercase; color: rgb(178, 178, 178);\">TOTAL:</span></td>\n" +
-                    "            <td style=\"margin: 0px; padding: 15px 10px 0px;\"><span style=\"font-weight: bold;\">₫"+(warehouseStore.getIdWarehouse().getPrice()*warehouseStore.getIdWarehouse().getMaxDiscountAmount()/100)*order.getQuantity()+"&nbsp;VND</span></td>\n" +
+                    "            <td style=\"margin: 0px; padding: 15px 10px 0px;\"><span style=\"font-weight: bold;\">₫"+warehouseStore.getIdWarehouse().getPrice()*order.getQuantity()+"&nbsp;VND</span></td>\n" +
                     "        </tr>\n" +
                     "        <tr>\n" +
                     "            <td colspan=\"2\" style=\"margin: 0px; text-align: center; padding-top: 15px;\"><br></td>\n" +
