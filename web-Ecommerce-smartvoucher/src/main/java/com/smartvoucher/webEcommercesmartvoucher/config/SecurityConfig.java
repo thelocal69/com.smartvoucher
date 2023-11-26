@@ -172,7 +172,7 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.POST, "/ticket/api/ticket_detail").hasRole("USER")
                     //ticket
                     //role_user
-                    .antMatchers(HttpMethod.GET,"/role_user").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET,"/role_user").permitAll()
                     .antMatchers(HttpMethod.POST,"/role_user/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/role_user/api/delete").hasRole("ADMIN")
                     //role_user
