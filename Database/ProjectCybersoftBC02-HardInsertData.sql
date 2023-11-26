@@ -131,4 +131,41 @@ VALUES
 	('W13', 1, 'Giảm 10% tour Cù Lao Câu', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'https://drive.google.com/uc?export=view&id=1UTad-tEoduL0I6MNQJWwPxaod8hz3Zcz', 'https://drive.google.com/uc?export=view&id=12lPiKzHUV-M_u7R6i5hXW7q6_nPEYSzl', 50.000, 2, 0.1, 100.000, '2023-11-01 22:00:00', '2024-01-10 22:00:00', 1, 1, 700, 1, 1, 'Admin', '2024-01-01 22:00:00'),
 	('W14', 2, 'Giảm 50.000đ thẻ nạp Game', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'https://drive.google.com/uc?export=view&id=1trE3cFwDovjrgDLJeydVyqjaGvcbDBSc', 'https://drive.google.com/uc?export=view&id=1lKs8dBv9ZsVj-NI2LL5Ga_ggcTqujq8X', 20.000, 1, 50.000, 50.000, '2023-02-01 23:00:00', '2024-02-10 23:00:00', 1, 1, 750, 1, 10, 'Admin', '2024-02-01 23:00:00'),
 	('W15', 3, 'Giảm 50.000đ trên tổng hóa đơn', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'https://drive.google.com/uc?export=view&id=16fy6FOM3xWawB5siUIdpoz8byXEutvmK', 'https://drive.google.com/uc?export=view&id=1APDAJDso1zStLJATNPGe2WAiYP7LYUyZ', 18.000, 1, 50.000, 50.000, '2023-03-01 00:00:00', '2024-03-10 00:00:00', 1, 1, 800, 1, 3, 'Admin', '2024-03-01 00:00:00');
-	
+
+INSERT INTO roles (name, role_code) VALUES ('ROLE_ADMIN','ADMIN'), ('ROLE_USER', 'USER'), ('ROLE_MERCHANT', 'MERCHANT') ;
+
+INSERT INTO warehouse_merchant (id_warehouse, id_merchant, id_role, created_by, created_at)
+VALUES 
+(1,1,3,'Admin','2023-05-01 14:00:00'),
+(2,4,3,'Admin','2023-05-01 14:00:00'), 
+(3,8,3,'Admin','2023-05-01 14:00:00'),
+(4,12,3,'Admin','2023-05-01 14:00:00'),
+(5,5,3,'Admin','2023-05-01 14:00:00'),
+(6,14,3,'Admin','2023-05-01 14:00:00'),
+(7,6,3,'Admin','2023-05-01 14:00:00'),
+(8,15,3,'Admin','2023-05-01 14:00:00'),
+(9,13,3,'Admin','2023-05-01 14:00:00'),
+(10,16,3,'Admin','2023-05-01 14:00:00'),
+(11,11,3,'Admin','2023-05-01 14:00:00'),
+(12,2,3,'Admin','2023-05-01 14:00:00'),
+(13,8,3,'Admin','2023-05-01 14:00:00'),
+(14,10,3,'Admin','2023-05-01 14:00:00'),
+(15,3,3,'Admin','2023-05-01 14:00:00');
+
+INSERT INTO warehouse_stores (id_warehouse, id_store, created_by, created_at)
+VALUES
+(1, 1, 'Admin', '2023-01-01 10:00:00'),
+(2, 4, 'Admin', '2023-01-02 11:00:00'),
+(3, 9, 'Admin', '2023-01-03 12:00:00'),
+(4, 13, 'Admin', '2023-01-04 13:00:00'),
+(5, 6, 'Admin', '2023-01-05 14:00:00'),
+(6, 15, 'Admin', '2023-01-06 15:00:00'),
+(7, 7, 'Admin', '2023-01-07 16:00:00'),
+(8, 16, 'Admin', '2023-01-08 17:00:00'),
+(9, 14, 'Admin', '2023-01-09 18:00:00'),
+(10, 17, 'Admin', '2023-01-10 19:00:00'),
+(11, 12, 'Admin', '2023-01-11 20:00:00'),
+(12, 2, 'Admin', '2023-01-12 21:00:00'),
+(13, 9, 'Admin', '2023-01-13 22:00:00'),
+(14, 11, 'Admin', '2023-01-14 23:00:00'),
+(15, 4, 'Admin', '2023-01-15 00:00:00');
