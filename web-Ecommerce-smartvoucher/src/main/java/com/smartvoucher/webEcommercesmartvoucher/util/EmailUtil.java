@@ -89,7 +89,8 @@ public class EmailUtil {
 
     public void sendTicketCode(String mail, List<TicketDTO> listVoucherCode) throws MessagingException, UnsupportedEncodingException {
             UserEntity user = userRepository.findByEmailAndProvider(mail, Provider.local.name());
-            OrderEntity order =  orderRepository.findOneByIdUser(user.getId());
+            List<OrderEntity> orderEntityList = orderRepository.findAllOrderByIdUser(user.getId());
+            OrderEntity order = orderEntityList.get(orderEntityList.size()-1);
             WarehouseStoreEntity warehouseStore = warehouseStoreRepository.getWarehouseStoreEntitiesByIdWarehouse(order.getIdWarehouse().getId());
             String senderName = "Cổng dịch vụ thanh toán mua voucher của người dùng Smartvoucher.com";
             String subject = "Thanh toán Voucher thành công";
@@ -145,9 +146,9 @@ public class EmailUtil {
                     "    </thead>\n" +
                     "    <tbody>\n" +
                     "        <tr>\n" +
-                    "            <td style=\"margin: 0px; padding-top: 15px; padding-left: 10px; word-break: break-all;\">"+order.getIdWarehouse().getName()+"</td>\n" +
+                    "            <td style=\"margin: 0px; padding-top: 15px; padding-left: 10px; word-break: break-all;\">"+warehouseStore.getIdWarehouse().getName()+"</td>\n" +
                     "            <td style=\"margin: 0px; padding-top: 15px; padding-left: 10px; word-break: break-all;\">"+warehouseStore.getIdStore().getName()+"</td>\n" +
-                    "            <td style=\"margin: 0px; text-align: right; padding-top: 15px; padding-right: 10px; word-break: break-all;\">₫"+order.getIdWarehouse().getPrice()+"&nbsp;VND</td>\n" +
+                    "            <td style=\"margin: 0px; text-align: right; padding-top: 15px; padding-right: 10px; word-break: break-all;\">₫"+warehouseStore.getIdWarehouse().getPrice()+"&nbsp;VND</td>\n" +
                     "        </tr>\n" +
                     "    </tbody>\n" +
                     "</table>\n" +
@@ -176,7 +177,7 @@ public class EmailUtil {
                     "    <tbody>\n" +
                     "        <tr>\n" +
                     "            <td style=\"margin: 0px; padding-top: 15px; padding-left: 10px;\">Sale Discount</td>\n" +
-                    "            <td style=\"margin: 0px; text-align: right; padding-top: 15px; padding-right: 10px;\">- ₫"+order.getIdWarehouse().getMaxDiscountAmount()+"&nbsp;VND</td>\n" +
+                    "            <td style=\"margin: 0px; text-align: right; padding-top: 15px; padding-right: 10px;\">- ₫"+warehouseStore.getIdWarehouse().getMaxDiscountAmount()+"&nbsp;VND</td>\n" +
                     "        </tr>\n" +
                     "    </tbody>\n" +
                     "</table>\n" +
@@ -190,7 +191,7 @@ public class EmailUtil {
                     "    <tbody>\n" +
                     "        <tr>\n" +
                     "            <td style=\"margin: 0px; padding-top: 15px;\"><span style=\"font-weight: bold; text-transform: uppercase; color: rgb(178, 178, 178);\">TOTAL:</span></td>\n" +
-                    "            <td style=\"margin: 0px; padding: 15px 10px 0px;\"><span style=\"font-weight: bold;\">₫"+(order.getIdWarehouse().getPrice()*order.getIdWarehouse().getMaxDiscountAmount()/100)*order.getQuantity()+"&nbsp;VND</span></td>\n" +
+                    "            <td style=\"margin: 0px; padding: 15px 10px 0px;\"><span style=\"font-weight: bold;\">₫"+(warehouseStore.getIdWarehouse().getPrice()*warehouseStore.getIdWarehouse().getMaxDiscountAmount()/100)*order.getQuantity()+"&nbsp;VND</span></td>\n" +
                     "        </tr>\n" +
                     "        <tr>\n" +
                     "            <td colspan=\"2\" style=\"margin: 0px; text-align: center; padding-top: 15px;\"><br></td>\n" +
