@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.smartvoucher</groupId>
-	<artifactId>web-Ecommerce-smartvoucher</artifactId>
-	<version>1.0.0_RELEASE</version>
+	<artifactId>web-ecommerce-smartvoucher</artifactId>
+	<version>1.0-SNAPSHOT</version>
 	<name>web-Ecommerce-smartvoucher</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
