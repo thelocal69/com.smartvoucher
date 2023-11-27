@@ -1,0 +1,108 @@
+.wrapper {
+  display: flex;
+  gap: 24px;
+  .list {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 24px;
+    border-radius: 4px;
+    height: fit-content;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    overflow-x: scroll;
+    .list-wrapper {
+      width: fit-content;
+      h2 {
+        margin: 0;
+      }
+      .item {
+        transition: all 0.3s;
+        &.head {
+          font-weight: 600;
+          border-bottom: 1px solid black;
+        }
+        font-size: 12px;
+        padding: 12px 0px;
+        justify-content: space-between;
+        width: 100%;
+        display: flex;
+        gap: 8px;
+        overflow-x: scroll;
+        cursor: pointer;
+        &:hover {
+          background-color: rgb(244, 241, 238);
+          transform: translateY(-4px);
+          transition: all 0.3s;
+          box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+        }
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        .a {
+          &.id {
+            width: 4%;
+          }
+          text-align: flex-start;
+          &::-webkit-scrollbar {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  .actions {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    .action {
+      display: flex;
+      flex-direction: column;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+      gap: 12px;
+      background-color: rgb(246, 243, 246);
+      input {
+        outline-style: none;
+        border: none;
+        padding: 8px;
+        border-radius: 3px;
+        font-size: 12px;
+      }
+      h4 {
+        margin: 0;
+      }
+
+      .form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+          height: 60px;
+          background-color: white;
+        }
+      }
+      .btn {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        background-color: black;
+        color: white;
+        margin-top: 4px;
+      }
+    }
+  }
+}

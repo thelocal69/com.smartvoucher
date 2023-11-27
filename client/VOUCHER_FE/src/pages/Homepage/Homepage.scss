@@ -1,0 +1,124 @@
+.homepage {
+  .faqs-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 56px;
+  }
+  .faqs {
+    height: 298px;
+    width: 940px;
+    border-radius: 16px;
+    background: url("../../assets/homepage/question_banner.png"),
+      lightgray 0px 0px / 100% 100% no-repeat;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    .question {
+      color: #000;
+      width: 60%;
+      font-size: 36px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 45px; /* 125% */
+
+      span {
+        color: #ed1c24;
+        font-size: 36px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 45px;
+      }
+    }
+    .more {
+      display: flex;
+      padding: 0px 35.5px;
+      justify-content: center;
+      align-items: flex-start;
+      border-radius: 8px;
+      background: #ed1c24;
+      color: #fff;
+      width: fit-content;
+      text-align: center;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 48px; /* 200% */
+    }
+  }
+  .not-have-account {
+    background-color: #000;
+    .content {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 42px;
+      padding: 22px;
+
+      .txt {
+        flex: 1;
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 21px;
+        .title {
+          color: #fff;
+          font-size: 26.3px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 31.5px; /* 119.772% */
+        }
+        .subtitle {
+          color: #fff;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 21px; /* 150% */
+        }
+        .btns {
+          display: flex;
+          align-items: center;
+          gap: 22px;
+          .register {
+            color: #fff;
+
+            text-align: center;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 21px;
+            display: flex;
+            height: 42px;
+            padding: 10.5px 15px;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 5.25px;
+            cursor: pointer;
+            background: #2579f2;
+          }
+          .login {
+            color: #fff;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 21px; /* 150% */
+            cursor: pointer;
+
+            span {
+              color: #fff;
+
+              text-align: center;
+              font-size: 14px;
+              font-style: normal;
+              font-weight: 600;
+              line-height: 21px; /* 150% */
+            }
+          }
+        }
+      }
+    }
+  }
+}

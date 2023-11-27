@@ -1,0 +1,57 @@
+.nav {
+  position: fixed;
+  width: 20%;
+  background-color: #264653;
+  color: white;
+  height: 100vh;
+  transition: all 0.3s;
+  padding: 1rem;
+  top: 0;
+  left: 0;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(1, 0, 0, 0.09) 0px -3px 5px;
+  a {
+    text-decoration: none;
+  }
+  .nav-item {
+    margin-bottom: 4px;
+    padding: 15px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.114);
+    }
+    &.active {
+      background-color: rgba(255, 255, 255, 0.114);
+    }
+
+    color: white;
+    a {
+      appearance: none;
+      color: white;
+      text-decoration: none;
+    }
+  }
+}
+form {
+  margin: 32px 0px;
+}
+.logout {
+  cursor: pointer;
+  background-color: black;
+  padding: 11px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  margin: 32px 0px;
+  justify-content: center;
+}
+.wrapper {
+  flex: 1;
+  margin-left: 20%;
+  padding: 1rem;
+  margin-top: 40px;
+  width: 80%;
+}
