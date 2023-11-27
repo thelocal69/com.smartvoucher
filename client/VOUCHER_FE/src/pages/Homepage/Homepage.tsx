@@ -53,7 +53,7 @@ export const Homepage = () => {
         <div className="faqs-wrapper">
           <div className="faqs">
             <div className="question">
-              Bạn có <span> câu hỏi?</span> Super Voucher có{" "}
+              Bạn có <span> câu hỏi?</span> Smart Voucher có{" "}
               <span>câu trả lời </span>
             </div>
             <div className="more">Xem thêm</div>
@@ -69,7 +69,7 @@ export const Homepage = () => {
               <div className="subtitle">
                 Hãy tạo ngay một tài khoản để sử dụng đầy đủ các tính năng, tích
                 lũy ưu đãi khi thanh toán các sản phẩm và tham gia vào chương
-                trình Giới thiệu bạn bè nhận hoa hồng vĩnh viễn tại Super
+                trình Giới thiệu bạn bè nhận hoa hồng vĩnh viễn tại Smart
                 Voucher.
               </div>
               <div className="btns">
