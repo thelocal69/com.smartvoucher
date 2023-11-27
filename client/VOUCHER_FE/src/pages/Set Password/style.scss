@@ -1,0 +1,78 @@
+.set-password {
+  .content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    margin: 120px 0px;
+    .path {
+      color: rgba(1, 18, 34, 0.3);
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px; /* 150% */
+      transition: all 0.3s;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      width: 100%;
+      .ic {
+        font-size: 14px;
+      }
+      &:hover {
+        color: black;
+      }
+    }
+    .loading {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      .lds-ellipsis {
+        height: 60px;
+        div {
+          background-color: #2579f2;
+        }
+      }
+      p {
+        font-size: 13px;
+        color: green;
+      }
+    }
+    input[type="submit"] {
+      border-radius: 5.25px;
+      // background: #2579f2;
+      color: black;
+      display: flex;
+      height: 42px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 21px; /* 150% */
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.3s;
+      &:hover {
+        transform: scale(1.03);
+      }
+    }
+    input {
+      width: 100%;
+      border-radius: 5.25px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      padding: 12px 12px;
+      outline: none;
+      margin: 8px 0px;
+    }
+    p {
+      color: red;
+    }
+  }
+}

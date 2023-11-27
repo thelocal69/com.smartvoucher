@@ -1,0 +1,31 @@
+.brand {
+  padding: 0px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin: 46px 0px;
+  .title {
+    color: #000;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 29px; /* 120.833% */
+    margin-top: 80px;
+  }
+  .list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 12px;
+    width: 100%;
+    overflow: scroll;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    img {
+      max-width: 120px;
+      max-height: 120px;
+      border-radius: 7px;
+    }
+  }
+}
