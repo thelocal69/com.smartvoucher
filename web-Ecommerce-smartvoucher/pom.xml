@@ -20,7 +20,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub Packages</name>
-			<url>https://maven.pkg.github.com/devopshint/com.smartvoucher/web-Ecommerce-smartvoucher</url>
+			<url>https://maven.pkg.github.com/thelocal69/com.smartvoucher/web-Ecommerce-smartvoucher</url>
 		</repository>
 	</distributionManagement>
 	<dependencies>
