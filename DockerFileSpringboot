@@ -1,0 +1,10 @@
+FROM maven:3.8.4-openjdk-11 AS build
+WORKDIR /app
+COPY web-Ecommerce-smartvoucher /app/web-Ecommerce-smartvoucher
+RUN mvn package -f /app/web-Ecommerce-smartvoucher/pom.xml
+FROM openjdk:11
+WORKDIR /app
+COPY --from=build /app/web-Ecommerce-smartvoucher/target/web-ecommerce-smartvoucher-1.0-SNAPSHOT.jar app-smartvoucher.jar
+EXPOSE 8082
+CMD ["java", "-jar", "app-smartvoucher.jar"]
+
