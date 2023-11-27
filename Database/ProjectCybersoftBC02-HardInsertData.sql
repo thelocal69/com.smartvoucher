@@ -91,28 +91,6 @@ VALUES
 	('S16', 'Mighty Lion', '678 Đường Huỳnh Văn Bánh, Quận Phú Nhuận, TP.HCM', '0122213453', 1, 16, 15, 'Admin', '2023-01-15 00:00:00'),
 	('S17', 'Art Academy', '901 Đường Lý Tự Trọng, Quận 1, TP.HCM', '0455566266', 1, 17, 16, 'Admin', '2023-01-16 01:00:00');
 
-INSERT INTO store 
-	(store_code, name, address, phone, status, id_chain, id_merchant, created_by, created_at) 
-	
-VALUES 
-	('S01', 'Cửa hàng Organic Foods', '123 Đường Lê Lai, Quận 1, TP.HCM', '0123456789', 1, ' ', 1, 'Admin', '2023-01-01 10:00:00'),
-	('S02', 'Cửa hàng Thực phẩm Annamese GoGo', '456 Đường Nguyễn Văn Cừ, Quận 5, TP.HCM', '0987654321', 1, 2, 2, 'Admin', '2023-01-02 11:00:00'),
-	('S03', 'Cửa hàng Ramenly', '789 Đường Lê Thánh Tôn, Quận 3, TP.HCM', '0111222333', 1, ' ', 3, 'Admin', '2023-01-03 12:00:00'),
-	('S04', 'Thai Cuisine Trần Khắc Chân', '10 Đường Trần Khắc Chân, Quận 1, TP.HCM', '0122433833', 1, 1, 4, 'Admin', '2023-01-04 13:00:00'),
-	('S04', 'Thai Cuisine Đặng Văn Bi', '20 Đặng Văn Bi, Bình Thọ, TP. Thủ Đức', '0123433833', 1, 2, 4, 'Admin', '2023-01-04 13:00:00'),
-	('S05', 'Everest Beauty', '234 Đường Hoàng Sa, Quận 1, TP.HCM', '0777888999', 1, ' ', 5, 'Admin', '2023-01-05 14:00:00'),
-	('S06', 'Cửa hàng Future Tech', '567 Đường Cách Mạng Tháng Tám, Quận 3, TP.HCM', '0222334444', 1, ' ', 6, 'Admin', '2023-01-06 15:00:00'),
-	('S07', 'Sport Light', '890 Đường Điện Biên Phủ, Quận Bình Thạnh, TP.HCM', '0556667777', 1, ' ', 7, 'Admin', '2023-01-07 16:00:00'),
-	('S08', 'Travel Buddy', '345 Đường Phan Xích Long, Quận Phú Nhuận, TP.HCM', '0884349050', 1, ' ', 8, 'Admin', '2023-01-08 17:00:00'),
-	('S09', 'Quần áo thể thao Soccer', '678 Đường Trần Hưng Đạo, Quận 5, TP.HCM', '0965227633', 1, ' ', 9, 'Admin', '2023-01-09 18:00:00'),
-	('S10', 'Gradient Gaming', '901 Đường Lê Văn Sỹ, Quận 3, TP.HCM', '0945556666', 1, ' ', 10, 'Admin', '2023-01-10 19:00:00'),
-	('S11', 'My Cosmetic and Spa', '234 Đường Lê Đại Hành, Quận 10, TP.HCM', '0772485919', 1, ' ', 11, 'Admin', '2023-01-11 20:00:00'),
-	('S12', 'Monster Coffee', '567 Đường Nguyễn Trãi, Quận 1, TP.HCM', '0323133644', 1, ' ', 12, 'Admin', '2023-01-12 21:00:00'),
-	('S13', 'Sushi Japan', '890 Đường Bùi Viện, Quận 1, TP.HCM', '0556617287', 1, ' ', 13, 'Admin', '2023-01-13 22:00:00'),
-	('S14', 'Cửa hàng Nowi', '345 Đường Cao Thắng, Quận 3, TP.HCM', '0889991010', 1, ' ', 14, 'Admin', '2023-01-14 23:00:00'),
-	('S15', 'Mighty Lion', '678 Đường Huỳnh Văn Bánh, Quận Phú Nhuận, TP.HCM', '0122213453', 1, ' ', 15, 'Admin', '2023-01-15 00:00:00'),
-	('S16', 'Art Academy', '901 Đường Lý Tự Trọng, Quận 1, TP.HCM', '0455566266', 1, ' ', 16, 'Admin', '2023-01-16 01:00:00');
-
 INSERT INTO warehouse 
 	(warehouse_code, id_label, name, term_of_use, thumbnail_url, banner_url, price, id_discount_type, discount_amount, max_discount_amount, available_from, available_to, status, show_on_web, capacity, voucher_channel, id_category, created_by, created_at) 
 VALUES 
