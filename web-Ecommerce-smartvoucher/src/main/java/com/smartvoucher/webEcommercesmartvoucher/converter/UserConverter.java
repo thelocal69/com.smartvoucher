@@ -101,6 +101,7 @@ public class  UserConverter {
         userDetailDTO.setFirstName(userEntity.getFirstName());
         userDetailDTO.setLastName(userEntity.getLastName());
         userDetailDTO.setFullName(userEntity.getFullName());
+        userDetailDTO.setUserName(userEntity.getUsername());
         userDetailDTO.setPhone(userEntity.getPhone());
         userDetailDTO.setEmail(userEntity.getEmail());
         userDetailDTO.setAddress(userEntity.getAddress());
