@@ -12,12 +12,13 @@ export const Overview = ({ ...props }: IDivContainerProps): JSX.Element => {
       <div className="overview">
         <div className="left">
           <div className="title">
-            Smart Voucher - Mang đến cho bạn "cơn lốc" quà tặng mỗi ngày!
+            Super Voucher - Mang đến cho bạn "cơn lốc" quà tặng mỗi ngày!
           </div>
           <div className="subtitle">
-            Smart Voucher mang tới cho hội viên hàng ngàn ưu 
-            đãi độc quyền từ các thương hiệu hàng đầu, thuộc đa dạng lĩnh vực từ Thời trang,
-             Ẩm thực tới Vui chơi - Giải trí. ”Săn” voucher ngay!
+            Là tính năng trên ứng dụng di động VinID, VinID Voucher mang tới cho
+            hội viên hàng ngàn ưu đãi độc quyền từ các thương hiệu hàng đầu,
+            thuộc đa dạng lĩnh vực từ Thờ i trang, Ẩm thực tới Vui chơi - Giải
+            trí. ”Săn” voucher ngay!
           </div>
           <div className="btn">
             Khám phá ngay

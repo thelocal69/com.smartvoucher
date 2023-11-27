@@ -8,6 +8,17 @@ import { editUser } from "queries/user";
 import { toast } from "react-toastify";
 import { userUpload } from "queries/user";
 import { Loading } from "components/Loading/Loading";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { schemaChangePassword } from "validate";
+import { useForm } from "react-hook-form";
+import { editPassword } from "queries/user";
+import { logOut } from "redux/features/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { logOutAsync } from "queries/auth";
+import { selectRefreshToken } from "redux/features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 interface Profile {
   data: any;
 }
@@ -16,7 +27,12 @@ export const AccountTab = ({ data }: Profile) => {
   const [obj, setObj] = React.useState(data);
   const [file, setFile] = React.useState<any>();
   const [loading, setLoading] = React.useState(false);
+  const [signingOut, setSigningOut] = React.useState(false);
+  const [isShowPopUp, setIsShowPopUp] = React.useState(false);
+  const dispatch = useDispatch();
+  const refreshToken = useSelector(selectRefreshToken);
   console.log(obj);
+  const navigate = useNavigate();
   const handleEdit = () => {
     setLoading(true);
     delete obj.avatarUrl;
@@ -53,8 +69,111 @@ export const AccountTab = ({ data }: Profile) => {
       toast.error("Please choose an image");
     }
   };
+  const handleChangePass = (data: any) => {
+    setLoading(true);
+    let obj = {
+      currentPassword: data.currentPassword,
+      newPassword: data.newpassChange,
+      confirmPassword: data.confirmnewpassChange,
+    };
+    editPassword(obj)
+      .then((rs: any) => {
+        if (rs) {
+          setLoading(false);
+          toast.success(rs.message);
+          setSigningOut(true);
+          var timer = setTimeout(() => {
+            dispatch(logOut());
+            logOutAsync(refreshToken)
+              .then((rs: any) => {
+                if (rs) {
+                  toast.success(rs.message);
+                  setSigningOut(false);
+                  clearTimeout(timer);
+                  navigate("/");
+                }
+              })
+              .catch((err: any) => {
+                setSigningOut(false);
+                toast.error(err.message);
+                clearTimeout(timer);
+              });
+          }, 3000);
+        }
+      })
+      .catch((err: any) => {
+        setLoading(false);
+        toast.error(err.message);
+      });
+  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<any>({
+    resolver: yupResolver(schemaChangePassword),
+  });
   return (
     <>
+      {isShowPopUp && (
+        <div className="popup-changepass">
+          <div className="bg" onClick={() => setIsShowPopUp(false)}></div>
+          <div className="content-popup">
+            <ArrowBackIosIcon
+              className="ic"
+              onClick={() => {
+                setIsShowPopUp(false);
+              }}
+            />
+            {!signingOut ? (
+              <form onSubmit={handleSubmit(handleChangePass)}>
+                <div>
+                  <div className="label">Enter current password</div>
+                  <input type="password" {...register("currentPassword")} />
+                  <p>
+                    {errors.currentPassword &&
+                      errors.currentPassword.message.toString()}
+                  </p>
+                </div>
+                <div>
+                  <div className="label">Enter new password</div>
+                  <input type="password" {...register("newpassChange")} />
+                  <p>
+                    {errors.newpassChange &&
+                      errors.newpassChange.message.toString()}
+                  </p>
+                </div>
+                <div>
+                  <div className="label">Confirm new password</div>
+                  <input
+                    type="password"
+                    {...register("confirmnewpassChange")}
+                  />
+                  <p>
+                    {errors.confirmnewpassChange &&
+                      errors.confirmnewpassChange.message.toString()}
+                  </p>
+                </div>
+                <input type="submit" value={"OK"} />
+                <div className="cancel" onClick={() => setIsShowPopUp(false)}>
+                  Cancel
+                </div>
+                {loading && (
+                  <div className="loading">
+                    <Loading />
+                    <p>Requesting ...</p>
+                  </div>
+                )}
+              </form>
+            ) : (
+              <div className="loading">
+                <Loading />
+                <p>Signing out for login again...</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       <div className="title">Tổng quan</div>
       <div className="stats">
         <div className="stat">
@@ -69,6 +188,12 @@ export const AccountTab = ({ data }: Profile) => {
           <div className="label">Họ và tên</div>
           <div className="val">{data.fullName ? data.fullName : "..."}</div>
         </div>{" "}
+        <div className="stat">
+          <div className="change-pass" onClick={() => setIsShowPopUp(true)}>
+            Đổi mật khẩu
+            <VpnKeyIcon color="white" />
+          </div>
+        </div>
       </div>
       <div className="line"></div>
       <div className="avatar">
@@ -111,6 +236,18 @@ export const AccountTab = ({ data }: Profile) => {
       </div>
       <div className="title">Cá nhân</div>
       <div className="inputs">
+        <TextField
+          id="outlined-basic"
+          label="Username"
+          variant="outlined"
+          size="small"
+          defaultValue={data.userName}
+          onChange={(e) => {
+            let o = { ...obj };
+            o.userName = e.target.value;
+            setObj(o);
+          }}
+        />
         <TextField
           id="outlined-basic"
           label="First Name"
