@@ -168,24 +168,25 @@ export const Detail = () => {
               {moment(data.availableTo).format("DD/MM/YYYY")}
             </p>
             <h3>Điều kiện sử dụng</h3>
-            <p>{data.termtermOfUse}</p>
+            <p>{data.termOfUse}</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sao
-              chép/copy mã voucher nhận được trên ứng dụng VinID
+              chép/copy mã voucher nhận được trên website Smart Voucher
             </p>
             <p>
-              <b>Bước 2: </b>Khách hàng đặt xe trên ứng dụng Xanh SM
+              <b>Bước 2: </b>Khách hàng đặt hàng hóa, dịch vụ tại các điểm 
+              chấp nhận sử dụng voucher
             </p>
             <p>
-              <b> Bước 3: </b>Tại phần Ưu đãi/Offers trên ứng dụng Xanh SM,
-              khách hàng dán/paste mã voucher đã lấy từ ứng dụng VinID vào để sử
-              dụng
+              <b> Bước 3: </b>Tại phần Ưu đãi/Offers trên ứng dụng hoặc tại điểm
+              chấp nhận sử dụng voucher, khách hàng dán hoặc cung cấp mã voucher 
+              đã lấy từ website Smart Voucher để sử dụng
             </p>
             <p>
-              <b>Bước 4: </b>Mệnh giá voucher sẽ được trừ tiền vào cuốc xe
+              <b>Bước 4: </b>Mệnh giá voucher sẽ được trừ tiền vào tổng hóa đơn
             </p>
-            <p>Đổi điểm VinID nhận ưu đãi ngay!</p>
+            <p>Truy cập Smart Voucher nhận ưu đãi ngay!</p>
           </div>
           <div
             className="btnBuy"
