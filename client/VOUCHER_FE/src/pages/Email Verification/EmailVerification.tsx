@@ -2,7 +2,7 @@ import { Wrapper } from "components/Wrapper/Wrapper";
 import React from "react";
 import "./style.scss";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { verifyEmail } from "queries/auth";
 import { toast } from "react-toastify";
 export const EmailVerification = () => {

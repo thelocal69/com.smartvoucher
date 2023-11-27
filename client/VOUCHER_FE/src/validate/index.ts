@@ -76,3 +76,28 @@ export const schemaSetPassword = yup
       .oneOf([yup.ref("newpass"), null], "New Password must be the same"),
   })
   .required();
+export const schemaChangePassword = yup
+  .object()
+  .shape({
+    currentPassword: yup
+      .string()
+      .required()
+      .min(8, "Current Password must have at least 8 character")
+      .matches(
+        /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/,
+        "Current Password must contain at least one letter and one number"
+      ),
+    newpassChange: yup
+      .string()
+      .required()
+      .min(8, "New Password must have at least 8 character")
+      .matches(
+        /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/,
+        "New Password must contain at least one letter and one number"
+      ),
+    confirmnewpassChange: yup
+      .string()
+      .required()
+      .oneOf([yup.ref("newpassChange"), null], "New Password must be the same"),
+  })
+  .required();
