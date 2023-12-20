@@ -70,26 +70,12 @@ public class WareHouseService implements IWareHouseService {
     @Override
     @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWareHouse() {
-        List<WareHouseEntity> wareHouseEntityList;
-        List<WareHouseDTO> wareHouseDTOList;
-        if (Boolean.TRUE.equals(this.redisTemplate.hasKey("listWareHouse"))){
-            String data = redisTemplate.opsForValue().get("listWareHouse");
-            Type listType = new TypeToken<ArrayList<WareHouseDTO>>(){}.getType();
-            wareHouseDTOList = gson.fromJson(data, listType);
-        }else {
-            wareHouseEntityList = wareHouseRepository.findAllByStatus(1);
-            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            wareHouseEntityList = wareHouseEntityList.stream()
-                    .filter(warehouse -> warehouse.getAvailableTo() == null || currentTime.before(warehouse.getAvailableTo()))
-                    .collect(Collectors.toList());
-            if (wareHouseEntityList.isEmpty()) {
-                log.info("List warehouse is empty !");
-                throw new ObjectEmptyException(
-                        404, "List warehouse is empty !"
-                );
-            }
-            wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
-            this.redisTemplate.opsForValue().set("listWareHouse", gson.toJson(wareHouseDTOList), 30, TimeUnit.MINUTES);
+        List<WareHouseDTO> wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(
+                wareHouseRepository.findAll()
+        );
+        if (wareHouseDTOList.isEmpty()){
+            log.info("List warehouse is empty !");
+            throw new ObjectEmptyException(500, "List warehouse is empty !");
         }
         log.info("Get all warehouse is completed !");
         return wareHouseDTOList;

@@ -95,7 +95,6 @@ public class SecurityConfig {
                     .authorizeHttpRequests()
                     .antMatchers("/account/**").permitAll()
                     .antMatchers("**/upload").permitAll()
-                    .antMatchers("/auth/**", "/oauth2/**").permitAll()
                     //merchant
                     .antMatchers(HttpMethod.GET, "/merchant").permitAll()
                     .antMatchers(HttpMethod.POST, "/merchant/api/insert").hasRole("ADMIN")
@@ -183,18 +182,6 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.DELETE,"/serial/api/delete-serial").hasRole("ADMIN")
                     //serial
                     .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
-                    .and().oauth2Login()
-                    .authorizationEndpoint()
-                    .baseUri("/oauth2/authorize")
-                    .authorizationRequestRepository(cookieAuthorizationRequestRepository())
-                    .and()
-                    .redirectionEndpoint()
-                    //.baseUri("/oauth2/callback/*")
-                    .and()
-                    .userInfoEndpoint().userService(oAuth2UserDetailCustomService)
-                    .and()
-                    .successHandler(oAuth2SuccessHandlerCustom)
-                    .failureHandler(oAuth2FailureHandlerCustom)
                     .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                     .logout()
                     .deleteCookies("JSESSIONID")
