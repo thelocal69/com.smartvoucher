@@ -23,5 +23,18 @@ i {
 }
 
 .table-condensed{
-    font-size: 10px;
+    a{
+        list-style: none;
+        text-decoration: none;
+        color: black;
+        &:hover{
+            color: red;
+        }
+    }
+    .formatLable{
+        cursor: pointer;
+        &:hover{
+            color: red;
+        }
+    }
   }
