@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.dto.MerchantDTO;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.service.IMerchantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,19 @@ public class MerchantController {
         );
     }
 
+    @GetMapping("/api/getAll")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseOutput> getAllPageMerchant(
+            @RequestParam int page,
+            @RequestParam int limit,
+            @RequestParam String sortBy,
+            @RequestParam String sortField
+    ) {
+        log.info("Get All merchant success !");
+        return new ResponseEntity<>(merchantService.getAllMerchant(
+                page, limit, sortBy, sortField), HttpStatus.OK);
+    }
+
     @PostMapping ("/api/upload")
     public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
         log.info("Upload images is completed !");
@@ -54,11 +68,11 @@ public class MerchantController {
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertMerchant(@Valid @RequestBody MerchantDTO merchantDTO) {
-        merchantDTO.setMerchantCode(
+        merchantDTO.setMerchantCode("M-"+
                 UUID.randomUUID()
                         .toString()
                         .replace("-","")
-                        .substring(0,20)
+                        .substring(0,18)
         );
         log.info("Insert is completed !");
             return ResponseEntity.status(HttpStatus.OK).body(

@@ -1,8 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.google.api.services.drive.model.File;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import com.smartvoucher.webEcommercesmartvoucher.converter.WareHouseConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.WareHouseDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.CategoryEntity;
@@ -21,17 +19,11 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.lang.reflect.Type;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -43,8 +35,6 @@ public class WareHouseService implements IWareHouseService {
     private final ICategoryRepository categoryRepository;
     private final ILabelRepository labelRepository;
     private final UploadUtil uploadUtil;
-    private final Gson gson;
-    private final RedisTemplate<String ,String> redisTemplate;
 
 
     @Autowired
@@ -53,9 +43,7 @@ public class WareHouseService implements IWareHouseService {
                             final IDiscountTypeRepository discountTypeRepository,
                             final ICategoryRepository categoryRepository,
                             final UploadUtil uploadUtil,
-                            final ILabelRepository labelRepository,
-                            final Gson gson,
-                            final RedisTemplate<String, String> redisTemplate
+                            final ILabelRepository labelRepository
     ) {
         this.wareHouseRepository = wareHouseRepository;
         this.wareHouseConverter = wareHouseConverter;
@@ -63,8 +51,6 @@ public class WareHouseService implements IWareHouseService {
         this.categoryRepository = categoryRepository;
         this.uploadUtil = uploadUtil;
         this.labelRepository = labelRepository;
-        this.gson = gson;
-        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -188,28 +174,12 @@ public class WareHouseService implements IWareHouseService {
     @Override
     @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWarehousesByLabel(int id) {
-        List<WareHouseEntity> wareHouseEntityList;
-        List<WareHouseDTO> wareHouseDTOList;
-        if (Boolean.TRUE.equals(this.redisTemplate.hasKey("listWareHouseByLable"))){
-            String data = redisTemplate.opsForValue().get("listWareHouseByLable");
-            Type listData = new TypeToken<ArrayList<WareHouseDTO>>(){}.getType();
-            wareHouseDTOList = gson.fromJson(data, listData);
-        }else {
-            wareHouseEntityList = wareHouseRepository.findAllByLabel(id);
-            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            wareHouseEntityList = wareHouseEntityList.stream()
-                    .filter(warehouse -> warehouse.getAvailableTo() == null || currentTime.before(warehouse.getAvailableTo()))
-                    .collect(Collectors.toList());
-
-            if (wareHouseEntityList.isEmpty()) {
-                log.info("List warehouse is empty !");
-                throw new ObjectEmptyException(
-                        404, "List warehouse is empty !"
-                );
-            }
-            wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
-            String data = gson.toJson(wareHouseDTOList);
-            this.redisTemplate.opsForValue().set("listWareHouseByLable", data, 30, TimeUnit.MINUTES);
+        List<WareHouseDTO> wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(
+                wareHouseRepository.findAllByLabel(id)
+        );
+        if (wareHouseDTOList.isEmpty()){
+            log.info("List warehouse bt label is empty !");
+            throw new ObjectEmptyException(500, "List warehouse bt label is empty !");
         }
         log.info("Get all warehouse by lable is completed !");
         return wareHouseDTOList;
@@ -217,23 +187,12 @@ public class WareHouseService implements IWareHouseService {
     @Override
     @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWarehouseByCategoryId(long id) {
-        List<WareHouseEntity>wareHouseEntities;
-        List<WareHouseDTO> wareHouseDTOList;
-        if (Boolean.TRUE.equals(this.redisTemplate.hasKey("listWareHouseByCategoryId"))){
-            String data = redisTemplate.opsForValue().get("listWareHouseByCategoryId");
-            Type listType = new TypeToken<ArrayList<WareHouseDTO>>(){}.getType();
-            wareHouseDTOList = gson.fromJson(data, listType);
-        }else {
-            wareHouseEntities = wareHouseRepository.findAllByCategoryId(id);
-            if (wareHouseEntities.isEmpty()){
-                log.info("List warehouse is empty !");
-                throw new ObjectEmptyException(
-                        404, "List warehouse is empty !"
-                );
-            }
-            wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(wareHouseEntities);
-            String data = gson.toJson(wareHouseDTOList);
-            this.redisTemplate.opsForValue().set("listWareHouseByCategoryId", data, 30, TimeUnit.MINUTES);
+        List<WareHouseDTO> wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(
+                wareHouseRepository.findAllByCategoryId(id)
+        );
+        if (wareHouseDTOList.isEmpty()){
+            log.info("List warehouse by category is empty !");
+            throw new ObjectEmptyException(500, "List warehouse by category is empty !");
         }
         log.info("Get all warehouse by category code is completed !");
         return wareHouseDTOList;

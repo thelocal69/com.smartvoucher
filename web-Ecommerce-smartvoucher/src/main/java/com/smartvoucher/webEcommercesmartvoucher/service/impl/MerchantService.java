@@ -6,11 +6,15 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.MerchantDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.MerchantEntity;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IMerchantService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +50,33 @@ public class MerchantService implements IMerchantService {
         }
         log.info("Get all merchant is completed !");
         return merchantConverter.toMerchantDTOList(merchantEntityList);
+    }
+
+    @Override
+    public ResponseOutput getAllMerchant(int page, int limit, String sortBy, String sortField) {
+        Pageable pageable = PageRequest.of(
+                page - 1,
+                limit,
+                Sort.by(Sort.Direction.fromString(sortBy), sortField)
+                );
+        List<MerchantDTO> merchantDTOList = merchantConverter.toMerchantDTOList(
+                merchantRepository.findAll(pageable).getContent()
+        );
+        if (merchantDTOList.isEmpty()){
+            log.info("List merchant is empty !");
+            throw new ObjectNotFoundException(
+                    404, "List merchant is empty !"
+            );
+        }
+        int totalItem = (int) merchantRepository.count();
+        int totalPage = (int) Math.ceil((double) totalItem / limit);
+        log.info("Get all merchant is completed !");
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                merchantDTOList
+        );
     }
 
     @Override

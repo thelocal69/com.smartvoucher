@@ -27,6 +27,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -83,12 +84,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
             return http.cors(cors -> cors.configurationSource(request -> {
-                CorsConfiguration corsConfig = new CorsConfiguration();
-                corsConfig.addAllowedOrigin(frontEndURL);
-                corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-                corsConfig.addAllowedHeader("*");
-                corsConfig.setAllowCredentials(false);
-                return corsConfig;
+                        CorsConfiguration configuration = new CorsConfiguration();
+                        configuration.setAllowedOrigins(List.of(frontEndURL));
+                        configuration.setAllowedHeaders(Arrays.asList(
+                                "X-CSRF-Token",
+                                "X-Requested-With",
+                                "client-security-token",
+                                "Content-Type",
+                                "Accept",
+                                "Authorization"));
+                        configuration.setAllowedMethods(Arrays.asList(
+                                "GET",
+                                "POST",
+                                "OPTIONS",
+                                "PUT",
+                                "DELETE"));
+                        configuration.setAllowCredentials(true);
+                        return  configuration;
             })).csrf().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
@@ -96,12 +108,16 @@ public class SecurityConfig {
                     .antMatchers("/account/**").permitAll()
                     .antMatchers("**/upload").permitAll()
                     //merchant
-                    .antMatchers(HttpMethod.GET, "/merchant").permitAll()
-                    .antMatchers(HttpMethod.POST, "/merchant/api/insert").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST, "/merchant/api/upload").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, "/merchant/api/{id}").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE, "/merchant/api/{id}").hasRole("ADMIN")
+                    .antMatchers("/merchant/**").permitAll()
+//                    .antMatchers(HttpMethod.GET, "/merchant").permitAll()
+//                    .antMatchers(HttpMethod.POST, "/merchant/api/insert").hasRole("ADMIN")
+//                    .antMatchers(HttpMethod.POST, "/merchant/api/upload").hasRole("ADMIN")
+//                    .antMatchers(HttpMethod.PUT, "/merchant/api/{id}").hasRole("ADMIN")
+//                    .antMatchers(HttpMethod.DELETE, "/merchant/api/{id}").hasRole("ADMIN")
                     //merchant
+                    //chain
+                    .antMatchers("/chain/**").permitAll()
+                    //chain
                     .antMatchers("/chain/**").hasRole("ADMIN")
                     .antMatchers("/label/api/all").permitAll()
                     //user
