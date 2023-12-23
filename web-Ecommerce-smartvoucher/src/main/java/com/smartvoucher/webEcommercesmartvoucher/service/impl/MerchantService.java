@@ -53,6 +53,19 @@ public class MerchantService implements IMerchantService {
     }
 
     @Override
+    public List<String> getALlMerchantName() {
+        List<String> getAllName = merchantRepository.getAllMerchantName();
+        if (getAllName.isEmpty()){
+            log.info("List merchant name is empty !");
+            throw new ObjectNotFoundException(
+                    404, "List merchant name is empty !"
+            );
+        }
+        log.info("Get all merchant name is completed !");
+        return getAllName;
+    }
+
+    @Override
     public ResponseOutput getAllMerchant(int page, int limit, String sortBy, String sortField) {
         Pageable pageable = PageRequest.of(
                 page - 1,

@@ -10,6 +10,8 @@ import java.util.List;
 public interface IChainRepository extends JpaRepository<ChainEntity, Long> {
     List<ChainEntity> findAllByChainCode(String chainCode);
     ChainEntity findOneByChainCode(String chainCode);
+    ChainEntity findOneByName(String name);
+    List<ChainEntity> searchAllByNameContainingIgnoreCase(String name);
     ChainEntity findOneById(Long id);
     Boolean existsByChainCode(String chainCode);
     List<ChainEntity> findAllByStatus(int status);

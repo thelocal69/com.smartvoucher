@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IMerchantService {
     List<MerchantDTO> getAllMerchant();
-
+    List<String> getALlMerchantName();
     ResponseOutput getAllMerchant(int page, int limit, String sortBy, String sortField);
     List<MerchantDTO> getAllMerchantCode(MerchantDTO merchantDTO);
     MerchantDTO getMerchantCode(MerchantDTO merchantDTO);

@@ -139,7 +139,7 @@ public class StoreService implements IStoreService {
     @Override
     @Transactional(readOnly = true)
     public Boolean existMerchantCodeAndChainCode(StoreDTO storeDTO) {
-        boolean existMerchantCode = merchantRepository.existsByMerchantCode(storeDTO.getMerchantCode());
+        boolean existMerchantCode = merchantRepository.existsByName(storeDTO.getName());
         boolean existChainCode = chainRepository.existsByChainCode(storeDTO.getChainCode());
         return existMerchantCode && existChainCode;
     }

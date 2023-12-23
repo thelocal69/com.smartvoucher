@@ -12,8 +12,9 @@ public interface IChainService {
     ResponseOutput getAllChain(int page, int limit, String sortBy, String sortField);
     ChainDTO upsert(ChainDTO chainDTO);
     List<ChainDTO> getAllChainCode(ChainDTO chainDTO);
+    List<ChainDTO> searchAllChainName(String name);
     void deleteChain(ChainDTO chainDTO);
     Boolean existChain(ChainDTO chainDTO);
-    Boolean existMerchantCode(ChainDTO chainDTO);
+    Boolean existMerchantName(ChainDTO chainDTO);
     String uploadChainImages(MultipartFile fileName);
 }

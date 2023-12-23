@@ -83,7 +83,7 @@ public class ChainService implements IChainService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ChainDTO upsert(ChainDTO chainDTO) {
-        boolean existMerchantCode = existMerchantCode(chainDTO);
+        boolean existMerchantName = existMerchantName(chainDTO);
         ChainEntity chainEntity;
         if (chainDTO.getId() != null){
             boolean exist = existChain(chainDTO);
@@ -92,10 +92,10 @@ public class ChainService implements IChainService {
                 throw new ObjectNotFoundException(
                         404, "Cannot update chain id: "+chainDTO.getId()
                 );
-            } else if (!existMerchantCode) {
-                log.info("Merchant code is empty or not exist !");
+            } else if (!existMerchantName) {
+                log.info("Merchant name is empty or not exist !");
                 throw new ObjectEmptyException(
-                        406, "Merchant code is empty or not exist !"
+                        406, "Merchant name is empty or not exist !"
                 );
             }
             ChainEntity oldChainEntity = chainRepository.findOneById(chainDTO.getId());
@@ -108,16 +108,16 @@ public class ChainService implements IChainService {
                 throw new DuplicationCodeException(
                         400, "Chain code is duplicated !"
                 );
-            }else if (!existMerchantCode) {
-                log.info("Merchant code is empty or not exist !");
+            }else if (!existMerchantName) {
+                log.info("Merchant name is empty or not exist !");
                 throw new ObjectEmptyException(
-                        406, "Merchant code is empty or not exist !"
+                        406, "Merchant name is empty or not exist !"
                 );
             }
             chainEntity = chainConverter.toChainEntity(chainDTO);
             log.info("Insert chain is completed !");
         }
-        MerchantEntity merchant = merchantRepository.findOneByMerchantCode(chainDTO.getMerchantCode());
+        MerchantEntity merchant = merchantRepository.findOnByName(chainDTO.getMerchantName());
         chainEntity.setMerchant(merchant);
         return chainConverter.toChainDTO(chainRepository.save(chainEntity));
     }
@@ -127,6 +127,13 @@ public class ChainService implements IChainService {
     public List<ChainDTO> getAllChainCode(ChainDTO chainDTO) {
         List<ChainEntity> chainEntityList = chainRepository.findAllByChainCode(chainDTO.getChainCode());
         return chainConverter.toChainDTOList(chainEntityList);
+    }
+
+    @Override
+    public List<ChainDTO> searchAllChainName(String name) {
+        return chainConverter.toChainDTOList(
+                chainRepository.searchAllByNameContainingIgnoreCase(name)
+        );
     }
 
     @Override
@@ -151,8 +158,8 @@ public class ChainService implements IChainService {
 
     @Override
     @Transactional(readOnly = true)
-    public Boolean existMerchantCode(ChainDTO chainDTO) {
-        return merchantRepository.existsByMerchantCode(chainDTO.getMerchantCode());
+    public Boolean existMerchantName(ChainDTO chainDTO) {
+        return merchantRepository.existsByName(chainDTO.getMerchantName());
     }
 
     @Override

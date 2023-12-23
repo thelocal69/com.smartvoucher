@@ -38,7 +38,4 @@ public class ChainDTO{
     @NotBlank(message = "Merchant code is not empty !")
     @NotNull
     private String merchantName;
-    @NotBlank(message = "Merchant code is not empty !")
-    @NotNull
-    private String merchantCode;
 }

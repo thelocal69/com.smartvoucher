@@ -53,6 +53,19 @@ public class MerchantController {
         );
     }
 
+    @GetMapping("/api/getName")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getAllMerchantName() {
+        log.info("Search All merchant name success !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Search All merchant name success !",
+                        this.merchantService.getALlMerchantName()
+                )
+        );
+    }
+
     @GetMapping("/api/getAll")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseOutput> getAllPageMerchant(

@@ -53,6 +53,19 @@ public class ChainController {
                 page, limit, sortBy, sortField), HttpStatus.OK);
     }
 
+    @GetMapping("/api/search")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> searchAllChainByName(@RequestParam String name) {
+        log.info("Get All chain success !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get All chain success !",
+                        this.chainService.searchAllChainName(name)
+                )
+        );
+    }
+
     @PostMapping ("/api/upload")
     public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
         log.info("Upload images is completed !");
