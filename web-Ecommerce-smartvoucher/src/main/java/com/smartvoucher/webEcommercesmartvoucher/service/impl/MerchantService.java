@@ -149,4 +149,11 @@ public class MerchantService implements IMerchantService {
         File file = uploadUtil.uploadImages(fileName, folderId);
         return "https://drive.google.com/uc?export=view&id="+file.getId();
     }
+
+    @Override
+    public List<MerchantDTO> searchMerchantByName(String name) {
+        return merchantConverter.toMerchantDTOList(
+                merchantRepository.searchMerchantEntityByNameContainingIgnoreCase(name)
+        );
+    }
 }

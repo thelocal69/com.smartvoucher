@@ -18,4 +18,5 @@ public interface IMerchantService {
     void deleteMerchant(MerchantDTO merchantDTO);
     Boolean existMerchant(MerchantDTO merchantDTO);
     String uploadMerchantImages(MultipartFile fileName);
+    List<MerchantDTO> searchMerchantByName(String name);
 }

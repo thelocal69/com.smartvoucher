@@ -8,12 +8,16 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.MerchantEntity;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IChainRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IChainService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,6 +55,29 @@ public class ChainService implements IChainService {
         }
         log.info("Get All chain success !");
         return chainConverter.toChainDTOList(chainEntityList);
+    }
+
+    @Override
+    public ResponseOutput getAllChain(int page, int limit, String sortBy, String sortField) {
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.fromString(sortBy), sortField));
+        List<ChainDTO> chainDTOList = chainConverter.toChainDTOList(
+                chainRepository.findAll(pageable).getContent()
+        );
+        if (chainDTOList.isEmpty()){
+            log.info("List chain is empty !");
+            throw new ObjectEmptyException(
+                    404, "List chain is empty !"
+            );
+        }
+        int totalItem = (int) chainRepository.count();
+        int totalPage = (int) Math.ceil((double) totalItem / limit);
+        log.info("Get all chain is completed !");
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                chainDTOList
+        );
     }
 
     @Override
