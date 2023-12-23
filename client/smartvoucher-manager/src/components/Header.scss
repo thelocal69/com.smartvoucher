@@ -5,3 +5,13 @@
     display: block;
     background-color: #fff;
 }
+
+.color-black{
+    color: #000;
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem 1rem;
+    &:hover{
+        color: gray;
+    }
+}

@@ -44,7 +44,7 @@ const Header = (props) => {
         <Navbar expand="lg" className="bg-white">
           <Container>
             <Navbar.Brand>
-              <NavLink to="/Home">
+              <NavLink to="/" className="color-black">
                 SMARTVOUCHER MANAGER
               </NavLink>
             </Navbar.Brand>

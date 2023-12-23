@@ -1,22 +1,39 @@
 import React from "react";
-import { getAllMerchant,
-          insertMerchant,
-          updateMerchant,
-          deleteMerchant
+import {
+  getAllMerchant,
+  insertMerchant,
+  updateMerchant,
+  deleteMerchant,
+  searchMerchantByName,
+  uploadImage,
 } from "../services/MechantService";
-import { Table, Modal, Button, Offcanvas, Form } from "react-bootstrap";
+import {
+  Table,
+  Modal,
+  Button,
+  Offcanvas,
+  Form,
+  Image,
+  Col,
+} from "react-bootstrap";
 import Paging from "./Paging";
 import "./Merchant.scss";
 import { toast } from "react-toastify";
+import debounce from "lodash.debounce";
+import Loading from "./Loading";
 
 const Merchant = () => {
   const [listMerchant, setListMerchant] = React.useState([]);
   const [totalMerchant, setTotalMerchant] = React.useState(0);
   const [totalPage, setTotalPage] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [limit, setLimit] = React.useState(4);
+  const [limit, setLimit] = React.useState(6);
   const [sortBy, setSortBy] = React.useState("desc");
   const [sortField, setSortField] = React.useState("id");
+  const [keyWord, setKeyWord] = React.useState("");
+  const [file, setFile] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const ref = React.useRef(null);
 
   const [smShow, setSmShow] = React.useState(false);
   const [isShowModalAddNew, setIsShowModalAddNew] = React.useState(false);
@@ -34,6 +51,7 @@ const Merchant = () => {
   const [merchantItem, setMerchantItem] = React.useState({});
   const [objEdit, setObjEdit] = React.useState({});
   const [objDelete, setObjDelete] = React.useState({});
+  const [editLogoUrl, setEditLogoUrl] = React.useState("");
 
   const statusHardCode = [
     {
@@ -54,11 +72,12 @@ const Merchant = () => {
     phone: phone,
     email: email,
     description: description,
-    status: status
-  }
+    status: status,
+  };
 
   React.useEffect(() => {
-    getMerchant(currentPage, limit, sortBy, sortField);
+    getMerchant(currentPage, limit, sortBy, sortField)
+    .catch((err) => toast.error(err.message));
   }, []);
 
   const getMerchant = async (page, limit, sortBy, sortField) => {
@@ -71,19 +90,40 @@ const Merchant = () => {
     }
   };
 
-  const handleSearchByName = () => {};
+  const searchMerchantName = async (keyWord) => {
+    let res = await searchMerchantByName(keyWord);
+    if (res && res.data) {
+      setListMerchant(res.data);
+    }
+  };
 
-  const handleSaveProduct = async() => {
-    if(!legalName || !logoUrl ||
-       !name || !email || !phone ||
-       !description || !address ||
-       !status){
-        toast.error("Please input full field !");
-        return;
-       }
-       await insertMerchant(obj)
-       .then((rs) => {
-        if(rs){
+  const handleSearchByName = debounce((event) => {
+    let term = event.target.value;
+    if (term) {
+      setKeyWord(term);
+      searchMerchantName(term);
+    } else {
+      getMerchant(currentPage, limit, sortBy, sortField);
+    }
+  }, 1000);
+
+  const handleSaveProduct = async () => {
+    if (
+      !legalName ||
+      !logoUrl ||
+      !name ||
+      !email ||
+      !phone ||
+      !description ||
+      !address ||
+      !status
+    ) {
+      toast.error("Please input full field !");
+      return;
+    }
+    await insertMerchant(obj)
+      .then((rs) => {
+        if (rs) {
           toast.success("Insert table merchant successfully !");
           getMerchant(currentPage, limit, sortBy, sortField);
           handleClose();
@@ -96,32 +136,33 @@ const Merchant = () => {
           setAddress("");
           setStatus(0);
         }
-       })
-       .catch((err) => toast.error(err.message));
+      })
+      .catch((err) => toast.error(err.message));
   };
 
-  const handleUpdateMerchant = async() => {
-      await updateMerchant(objEdit)
+  const handleUpdateMerchant = async () => {
+    await updateMerchant(objEdit)
       .then((rs) => {
-        if(rs){
+        if (rs) {
           toast.success("Update table merchant successfully !");
+          setEditLogoUrl("");
           getMerchant(currentPage, limit, sortBy, sortField);
           handleClose();
         }
       })
       .catch((err) => toast.error(err.message));
-  }
+  };
 
-  const handleDeleteProduct = async() => {
+  const handleDeleteProduct = async () => {
     await deleteMerchant(objDelete)
-    .then((rs) =>{
-      if(rs){
-        toast.success("Delete item merchant is successfully !");
-        getMerchant(currentPage, limit, sortBy, sortField);;
-        handleClose();
-      }
-    })
-    .catch((err) => toast.error(err.message));
+      .then((rs) => {
+        if (rs) {
+          toast.success("Delete item merchant is successfully !");
+          getMerchant(currentPage, limit, sortBy, sortField);
+          handleClose();
+        }
+      })
+      .catch((err) => toast.error("Cannot delete parent row because FK !"));
   };
 
   const handClickEditMerchant = (merchant) => {
@@ -130,12 +171,59 @@ const Merchant = () => {
   };
 
   const handClickDeleteMerchant = (merchant) => {
-      setIsShowModalDelete(true);
-      setObjDelete(merchant);
+    setIsShowModalDelete(true);
+    setObjDelete(merchant);
+  };
+
+  const handleUploadMerchant = async () => {
+    if (file) {
+      const form = new FormData();
+      form.append("fileName", file);
+      setLoading(true);
+      await uploadImage(form)
+        .then((rs) => {
+          if (rs) {
+            setLoading(false);
+            setFile(null);
+            setLogoUrl(rs.data);
+            toast.success(rs.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          toast.error(err.message);
+        });
+    } else {
+      toast.error("Please choose an logo !");
+    }
+  };
+
+  const handleUploadEditMerchant = async () => {
+    if (file) {
+      const form = new FormData();
+      form.append("fileName", file);
+      setLoading(true);
+      await uploadImage(form)
+        .then((rs) => {
+          if (rs) {
+            setLoading(false);
+            setFile(null);
+            setEditLogoUrl(rs.data);
+            toast.success(rs.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          toast.error(err.message);
+        });
+    } else {
+      toast.error("Please choose an new logo !");
+    }
   };
 
   const handleSortClick = (sortBy, sortField) => {
     getMerchant(currentPage, limit, sortBy, sortField);
+    setSortBy(sortBy);
   };
   const handlePageClick = (event) => {
     getMerchant(+event.selected + 1, limit, sortBy, sortField);
@@ -145,12 +233,14 @@ const Merchant = () => {
     setSmShow(true);
     setMerchantItem(merchant);
   };
+
   const handleClose = () => {
     setSmShow(false);
     setIsShowModalAddNew(false);
     setIsShowModalUpdate(false);
     setIsShowModalDelete(false);
   };
+
 
   return (
     <>
@@ -164,7 +254,7 @@ const Merchant = () => {
         <div>
           <input
             className="form-control"
-            placeholder="Search product by name..."
+            placeholder="Search merchant by name..."
             onChange={(event) => handleSearchByName(event)}
           />
         </div>
@@ -173,12 +263,12 @@ const Merchant = () => {
           onClick={() => setIsShowModalAddNew(true)}
         >
           <i class="fa-solid fa-circle-plus"></i>
-          <span>Add new product</span>
+          <span>Add new merchant</span>
         </button>
       </div>
 
       <div className="customize-table">
-        <Table striped bordered hover className="table-condensed">
+        <Table striped bordered hover size="sm" className="table-condensed">
           <thead>
             <tr>
               <th>NO</th>
@@ -189,12 +279,12 @@ const Merchant = () => {
                     {
                       <i
                         class="fa-solid fa-sort-down"
-                        onClick={() => handleSortClick("desc", "id")}
+                        onClick={() => handleSortClick("desc", sortField)}
                       ></i>
                     }
                     <i
                       class="fa-solid fa-sort-up"
-                      onClick={() => handleSortClick("asc", "id")}
+                      onClick={() => handleSortClick("asc", sortField)}
                     ></i>
                   </span>
                 </div>
@@ -269,13 +359,10 @@ const Merchant = () => {
                         </label>
                       </td>
                       <td>
-                        <label>
-                          {
-                            item?.status ? "Active" : "Deactive"
-                          }
-                        </label>
-                        </td>
+                        <label>{item?.status ? "Active" : "Deactive"}</label>
+                      </td>
                       <td>
+                        <div className="d-flex">
                         <button
                           className="btn btn-warning mx-2"
                           onClick={() => handClickEditMerchant(item)}
@@ -290,6 +377,7 @@ const Merchant = () => {
                           <i class="fa-solid fa-trash"></i>
                           <span>Delete</span>
                         </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -307,7 +395,7 @@ const Merchant = () => {
         backdrop="static"
       >
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Add new product</Offcanvas.Title>
+          <Offcanvas.Title>Add new Merchant</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Form>
@@ -324,9 +412,53 @@ const Merchant = () => {
               <Form.Label>Logo url</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter logo url"
+                placeholder="Logo url"
                 value={logoUrl}
-                onChange={(event) => setLogoUrl(event.target.value)}
+              />
+              <div className="d-flex align-items-center">
+                <Col xs={6} md={4} className="my-2">
+                  <Image src={logoUrl} thumbnail />
+                </Col>
+                <div className="m-3">
+                  <span>Vui lòng chọn ảnh nhỏ hơn 5MB</span>
+                  <br />
+                  <span>Chọn hình ảnh phù hợp, không phản cảm</span>
+                </div>
+              </div>
+              {file ? (
+                <>
+                  <Form.Label
+                    className="btn btn-success my-3"
+                    onClick={() => handleUploadMerchant()}
+                  >
+                    <i class="fa-solid fa-check"></i>
+                    Accept
+                  </Form.Label>
+                  {loading && (
+                    <div className="loading">
+                      <Loading fileName={file.name} />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Form.Label
+                    className="btn btn-primary my-3"
+                    onClick={() => {
+                      ref.current.click();
+                    }}
+                  >
+                    <i class="fa-solid fa-upload"></i>
+                    Upload logo
+                  </Form.Label>
+                </>
+              )}
+              <Form.Control
+                type="file"
+                ref={ref}
+                accept="image/png, image/jpeg"
+                onChange={(event) => setFile(event.target.files[0])}
+                hidden
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -376,22 +508,22 @@ const Merchant = () => {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Status</Form.Label>
-              <div 
-              className="d-flex justify-content-between" 
-              onChange={(event) => setStatus(event.target.value)}
+              <div
+                className="d-flex justify-content-between"
+                onChange={(event) => setStatus(event.target.value)}
               >
-              {statusHardCode?.map((item) => {
-                return (
-                  <label>
-                    <input
-                      checked={Number(status) === Number(item.value)}
-                      type="radio"
-                      value={item.value}
-                    />
-                    {item?.label}
-                  </label>
-                );
-              })}
+                {statusHardCode?.map((item) => {
+                  return (
+                    <label>
+                      <input
+                        checked={Number(status) === Number(item.value)}
+                        type="radio"
+                        value={item.value}
+                      />
+                      {item?.label}
+                    </label>
+                  );
+                })}
               </div>
             </Form.Group>
           </Form>
@@ -408,128 +540,190 @@ const Merchant = () => {
         </Offcanvas.Body>
       </Offcanvas>
 
-
-      <Offcanvas show={isShowModalUpdate} onHide={handleClose} placement='end' backdrop="static">
-            <Offcanvas.Header closeButton>
-                <Offcanvas.Title>Update product</Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body>
-                <Form>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Legal name</Form.Label>
-                        <Form.Control type="text" placeholder="Enter legal name"
-                            onChange={(event) => {
-                                let element = { ...objEdit }
-                                element.legalName = event.target.value;
-                                setObjEdit(element);
-                            }}
-                            defaultValue={objEdit?.legalName}
-                        />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Logo url</Form.Label>
-                        <Form.Control type="text" placeholder="Enter logo url"
-                            onChange={(event) => {
-                                let element = { ...objEdit }
-                                element.logoUrl = event.target.value;
-                                setObjEdit(element);
-                            }}
-                            defaultValue={objEdit?.logoUrl}
-                        />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control type="text" placeholder="Enter name"
-                            onChange={(event) => {
-                                let element = { ...objEdit }
-                                element.name = event.target.value;
-                                setObjEdit(element);
-                            }}
-                            defaultValue={objEdit?.name}
-                        />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="text" placeholder="Enter email"
-                            onChange={(event) => {
-                                let element = { ...objEdit }
-                                element.email = event.target.value;
-                                setObjEdit(element);
-                            }}
-                            defaultValue={objEdit?.email}
-                        />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Phone</Form.Label>
-                        <Form.Control type="text" placeholder="Enter phone"
-                            onChange={(event) => {
-                                let element = { ...objEdit }
-                                element.phone = event.target.value;
-                                setObjEdit(element);
-                            }}
-                            defaultValue={objEdit?.phone}
-                        />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control type="text" placeholder="Enter description"
-                            onChange={(event) => {
-                                let element = { ...objEdit }
-                                element.description = event.target.value;
-                                setObjEdit(element);
-                            }}
-                            defaultValue={objEdit?.description}
-                        />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Address</Form.Label>
-                        <Form.Control type="text" placeholder="Enter address"
-                            onChange={(event) => {
-                                let element = { ...objEdit }
-                                element.address = event.target.value;
-                                setObjEdit(element);
-                            }}
-                            defaultValue={objEdit?.address}
-                        />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Status</Form.Label>
-                        <div 
-              className="d-flex justify-content-between" 
-              onChange={(event) => {
-                let obj = { ...objEdit };
-                obj.status = event.target.value;
-                setObjEdit(obj);
-              }}
-              >
-              {statusHardCode?.map((item) => {
-                return (
-                  <label>
-                    <input
-                      checked={Number(objEdit?.status) === Number(item.value)}
-                      type="radio"
-                      value={item.value}
-                    />
-                    {item?.label}
-                  </label>
-                );
-              })}
-              </div>
-                    </Form.Group>
-                </Form>
-                <div className='d-flex justify-content-between'>
-                    <Button variant="secondary" onClick={handleClose}>
-                        <i class="fa-solid fa-circle-xmark"></i>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={() => handleUpdateMerchant()}>
-                        <i class="fa-solid fa-floppy-disk"></i>
-                        Update Changes
-                    </Button>
+      <Offcanvas
+        show={isShowModalUpdate}
+        onHide={handleClose}
+        placement="end"
+        backdrop="static"
+      >
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Update Merchant</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Legal name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter legal name"
+                onChange={(event) => {
+                  let element = { ...objEdit };
+                  element.legalName = event.target.value;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.legalName}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Logo url</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Logo url"
+                onChange={() => {
+                  let element = { ...objEdit };
+                  element.logoUrl = editLogoUrl;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.logoUrl}
+              />
+              <div className="d-flex align-items-center">
+                <Col xs={6} md={4} className="d-flex my-2">
+                  <Image src={objEdit?.logoUrl} thumbnail />
+                </Col>
+                <div className="m-3">
+                  <span>Vui lòng chọn ảnh nhỏ hơn 5MB</span>
+                  <br />
+                  <span>Chọn hình ảnh phù hợp, không phản cảm</span>
                 </div>
-            </Offcanvas.Body>
-        </Offcanvas>
-
+              </div>
+              {file ? (
+                <>
+                  <Form.Label
+                    className="btn btn-success my-3"
+                    onClick={() => handleUploadEditMerchant()}
+                  >
+                    <i class="fa-solid fa-check"></i>
+                    Accept
+                  </Form.Label>
+                  {loading && (
+                    <div className="loading">
+                      <Loading fileName={file.name} />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Form.Label
+                    className="btn btn-primary my-3"
+                    onClick={() => {
+                      ref.current.click();
+                    }}
+                  >
+                    <i class="fa-solid fa-upload"></i>
+                    Upload logo
+                  </Form.Label>
+                </>
+              )}
+              <Form.Control
+                type="file"
+                ref={ref}
+                accept="image/png, image/jpeg"
+                onChange={(event) => setFile(event.target.files[0])}
+                hidden
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter name"
+                onChange={(event) => {
+                  let element = { ...objEdit };
+                  element.name = event.target.value;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.name}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter email"
+                onChange={(event) => {
+                  let element = { ...objEdit };
+                  element.email = event.target.value;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.email}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter phone"
+                onChange={(event) => {
+                  let element = { ...objEdit };
+                  element.phone = event.target.value;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.phone}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter description"
+                onChange={(event) => {
+                  let element = { ...objEdit };
+                  element.description = event.target.value;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.description}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter address"
+                onChange={(event) => {
+                  let element = { ...objEdit };
+                  element.address = event.target.value;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.address}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Status</Form.Label>
+              <div
+                className="d-flex justify-content-between"
+                onChange={(event) => {
+                  let obj = { ...objEdit };
+                  obj.status = event.target.value;
+                  setObjEdit(obj);
+                }}
+              >
+                {statusHardCode?.map((item) => {
+                  return (
+                    <label>
+                      <input
+                        checked={Number(objEdit?.status) === Number(item.value)}
+                        type="radio"
+                        value={item.value}
+                      />
+                      {item?.label}
+                    </label>
+                  );
+                })}
+              </div>
+            </Form.Group>
+          </Form>
+          <div className="d-flex justify-content-between">
+            <Button variant="secondary" onClick={handleClose}>
+              <i class="fa-solid fa-circle-xmark"></i>
+              Close
+            </Button>
+            <Button variant="primary" onClick={() => handleUpdateMerchant()}>
+              <i class="fa-solid fa-floppy-disk"></i>
+              Update Changes
+            </Button>
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
 
       <Modal
         size="md"
@@ -542,25 +736,30 @@ const Merchant = () => {
             Small info
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>{merchantItem}</Modal.Body>
+        <Modal.Body>
+          {merchantItem}
+          <Col xs={6} md={4}>
+            <Image src={merchantItem} thumbnail />
+          </Col>
+        </Modal.Body>
       </Modal>
 
       <Modal show={isShowModalDelete} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>Delete product</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Do you want to delete !</Modal.Body>
-            <Modal.Footer className='d-flex justify-content-between'>
-                <Button variant="secondary" onClick={handleClose}>
-                    <i class="fa-solid fa-circle-xmark"></i>
-                    Close
-                </Button>
-                <Button variant="primary" onClick={() => handleDeleteProduct()}>
-                    <i class="fa-solid fa-check"></i>
-                    Delete it
-                </Button>
-            </Modal.Footer>
-        </Modal>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete product</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Do you want to delete !</Modal.Body>
+        <Modal.Footer className="d-flex justify-content-between">
+          <Button variant="secondary" onClick={handleClose}>
+            <i class="fa-solid fa-circle-xmark"></i>
+            Close
+          </Button>
+          <Button variant="primary" onClick={() => handleDeleteProduct()}>
+            <i class="fa-solid fa-check"></i>
+            Delete it
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
