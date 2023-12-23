@@ -107,7 +107,7 @@ const Merchant = () => {
     }
   }, 1000);
 
-  const handleSaveProduct = async () => {
+  const handleSaveMerchant = async () => {
     if (
       !legalName ||
       !logoUrl ||
@@ -124,7 +124,7 @@ const Merchant = () => {
     await insertMerchant(obj)
       .then((rs) => {
         if (rs) {
-          toast.success("Insert table merchant successfully !");
+          toast.success("Insert row merchant successfully !");
           getMerchant(currentPage, limit, sortBy, sortField);
           handleClose();
           setLegalName("");
@@ -153,7 +153,7 @@ const Merchant = () => {
       .catch((err) => toast.error(err.message));
   };
 
-  const handleDeleteProduct = async () => {
+  const handleDeleteMerchant = async () => {
     await deleteMerchant(objDelete)
       .then((rs) => {
         if (rs) {
@@ -532,7 +532,7 @@ const Merchant = () => {
               <i class="fa-solid fa-circle-xmark"></i>
               Close
             </Button>
-            <Button variant="primary" onClick={() => handleSaveProduct()}>
+            <Button variant="primary" onClick={() => handleSaveMerchant()}>
               <i class="fa-solid fa-floppy-disk"></i>
               Save Changes
             </Button>
@@ -754,7 +754,7 @@ const Merchant = () => {
             <i class="fa-solid fa-circle-xmark"></i>
             Close
           </Button>
-          <Button variant="primary" onClick={() => handleDeleteProduct()}>
+          <Button variant="primary" onClick={() => handleDeleteMerchant()}>
             <i class="fa-solid fa-check"></i>
             Delete it
           </Button>

@@ -9,6 +9,10 @@ export const searchMerchantByName = (name) => {
     return Http.get(`/merchant/api/search?name=${name}`);
 }
 
+export const getAllName = () => {
+    return Http.get(`/merchant/api/getName`);
+}
+
 export const insertMerchant = (obj) => {
     return Http.post(`/merchant/api/insert`, obj);
 }
