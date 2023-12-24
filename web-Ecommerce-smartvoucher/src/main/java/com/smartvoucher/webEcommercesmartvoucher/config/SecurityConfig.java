@@ -108,17 +108,18 @@ public class SecurityConfig {
                     .antMatchers("/account/**").permitAll()
                     .antMatchers("**/upload").permitAll()
                     //merchant
-                    .antMatchers("/merchant/**").permitAll()
-//                    .antMatchers(HttpMethod.GET, "/merchant").permitAll()
-//                    .antMatchers(HttpMethod.POST, "/merchant/api/insert").hasRole("ADMIN")
-//                    .antMatchers(HttpMethod.POST, "/merchant/api/upload").hasRole("ADMIN")
-//                    .antMatchers(HttpMethod.PUT, "/merchant/api/{id}").hasRole("ADMIN")
-//                    .antMatchers(HttpMethod.DELETE, "/merchant/api/{id}").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/merchant").permitAll()
+                    .antMatchers(HttpMethod.GET, "/merchant/api/getAll").permitAll()
+                    .antMatchers(HttpMethod.GET, "/merchant/api/getName").permitAll()
+                    .antMatchers(HttpMethod.GET, "/merchant/api/getAll").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/merchant/api/insert").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/merchant/api/upload").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/merchant/api/{id}").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, "/merchant/api/{id}").hasRole("ADMIN")
                     //merchant
                     //chain
-                    .antMatchers("/chain/**").permitAll()
-                    //chain
                     .antMatchers("/chain/**").hasRole("ADMIN")
+                    //chain
                     .antMatchers("/label/api/all").permitAll()
                     //user
                     .antMatchers(HttpMethod.GET,"/user/api/infor").hasRole("USER")
@@ -180,14 +181,14 @@ public class SecurityConfig {
                     //ticket
                     .antMatchers(HttpMethod.GET, "/ticket/api/list-ticket").hasRole("ADMIN")
                     .antMatchers(HttpMethod.PUT, "/ticket/api/update-ticket").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, "/ticket/api/delete-ticket").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, "/ticket/api/upload").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, "/ticket/api/delete-ticket").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/ticket/api/upload").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/ticket/api/buy-ticket").hasRole("USER")
-                    .antMatchers(HttpMethod.POST, "/ticket/api/use-ticket").hasRole("USER")
-                    .antMatchers(HttpMethod.POST, "/ticket/api/ticket_detail").hasRole("USER")
+                    .antMatchers(HttpMethod.PUT, "/ticket/api/use-ticket").hasRole("USER")
+                    .antMatchers(HttpMethod.GET, "/ticket/api/ticket_detail").hasRole("USER")
                     //ticket
                     //role_user
-                    .antMatchers(HttpMethod.GET,"/role_user").permitAll()
+                    .antMatchers(HttpMethod.GET,"/role_user").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST,"/role_user/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/role_user/api/delete").hasRole("ADMIN")
                     //role_user
