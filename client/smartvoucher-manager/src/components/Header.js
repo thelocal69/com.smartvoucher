@@ -1,86 +1,147 @@
-import { Nav, Navbar, Container, NavDropdown } from "react-bootstrap";
+import { 
+  Nav, 
+  Navbar, 
+  Container, 
+  NavDropdown,
+  Modal,
+  Button } from "react-bootstrap";
 import React from "react";
 import SideMenu from "./SideMenu";
 import "./Header.scss";
-import { useLocation, useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
-// import { useDispatch } from "react-redux";
-// import { logOut } from "../redux/feature/authen/authSlice";
-// import store from "../redux/store";
-// import { removeUserPayload } from "../redux/feature/data/UserSlice";
+import { useLocation, useNavigate, NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  logOut,
+  selectRefreshToken,
+  selectAccessToken,
+  selectIsAuthenticated,
+} from "../redux/data/AuthSlice";
+import { removeUserPayload, selectEmail } from "../redux/data/UserSlice";
+import { logOutAsync } from "../services/AccountService";
+import { toast } from "react-toastify";
 
 const Header = (props) => {
   const [isShowMenu, setIsShowMenu] = React.useState(false);
-  //const [isShowHeader, setIsShowHeader] = React.useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
-  //const dispatch = useDispatch();
+  const [isShowHeader, setIsShowHeader] = React.useState(false);
+  const [isShowLogOut, setIsShowLogOut] = React.useState(false);
 
-  // let isAuthenticated = store.getState().auth.isAuthenticated;
-  // const token = store.getState().auth.accessToken;
-  
-  // React.useEffect(() => {
-  //   if (isAuthenticated) {
-  //     setIsShowHeader(true);
-  //   }else{
-  //     setIsShowHeader(false);
-  //   }
-  // }, [isAuthenticated]);
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const accessToken = useSelector(selectAccessToken);
+  const refreshToken = useSelector(selectRefreshToken);
+  const email = useSelector(selectEmail);
+  let index = email.indexOf("@");
+  const username = email.substring(0, index);
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      setIsShowHeader(true);
+    } else {
+      setIsShowHeader(false);
+    }
+  }, [isAuthenticated]);
 
   const handleClose = () => {
     setIsShowMenu(false);
+    setIsShowLogOut(false);
   };
 
-  // const handleLogout = () => {
-  //   dispatch(logOut());
-  //   dispatch(removeUserPayload());
-  //   navigate("/");
-  // };
-  // const email = store.getState().user.email;
-  // let index = email.indexOf('@');
-  // const username = email.substring(0, index);
+  const handleLogout = async () => {
+    dispatch(logOut());
+    dispatch(removeUserPayload());
+    navigate("/");
+    setIsShowLogOut(false);
+    await logOutAsync(refreshToken)
+      .then((rs) => {
+        if (rs) {
+          toast.success(rs.message);
+        }
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
+
   return (
     <>
-        <Navbar expand="lg" className="bg-white">
-          <Container>
-            <Navbar.Brand>
-              <NavLink to="/" className="color-black">
-                SMARTVOUCHER MANAGER
-              </NavLink>
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto" activeKey={location.pathname}>
-                <NavLink to="/" className="nav-link">
-                  Home
+      {isAuthenticated && (
+        <>
+          <Navbar expand="lg" className="bg-white">
+            <Container>
+              <Navbar.Brand>
+                <NavLink to="/Home" className="color-black">
+                  SMARTVOUCHER MANAGER
                 </NavLink>
-                <NavLink
-                  onClick={() => setIsShowMenu(true)}
-                  className="nav-link"
-                >
-                  Menu
-                </NavLink>
-              </Nav>
-              <Nav>
-                <NavDropdown title="Account" id="basic-nav-dropdown">
-                  <NavLink
-                    to="/"
-                    className="dropdown-item"
-                  >
-                    Login
+              </Navbar.Brand>
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="me-auto" activeKey={location.pathname}>
+                  <NavLink to="/Home" className="nav-link">
+                    Home
                   </NavLink>
-                  <NavDropdown.Item>
-                    Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-
+                  <NavLink
+                    onClick={() => setIsShowMenu(true)}
+                    className="nav-link"
+                  >
+                    Menu
+                  </NavLink>
+                </Nav>
+                <Nav>
+                  <NavDropdown title={username} id="basic-nav-dropdown">
+                    <NavLink
+                    to="/profile"
+                    className="dropdown-item"
+                    >
+                      Profile
+                    </NavLink>
+                    <NavLink
+                      to="/"
+                      className="dropdown-item"
+                      hidden={accessToken ? true : false}
+                    >
+                      Login
+                    </NavLink>
+                    {accessToken && (
+                      <>
+                        <NavDropdown.Item
+                          hidden={accessToken ? false : true}
+                          onClick={() => setIsShowLogOut(true)}
+                        >
+                          Logout
+                        </NavDropdown.Item>
+                      </>
+                    )}
+                  </NavDropdown>
+                </Nav>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
+        </>
+      )}
       <Container>
         <SideMenu show={isShowMenu} handleClose={handleClose} />
       </Container>
+      
+      <Modal show={isShowLogOut} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Logout SMARTVOUCHER MANAGER</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Do you want to log-out !</Modal.Body>
+        <Modal.Footer className="d-flex justify-content-between">
+          <Button variant="secondary" onClick={handleClose}>
+            <i class="fa-solid fa-circle-xmark"></i>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleLogout}>
+            <i class="fa-solid fa-check"></i>
+            Accept
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
     </>
   );
 };

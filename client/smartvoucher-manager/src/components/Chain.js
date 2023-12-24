@@ -27,6 +27,7 @@ const Chain = () => {
   const ref = React.useRef(null);
 
   const [isShowModalAddNew, setIsShowModalAddNew] = React.useState(false);
+  const [isShowModalUpdate, setIsShowModalUpdate] = React.useState(false);;;
   const [isShowModalDelete, setIsShowModalDelete] = React.useState(false);
   const [smShow, setSmShow] = React.useState(false);
 
@@ -43,9 +44,11 @@ const Chain = () => {
   const [listChain, setListChain] = React.useState([]);
   const [merchantNames, setMerchantNames] = React.useState([]);
   const [chainItem, setChainItem] = React.useState({});
+  const [objEdit, setObjEdit] = React.useState({});
   const [objDelete, setObjDelete] = React.useState({});
   const [legalName, setLegalName] = React.useState("");
   const [logoUrl, setLogoUrl] = React.useState("");
+  const [editLogoUrl, setEditLogoUrl] = React.useState("");
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [phone, setPhone] = React.useState("");
@@ -159,6 +162,21 @@ const Chain = () => {
       .catch((err) => toast.error(err.message));
   };
 
+  const handleUpdateChain = async() => {
+    await editChain(objEdit)
+    .then((rs) => {
+      if(rs){
+        toast.success("Update chain is successfully !");
+        getChain(currentPage, limit, sortBy, sortField);
+        setObjEdit("");
+        handleClose();
+      }
+    })
+    .catch((err) => {
+      toast.error(err.message);
+    })
+  }
+
   const handDeleteChain = async() => {
     await deleteChain(objDelete)
     .then((rs) => {
@@ -169,7 +187,10 @@ const Chain = () => {
     .catch((err) => toast.error("Cannot delete parent row because FK !"));
   }
 
-  const handClickEditChain = () => {};
+  const handClickEditChain = (chain) => {
+    setIsShowModalUpdate(true);
+    setObjEdit(chain);
+  };
 
   const handClickDeleteChain = (chain) => {
     setIsShowModalDelete(true);
@@ -199,6 +220,29 @@ const Chain = () => {
     }
   };
 
+  const handleUploadEditChain = async() => {
+    if (file) {
+      const form = new FormData();
+      form.append("fileName", file);
+      setLoading(true);
+      await uploadLogoChain(form)
+      .then((rs) => {
+        if(rs){
+          setLoading(false);
+          setFile(null);
+          setEditLogoUrl(rs.data);
+          toast.success(rs.message);
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        toast.error(err.message);
+      });
+    }else{
+      toast.error("Please choose an logo !");
+    }
+  };
+
   const handleSortClick = (sortBy, sortField) => {
     getChain(currentPage, limit, sortBy, sortField);
     setSortBy(sortBy);
@@ -215,6 +259,7 @@ const Chain = () => {
 
   const handleClose = () => {
     setIsShowModalAddNew(false);
+    setIsShowModalUpdate(false);
     setIsShowModalDelete(false);
     setSmShow(false);
   };
@@ -532,6 +577,218 @@ const Chain = () => {
             <Button variant="primary" onClick={() => handleSaveChain()}>
               <i class="fa-solid fa-floppy-disk"></i>
               Save Changes
+            </Button>
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
+
+      <Offcanvas
+        show={isShowModalUpdate}
+        onHide={handleClose}
+        placement="end"
+        backdrop="static"
+      >
+      <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Update Merchant</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Legal name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter legal name"
+                onChange={(event) => {
+                  let element = { ...objEdit };
+                  element.legalName = event.target.value;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.legalName}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Logo url</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Logo url"
+                onChange={() => {
+                  let element = { ...objEdit };
+                  element.logoUrl = editLogoUrl;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.logoUrl}
+              />
+              <div className="d-flex align-items-center">
+                <Col xs={6} md={4} className="d-flex my-2">
+                  <Image src={objEdit?.logoUrl} thumbnail />
+                </Col>
+                <div className="m-3">
+                  <span>Vui lòng chọn ảnh nhỏ hơn 5MB</span>
+                  <br />
+                  <span>Chọn hình ảnh phù hợp, không phản cảm</span>
+                </div>
+              </div>
+              {file ? (
+                <>
+                  <Form.Label
+                    className="btn btn-success my-3"
+                    onClick={() => handleUploadEditChain()}
+                  >
+                    <i class="fa-solid fa-check"></i>
+                    Accept
+                  </Form.Label>
+                  {loading && (
+                    <div className="loading">
+                      <Loading fileName={file.name} />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Form.Label
+                    className="btn btn-primary my-3"
+                    onClick={() => {
+                      ref.current.click();
+                    }}
+                  >
+                    <i class="fa-solid fa-upload"></i>
+                    Upload logo
+                  </Form.Label>
+                </>
+              )}
+              <Form.Control
+                type="file"
+                ref={ref}
+                accept="image/png, image/jpeg"
+                onChange={(event) => setFile(event.target.files[0])}
+                hidden
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter name"
+                onChange={(event) => {
+                  let element = { ...objEdit };
+                  element.name = event.target.value;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.name}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter email"
+                onChange={(event) => {
+                  let element = { ...objEdit };
+                  element.email = event.target.value;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.email}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter phone"
+                onChange={(event) => {
+                  let element = { ...objEdit };
+                  element.phone = event.target.value;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.phone}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter description"
+                onChange={(event) => {
+                  let element = { ...objEdit };
+                  element.description = event.target.value;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.description}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter address"
+                onChange={(event) => {
+                  let element = { ...objEdit };
+                  element.address = event.target.value;
+                  setObjEdit(element);
+                }}
+                defaultValue={objEdit?.address}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Status</Form.Label>
+              <div
+                className="d-flex justify-content-between"
+                onChange={(event) => {
+                  let obj = { ...objEdit };
+                  obj.status = event.target.value;
+                  setObjEdit(obj);
+                }}
+              >
+                {statusHardCode?.map((item) => {
+                  return (
+                    <label>
+                      <input
+                        checked={Number(objEdit?.status) === Number(item.value)}
+                        type="radio"
+                        value={item.value}
+                      />
+                      {item?.label}
+                    </label>
+                  );
+                })}
+              </div>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Merchant Name</Form.Label>
+              <Form.Select
+                type="text"
+                placeholder="Enter category"
+                onChange={(event) => {
+                  let element = {...objEdit};
+                  element.merchantName = event.target.value;
+                  setObjEdit(element);
+                }}
+              >
+                {
+                  merchantNames?.map((item) => {
+                    return (
+                      <>
+                      <option
+                      value={item}
+                      selected={item === objEdit?.merchantName ? true : false}
+                      >
+                          {item}
+                      </option>
+                      </>
+                    )
+                  })
+                }
+              </Form.Select>
+            </Form.Group>
+          </Form>
+          <div className="d-flex justify-content-between">
+            <Button variant="secondary" onClick={handleClose}>
+              <i class="fa-solid fa-circle-xmark"></i>
+              Close
+            </Button>
+            <Button variant="primary" onClick={() => handleUpdateChain()}>
+              <i class="fa-solid fa-floppy-disk"></i>
+              Update Changes
             </Button>
           </div>
         </Offcanvas.Body>
