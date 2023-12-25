@@ -54,13 +54,13 @@ public class UserController {
         );
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/api/profile")
     public ResponseEntity<ResponseObject>profile(Principal principal){
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
-                        "OK",
-                        principal.getName()
+                        "get Information is completed !",
+                        userService.getInformationLoginUser(principal)
                 )
         );
     }
@@ -76,6 +76,20 @@ public class UserController {
                 )
         );
     }
+
+    @PostMapping("/api/uploadAdmin")
+    public ResponseEntity<ResponseObject> uploadFilesAdmin(@RequestParam MultipartFile fileName, Principal connectedUser){
+        log.info("Upload images is completed !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Upload images is completed !",
+                        userService.uploadUserImages(fileName, connectedUser)
+                )
+        );
+    }
+
+
     @GetMapping("/api/{id}")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getUserById(@PathVariable long id) {
@@ -105,6 +119,24 @@ public class UserController {
     @PutMapping("/api/edit")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject>editProfile(
+            @RequestBody @Valid UserDetailDTO userDetailDTO,
+            Principal connectedUser
+    ){
+        log.info("Update profile is completed !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Update profile is completed !",
+                        userService.editUserProfile(
+                                userDetailDTO, connectedUser
+                        )
+                )
+        );
+    }
+
+    @PutMapping("/api/editAdmin")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<ResponseObject>editProfileAdmin(
             @RequestBody @Valid UserDetailDTO userDetailDTO,
             Principal connectedUser
     ){

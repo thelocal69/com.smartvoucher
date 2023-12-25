@@ -109,8 +109,8 @@ public class SecurityConfig {
                     .antMatchers("**/upload").permitAll()
                     //merchant
                     .antMatchers(HttpMethod.GET, "/merchant").permitAll()
-                    .antMatchers(HttpMethod.GET, "/merchant/api/getAll").permitAll()
-                    .antMatchers(HttpMethod.GET, "/merchant/api/getName").permitAll()
+                    .antMatchers(HttpMethod.GET, "/merchant/api/getAll").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/merchant/api/getName").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/merchant/api/getAll").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/merchant/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/merchant/api/upload").hasRole("ADMIN")
@@ -121,12 +121,16 @@ public class SecurityConfig {
                     .antMatchers("/chain/**").hasRole("ADMIN")
                     //chain
                     .antMatchers("/label/api/all").permitAll()
+                    .antMatchers("/label/api/getAll").hasRole("ADMIN")
                     //user
                     .antMatchers(HttpMethod.GET,"/user/api/infor").hasRole("USER")
                     .antMatchers(HttpMethod.GET,"/user/api/auth2/infor").hasRole("USER")
                     .antMatchers(HttpMethod.PUT,"/user/api/edit").hasRole("USER")
                     .antMatchers(HttpMethod.POST,"/user/api/upload").hasRole("USER")
                     .antMatchers(HttpMethod.PUT,"/user/api/change_pwd").hasRole("USER")
+                    .antMatchers(HttpMethod.GET, "/user/api/profile").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/user/api/uploadAdmin").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/user/api/editAdmin").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/user/api/{id}").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/user/api/all").hasRole("ADMIN")
                     //user
