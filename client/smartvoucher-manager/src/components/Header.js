@@ -1,10 +1,11 @@
-import { 
-  Nav, 
-  Navbar, 
-  Container, 
+import {
+  Nav,
+  Navbar,
+  Container,
   NavDropdown,
   Modal,
-  Button } from "react-bootstrap";
+  Button,
+} from "react-bootstrap";
 import React from "react";
 import SideMenu from "./SideMenu";
 import "./Header.scss";
@@ -16,9 +17,9 @@ import {
   selectAccessToken,
   selectIsAuthenticated,
 } from "../redux/data/AuthSlice";
-import { removeUserPayload, selectEmail } from "../redux/data/UserSlice";
 import { logOutAsync } from "../services/AccountService";
 import { toast } from "react-toastify";
+import { getUserInforLogin } from "../services/ProfileService";
 
 const Header = (props) => {
   const [isShowMenu, setIsShowMenu] = React.useState(false);
@@ -32,9 +33,8 @@ const Header = (props) => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const accessToken = useSelector(selectAccessToken);
   const refreshToken = useSelector(selectRefreshToken);
-  const email = useSelector(selectEmail);
-  let index = email.indexOf("@");
-  const username = email.substring(0, index);
+
+  const [objInfo, setObjInfor] = React.useState({});
 
   React.useEffect(() => {
     if (isAuthenticated) {
@@ -44,6 +44,24 @@ const Header = (props) => {
     }
   }, [isAuthenticated]);
 
+  React.useEffect(() => {
+    if (accessToken) {
+      getUserName();
+    }
+  }, [accessToken]);
+
+  const getUserName = async() => {
+    await getUserInforLogin()
+    .then((rs) => {
+      if (rs) {
+        setObjInfor(rs.data);
+      }
+    })
+    .catch((err) => {
+      toast.error(err.message);
+    });
+  }
+
   const handleClose = () => {
     setIsShowMenu(false);
     setIsShowLogOut(false);
@@ -51,7 +69,6 @@ const Header = (props) => {
 
   const handleLogout = async () => {
     dispatch(logOut());
-    dispatch(removeUserPayload());
     navigate("/");
     setIsShowLogOut(false);
     await logOutAsync(refreshToken)
@@ -90,31 +107,39 @@ const Header = (props) => {
                   </NavLink>
                 </Nav>
                 <Nav>
-                  <NavDropdown title={username} id="basic-nav-dropdown">
-                    <NavLink
-                    to="/profile"
-                    className="dropdown-item"
-                    >
-                      Profile
-                    </NavLink>
-                    <NavLink
-                      to="/"
-                      className="dropdown-item"
-                      hidden={accessToken ? true : false}
-                    >
+                  {accessToken && objInfo ? (
+                    <>
+                      <NavDropdown
+                        title={objInfo.userName}
+                        id="basic-nav-dropdown"
+                      >
+                        <NavLink to="/Profile" className="dropdown-item">
+                          Profile
+                        </NavLink>
+                        <NavLink
+                          to="/"
+                          className="dropdown-item"
+                          hidden={accessToken ? true : false}
+                        >
+                          Login
+                        </NavLink>
+                        {accessToken && (
+                          <>
+                            <NavDropdown.Item
+                              hidden={accessToken ? false : true}
+                              onClick={() => setIsShowLogOut(true)}
+                            >
+                              Logout
+                            </NavDropdown.Item>
+                          </>
+                        )}
+                      </NavDropdown>
+                    </>
+                  ) : (
+                    <NavLink to="/" className="dropdown-item">
                       Login
                     </NavLink>
-                    {accessToken && (
-                      <>
-                        <NavDropdown.Item
-                          hidden={accessToken ? false : true}
-                          onClick={() => setIsShowLogOut(true)}
-                        >
-                          Logout
-                        </NavDropdown.Item>
-                      </>
-                    )}
-                  </NavDropdown>
+                  )}
                 </Nav>
               </Navbar.Collapse>
             </Container>
@@ -124,7 +149,7 @@ const Header = (props) => {
       <Container>
         <SideMenu show={isShowMenu} handleClose={handleClose} />
       </Container>
-      
+
       <Modal show={isShowLogOut} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Logout SMARTVOUCHER MANAGER</Modal.Title>
@@ -141,7 +166,6 @@ const Header = (props) => {
           </Button>
         </Modal.Footer>
       </Modal>
-
     </>
   );
 };

@@ -5,6 +5,8 @@ import NotFound from "../components/NotFound";
 import Chain from "../components/Chain";
 import Login from "../components/Login";
 import PrivateRoutes from "./PrivateRoutes";
+import Label from "../components/Label";
+import Profile from "../components/Profile";
 
 const AppRoutes = () => {
   return (
@@ -14,6 +16,8 @@ const AppRoutes = () => {
         <Route path="/Home" element={<PrivateRoutes Component={HomePage}/>} />
         <Route path="/Merchant" element={<PrivateRoutes Component={Merchant}/>} />
         <Route path="/Chain" element={<PrivateRoutes Component={Chain}/>} />
+        <Route path="/Label" element={<PrivateRoutes Component={Label}/>} />
+        <Route path="/Profile" element={<PrivateRoutes Component={Profile}/>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

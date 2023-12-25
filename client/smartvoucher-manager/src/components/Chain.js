@@ -48,7 +48,6 @@ const Chain = () => {
   const [objDelete, setObjDelete] = React.useState({});
   const [legalName, setLegalName] = React.useState("");
   const [logoUrl, setLogoUrl] = React.useState("");
-  const [editLogoUrl, setEditLogoUrl] = React.useState("");
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [phone, setPhone] = React.useState("");
@@ -168,7 +167,6 @@ const Chain = () => {
       if(rs){
         toast.success("Update chain is successfully !");
         getChain(currentPage, limit, sortBy, sortField);
-        setObjEdit("");
         handleClose();
       }
     })
@@ -230,7 +228,7 @@ const Chain = () => {
         if(rs){
           setLoading(false);
           setFile(null);
-          setEditLogoUrl(rs.data);
+          objEdit.logoUrl = rs.data;;
           toast.success(rs.message);
         }
       })
@@ -264,6 +262,7 @@ const Chain = () => {
     setSmShow(false);
   };
 
+
   return (
     <>
       <div className="my-3 d-sm-flex justify-content-between">
@@ -276,7 +275,7 @@ const Chain = () => {
         <div>
           <input
             className="form-control"
-            placeholder="Search merchant by name..."
+            placeholder="Search chain by name..."
             onChange={(event) => handleSearchByName(event)}
           />
         </div>
@@ -611,12 +610,7 @@ const Chain = () => {
               <Form.Control
                 type="text"
                 placeholder="Logo url"
-                onChange={() => {
-                  let element = { ...objEdit };
-                  element.logoUrl = editLogoUrl;
-                  setObjEdit(element);
-                }}
-                defaultValue={objEdit?.logoUrl}
+                defaultValue={objEdit.logoUrl}
               />
               <div className="d-flex align-items-center">
                 <Col xs={6} md={4} className="d-flex my-2">

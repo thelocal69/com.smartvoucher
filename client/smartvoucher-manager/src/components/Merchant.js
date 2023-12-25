@@ -51,7 +51,6 @@ const Merchant = () => {
   const [merchantItem, setMerchantItem] = React.useState({});
   const [objEdit, setObjEdit] = React.useState({});
   const [objDelete, setObjDelete] = React.useState({});
-  const [editLogoUrl, setEditLogoUrl] = React.useState("");
 
   const statusHardCode = [
     {
@@ -76,8 +75,9 @@ const Merchant = () => {
   };
 
   React.useEffect(() => {
-    getMerchant(currentPage, limit, sortBy, sortField)
-    .catch((err) => toast.error(err.message));
+    getMerchant(currentPage, limit, sortBy, sortField).catch((err) =>
+      toast.error(err.message)
+    );
   }, []);
 
   const getMerchant = async (page, limit, sortBy, sortField) => {
@@ -145,7 +145,6 @@ const Merchant = () => {
       .then((rs) => {
         if (rs) {
           toast.success("Update table merchant successfully !");
-          setEditLogoUrl("");
           getMerchant(currentPage, limit, sortBy, sortField);
           handleClose();
         }
@@ -164,6 +163,7 @@ const Merchant = () => {
       })
       .catch((err) => toast.error("Cannot delete parent row because FK !"));
   };
+
 
   const handClickEditMerchant = (merchant) => {
     setIsShowModalUpdate(true);
@@ -208,7 +208,7 @@ const Merchant = () => {
           if (rs) {
             setLoading(false);
             setFile(null);
-            setEditLogoUrl(rs.data);
+            objEdit.logoUrl = rs.data;
             toast.success(rs.message);
           }
         })
@@ -363,20 +363,20 @@ const Merchant = () => {
                       </td>
                       <td>
                         <div className="d-flex">
-                        <button
-                          className="btn btn-warning mx-2"
-                          onClick={() => handClickEditMerchant(item)}
-                        >
-                          <i class="fa-solid fa-pen-to-square"></i>
-                          <span>Edit</span>
-                        </button>
-                        <button
-                          className="btn btn-danger mx-2"
-                          onClick={() => handClickDeleteMerchant(item)}
-                        >
-                          <i class="fa-solid fa-trash"></i>
-                          <span>Delete</span>
-                        </button>
+                          <button
+                            className="btn btn-warning mx-2"
+                            onClick={() => handClickEditMerchant(item)}
+                          >
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>Edit</span>
+                          </button>
+                          <button
+                            className="btn btn-danger mx-2"
+                            onClick={() => handClickDeleteMerchant(item)}
+                          >
+                            <i class="fa-solid fa-trash"></i>
+                            <span>Delete</span>
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -569,12 +569,7 @@ const Merchant = () => {
               <Form.Control
                 type="text"
                 placeholder="Logo url"
-                onChange={() => {
-                  let element = { ...objEdit };
-                  element.logoUrl = editLogoUrl;
-                  setObjEdit(element);
-                }}
-                defaultValue={objEdit?.logoUrl}
+                defaultValue={objEdit.logoUrl}
               />
               <div className="d-flex align-items-center">
                 <Col xs={6} md={4} className="d-flex my-2">

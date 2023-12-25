@@ -7,7 +7,6 @@ import { loginAdmin } from '../services/AccountService';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { logIn, selectAccessToken } from '../redux/data/AuthSlice';
-import { userPayload } from '../redux/data/UserSlice';
 
 const Login = () => {
 
@@ -43,7 +42,6 @@ const Login = () => {
             if(rs){
                 toast.success(rs.message);
                 dispatch(logIn(rs.data));
-                dispatch(userPayload(email));
                 navigate("/Home")
                 setLoading(false);
             }
