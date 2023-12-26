@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface IDiscountTypeRepository extends JpaRepository<DiscountTypeEntity, Long> {
     List<DiscountTypeEntity> findByCode(String code);
+    List<DiscountTypeEntity> searchAllByNameContainingIgnoreCase(String name);
     DiscountTypeEntity findOneByCode(String code);
     DiscountTypeEntity findOneById(Long id);
     Boolean existsByCode(String code);

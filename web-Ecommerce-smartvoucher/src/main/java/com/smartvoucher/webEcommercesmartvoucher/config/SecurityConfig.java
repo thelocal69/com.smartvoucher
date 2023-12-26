@@ -136,6 +136,8 @@ public class SecurityConfig {
                     //user
                     //category
                     .antMatchers(HttpMethod.GET, "/category/api/all").permitAll()
+                    .antMatchers(HttpMethod.GET, "/category/api/getAll").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/category/api/search").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/category/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/category/api/upload").hasRole("ADMIN")
                     .antMatchers(HttpMethod.PUT, "/category/api/{id}").hasRole("ADMIN")
@@ -143,6 +145,8 @@ public class SecurityConfig {
                     //category
                     //discount
                     .antMatchers(HttpMethod.GET,"/discount").permitAll()
+                    .antMatchers(HttpMethod.GET,"/discount/api/getAll").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET,"/discount/api/search").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST,"/discount/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST,"/discount/api/{id}").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST,"/discount/api/{id}").hasRole("ADMIN")

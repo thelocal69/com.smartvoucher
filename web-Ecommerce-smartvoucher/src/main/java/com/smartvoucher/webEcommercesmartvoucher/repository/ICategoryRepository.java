@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface ICategoryRepository extends JpaRepository<CategoryEntity, Long> {
     List<CategoryEntity> findByCategoryCode(String categoryCode);
+    List<CategoryEntity> searchAllByNameContainingIgnoreCase(String name);
     CategoryEntity findOneByCategoryCode(String categoryCode);
     CategoryEntity findOneById(Long id);
     Boolean existsByCategoryCode(String categoryCode);

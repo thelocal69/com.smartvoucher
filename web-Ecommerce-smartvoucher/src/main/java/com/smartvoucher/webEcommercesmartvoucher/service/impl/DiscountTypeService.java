@@ -6,10 +6,14 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.DiscountTypeEntity;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IDiscountTypeRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IDiscountTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +51,36 @@ public class DiscountTypeService implements IDiscountTypeService {
     public List<DiscountTypeDTO> getAllDiscountTypeCode(DiscountTypeDTO discountTypeDTO) {
         List<DiscountTypeEntity> discountTypeEntityList = discountTypeRepository.findByCode(discountTypeDTO.getCode());
         return discountTypeConverter.toDiscountTypeDTOList(discountTypeEntityList);
+    }
+
+    @Override
+    public List<DiscountTypeDTO> searchByName(String name) {
+        return discountTypeConverter.toDiscountTypeDTOList(
+                discountTypeRepository.searchAllByNameContainingIgnoreCase(name)
+        );
+    }
+
+    @Override
+    public ResponseOutput getAllDiscountType(int page, int limit, String sortBy, String sortField) {
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.fromString(sortBy), sortField));
+        List<DiscountTypeDTO> discountTypeDTOList = discountTypeConverter.toDiscountTypeDTOList(
+                discountTypeRepository.findAll(pageable).getContent()
+        );
+        if (discountTypeDTOList.isEmpty()){
+            log.info("List category is empty !");
+            throw new ObjectEmptyException(
+                    404, "List category is empty !"
+            );
+        }
+        int totalItem = (int) discountTypeRepository.count();
+        int totalPage = (int) Math.ceil((double) totalItem / limit);
+        log.info("Get all discount type is completed !");
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                discountTypeDTOList
+        );
     }
 
     @Override
