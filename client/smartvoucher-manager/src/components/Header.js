@@ -5,6 +5,8 @@ import {
   NavDropdown,
   Modal,
   Button,
+  Image,
+  Col,
 } from "react-bootstrap";
 import React from "react";
 import SideMenu from "./SideMenu";
@@ -50,17 +52,17 @@ const Header = (props) => {
     }
   }, [accessToken]);
 
-  const getUserName = async() => {
+  const getUserName = async () => {
     await getUserInforLogin()
-    .then((rs) => {
-      if (rs) {
-        setObjInfor(rs.data);
-      }
-    })
-    .catch((err) => {
-      toast.error(err.message);
-    });
-  }
+      .then((rs) => {
+        if (rs) {
+          setObjInfor(rs.data);
+        }
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
 
   const handleClose = () => {
     setIsShowMenu(false);
@@ -109,6 +111,17 @@ const Header = (props) => {
                 <Nav>
                   {accessToken && objInfo ? (
                     <>
+                      <Navbar>
+                        <Col xs={3} md={2}>
+                          <NavLink to="/Profile">
+                            <Image
+                              src={objInfo.avatarUrl}
+                              roundedCircle
+                              className="avatar"
+                            />
+                          </NavLink>
+                        </Col>
+                      </Navbar>
                       <NavDropdown
                         title={objInfo.userName}
                         id="basic-nav-dropdown"
