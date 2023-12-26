@@ -13,6 +13,7 @@ public interface IChainService {
     ChainDTO upsert(ChainDTO chainDTO);
     List<ChainDTO> getAllChainCode(ChainDTO chainDTO);
     List<ChainDTO> searchAllChainName(String name);
+    List<String> getAllChainName();
     void deleteChain(ChainDTO chainDTO);
     Boolean existChain(ChainDTO chainDTO);
     Boolean existMerchantName(ChainDTO chainDTO);

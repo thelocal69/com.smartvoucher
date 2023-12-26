@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface IStoreRepository extends JpaRepository<StoreEntity, Long> {
     List<StoreEntity> findAllByStoreCode(String storeCode);
+    List<StoreEntity> searchAllByNameContainingIgnoreCase(String name);
     StoreEntity findOneById(Long id);
     StoreEntity findOneByStoreCode(String storeCode);
     List<StoreEntity> findAllByStatus(int status);

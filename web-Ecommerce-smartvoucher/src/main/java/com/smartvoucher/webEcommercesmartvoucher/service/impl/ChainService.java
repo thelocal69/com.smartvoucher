@@ -137,6 +137,17 @@ public class ChainService implements IChainService {
     }
 
     @Override
+    public List<String> getAllChainName() {
+        List<String> getAllName = chainRepository.getChainName();
+        if (getAllName.isEmpty()){
+            log.info("List chain name is empty !");
+            throw new ObjectEmptyException(404, "List chain name is empty !");
+        }
+        log.info("Get all name is successfully !");
+        return getAllName;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteChain(ChainDTO chainDTO) {
         boolean exists = chainRepository.existsById(chainDTO.getId());

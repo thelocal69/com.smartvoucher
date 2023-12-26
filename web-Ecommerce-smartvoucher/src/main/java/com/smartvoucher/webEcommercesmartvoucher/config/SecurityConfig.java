@@ -151,10 +151,14 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.POST,"/discount/api/{id}").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST,"/discount/api/{id}").hasRole("ADMIN")
                     //discount
+                    //store
                     .antMatchers(HttpMethod.GET, "/store").permitAll()
+                    .antMatchers(HttpMethod.GET, "/store/api/getAll").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/store/api/search").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/store/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.PUT, "/store/api/{id}").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE, "/store/api/{id}").hasRole("ADMIN")
+                    //store
                     //order
                     .antMatchers(HttpMethod.GET, "/order/api/list-order").hasRole("USER")
                     .antMatchers(HttpMethod.GET, "/order/api/get_all_oder_user/{id}").hasRole("USER")
