@@ -9,6 +9,7 @@ import Label from "../components/Label";
 import Profile from "../components/Profile";
 import Category from "../components/Category";
 import DiscountType from "../components/DiscountType";
+import Store from "../components/Store";
 
 const AppRoutes = () => {
   return (
@@ -21,6 +22,7 @@ const AppRoutes = () => {
         <Route path="/Label" element={<PrivateRoutes Component={Label}/>} />
         <Route path="/Category" element={<PrivateRoutes Component={Category}/>} />
         <Route path="/Discount type" element={<PrivateRoutes Component={DiscountType}/>} />
+        <Route path="/Store" element={<PrivateRoutes Component={Store}/>} />
         <Route path="/Profile" element={<PrivateRoutes Component={Profile}/>} />
         <Route path="*" element={<NotFound />} />
       </Routes>

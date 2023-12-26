@@ -134,17 +134,19 @@ const Category = () => {
             handleClose();
         }
     })
+    .catch((err) => toast.error(err.message));
   }
-
+  
   const handleDeleteCategory = async() => {
     await deleteCategory(objDelete)
     .then((rs) => {
-        if(rs){
-            toast.success("Delete row table category is successfully !");
-            getCategory(currentPage, limit, sortBy, sortField);
-            handleClose();
-        }
+      if(rs){
+        toast.success("Delete row table category is successfully !");
+        getCategory(currentPage, limit, sortBy, sortField);
+        handleClose();
+      }
     })
+    .catch((err) => toast.error("Cannot delete parent row because FK !"));
   }
 
   const handleUploadCategory = async() => {

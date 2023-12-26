@@ -118,7 +118,7 @@ const DiscountType = () => {
           handleClose();
         }
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => toast.error("Cannot delete parent row because FK !"));
   };
 
   const handClickEditDiscount = (discount) => {

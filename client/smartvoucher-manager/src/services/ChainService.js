@@ -9,6 +9,10 @@ export const searchAllChainByName = (name) => {
     return Http.get(`/chain/api/search?name=${name}`);
 }
 
+export const getAllChainName = () => {
+    return Http.get(`/chain/api/getName`);
+}
+
 export const insertChain = (obj) => {
     return Http.post(`/chain/api/insert`, obj);
 }
