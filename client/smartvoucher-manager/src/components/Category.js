@@ -20,6 +20,7 @@ import Paging from "./Paging";
 import { toast } from "react-toastify";
 import debounce from "lodash.debounce";
 import Loading from "./Loading";
+import './Category.scss'
 
 const Category = () => {
   const ref = React.useRef(null);
@@ -313,7 +314,11 @@ const Category = () => {
                         </label>
                       </td>
                       <td>
-                        <label>{item?.status ? "Active" : "Deactive"}</label>
+                        <label
+                        className={
+                          item?.status ? "ac active" : "ac deactive"
+                        }
+                        >{item?.status ? "Active" : "Deactive"}</label>
                       </td>
                       <td>
                         <div className="d-flex">
@@ -577,9 +582,6 @@ const Category = () => {
         </Modal.Header>
         <Modal.Body>
           {categoryItem}
-          <Col xs={6} md={4}>
-            <Image src={categoryItem} thumbnail />
-          </Col>
         </Modal.Body>
       </Modal>
 

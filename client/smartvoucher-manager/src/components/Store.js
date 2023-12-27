@@ -12,6 +12,7 @@ import { Table, Modal, Button, Offcanvas, Form } from "react-bootstrap";
 import Paging from "./Paging";
 import { toast } from "react-toastify";
 import debounce from "lodash.debounce";
+import './Store.scss';
 
 const Store = () => {
   const [isShowModalAddNew, setIsShowModalAddNew] = React.useState(false);
@@ -209,7 +210,7 @@ const Store = () => {
     <>
       <div className="my-3 d-sm-flex justify-content-between">
         <span>
-          <b>List Chain:</b>
+          <b>List Store:</b>
         </span>
       </div>
 
@@ -269,8 +270,15 @@ const Store = () => {
                   return (
                     <tr key={key}>
                       <td>{key + 1}</td>
-                      <td>{item?.id}</td>
-                      <td>{item?.name}</td>
+                      <td>{item?.id}</td>{" "}
+                      <td>
+                        <label
+                          className="formatLable"
+                          onClick={() => handleClickTable(item?.name)}
+                        >
+                          Name {item?.id}
+                        </label>
+                      </td>
                       <td>
                         <label
                           className="formatLable"
@@ -279,7 +287,14 @@ const Store = () => {
                           Code {item?.id}
                         </label>
                       </td>
-                      <td>{item?.phone}</td>
+                      <td>
+                        <label
+                          className="formatLable"
+                          onClick={() => handleClickTable(item?.phone)}
+                        >
+                          Phone {item?.id}
+                        </label>
+                      </td>
                       <td>
                         <label
                           className="formatLable"
@@ -297,7 +312,11 @@ const Store = () => {
                         </label>
                       </td>
                       <td>
-                        <label>{item?.status ? "Active" : "Deactive"}</label>
+                        <label
+                        className={
+                          item?.status ? "ac active" : "ac deactive"
+                        }
+                        >{item?.status ? "Active" : "Deactive"}</label>
                       </td>
                       <td>
                         <label

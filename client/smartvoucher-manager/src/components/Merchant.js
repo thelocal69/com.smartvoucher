@@ -332,7 +332,14 @@ const Merchant = () => {
                           Logo {item?.id}
                         </label>
                       </td>
-                      <td>{item?.name}</td>
+                      <td>
+                        <label
+                          className="formatLable"
+                          onClick={() => handleClickTable(item?.name)}
+                        >
+                          Name {item?.id}
+                        </label>
+                      </td>
                       <td>
                         <label
                           className="formatLable"
@@ -349,7 +356,14 @@ const Merchant = () => {
                           Email {item?.id}
                         </label>
                       </td>
-                      <td>{item?.phone}</td>
+                      <td>
+                        <label
+                          className="formatLable"
+                          onClick={() => handleClickTable(item?.phone)}
+                        >
+                          Phone {item?.id}
+                        </label>
+                      </td>
                       <td>
                         <label
                           className="formatLable"
@@ -367,7 +381,11 @@ const Merchant = () => {
                         </label>
                       </td>
                       <td>
-                        <label>{item?.status ? "Active" : "Deactive"}</label>
+                        <label
+                        className={
+                          item?.status ? "ac active" : "ac deactive"
+                        }
+                        >{item?.status ? "Active" : "Deactive"}</label>
                       </td>
                       <td>
                         <div className="d-flex">
@@ -741,9 +759,6 @@ const Merchant = () => {
         </Modal.Header>
         <Modal.Body>
           {merchantItem}
-          <Col xs={6} md={4}>
-            <Image src={merchantItem} thumbnail />
-          </Col>
         </Modal.Body>
       </Modal>
 
