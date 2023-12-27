@@ -5,20 +5,20 @@ import com.smartvoucher.webEcommercesmartvoucher.converter.WareHouseConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.WarehouseSerialEntity;
-import com.smartvoucher.webEcommercesmartvoucher.entity.keys.WarehouseSerialKeys;
-import com.smartvoucher.webEcommercesmartvoucher.exception.CheckCapacityException;
-import com.smartvoucher.webEcommercesmartvoucher.exception.CheckStatusWarehouseException;
-import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
-import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.exception.*;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
 import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +51,26 @@ public class SerialService implements ISerialService {
         this.wareHouseConverter = wareHouseConverter;
         this.ticketRepository = ticketRepository;
         this.ticketHistoryRepository = ticketHistoryRepository;
+    }
+
+    @Override
+    public ResponseOutput getAllSerial(int page, int limit, String sortBy, String sortField) {
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.fromString(sortBy), sortField));
+        List<SerialDTO> serialDTOList = serialConverter.toSerialDTOList(
+                serialRepository.findAll(pageable).getContent()
+        );
+        if (serialDTOList.isEmpty()){
+            log.info("Get all serial is completed !");
+            throw new ObjectEmptyException(406, "Get all serial is completed !");
+        }
+        int totalItem = (int) serialRepository.count();
+        int totalPage = (int) Math.ceil((double) totalItem / limit);
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                serialDTOList
+        );
     }
 
     @Override

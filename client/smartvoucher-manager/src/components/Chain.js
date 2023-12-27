@@ -357,7 +357,14 @@ const Chain = () => {
                           Logo {item?.id}
                         </label>
                       </td>
-                      <td>{item?.name}</td>
+                      <td>
+                        <label
+                          className="formatLable"
+                          onClick={() => handleClickTable(item?.name)}
+                        >
+                          Name {item?.id}
+                        </label>
+                      </td>
                       <td>
                         <label
                           className="formatLable"
@@ -374,7 +381,14 @@ const Chain = () => {
                           Email {item?.id}
                         </label>
                       </td>
-                      <td>{item?.phone}</td>
+                      <td>
+                        <label
+                          className="formatLable"
+                          onClick={() => handleClickTable(item?.phone)}
+                        >
+                          Phone {item?.id}
+                        </label>
+                      </td>
                       <td>
                         <label
                           className="formatLable"
@@ -392,7 +406,11 @@ const Chain = () => {
                         </label>
                       </td>
                       <td>
-                        <label>{item?.status ? "Active" : "Deactive"}</label>
+                        <label
+                        className={
+                          item?.status ? "ac active" : "ac deactive"
+                        }
+                        >{item?.status ? "Active" : "Deactive"}</label>
                       </td>
                       <td>
                         <label
@@ -814,9 +832,6 @@ const Chain = () => {
         </Modal.Header>
         <Modal.Body>
           {chainItem}
-          <Col xs={6} md={4}>
-            <Image src={chainItem} thumbnail />
-          </Col>
         </Modal.Body>
       </Modal>
 

@@ -6,7 +6,9 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
 import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class SerialConverter {
@@ -38,6 +40,10 @@ public class SerialConverter {
             serialEntity.setSerialCode(randomCodeHandler.generateRandomChars(10));
             serialEntity.setStatus(1);
         return serialEntity;
+    }
+
+    public List<SerialDTO> toSerialDTOList(List<SerialEntity> serialEntityList){
+        return serialEntityList.stream().map(this::toSerialDTO).collect(Collectors.toList());
     }
 
     public SerialEntity generateSerial(String batchCode, int numberOfSerial, String serialCode ) {

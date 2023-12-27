@@ -26,6 +26,7 @@ import { getAllLabelName } from "../services/LabelService";
 import Moment from "moment";
 import Loading from "./Loading";
 import { DateTimePicker } from "@mui/x-date-pickers";
+import './Warehouse.scss';
 
 const Warehouse = () => {
   const ref = React.useRef(null);
@@ -600,7 +601,11 @@ const Warehouse = () => {
                         </label>
                       </td>
                       <td>
-                        <label>{item?.showOnWeb ? "Show" : "Nope"}</label>
+                        <label
+                        className={
+                          item?.showOnWeb ? "ac active" : "ac deactive"
+                        }
+                        >{item?.showOnWeb ? "Show" : "Nope"}</label>
                       </td>
                       <td>
                         <label
@@ -627,7 +632,11 @@ const Warehouse = () => {
                         </label>
                       </td>
                       <td>
-                        <label>{item?.status ? "Active" : "Deactive"}</label>
+                        <label
+                        className={
+                          item?.status ? "ac active" : "ac deactive"
+                        }
+                        >{item?.status ? "Active" : "Deactive"}</label>
                       </td>
                       <td>
                         <label

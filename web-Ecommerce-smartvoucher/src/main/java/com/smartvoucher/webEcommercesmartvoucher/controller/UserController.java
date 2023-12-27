@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 import com.smartvoucher.webEcommercesmartvoucher.dto.ChangePasswordDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustom;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,33 @@ public class UserController {
         )
         );
     }
+
+    @GetMapping("/api/getAll")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseOutput>getAllUser(
+            @RequestParam int page,
+            @RequestParam int limit,
+            @RequestParam String sortBy,
+            @RequestParam String sortField
+    ){
+        log.info("get all user completed !");
+        return new ResponseEntity<>(userService.getAllUser(
+                page, limit, sortBy, sortField), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/search")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject>searchUserByEmail(
+            @RequestParam String email
+    ){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(200,
+                        "search all user completed !",
+                        userService.searchUserByEmail(email)
+                )
+        );
+    }
+
     @GetMapping("/api/auth2/infor")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getUser(@AuthenticationPrincipal OAuth2UserDetailCustom oAuth2User){
