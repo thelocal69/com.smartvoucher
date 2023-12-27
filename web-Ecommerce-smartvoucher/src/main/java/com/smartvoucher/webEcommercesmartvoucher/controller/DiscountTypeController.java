@@ -39,6 +39,19 @@ public class DiscountTypeController {
         );
     }
 
+    @GetMapping("/api/getName")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getAllDiscountName() {
+        log.info("Get All discount name success !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get All discount name success !",
+                        this.discountTypeService.getAllNameByDiscount()
+                )
+        );
+    }
+
     @GetMapping("/api/search")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> searchAllByName(@RequestParam String name) {

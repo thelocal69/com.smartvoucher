@@ -38,6 +38,19 @@ public class LabelController {
         );
     }
 
+    @GetMapping("/api/getName")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getAllLabelName(){
+        log.info("Get all label name successfully !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get all label name successfully !",
+                        labelService.getAllNameByLabel()
+                )
+        );
+    }
+
     @GetMapping("/api/getAll")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseOutput> getAllLabel(

@@ -121,6 +121,7 @@ public class SecurityConfig {
                     .antMatchers("/chain/**").hasRole("ADMIN")
                     //chain
                     .antMatchers("/label/api/all").permitAll()
+                    .antMatchers("/label/api/getName").hasRole("ADMIN")
                     .antMatchers("/label/api/getAll").hasRole("ADMIN")
                     //user
                     .antMatchers(HttpMethod.GET,"/user/api/infor").hasRole("USER")
@@ -136,6 +137,7 @@ public class SecurityConfig {
                     //user
                     //category
                     .antMatchers(HttpMethod.GET, "/category/api/all").permitAll()
+                    .antMatchers(HttpMethod.GET, "/category/api/getName").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/category/api/getAll").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/category/api/search").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/category/api/insert").hasRole("ADMIN")
@@ -145,6 +147,7 @@ public class SecurityConfig {
                     //category
                     //discount
                     .antMatchers(HttpMethod.GET,"/discount").permitAll()
+                    .antMatchers(HttpMethod.GET,"/discount/api/getName").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET,"/discount/api/getAll").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET,"/discount/api/search").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST,"/discount/api/insert").hasRole("ADMIN")
@@ -170,8 +173,12 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.GET, "/warehouse/api/all").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/{id}").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/by-label-id/{id}").permitAll()
-                    .antMatchers(HttpMethod.POST,"/warehouse/api/upload").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET,"/warehouse/api/getAll").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET,"/warehouse/api/search").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/warehouse/api/upload/banner").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST,"/warehouse/api/upload/thumbnail").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST,"/warehouse/api/insert").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT,"/warehouse/api/{id}").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/warehouse/api/{id}").hasRole("ADMIN")
                     //warehouse
                     //warehouse_store

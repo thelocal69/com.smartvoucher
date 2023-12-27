@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 import com.smartvoucher.webEcommercesmartvoucher.converter.LabelConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.LabelDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.LabelEntity;
+import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.ILabelRepository;
@@ -64,5 +65,16 @@ public class LabelService implements ILabelService {
                 totalPage,
                 labelDTOList
         );
+    }
+
+    @Override
+    public List<String> getAllNameByLabel() {
+        List<String> labelNameList = labelRepository.getAllByLabelName();
+        if (labelNameList.isEmpty()){
+            log.info("List label name is empty !");
+            throw new ObjectEmptyException(404, "List label name is empty !");
+        }
+        log.info("Get list label name is successfully !");
+        return labelNameList;
     }
 }

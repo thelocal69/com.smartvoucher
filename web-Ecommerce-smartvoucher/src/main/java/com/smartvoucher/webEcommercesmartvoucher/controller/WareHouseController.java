@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.WareHouseDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,31 @@ public class WareHouseController {
         );
     }
 
+    @GetMapping("/api/getAll")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseOutput> getAllWareHouse(
+            @RequestParam int page,
+            @RequestParam int limit,
+            @RequestParam String sortBy,
+            @RequestParam String sortField
+    ) {
+        log.info("Get All warehouse success !");
+        return new ResponseEntity<>(wareHouseService.getAllWareHouse(page, limit, sortBy, sortField), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/search")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> searchWarehouseByName(@RequestParam String name) {
+        log.info("Get All warehouse success !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get All warehouse success !",
+                        this.wareHouseService.searchByWarehouseName(name)
+                )
+        );
+    }
+
     @GetMapping("/api/{id}")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getWarehouseById(@PathVariable Long id){
@@ -52,13 +78,25 @@ public class WareHouseController {
         );
     }
 
-    @PostMapping ("/api/upload")
-    public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
-        log.info("Upload images is completed !");
+    @PostMapping ("/api/upload/banner")
+    public ResponseEntity<ResponseObject> uploadBanner(@RequestParam MultipartFile fileName){
+        log.info("Upload banner is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(
                         200,
-                        "Upload images is completed !",
+                        "Upload banner is completed !",
+                        wareHouseService.uploadWarehouseImages(fileName)
+                )
+        );
+    }
+
+    @PostMapping ("/api/upload/thumbnail")
+    public ResponseEntity<ResponseObject> uploadThumbnail(@RequestParam MultipartFile fileName){
+        log.info("Upload thumbnail is completed !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Upload thumbnail is completed !",
                         wareHouseService.uploadWarehouseImages(fileName)
                 )
         );
@@ -67,11 +105,11 @@ public class WareHouseController {
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertWareHouse(@Valid @RequestBody WareHouseDTO wareHouseDTO){
-        wareHouseDTO.setWarehouseCode(
+        wareHouseDTO.setWarehouseCode("W-"+
                 UUID.randomUUID()
                         .toString()
                         .replace("-","")
-                        .substring(0,20)
+                        .substring(0,18)
         );
         log.info("Insert is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(

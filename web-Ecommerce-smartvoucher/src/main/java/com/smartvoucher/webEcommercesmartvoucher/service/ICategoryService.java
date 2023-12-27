@@ -13,6 +13,7 @@ public interface ICategoryService {
     ResponseOutput getAllCategory(int page, int limit, String sortBy, String sortField);
     List<CategoryDTO> getAllCategoryCode(CategoryDTO categoryDTO);
     List<CategoryDTO> searchAllByName(String name);
+    List<String> getAllNameByCategory();
     CategoryDTO upsert(CategoryDTO categoryDTO);
     void deleteCategory(CategoryDTO categoryDTO);
     Boolean exitsCategory(CategoryDTO categoryDTO);

@@ -91,6 +91,17 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    public List<String> getAllNameByCategory() {
+        List<String> categoryNameList = categoryRepository.getAllByCategoryName();
+        if (categoryNameList.isEmpty()){
+            log.info("List category name is empty !");
+            throw new ObjectEmptyException(404, "List category name is empty !");
+        }
+        log.info("Get list category name is successfully !");
+        return categoryNameList;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public CategoryDTO upsert(CategoryDTO categoryDTO) {
         CategoryEntity categoryEntity;

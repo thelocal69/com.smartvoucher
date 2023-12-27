@@ -8,4 +8,5 @@ import java.util.List;
 public interface ILabelService {
     List<LabelDTO> getAllLabel();
     ResponseOutput getAllLabel(int page, int limit, String sortBy, String sortField);
+    List<String> getAllNameByLabel();
 }

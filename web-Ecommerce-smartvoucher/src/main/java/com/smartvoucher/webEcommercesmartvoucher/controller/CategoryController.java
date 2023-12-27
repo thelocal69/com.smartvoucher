@@ -40,6 +40,19 @@ public class CategoryController {
         );
     }
 
+    @GetMapping("/api/getName")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getAllCategoryName() {
+        log.info("Get All category name success !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get All category name success !",
+                        this.categoryService.getAllNameByCategory()
+                )
+        );
+    }
+
     @GetMapping("/api/search")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> searchAllByName(@RequestParam String name) {

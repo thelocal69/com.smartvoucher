@@ -11,6 +11,7 @@ import com.smartvoucher.webEcommercesmartvoucher.exception.CheckCapacityExceptio
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.ICategoryRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IDiscountTypeRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.ILabelRepository;
@@ -19,6 +20,9 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,10 +72,37 @@ public class WareHouseService implements IWareHouseService {
     }
 
     @Override
+    public ResponseOutput getAllWareHouse(int page, int limit, String sortBy, String sortField) {
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.fromString(sortBy), sortField));
+        List<WareHouseDTO> wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(
+                wareHouseRepository.findAll(pageable).getContent()
+        );
+        if (wareHouseDTOList.isEmpty()){
+            log.info("Warehouse list is empty !");
+            throw new ObjectEmptyException(406, "Warehouse list is empty !");
+        }
+        int totalItem = (int) wareHouseRepository.count();
+        int totalPage = (int) Math.ceil((double) totalItem / limit);
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                wareHouseDTOList
+        );
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWareHouseCode(WareHouseDTO wareHouseDTO) {
         List<WareHouseEntity> wareHouseEntityList = wareHouseRepository.findAllByWarehouseCode(wareHouseDTO.getWarehouseCode());
         return wareHouseConverter.toWareHouseDTOList(wareHouseEntityList);
+    }
+
+    @Override
+    public List<WareHouseDTO> searchByWarehouseName(String name) {
+        return wareHouseConverter.toWareHouseDTOList(
+                wareHouseRepository.searchAllByNameContainingIgnoreCase(name)
+        );
     }
 
     @Override
@@ -85,13 +116,12 @@ public class WareHouseService implements IWareHouseService {
                         404, "Cannot update warehouse id: " + wareHouseDTO.getId()
                 );
             } else if (!existCategoryAndDiscountAndLabel(wareHouseDTO)) {
-                log.info("Category code or discount code or label name is empty or not exist !");
+                log.info("Category name or discount name or label name is empty or not exist !");
                 throw new ObjectEmptyException(
-                        406, "Category code or discount code or label name is empty or not exist !"
+                        406, "Category name or discount name or label name is empty or not exist !"
                 );
             }
             WareHouseEntity oldWareHouse = wareHouseRepository.findOneById(wareHouseDTO.getId());
-            wareHouseDTO.setDiscountTypeCode(oldWareHouse.getDiscountType().getCode());
             if (wareHouseDTO.getCapacity() < oldWareHouse.getCapacity()){
                 throw new CheckCapacityException(500, "Not allow decrease capacity, only increase !");
             }
@@ -105,16 +135,16 @@ public class WareHouseService implements IWareHouseService {
                         400, "Warehouse code is duplicated !"
                 );
             }if (!existCategoryAndDiscountAndLabel(wareHouseDTO)) {
-                log.info("Category code or discount code or label name is empty or not exist !");
+                log.info("Category name or discount name or label name is empty or not exist !");
                 throw new ObjectEmptyException(
-                        406, "Category code or discount code or label name is empty or not exist !"
+                        406, "Category name or discount name or label name is empty or not exist !"
                 );
             }
             wareHouse = wareHouseConverter.toWareHouseEntity(wareHouseDTO);
             log.info("Insert warehouse is completed !");
         }
-        DiscountTypeEntity discountType = discountTypeRepository.findOneByCode(wareHouseDTO.getDiscountTypeCode());
-        CategoryEntity category = categoryRepository.findOneByCategoryCode(wareHouseDTO.getCategoryCode());
+        DiscountTypeEntity discountType = discountTypeRepository.findOneByName(wareHouseDTO.getDiscountTypeName());
+        CategoryEntity category = categoryRepository.findOneByName(wareHouseDTO.getCategoryName());
         LabelEntity label = labelRepository.findOneByName(wareHouseDTO.getLabelName());
         wareHouse.setDiscountType(discountType);
         wareHouse.setCategory(category);
@@ -145,10 +175,10 @@ public class WareHouseService implements IWareHouseService {
     @Override
     @Transactional(readOnly = true)
     public Boolean existCategoryAndDiscountAndLabel(WareHouseDTO wareHouseDTO) {
-        boolean existCategoryCode = categoryRepository.existsByCategoryCode(wareHouseDTO.getCategoryCode());
-        boolean existDiscountCode = discountTypeRepository.existsByCode(wareHouseDTO.getDiscountTypeCode());
+        boolean existCategoryName = categoryRepository.existsByName(wareHouseDTO.getCategoryName());
+        boolean existDiscountName = discountTypeRepository.existsByName(wareHouseDTO.getDiscountTypeName());
         boolean existLabelName = labelRepository.existsByName(wareHouseDTO.getLabelName());
-        return existDiscountCode && existCategoryCode && existLabelName;
+        return existCategoryName && existDiscountName && existLabelName;
     }
 
     @Override

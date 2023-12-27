@@ -61,6 +61,17 @@ public class DiscountTypeService implements IDiscountTypeService {
     }
 
     @Override
+    public List<String> getAllNameByDiscount() {
+        List<String> discountNameList = discountTypeRepository.getAllByDiscountName();
+        if (discountNameList.isEmpty()){
+            log.info("List discount name is empty !");
+            throw new ObjectEmptyException(404, "List discount name is empty !");
+        }
+        log.info("Get list discount name is successfully !");
+        return discountNameList;
+    }
+
+    @Override
     public ResponseOutput getAllDiscountType(int page, int limit, String sortBy, String sortField) {
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.fromString(sortBy), sortField));
         List<DiscountTypeDTO> discountTypeDTOList = discountTypeConverter.toDiscountTypeDTOList(
