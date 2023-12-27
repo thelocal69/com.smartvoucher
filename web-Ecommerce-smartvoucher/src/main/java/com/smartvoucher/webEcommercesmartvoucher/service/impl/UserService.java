@@ -10,12 +10,16 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ChangePasswordException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.UserNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
 import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustom;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,6 +78,35 @@ public class UserService implements IUserService {
         log.info("Get all user completed !");
         return userConverter.toUserDTOList(userRepository.findAll());
     }
+
+    @Override
+    public ResponseOutput getAllUser(int page, int limit, String sortBy, String sortField) {
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.fromString(sortBy), sortField));
+        List<UserDTO> userDTOList = userConverter.toUserDTOList(
+                userRepository.findAll(pageable).getContent()
+        );
+        if (userDTOList.isEmpty()){
+            log.info("List user is empty !");
+            throw new ObjectNotFoundException(404, "List user is empty !");
+        }
+        int totalItem = (int) userRepository.count();
+        int totalPage = (int) Math.ceil((double) totalItem / limit);
+        log.info("Get all user completed !");
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                userDTOList
+        );
+    }
+
+    @Override
+    public List<UserDTO> searchUserByEmail(String email) {
+        return userConverter.toUserDTOList(
+                userRepository.searchAllByEmailContainingIgnoreCase(email)
+        );
+    }
+
 
     @Override
     @Transactional(readOnly = true)

@@ -30,6 +30,10 @@ public class UserDTO {
 
     private String email;
 
+    private boolean enable;
+
+    private String provider;
+
     private int status;
 
     private String address;

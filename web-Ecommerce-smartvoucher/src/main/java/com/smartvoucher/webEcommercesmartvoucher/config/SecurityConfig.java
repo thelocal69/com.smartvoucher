@@ -129,6 +129,8 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.PUT,"/user/api/edit").hasRole("USER")
                     .antMatchers(HttpMethod.POST,"/user/api/upload").hasRole("USER")
                     .antMatchers(HttpMethod.PUT,"/user/api/change_pwd").hasRole("USER")
+                    .antMatchers(HttpMethod.GET, "/user/api/getAll").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/user/api/search").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/user/api/profile").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/user/api/uploadAdmin").hasRole("ADMIN")
                     .antMatchers(HttpMethod.PUT, "/user/api/editAdmin").hasRole("ADMIN")
@@ -213,6 +215,7 @@ public class SecurityConfig {
                     //role_user
                     //serial
                     .antMatchers(HttpMethod.GET,"/serial/api/list-serial").permitAll()
+                    .antMatchers(HttpMethod.GET,"/serial/api/getAll").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST,"/serial/api/add-serial").hasRole("ADMIN")
                     .antMatchers(HttpMethod.PUT,"/serial/api/update-serial").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/serial/api/delete-serial").hasRole("ADMIN")

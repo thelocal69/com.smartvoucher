@@ -41,6 +41,8 @@ public class  UserConverter {
             userDTO.setUserName(userEntity.getUsername());
             userDTO.setPhone(userEntity.getPhone());
             userDTO.setEmail(userEntity.getEmail());
+            userDTO.setEnable(userEntity.isEnable());
+            userDTO.setProvider(userEntity.getProvider());
             userDTO.setStatus(userEntity.getStatus());
             userDTO.setAddress(userEntity.getAddress());
             userDTO.setCreatedBy(userEntity.getCreatedBy());
