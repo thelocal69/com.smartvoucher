@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.ResetPasswordDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.SignInDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
 import com.smartvoucher.webEcommercesmartvoucher.event.SignUpCompleteEvent;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
@@ -49,13 +50,14 @@ public class AccountController {
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> signin(@RequestParam String email, @RequestParam String password) {
         log.info("Sign-in is successfully !");
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(
-                        200,
-                        "Sign-in is successfully !",
-                        this.accountService.token(email, password)
-                )
-        );
+        return new ResponseEntity<>(accountService.signInUser(email, password), HttpStatus.OK);
+    }
+
+    @PostMapping("/api/signinAdmin")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<ResponseObject> signinAdmin(@RequestBody SignInDTO signInDTO) {
+        log.info("Sign-in admin is successfully !");
+        return new ResponseEntity<>(accountService.signInAdmin(signInDTO), HttpStatus.OK);
     }
 
     @PostMapping("/api/refresh_token")

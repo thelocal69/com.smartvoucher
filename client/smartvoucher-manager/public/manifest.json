@@ -1,0 +1,8 @@
+{
+  "short_name": "SMARTVOUCHER MANAGER",
+  "name": "SMARTVOUCHER MANAGER",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

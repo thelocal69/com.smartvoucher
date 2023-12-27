@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.StoreDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.service.IStoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +38,43 @@ public class StoreController {
                 )
         );
     }
+
+    @GetMapping("/api/getAll")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseOutput> getAllStore(
+            @RequestParam int page,
+            @RequestParam int limit,
+            @RequestParam String sortBy,
+            @RequestParam String sortField
+    ) {
+        log.info("Get All store name success !");
+        return new ResponseEntity<>(storeService.getAllStoreCode(
+                page, limit, sortBy, sortField), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/search")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> searchStoreByName(
+            @RequestParam String name
+    ) {
+        log.info("Search All store success !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Search All store success !",
+                        this.storeService.searchAllStoreByName(name)
+                )
+        );
+    }
+
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertStore(@Valid @RequestBody StoreDTO storeDTO){
-        storeDTO.setStoreCode(
+        storeDTO.setStoreCode("ST-"+
                 UUID.randomUUID()
                         .toString()
                         .replace("-","")
-                        .substring(0,20)
+                        .substring(0,17)
         );
         log.info("Insert is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(

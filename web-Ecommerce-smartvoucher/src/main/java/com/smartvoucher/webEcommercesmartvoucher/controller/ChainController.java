@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.ChainDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.service.IChainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,45 @@ public class ChainController {
         );
     }
 
+    @GetMapping("/api/getName")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getAllChainName() {
+        log.info("Search All chain name success !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Search All chain name success !",
+                        this.chainService.getAllChainName()
+                )
+        );
+    }
+
+    @GetMapping("/api/getAll")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseOutput> getAllChain(
+            @RequestParam int page,
+            @RequestParam int limit,
+            @RequestParam String sortBy,
+            @RequestParam String sortField
+    ) {
+        log.info("Get All chain success !");
+        return new ResponseEntity<>(chainService.getAllChain(
+                page, limit, sortBy, sortField), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/search")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> searchAllChainByName(@RequestParam String name) {
+        log.info("Get All chain success !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get All chain success !",
+                        this.chainService.searchAllChainName(name)
+                )
+        );
+    }
+
     @PostMapping ("/api/upload")
     public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
         log.info("Upload images is completed !");
@@ -54,11 +94,11 @@ public class ChainController {
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertChain(@Valid @RequestBody ChainDTO chainDTO) {
-        chainDTO.setChainCode(
+        chainDTO.setChainCode("C-" +
                 UUID.randomUUID()
                         .toString()
                         .replace("-","")
-                        .substring(0, 20)
+                        .substring(0, 18)
         );
         log.info("Insert is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(

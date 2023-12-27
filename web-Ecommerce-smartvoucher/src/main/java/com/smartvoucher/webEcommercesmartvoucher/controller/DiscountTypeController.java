@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.DiscountTypeDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.service.IDiscountTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +39,53 @@ public class DiscountTypeController {
         );
     }
 
+    @GetMapping("/api/getName")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getAllDiscountName() {
+        log.info("Get All discount name success !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get All discount name success !",
+                        this.discountTypeService.getAllNameByDiscount()
+                )
+        );
+    }
+
+    @GetMapping("/api/search")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> searchAllByName(@RequestParam String name) {
+        log.info("Search All discount success !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Search All discount success !",
+                        this.discountTypeService.searchByName(name)
+                )
+        );
+    }
+
+    @GetMapping("/api/getAll")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseOutput> getAllDiscount(
+            @RequestParam int page,
+            @RequestParam int limit,
+            @RequestParam String sortBy,
+            @RequestParam String sortField
+    ) {
+        log.info("Get All discount success !");
+        return new ResponseEntity<>(discountTypeService.getAllDiscountType(
+                page, limit, sortBy, sortField), HttpStatus.OK);
+    }
+
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public  ResponseEntity<ResponseObject> insertDiscount(@Valid @RequestBody DiscountTypeDTO discountTypeDTO){
-        discountTypeDTO.setCode(
+        discountTypeDTO.setCode("D-"+
                 UUID.randomUUID()
                         .toString()
                         .replace("-","")
-                        .substring(0,20)
+                        .substring(0,18)
         );
         log.info("Insert is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(

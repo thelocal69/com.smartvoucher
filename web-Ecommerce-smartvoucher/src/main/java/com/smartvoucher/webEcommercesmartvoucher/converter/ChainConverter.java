@@ -24,7 +24,7 @@ public class ChainConverter {
                 .phone(chainEntity.getPhone())
                 .description(chainEntity.getDescription())
                 .address(chainEntity.getAddress())
-                .merchantCode(chainEntity.getMerchant().getMerchantCode())
+                .merchantName(chainEntity.getMerchant().getName())
                 .status(chainEntity.getStatus())
                 .build();
     }

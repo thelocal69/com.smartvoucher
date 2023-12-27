@@ -1,0 +1,40 @@
+.sort-header {
+    display: flex;
+    justify-content: space-between;
+
+    i {
+        cursor: pointer;
+        padding: 0 2px;
+    }
+}
+
+i {
+    padding: 0 5px 0 0;
+}
+
+.group-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.customize-table{
+    width: inherit;
+    overflow: auto;
+}
+
+.table-condensed{
+    a{
+        list-style: none;
+        text-decoration: none;
+        color: black;
+        &:hover{
+            color: red;
+        }
+    }
+    .formatLable{
+        cursor: pointer;
+        &:hover{
+            color: red;
+        }
+    }
+  }

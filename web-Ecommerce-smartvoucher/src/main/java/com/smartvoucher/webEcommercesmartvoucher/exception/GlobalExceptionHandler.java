@@ -225,6 +225,20 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(PermissionDenyException.class)
+    public ResponseEntity<ErrorResponse> handlePermissionDenyException(Exception ex){
+        log.info(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ErrorResponse(
+                        new Timestamp(System.currentTimeMillis()),
+                        403,
+                        ex.getMessage(),
+                        "Permission Denied !",
+                        "/"
+                )
+        );
+    }
+
         @ExceptionHandler(JwtFilterException.class)
         public ResponseEntity<ErrorResponse> handleJwtFilterException(Exception ex){
             log.info(ex.getMessage());

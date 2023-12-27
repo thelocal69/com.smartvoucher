@@ -8,12 +8,16 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.MerchantEntity;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IChainRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IChainService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,9 +58,32 @@ public class ChainService implements IChainService {
     }
 
     @Override
+    public ResponseOutput getAllChain(int page, int limit, String sortBy, String sortField) {
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.fromString(sortBy), sortField));
+        List<ChainDTO> chainDTOList = chainConverter.toChainDTOList(
+                chainRepository.findAll(pageable).getContent()
+        );
+        if (chainDTOList.isEmpty()){
+            log.info("List chain is empty !");
+            throw new ObjectEmptyException(
+                    404, "List chain is empty !"
+            );
+        }
+        int totalItem = (int) chainRepository.count();
+        int totalPage = (int) Math.ceil((double) totalItem / limit);
+        log.info("Get all chain is completed !");
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                chainDTOList
+        );
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public ChainDTO upsert(ChainDTO chainDTO) {
-        boolean existMerchantCode = existMerchantCode(chainDTO);
+        boolean existMerchantName = existMerchantName(chainDTO);
         ChainEntity chainEntity;
         if (chainDTO.getId() != null){
             boolean exist = existChain(chainDTO);
@@ -65,10 +92,10 @@ public class ChainService implements IChainService {
                 throw new ObjectNotFoundException(
                         404, "Cannot update chain id: "+chainDTO.getId()
                 );
-            } else if (!existMerchantCode) {
-                log.info("Merchant code is empty or not exist !");
+            } else if (!existMerchantName) {
+                log.info("Merchant name is empty or not exist !");
                 throw new ObjectEmptyException(
-                        406, "Merchant code is empty or not exist !"
+                        406, "Merchant name is empty or not exist !"
                 );
             }
             ChainEntity oldChainEntity = chainRepository.findOneById(chainDTO.getId());
@@ -81,16 +108,16 @@ public class ChainService implements IChainService {
                 throw new DuplicationCodeException(
                         400, "Chain code is duplicated !"
                 );
-            }else if (!existMerchantCode) {
-                log.info("Merchant code is empty or not exist !");
+            }else if (!existMerchantName) {
+                log.info("Merchant name is empty or not exist !");
                 throw new ObjectEmptyException(
-                        406, "Merchant code is empty or not exist !"
+                        406, "Merchant name is empty or not exist !"
                 );
             }
             chainEntity = chainConverter.toChainEntity(chainDTO);
             log.info("Insert chain is completed !");
         }
-        MerchantEntity merchant = merchantRepository.findOneByMerchantCode(chainDTO.getMerchantCode());
+        MerchantEntity merchant = merchantRepository.findOnByName(chainDTO.getMerchantName());
         chainEntity.setMerchant(merchant);
         return chainConverter.toChainDTO(chainRepository.save(chainEntity));
     }
@@ -100,6 +127,24 @@ public class ChainService implements IChainService {
     public List<ChainDTO> getAllChainCode(ChainDTO chainDTO) {
         List<ChainEntity> chainEntityList = chainRepository.findAllByChainCode(chainDTO.getChainCode());
         return chainConverter.toChainDTOList(chainEntityList);
+    }
+
+    @Override
+    public List<ChainDTO> searchAllChainName(String name) {
+        return chainConverter.toChainDTOList(
+                chainRepository.searchAllByNameContainingIgnoreCase(name)
+        );
+    }
+
+    @Override
+    public List<String> getAllChainName() {
+        List<String> getAllName = chainRepository.getChainName();
+        if (getAllName.isEmpty()){
+            log.info("List chain name is empty !");
+            throw new ObjectEmptyException(404, "List chain name is empty !");
+        }
+        log.info("Get all name is successfully !");
+        return getAllName;
     }
 
     @Override
@@ -124,8 +169,8 @@ public class ChainService implements IChainService {
 
     @Override
     @Transactional(readOnly = true)
-    public Boolean existMerchantCode(ChainDTO chainDTO) {
-        return merchantRepository.existsByMerchantCode(chainDTO.getMerchantCode());
+    public Boolean existMerchantName(ChainDTO chainDTO) {
+        return merchantRepository.existsByName(chainDTO.getMerchantName());
     }
 
     @Override

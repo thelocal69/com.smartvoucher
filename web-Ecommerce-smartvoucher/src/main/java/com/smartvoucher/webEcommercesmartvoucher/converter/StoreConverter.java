@@ -22,8 +22,8 @@ public class StoreConverter {
                 .description(storeEntity.getDescription())
                 .phone(storeEntity.getPhone())
                 .status(storeEntity.getStatus())
-                .merchantCode(storeEntity.getMerchant().getMerchantCode())
-                .chainCode(storeEntity.getChain().getChainCode())
+                .merchantName(storeEntity.getMerchant().getName())
+                .chainName(storeEntity.getChain().getName())
                 .build();
     }
 

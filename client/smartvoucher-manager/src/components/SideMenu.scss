@@ -1,0 +1,48 @@
+.nav {
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    background-color: #264653;
+    color: white;
+    //height: 100vh;
+    transition: all 0.3s;
+    padding: 1rem;
+    top: 0;
+    left: 0;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+        rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(1, 0, 0, 0.09) 0px -3px 5px;
+
+
+
+    a {
+        appearance: none;
+        color: white;
+        text-decoration: none;
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
+.nav-item {
+    margin-bottom: 4px;
+    padding: 15px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.114);
+    }
+
+    &.active {
+        background-color: rgba(255, 255, 255, 0.114);
+    }
+
+    color: white;
+}

@@ -37,5 +37,5 @@ public class ChainDTO{
     private int status;
     @NotBlank(message = "Merchant code is not empty !")
     @NotNull
-    private String merchantCode;
+    private String merchantName;
 }
