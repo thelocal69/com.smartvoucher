@@ -9,6 +9,10 @@ export const searchAllByName = (name) => {
     return Http.get(`/category/api/search?name=${name}`);
 }
 
+export const getAllCategoryName = () => {
+    return Http.get(`/category/api/getName`);
+}
+
 export const insertCategory = (obj) => {
     return Http.post(`/category/api/insert`, obj);
 }

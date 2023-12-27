@@ -29,9 +29,11 @@ const Category = () => {
   const [isShowModalDelete, setIsShowModalDelete] = React.useState(false);
   const [smShow, setSmShow] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [imageShow, setImageShow] = React.useState(false);
 
   const [listCategory, setListCategory] = React.useState([]);
   const [categoryItem, setCategoryItem] = React.useState({});
+  const [imageItem, setImageItem] = React.useState({});
   const [objEdit, setObjEdit] = React.useState({});
   const [objDelete, setObjDelete] = React.useState({});
 
@@ -205,6 +207,11 @@ const Category = () => {
     setSmShow(true);
   };
 
+  const handleShowImage = (image) => {
+    setImageItem(image);
+    setImageShow(true);
+  }
+
   const handClickEditCategory = (category) => {
     setObjEdit(category);
     setIsShowModalUpdate(true);
@@ -224,6 +231,7 @@ const Category = () => {
     setIsShowModalAddNew(false);
     setIsShowModalDelete(false);
     setSmShow(false);
+    setImageShow(false);
   };
 
   return (
@@ -290,7 +298,7 @@ const Category = () => {
                       <td>
                         <label
                           className="formatLable"
-                          onClick={() => handleClickTable(item?.bannerUrl)}
+                          onClick={() => handleShowImage(item?.bannerUrl)}
                         >
                           Banner {item?.id}
                         </label>
@@ -575,9 +583,27 @@ const Category = () => {
         </Modal.Body>
       </Modal>
 
+      <Modal
+        size="md"
+        show={imageShow}
+        onHide={() => handleClose()}
+        aria-labelledby="example-modal-sizes-title-sm"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-sm">
+            Show image
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+              <Col xs={10} md={8}>
+                <Image src={imageItem}  thumbnail/>
+              </Col>
+        </Modal.Body>
+      </Modal>
+
       <Modal show={isShowModalDelete} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Delete product</Modal.Title>
+          <Modal.Title>Delete Category</Modal.Title>
         </Modal.Header>
         <Modal.Body>Do you want to delete !</Modal.Body>
         <Modal.Footer className="d-flex justify-content-between">

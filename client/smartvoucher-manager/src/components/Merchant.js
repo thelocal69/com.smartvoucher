@@ -36,6 +36,7 @@ const Merchant = () => {
   const ref = React.useRef(null);
 
   const [smShow, setSmShow] = React.useState(false);
+  const [imageShow, setImageShow] = React.useState(false);
   const [isShowModalAddNew, setIsShowModalAddNew] = React.useState(false);
   const [isShowModalUpdate, setIsShowModalUpdate] = React.useState(false);
   const [isShowModalDelete, setIsShowModalDelete] = React.useState(false);
@@ -49,6 +50,7 @@ const Merchant = () => {
   const [address, setAddress] = React.useState("");
   const [status, setStatus] = React.useState(0);
   const [merchantItem, setMerchantItem] = React.useState({});
+  const [imageItem, setImageItem] = React.useState({});
   const [objEdit, setObjEdit] = React.useState({});
   const [objDelete, setObjDelete] = React.useState({});
 
@@ -234,8 +236,14 @@ const Merchant = () => {
     setMerchantItem(merchant);
   };
 
+  const handleShowImage = (image) => {
+    setImageItem(image);
+    setImageShow(true);
+  }
+
   const handleClose = () => {
     setSmShow(false);
+    setImageShow(false);
     setIsShowModalAddNew(false);
     setIsShowModalUpdate(false);
     setIsShowModalDelete(false);
@@ -319,7 +327,7 @@ const Merchant = () => {
                       <td>
                         <label
                           className="formatLable"
-                          onClick={() => handleClickTable(item?.logoUrl)}
+                          onClick={() => handleShowImage(item?.logoUrl)}
                         >
                           Logo {item?.id}
                         </label>
@@ -739,9 +747,27 @@ const Merchant = () => {
         </Modal.Body>
       </Modal>
 
+      <Modal
+        size="md"
+        show={imageShow}
+        onHide={() => handleClose()}
+        aria-labelledby="example-modal-sizes-title-sm"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-sm">
+            Show image
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+              <Col xs={10} md={8}>
+                <Image src={imageItem}  thumbnail/>
+              </Col>
+        </Modal.Body>
+      </Modal>
+
       <Modal show={isShowModalDelete} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Delete product</Modal.Title>
+          <Modal.Title>Delete Merchant</Modal.Title>
         </Modal.Header>
         <Modal.Body>Do you want to delete !</Modal.Body>
         <Modal.Footer className="d-flex justify-content-between">

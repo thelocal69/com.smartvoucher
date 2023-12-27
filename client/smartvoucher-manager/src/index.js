@@ -11,12 +11,15 @@ import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import Store from "./redux/Store";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 let persistor = persistStore(Store);
 root.render(
   <Provider store={Store}>
     <PersistGate loading={null} persistor={persistor}>
+    <LocalizationProvider dateAdapter={AdapterMoment}>
       <React.StrictMode>
         <BrowserRouter>
           <App />
@@ -34,6 +37,7 @@ root.render(
           />
         </BrowserRouter>
       </React.StrictMode>
+      </LocalizationProvider>
     </PersistGate>
   </Provider>
 );

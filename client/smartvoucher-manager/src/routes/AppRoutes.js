@@ -10,6 +10,7 @@ import Profile from "../components/Profile";
 import Category from "../components/Category";
 import DiscountType from "../components/DiscountType";
 import Store from "../components/Store";
+import Warehouse from "../components/Warehouse";
 
 const AppRoutes = () => {
   return (
@@ -23,6 +24,7 @@ const AppRoutes = () => {
         <Route path="/Category" element={<PrivateRoutes Component={Category}/>} />
         <Route path="/Discount type" element={<PrivateRoutes Component={DiscountType}/>} />
         <Route path="/Store" element={<PrivateRoutes Component={Store}/>} />
+        <Route path="/Warehouse" element={<PrivateRoutes Component={Warehouse}/>} />
         <Route path="/Profile" element={<PrivateRoutes Component={Profile}/>} />
         <Route path="*" element={<NotFound />} />
       </Routes>

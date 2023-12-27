@@ -13,7 +13,8 @@ const SideMenu = (props) => {
         "Label",
         "Category",
         "Discount type",
-        "Store"
+        "Store",
+        "Warehouse"
     ];
 
     const [activeTab, setActiveTab] = React.useState(0);

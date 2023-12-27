@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   getAllChain,
   searchAllChainByName,
@@ -27,9 +28,10 @@ const Chain = () => {
   const ref = React.useRef(null);
 
   const [isShowModalAddNew, setIsShowModalAddNew] = React.useState(false);
-  const [isShowModalUpdate, setIsShowModalUpdate] = React.useState(false);;;
+  const [isShowModalUpdate, setIsShowModalUpdate] = React.useState(false);
   const [isShowModalDelete, setIsShowModalDelete] = React.useState(false);
   const [smShow, setSmShow] = React.useState(false);
+  const [imageShow, setImageShow] = React.useState(false);
 
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(0);
@@ -44,6 +46,7 @@ const Chain = () => {
   const [listChain, setListChain] = React.useState([]);
   const [merchantNames, setMerchantNames] = React.useState([]);
   const [chainItem, setChainItem] = React.useState({});
+  const [imageItem, setImageItem] = React.useState({});
   const [objEdit, setObjEdit] = React.useState({});
   const [objDelete, setObjDelete] = React.useState({});
   const [legalName, setLegalName] = React.useState("");
@@ -178,9 +181,11 @@ const Chain = () => {
   const handDeleteChain = async() => {
     await deleteChain(objDelete)
     .then((rs) => {
-      toast.success("Delete item chain is successfully !");
-      getChain(currentPage, limit, sortBy, sortField);
-      handleClose();
+      if(rs){
+        toast.success("Delete item chain is successfully !");
+        getChain(currentPage, limit, sortBy, sortField);
+        handleClose();
+      }
     })
     .catch((err) => toast.error("Cannot delete parent row because FK !"));
   }
@@ -251,6 +256,11 @@ const Chain = () => {
     setChainItem(chain);
   };
 
+  const handleShowImage = (image) => {
+    setImageItem(image);
+    setImageShow(true);
+  }
+
   const handlePageClick = (event) => {
     getChain(+event.selected + 1, limit, sortBy, sortField);
   };
@@ -260,6 +270,7 @@ const Chain = () => {
     setIsShowModalUpdate(false);
     setIsShowModalDelete(false);
     setSmShow(false);
+    setImageShow(false);
   };
 
 
@@ -341,7 +352,7 @@ const Chain = () => {
                       <td>
                         <label
                           className="formatLable"
-                          onClick={() => handleClickTable(item?.logoUrl)}
+                          onClick={() => handleShowImage(item?.logoUrl)}
                         >
                           Logo {item?.id}
                         </label>
@@ -424,7 +435,7 @@ const Chain = () => {
         backdrop="static"
       >
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Add new Merchant</Offcanvas.Title>
+          <Offcanvas.Title>Add new Chain</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Form>
@@ -588,7 +599,7 @@ const Chain = () => {
         backdrop="static"
       >
       <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Update Merchant</Offcanvas.Title>
+          <Offcanvas.Title>Update Chain</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Form>
@@ -809,9 +820,27 @@ const Chain = () => {
         </Modal.Body>
       </Modal>
 
+      <Modal
+        size="md"
+        show={imageShow}
+        onHide={() => handleClose()}
+        aria-labelledby="example-modal-sizes-title-sm"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-sm">
+            Show image
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+              <Col xs={10} md={8}>
+                <Image src={imageItem}  thumbnail/>
+              </Col>
+        </Modal.Body>
+      </Modal>
+
       <Modal show={isShowModalDelete} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Delete product</Modal.Title>
+          <Modal.Title>Delete Chain</Modal.Title>
         </Modal.Header>
         <Modal.Body>Do you want to delete !</Modal.Body>
         <Modal.Footer className="d-flex justify-content-between">

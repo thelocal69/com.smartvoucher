@@ -8,6 +8,10 @@ export const searchAllByName = (name) => {
     return Http.get(`/discount/api/search?name=${name}`);
 }
 
+export const getAllDiscountName = () => {
+    return Http.get(`/discount/api/getName`);
+}
+
 export const insertDiscountType = (obj) => {
     return Http.post(`/discount/api/insert`, obj);
 }

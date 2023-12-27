@@ -407,7 +407,7 @@ const DiscountType = () => {
 
       <Modal show={isShowModalDelete} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Delete product</Modal.Title>
+          <Modal.Title>Delete Discount</Modal.Title>
         </Modal.Header>
         <Modal.Body>Do you want to delete !</Modal.Body>
         <Modal.Footer className="d-flex justify-content-between">
