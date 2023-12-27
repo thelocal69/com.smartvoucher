@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
+import com.smartvoucher.webEcommercesmartvoucher.dto.SignInDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
@@ -70,6 +71,13 @@ public class  UserConverter {
         userEntity.setCreatedAt(userDTO.getCreatedAt());
         userEntity.setUpdatedAt(userDTO.getUpdatedAt());
         return userEntity;
+    }
+
+    public UserEntity signIn(SignInDTO signInDTO){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setEmail(signInDTO.getEmail());
+        userEntity.setPwd(signInDTO.getPassword());
+        return  userEntity;
     }
 
     public UserEntity signUp(SignUpDTO signUpDTO) {

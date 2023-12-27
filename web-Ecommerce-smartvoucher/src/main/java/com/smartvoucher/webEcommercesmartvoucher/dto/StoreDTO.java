@@ -28,10 +28,10 @@ public class StoreDTO{
     private String description;
     @NotNull
     private int status;
-    @NotBlank(message = "Merchant code is not empty !")
+    @NotBlank(message = "Merchant name is not empty !")
     @NotNull
-    private String merchantCode;
-    @NotBlank(message = "Chain code is not empty !")
+    private String merchantName;
+    @NotBlank(message = "Chain name is not empty !")
     @NotNull
-    private String chainCode;
+    private String chainName;
 }

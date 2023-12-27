@@ -16,7 +16,7 @@ public interface IWareHouseRepository extends JpaRepository<WareHouseEntity, Lon
     List<WareHouseEntity> findAllByStatus(int status);
     @Query(value="SELECT * from warehouse WHERE warehouse.id_label= :id and warehouse.status = 1", nativeQuery = true)
     List<WareHouseEntity> findAllByLabel (@Param("id") int id);
-
+    List<WareHouseEntity> searchAllByNameContainingIgnoreCase(String name);
     @Query("SELECT w FROM warehouse w JOIN category c ON w.category.id=c.id" +
             " WHERE w.category.id = :id")
     List<WareHouseEntity>findAllByCategoryId(long id);

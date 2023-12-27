@@ -7,11 +7,15 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.CategoryEntity;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.ICategoryRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.ICategoryService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,10 +54,51 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    public ResponseOutput getAllCategory(int page, int limit, String sortBy, String sortField) {
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.fromString(sortBy), sortField));
+        List<CategoryDTO> categoryDTOList = categoryConverter.toCategoryDTOList(
+                categoryRepository.findAll(pageable).getContent()
+        );
+        if (categoryDTOList.isEmpty()){
+            log.info("List category is empty !");
+            throw new ObjectEmptyException(
+                    404, "List category is empty !"
+            );
+        }
+        int totalItem = (int) categoryRepository.count();
+        int totalPage = (int) Math.ceil((double) totalItem/limit);
+        log.info("Get all category successfully !");
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                categoryDTOList
+        );
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<CategoryDTO> getAllCategoryCode(CategoryDTO categoryDTO) {
         List<CategoryEntity> category = categoryRepository.findByCategoryCode(categoryDTO.getCategoryCode());
         return categoryConverter.toCategoryDTOList(category);
+    }
+
+    @Override
+    public List<CategoryDTO> searchAllByName(String name) {
+        return categoryConverter.toCategoryDTOList(
+                categoryRepository.searchAllByNameContainingIgnoreCase(name)
+        );
+    }
+
+    @Override
+    public List<String> getAllNameByCategory() {
+        List<String> categoryNameList = categoryRepository.getAllByCategoryName();
+        if (categoryNameList.isEmpty()){
+            log.info("List category name is empty !");
+            throw new ObjectEmptyException(404, "List category name is empty !");
+        }
+        log.info("Get list category name is successfully !");
+        return categoryNameList;
     }
 
     @Override

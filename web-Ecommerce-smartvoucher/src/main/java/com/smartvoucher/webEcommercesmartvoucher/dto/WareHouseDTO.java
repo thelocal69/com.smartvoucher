@@ -48,12 +48,12 @@ public class WareHouseDTO{
     private int capacity;
     @NotNull
     private int voucherChannel;
-    @NotBlank(message = "Discount type code is not empty !")
+    @NotBlank(message = "Discount type name is not empty !")
     @NotNull
-    private String discountTypeCode;
-    @NotBlank(message = "Category code is not empty !")
+    private String discountTypeName;
+    @NotBlank(message = "Category name is not empty !")
     @NotNull
-    private String categoryCode;
+    private String categoryName;
     @NotBlank(message = "label name is not empty !")
     @NotNull
     private String labelName;

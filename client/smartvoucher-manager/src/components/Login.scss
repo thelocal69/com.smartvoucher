@@ -1,0 +1,42 @@
+input {
+    outline: none;
+
+    &:hover {
+        background-color: #dedede;
+    }
+}
+
+.btn-login {
+    button {
+        background-color: #dedede;
+        color: #000;
+        border: none;
+        outline: none;
+        width: 100%;
+        padding: 5%;
+        border-radius: 5px;
+
+
+        &.active {
+            background-color: #fe2c55;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button[disabled=disable],
+        &:disabled {
+            cursor: not-allowed;
+        }
+    }
+}
+
+.input-pass {
+    position: relative;
+
+    i {
+        position: absolute;
+        top: 21px;
+        right: 15px;
+        cursor: pointer;
+    }
+}

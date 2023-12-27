@@ -3,10 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 import com.google.gson.Gson;
 import com.smartvoucher.webEcommercesmartvoucher.converter.RoleUsersConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
-import com.smartvoucher.webEcommercesmartvoucher.dto.ResetPasswordDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.RolesUsersDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.*;
 import com.smartvoucher.webEcommercesmartvoucher.dto.token.RefreshTokenDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RoleEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.RolesUsersEntity;
@@ -16,6 +13,7 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.token.Tokens;
 import com.smartvoucher.webEcommercesmartvoucher.entity.token.VerificationToken;
 import com.smartvoucher.webEcommercesmartvoucher.exception.*;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseAuthentication;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseToken;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IRoleUserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.RoleRepository;
@@ -87,8 +85,7 @@ public class AccountService implements IAccountService {
         this.emailUtil = emailUtil;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
+
     public ResponseAuthentication token(String email, String password) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 email, password
@@ -104,7 +101,7 @@ public class AccountService implements IAccountService {
         UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
         revokeAllUserTokens(user);
         saveUserToken(user, refreshToken);
-        log.info("Sign-in is successfully !");
+        log.info("Generate token is successfully !");
         return ResponseAuthentication.builder()
                 .accessToken(token)
                 .refreshToken(refreshToken)
@@ -149,6 +146,38 @@ public class AccountService implements IAccountService {
         return RefreshTokenDTO.builder()
                 .accessToken(accessToken)
                 .build();
+    }
+
+    @Override
+    public ResponseObject signInAdmin(SignInDTO signInDTO) {
+        RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(
+                signInDTO.getEmail(), Provider.local.name()
+        );
+        if (!(rolesUsers.getIdRole().getName().equals("ROLE_USER"))){
+            return new ResponseObject(
+                    200,
+                    "Sign-In by admin !",
+                    token(signInDTO.getEmail(), signInDTO.getPassword())
+            );
+        }else {
+            throw new PermissionDenyException(403, "Permission Denied !", null);
+        }
+    }
+
+    @Override
+    public ResponseObject signInUser(String email, String password) {
+        RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(
+                email, Provider.local.name()
+        );
+        if (!(rolesUsers.getIdRole().getName().equals("ROLE_ADMIN"))){
+            return new ResponseObject(
+                    200,
+                    "Sig-In by user !",
+                    token(email, password)
+            );
+        }else {
+            throw new PermissionDenyException(403, "Permission Denied !", null);
+        }
     }
 
     @Override

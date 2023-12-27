@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.CategoryDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.service.ICategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,44 @@ public class CategoryController {
         );
     }
 
+    @GetMapping("/api/getName")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getAllCategoryName() {
+        log.info("Get All category name success !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get All category name success !",
+                        this.categoryService.getAllNameByCategory()
+                )
+        );
+    }
+
+    @GetMapping("/api/search")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> searchAllByName(@RequestParam String name) {
+        log.info("Search All category success !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Search All category success !",
+                        this.categoryService.searchAllByName(name)
+                )
+        );
+    }
+
+    @GetMapping("/api/getAll")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseOutput> getAllCategory(
+            @RequestParam int page,
+            @RequestParam int limit,
+            @RequestParam String sortBy,
+            @RequestParam String sortField) {
+        log.info("Get All category success !");
+        return new ResponseEntity<>(categoryService.getAllCategory(
+                page, limit, sortBy, sortField), HttpStatus.OK);
+    }
+
     @PostMapping ("/api/upload")
     public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
         log.info("Upload images is completed !");
@@ -54,11 +93,11 @@ public class CategoryController {
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertCategory(@Valid @RequestBody CategoryDTO categoryDTO){
-        categoryDTO.setCategoryCode(
+        categoryDTO.setCategoryCode("CA-"+
                 UUID.randomUUID()
                         .toString()
                         .replace("-","")
-                        .substring(0, 20)
+                        .substring(0, 17)
         );
         log.info("Insert is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
