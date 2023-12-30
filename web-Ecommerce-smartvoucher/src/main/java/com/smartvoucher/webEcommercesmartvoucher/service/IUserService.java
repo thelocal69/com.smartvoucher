@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.service;
 
 import com.google.api.services.drive.model.File;
+import com.smartvoucher.webEcommercesmartvoucher.dto.BlockUserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.ChangePasswordDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
@@ -23,4 +24,5 @@ public interface IUserService {
     UserDetailDTO getInformationLoginUser(Principal connectedUser);
     UserDetailDTO getInformationOauth2User(OAuth2UserDetailCustom oAuth2UserDetail);
     String editUserProfile(UserDetailDTO userDetailDTO, Principal connectedUser);
+    Boolean blockUser(BlockUserDTO blockUserDTO);
 }

@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
+import com.smartvoucher.webEcommercesmartvoucher.dto.BlockUserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.ChangePasswordDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
@@ -196,5 +197,20 @@ public class UserService implements IUserService {
         }
         log.info("Update your profile is successfully !");
         return "Update your profile is successfully !";
+    }
+
+    @Override
+    public Boolean blockUser(BlockUserDTO blockUserDTO) {
+        UserEntity user = userRepository.findOneById(blockUserDTO.getId());
+        boolean isBlockUser;
+        if (user != null){
+            isBlockUser = blockUserDTO.isEnable();
+            user.setEnable(isBlockUser);
+            user.setStatus(blockUserDTO.getStatus());
+            this.userRepository.save(user);
+        }else {
+            throw new UserNotFoundException(404, "User not found data !");
+        }
+        return isBlockUser;
     }
 }

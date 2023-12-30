@@ -131,6 +131,7 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.PUT,"/user/api/change_pwd").hasRole("USER")
                     .antMatchers(HttpMethod.GET, "/user/api/getAll").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/user/api/search").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/user/api/block/{id}").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/user/api/profile").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/user/api/uploadAdmin").hasRole("ADMIN")
                     .antMatchers(HttpMethod.PUT, "/user/api/editAdmin").hasRole("ADMIN")
