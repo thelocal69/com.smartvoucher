@@ -26,9 +26,7 @@ Http.interceptors.response.use(
         return response.data;
     },
     function(error){
-        if (error.response.status === 403) {
-            toast.error("Please login by admin !");
-        } 
+        toast.error(error.response.data.error);
         return Promise.reject(error);
     }
 );

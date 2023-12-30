@@ -1,5 +1,9 @@
 import React from "react";
-import { getAllUser, searchAllByUserEmail } from "../services/UserService";
+import {
+  getAllUser,
+  searchAllByUserEmail,
+  blockUser,
+} from "../services/UserService";
 import {
   Table,
   Modal,
@@ -12,15 +16,19 @@ import {
 import Paging from "./Paging";
 import { toast } from "react-toastify";
 import debounce from "lodash.debounce";
-import './User.scss';
+import "./User.scss";
+import { useDispatch } from "react-redux";
+import { logOut } from "../redux/data/AuthSlice";
 
 const User = () => {
   const [smShow, setSmShow] = React.useState(false);
   const [imageShow, setImageShow] = React.useState(false);
+  const [showBlock, setShowBlock] = React.useState(false);
 
   const [listUser, setListUser] = React.useState([]);
   const [userItem, setUserItem] = React.useState({});
   const [imageItem, setImageItem] = React.useState({});
+  const [objBlock, setObjBlock] = React.useState({});
   const [totalItem, setTotalItem] = React.useState(0);
   const [totalPage, setTotalPage] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -28,6 +36,8 @@ const User = () => {
   const [sortBy, setSortBy] = React.useState("desc");
   const [sortField, setSortField] = React.useState("id");
   const [keyWord, setKeyWord] = React.useState("");
+
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     getUser(currentPage, limit, sortBy, sortField);
@@ -66,6 +76,32 @@ const User = () => {
       .catch((err) => toast.error(err.message));
   };
 
+  const handleEnableUser = async () => {
+    objBlock.enable = true;
+    objBlock.status = 1;
+    await blockUser(objBlock)
+      .then((rs) => {
+        if (rs) {
+          toast.success("Enable user is successfully !");
+          handleClose();
+        }
+      })
+      .catch((err) => toast.error(err.message));
+  };
+
+  const handleDisableUser = async () => {
+    objBlock.enable = false;
+    objBlock.status = 0;
+    await blockUser(objBlock)
+      .then((rs) => {
+        if (rs) {
+          toast.success("Disable user is successfully !");
+          handleClose();
+        }
+      })
+      .catch((err) => toast.error(err.message));
+  };
+
   const handleSortClick = (sortBy, sortField) => {
     getUser(currentPage, limit, sortBy, sortField);
     setSortBy(sortBy);
@@ -79,7 +115,12 @@ const User = () => {
   const handleShowImage = (imageItem) => {
     setImageItem(imageItem);
     setImageShow(true);
-  }
+  };
+
+  const handleClickBlockButton = (user) => {
+    setObjBlock(user);
+    setShowBlock(true);
+  };
 
   const handlePageClick = (event) => {
     getUser(+event.selected + 1, limit, sortBy, sortField);
@@ -88,6 +129,7 @@ const User = () => {
   const handleClose = () => {
     setSmShow(false);
     setImageShow(false);
+    setShowBlock(false);
   };
 
   return (
@@ -149,6 +191,7 @@ const User = () => {
               <th>Status</th>
               <th>Enable</th>
               <th>Provider</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -174,12 +217,8 @@ const User = () => {
                           Full Name {item?.id}
                         </label>
                       </td>
-                      <td>
-                        {item?.firstName}
-                      </td>
-                      <td>
-                        {item?.lastName}
-                      </td>
+                      <td>{item?.firstName}</td>
+                      <td>{item?.lastName}</td>
                       <td>
                         <label
                           className="formatLable"
@@ -205,7 +244,7 @@ const User = () => {
                         </label>
                       </td>
                       <td>
-                        <label  
+                        <label
                           className="formatLable"
                           onClick={() => handleClickTable(item?.email)}
                         >
@@ -222,39 +261,30 @@ const User = () => {
                       </td>
                       <td>
                         <label
-                        className={
-                          item?.status ? "ac active" : "ac deactive"
-                        }
-                        >{item?.status ? "Active" : "Deactive"}</label>
+                          className={item?.status ? "ac active" : "ac deactive"}
+                        >
+                          {item?.status ? "Active" : "Deactive"}
+                        </label>
                       </td>
                       <td>
                         <label
-                        className={
-                          item?.enable ? "ac active" : "ac deactive"
-                        }
-                        >{item?.enable ? "Enable" : "Disable"}</label>
+                          className={item?.enable ? "ac active" : "ac deactive"}
+                        >
+                          {item?.enable ? "Enable" : "Disable"}
+                        </label>
                       </td>
                       <td>
                         <label>{item?.provider}</label>
                       </td>
-                      {/* <td>
-                        <div className="d-flex">
-                          <button
-                            className="btn btn-warning mx-2"
-                            onClick={() => handClickEditMerchant(item)}
-                          >
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            <span>Edit</span>
-                          </button>
-                          <button
-                            className="btn btn-danger mx-2"
-                            onClick={() => handClickDeleteMerchant(item)}
-                          >
-                            <i class="fa-solid fa-trash"></i>
-                            <span>Delete</span>
-                          </button>
-                        </div>
-                      </td> */}
+                      <td>
+                        <button
+                          className="btn btn-danger mx-2"
+                          onClick={() => handleClickBlockButton(item)}
+                        >
+                          <i class="fa-solid fa-user-slash"></i>
+                          <span>Block</span>
+                        </button>
+                      </td>
                     </tr>
                   );
                 })
@@ -275,9 +305,7 @@ const User = () => {
             Small info
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          {userItem}
-        </Modal.Body>
+        <Modal.Body>{userItem}</Modal.Body>
       </Modal>
 
       <Modal
@@ -292,9 +320,40 @@ const User = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-              <Col xs={10} md={8}>
-                <Image src={imageItem}  thumbnail/>
-              </Col>
+          <Col xs={10} md={8}>
+            <Image src={imageItem} thumbnail />
+          </Col>
+        </Modal.Body>
+      </Modal>
+
+      <Modal
+        size="sm"
+        show={showBlock}
+        onHide={() => handleClose()}
+        aria-labelledby="example-modal-sizes-title-sm"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-sm">
+            Block Options
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-flex">
+            <button
+              className="btn btn-success mx-2"
+              onClick={() => handleEnableUser()}
+            >
+              <i class="fa-solid fa-check"></i>
+              <span>Enable</span>
+            </button>
+            <button
+              className="btn btn-danger mx-2"
+              onClick={() => handleDisableUser()}
+            >
+              <i class="fa-solid fa-user-slash"></i>
+              <span>Disable</span>
+            </button>
+          </div>
         </Modal.Body>
       </Modal>
     </>
