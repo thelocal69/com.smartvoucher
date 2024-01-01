@@ -1,0 +1,25 @@
+.discount-price{
+    text-decoration-line: line-through;
+    color: #9ca3af;
+}
+
+.label-font{
+    font-size: 1.5rem;
+    line-height: 2rem;
+}
+
+.a{
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+    &:hover{
+        cursor: pointer;
+        color: #000;
+        text-decoration:underline;
+    }
+}
+
+.price{
+    color: #000;
+    font-weight: 500;
+}

@@ -1,0 +1,34 @@
+.custom-header {
+  background-color: #2579f2;
+  .custom-bg {
+    background-color: #2579f2;
+  }
+  .custom-font {
+    color: #ffff;
+    text-decoration: none;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 500;
+  }
+  .custom-form{
+    border-radius: 5px;
+  }
+  .custom-search{
+    border: none;
+  }
+  .custom-btn-bg{
+    background-color: #0a59cc;
+    border-radius: 0 5px 5px 0;
+  }
+  .custom-btn{
+    background-color: #0a59cc;
+    border: none;
+    color: #ffff;
+  }
+  .custom-cart{
+    background-color: #2579f2;
+    text-decoration: solid ;
+    border-color: #f9fafb;
+    color: #ffff;
+  }
+}
