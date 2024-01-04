@@ -13,6 +13,7 @@ public class LabelConverter {
         LabelDTO labelDTO = new LabelDTO();
         labelDTO.setId(labelEntity.getId());
         labelDTO.setName(labelEntity.getName());
+        labelDTO.setSlug(labelEntity.getSlug());
         return labelDTO;
     }
 
@@ -24,6 +25,7 @@ public class LabelConverter {
         LabelEntity labelEntity = new LabelEntity();
         labelEntity.setId(labelDTO.getId());
         labelEntity.setName(labelDTO.getName());
+        labelEntity.setSlug(labelDTO.getSlug());
         return labelEntity;
     }
 

@@ -52,6 +52,17 @@ public class WareHouseController {
         return new ResponseEntity<>(wareHouseService.getAllWareHouse(page, limit, sortBy, sortField), HttpStatus.OK);
     }
 
+    @GetMapping("/api/get/label")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseOutput> getAllWareHouseByLabel(
+            @RequestParam String slug,
+            @RequestParam int page,
+            @RequestParam int limit
+    ) {
+        log.info("Get All warehouse success !");
+        return new ResponseEntity<>(wareHouseService.getAllWarehousesByLabel(slug, page, limit), HttpStatus.OK);
+    }
+
     @GetMapping("/api/search")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> searchWarehouseByName(@RequestParam String name) {

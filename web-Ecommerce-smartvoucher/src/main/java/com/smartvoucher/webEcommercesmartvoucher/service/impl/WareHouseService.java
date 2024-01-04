@@ -208,12 +208,33 @@ public class WareHouseService implements IWareHouseService {
                 wareHouseRepository.findAllByLabel(id)
         );
         if (wareHouseDTOList.isEmpty()){
-            log.info("List warehouse bt label is empty !");
+            log.info("List warehouse label is empty !");
             throw new ObjectEmptyException(500, "List warehouse bt label is empty !");
         }
         log.info("Get all warehouse by lable is completed !");
         return wareHouseDTOList;
         }
+
+    @Override
+    public ResponseOutput getAllWarehousesByLabel(String slug, int page, int limit) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        List<WareHouseDTO> wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(
+                wareHouseRepository.findAllByLabelSlug(slug, pageable)
+        );
+        if (wareHouseDTOList.isEmpty()){
+            log.info("List warehouse label is empty !");
+            throw new ObjectEmptyException(500, "List warehouse bt label is empty !");
+        }
+        int totalItem = wareHouseRepository.countByLabel(slug);
+        int totalPage = (int) Math.ceil((double) totalItem / limit);
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                wareHouseDTOList
+        );
+    }
+
     @Override
     @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWarehouseByCategoryId(long id) {

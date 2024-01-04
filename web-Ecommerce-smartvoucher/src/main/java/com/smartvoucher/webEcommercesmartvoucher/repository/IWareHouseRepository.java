@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.repository;
 
 import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +21,13 @@ public interface IWareHouseRepository extends JpaRepository<WareHouseEntity, Lon
     @Query("SELECT w FROM warehouse w JOIN category c ON w.category.id=c.id" +
             " WHERE w.category.id = :id")
     List<WareHouseEntity>findAllByCategoryId(long id);
+
+//    @Query("SELECT w FROM warehouse w JOIN label la ON w.label.id = la.id" +
+//            " WHERE w.label.id = :id AND w.status = 1" +
+//            " ORDER BY ?#{#pageable}")
+    List<WareHouseEntity>findAllByLabelSlug(String id, Pageable pageable);
+
+    @Query("SELECT count(*) FROM warehouse w JOIN label la ON w.label.id=la.id" +
+            " WHERE la.slug = :slug")
+    int countByLabel(String slug);
 }

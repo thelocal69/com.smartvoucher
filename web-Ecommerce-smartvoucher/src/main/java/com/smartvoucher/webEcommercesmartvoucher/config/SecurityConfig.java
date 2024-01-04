@@ -121,7 +121,7 @@ public class SecurityConfig {
                     .antMatchers("/chain/**").hasRole("ADMIN")
                     //chain
                     .antMatchers("/label/api/all").permitAll()
-                    .antMatchers("/label/api/getName").hasRole("ADMIN")
+                    .antMatchers("/label/api/getName").permitAll()
                     .antMatchers("/label/api/getAll").hasRole("ADMIN")
                     //user
                     .antMatchers(HttpMethod.GET,"/user/api/infor").hasRole("USER")
@@ -174,6 +174,7 @@ public class SecurityConfig {
                     //warehouse
                     .antMatchers(HttpMethod.GET, "/warehouse/CategoryId/{id}").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/all").permitAll()
+                    .antMatchers(HttpMethod.GET, "/warehouse/api/get/label").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/{id}").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/by-label-id/{id}").permitAll()
                     .antMatchers(HttpMethod.GET,"/warehouse/api/getAll").hasRole("ADMIN")
