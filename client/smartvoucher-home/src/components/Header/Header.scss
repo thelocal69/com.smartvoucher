@@ -105,3 +105,21 @@
     font-weight: 500;
   }
 }
+
+.form-auth{
+  color: #ffff;
+  font-weight: 500;
+  text-decoration: none;
+  &:hover{
+    color: #ffff;
+  }
+}
+
+.form-sub{
+  color: #000;
+  font-weight: 500;
+  text-decoration: none;
+  &:hover{
+    color: #000;
+  }
+}
