@@ -1,0 +1,26 @@
+.list-l {
+  width: 15rem;
+  height: 14.25rem;
+  border: 1px solid #fff;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 10px;
+  .bd {
+    border-radius: 5px;
+    color: #000;
+    .sideBar {
+      text-decoration: none;
+      text-transform: capitalize;
+      font-weight: 500;
+    }
+    &:hover {
+      background-color: #2579f2;
+      transform: translateY(-4px);
+      transition: all 0.3s;
+      box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+    }
+    &.active {
+      background-color: #2579f2;
+      color: #fff;
+    }
+  }
+}

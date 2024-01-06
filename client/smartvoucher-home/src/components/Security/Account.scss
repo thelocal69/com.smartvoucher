@@ -126,7 +126,7 @@ input {
 .tabs > .tabs-content .login_socnet .fa-facebook {
   color: #5c6bc0;
 }
-.tabs > .tabs-content form {
+.tabs > .tabs-content .f {
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flex;
@@ -138,7 +138,7 @@ input {
   -o-flex-direction: column;
   flex-direction: column;
 }
-.tabs > .tabs-content form input {
+.tabs > .tabs-content .f input {
   padding: 10px;
   margin: 15px 0;
   border: none;
@@ -147,7 +147,7 @@ input {
   letter-spacing: 1px;
   transition: 0.1s;
 }
-.tabs > .tabs-content form input:focus {
+.tabs > .tabs-content .f input:focus {
   transform: translateX(10px);
   outline: none;
 }

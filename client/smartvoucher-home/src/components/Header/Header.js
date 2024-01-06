@@ -1,19 +1,55 @@
 import React from "react";
-import { Container, Navbar, Nav, Col, Image, Badge } from "react-bootstrap";
+import {
+  Container,
+  Navbar,
+  Nav,
+  Col,
+  Image,
+  Badge,
+  NavDropdown,
+} from "react-bootstrap";
 import "../Header/Header.scss";
 import { NavLink } from "react-router-dom";
 import Logo from "../../assets/logo/logo.png";
-import ModalLogin from "../Util/ModalLogin";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectIsAuthenticated,
+  selectAccessToken,
+  selectRefreshToken,
+  logOut,
+} from "../../Redux/data/AuthSlice";
+import { logoutUser } from "../../services/AccountServices";
+import { toast } from "react-toastify";
+import Account from "../Security/Account";
 
 const Header = () => {
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
 
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const accessToken = useSelector(selectAccessToken);
+  const refreshToken = useSelector(selectRefreshToken);
+
+  const dispatch = useDispatch();
+
   const handleClickLogin = () => {
-    setIsShowModalLogin(true);
+    if (isAuthenticated === false) {
+      setIsShowModalLogin(true);
+    }
   };
 
   const handleClose = () => {
     setIsShowModalLogin(false);
+  };
+
+  console.log(isAuthenticated);
+
+  const handleLogout = async () => {
+    dispatch(logOut());
+    await logoutUser(refreshToken).then((rs) => {
+      if (rs) {
+        toast.success(rs.message);
+      }
+    });
   };
 
   return (
@@ -104,30 +140,54 @@ const Header = () => {
                   width: 16 + "rem",
                 }}
               >
-                <Col xs={3} md={2}>
-                  <NavLink to="/Profile">
-                    <Image src="" roundedCircle className="avatar" />
-                  </NavLink>
-                </Col>
-                <NavLink className="custom-font mx-2">
-                  <i
-                    class="fa-regular fa-circle-user"
-                    onClick={() => handleClickLogin()}
-                  ></i>
-                </NavLink>
-                <NavLink
-                  className="form-auth"
-                  onClick={() => handleClickLogin()}
-                >
-                  Đăng nhập
-                </NavLink>
-                <span className="form-auth mx-2">/</span>
-                <NavLink
-                  className="form-auth"
-                  onClick={() => handleClickLogin()}
-                >
-                  Đăng ký
-                </NavLink>
+                {isAuthenticated ? (
+                  <>
+                    <Navbar>
+                      <Col xs={3} md={2}>
+                        <NavLink>
+                          <Image
+                            //src={objInfo.avatarUrl}
+                            roundedCircle
+                            className="avatar"
+                          />
+                        </NavLink>
+                      </Col>
+                    </Navbar>
+                    <NavDropdown
+                      //title={objInfo.userName}
+                      id="basic-nav-dropdown"
+                    >
+                      <NavLink to="/User/Profile" className="dropdown-item">
+                        Profile
+                      </NavLink>
+                      <NavDropdown.Item onClick={() => handleLogout()}>
+                        Logout
+                      </NavDropdown.Item>
+                    </NavDropdown>
+                  </>
+                ) : (
+                  <>
+                    <NavLink className="custom-font mx-2">
+                      <i
+                        class="fa-regular fa-circle-user"
+                        onClick={() => handleClickLogin()}
+                      ></i>
+                    </NavLink>
+                    <NavLink
+                      className="form-auth"
+                      onClick={() => handleClickLogin()}
+                    >
+                      Đăng nhập
+                    </NavLink>
+                    <span className="form-auth mx-2">/</span>
+                    <NavLink
+                      className="form-auth"
+                      onClick={() => handleClickLogin()}
+                    >
+                      Đăng ký
+                    </NavLink>
+                  </>
+                )}
               </Navbar>
             </Nav>
             <Nav>
@@ -202,7 +262,7 @@ const Header = () => {
           </Nav>
         </div>
 
-        <ModalLogin show={isShowModalLogin} handleClose={handleClose} />
+        <Account show={isShowModalLogin} handleClose={handleClose} />
       </Container>
     </>
   );
