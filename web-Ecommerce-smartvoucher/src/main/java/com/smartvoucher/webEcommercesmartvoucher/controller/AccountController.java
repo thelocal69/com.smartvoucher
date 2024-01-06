@@ -48,9 +48,9 @@ public class AccountController {
 
     @PostMapping("/api/signin")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject> signin(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<ResponseObject> signin(@RequestBody SignInDTO signInDTO) {
         log.info("Sign-in is successfully !");
-        return new ResponseEntity<>(accountService.signInUser(email, password), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.signInUser(signInDTO), HttpStatus.OK);
     }
 
     @PostMapping("/api/signinAdmin")
