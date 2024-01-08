@@ -20,6 +20,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -39,6 +40,8 @@ public class WareHouseService implements IWareHouseService {
     private final ICategoryRepository categoryRepository;
     private final ILabelRepository labelRepository;
     private final UploadUtil uploadUtil;
+    @Value("${drive_view}")
+    private String driveUrl;
 
 
     @Autowired
@@ -185,7 +188,7 @@ public class WareHouseService implements IWareHouseService {
     public String uploadWarehouseImages(MultipartFile fileName) {
         String folderId = "101aTGIyIgR4tIq88tT3lCE3_QWZcVP03";
         File file = uploadUtil.uploadImages(fileName, folderId);
-        return "https://drive.google.com/uc?export=view&id="+file.getId();
+        return driveUrl+file.getId();
     }
 
     @Override
