@@ -3,8 +3,6 @@ import {
   Container,
   Navbar,
   Nav,
-  Col,
-  Image,
   Badge,
   NavDropdown,
 } from "react-bootstrap";
@@ -14,34 +12,30 @@ import Logo from "../../assets/logo/logo.png";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectIsAuthenticated,
-  selectAccessToken,
   selectRefreshToken,
   logOut,
 } from "../../Redux/data/AuthSlice";
+import { selectAvatar, selectUsername } from "../../Redux/data/UserSlice";
 import { logoutUser } from "../../services/AccountServices";
 import { toast } from "react-toastify";
 import Account from "../Security/Account";
 
 const Header = () => {
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
-
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  const accessToken = useSelector(selectAccessToken);
   const refreshToken = useSelector(selectRefreshToken);
+  const avatar = useSelector(selectAvatar);
+  const username = useSelector(selectUsername);
 
   const dispatch = useDispatch();
 
   const handleClickLogin = () => {
-    if (isAuthenticated === false) {
-      setIsShowModalLogin(true);
-    }
+    setIsShowModalLogin(true);
   };
 
   const handleClose = () => {
     setIsShowModalLogin(false);
   };
-
-  console.log(isAuthenticated);
 
   const handleLogout = async () => {
     dispatch(logOut());
@@ -51,6 +45,7 @@ const Header = () => {
       }
     });
   };
+  console.log(isShowModalLogin);
 
   return (
     <>
@@ -90,114 +85,106 @@ const Header = () => {
         </div>
         <Navbar
           expand="lg"
-          className=" bg-body-tertiary custom-bg d-flex"
+          className=" bg-body-tertiary custom-bg d-flex justify-content-between"
           data-bs-theme="dark"
           style={{
             paddingTop: 2 + "rem",
+            paddingLeft: 4.5 + "rem",
+            paddingRight: 4.5 + "rem",
           }}
         >
-          <Container>
-            <Nav>
-              <NavLink to="/" className="custom-font">
-                <img
-                  src={Logo}
-                  alt=""
-                  style={{
-                    width: 4 + "rem",
-                    marginRight: 1 + "rem",
-                  }}
-                />
-              </NavLink>
-              <NavLink
-                to="/"
-                className="custom-font"
+          <Nav>
+            <NavLink to="/" className="custom-font">
+              <img
+                src={Logo}
+                alt=""
                 style={{
-                  lineHeight: 4 + "rem",
+                  width: 4 + "rem",
+                  marginRight: 1 + "rem",
                 }}
-              >
-                SMART VOUCHER
-              </NavLink>
-            </Nav>
-            <Nav>
-              <div className="search-wrapper">
-                <input
-                  type="search"
-                  name=""
-                  id=""
-                  placeholder="Tìm kiếm sản phẩm theo tên"
-                />
-                <div className="ic-wrapper custom-btn">
-                  <i class="fa-solid fa-magnifying-glass"></i>
-                </div>
+              />
+            </NavLink>
+            <NavLink
+              to="/"
+              className="custom-font"
+              style={{
+                lineHeight: 4 + "rem",
+              }}
+            >
+              SMART VOUCHER
+            </NavLink>
+          </Nav>
+          <Nav>
+            <div className="search-wrapper">
+              <input
+                type="search"
+                name=""
+                id=""
+                placeholder="Tìm kiếm sản phẩm theo tên"
+              />
+              <div className="ic-wrapper custom-btn">
+                <i class="fa-solid fa-magnifying-glass"></i>
               </div>
-            </Nav>
-            <Nav>
-              <Navbar
-                expand="lg"
-                className=" bg-body-tertiary custom-bg d-flex justify-content-center"
-                data-bs-theme="dark"
-                style={{
-                  width: 16 + "rem",
-                }}
-              >
-                {isAuthenticated ? (
-                  <>
-                    <Navbar>
-                      <Col xs={3} md={2}>
-                        <NavLink>
-                          <Image
-                            //src={objInfo.avatarUrl}
-                            roundedCircle
-                            className="avatar"
-                          />
-                        </NavLink>
-                      </Col>
-                    </Navbar>
-                    <NavDropdown
-                      //title={objInfo.userName}
-                      id="basic-nav-dropdown"
-                    >
-                      <NavLink to="/User/Profile" className="dropdown-item">
-                        Profile
-                      </NavLink>
-                      <NavDropdown.Item onClick={() => handleLogout()}>
-                        Logout
-                      </NavDropdown.Item>
-                    </NavDropdown>
-                  </>
-                ) : (
-                  <>
-                    <NavLink className="custom-font mx-2">
-                      <i
-                        class="fa-regular fa-circle-user"
-                        onClick={() => handleClickLogin()}
-                      ></i>
+            </div>
+          </Nav>
+          <Nav>
+            <Navbar
+              expand="lg"
+              className=" bg-body-tertiary custom-bg d-flex justify-content-center"
+              data-bs-theme="dark"
+            >
+              {isAuthenticated ? (
+                <>
+                  <Navbar>
+                    <NavLink>
+                      <img alt="" src={avatar.avatarUrl} className="aval" />
                     </NavLink>
-                    <NavLink
-                      className="form-auth"
+                  </Navbar>
+                  <NavDropdown
+                    title={<span className="ft">{username.username}</span>}
+                    id="basic-nav-dropdown"
+                    className="ft"
+                  >
+                    <NavLink to="/User/Profile" className="dropdown-item">
+                      Quản lí tài khoản
+                    </NavLink>
+                    <NavDropdown.Item onClick={() => handleLogout()}>
+                      Logout
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                </>
+              ) : (
+                <>
+                  <NavLink className="custom-font mx-2">
+                    <i
+                      class="fa-regular fa-circle-user"
                       onClick={() => handleClickLogin()}
-                    >
-                      Đăng nhập
-                    </NavLink>
-                    <span className="form-auth mx-2">/</span>
-                    <NavLink
-                      className="form-auth"
-                      onClick={() => handleClickLogin()}
-                    >
-                      Đăng ký
-                    </NavLink>
-                  </>
-                )}
-              </Navbar>
-            </Nav>
-            <Nav>
-              <button className="btn btn-light custom-cart">
-                <i class="fa-solid fa-cart-shopping"></i>
-                Cart <Badge bg="secondary">9</Badge>
-                <span className="visually-hidden">unread messages</span>
-              </button>
-            </Nav>
-          </Container>
+                    ></i>
+                  </NavLink>
+                  <NavLink
+                    className="form-auth"
+                    onClick={() => handleClickLogin()}
+                  >
+                    Đăng nhập
+                  </NavLink >
+                  <span className="form-auth mx-2">/</span>
+                  <NavLink
+                    className="form-auth"
+                    onClick={() => handleClickLogin()}
+                  >
+                    Đăng ký
+                  </NavLink>
+                </>
+              )}
+            </Navbar>
+          </Nav>
+          <Nav>
+            <button className="btn btn-light custom-cart">
+              <i class="fa-solid fa-cart-shopping"></i>
+              Cart <Badge bg="secondary">9</Badge>
+              <span className="visually-hidden">unread messages</span>
+            </button>
+          </Nav>
         </Navbar>
         <Container>
           <div className="p-3 d-flex justify-content-between">
@@ -262,7 +249,7 @@ const Header = () => {
           </Nav>
         </div>
 
-        <Account show={isShowModalLogin} handleClose={handleClose} />
+        <Account show={isShowModalLogin}  handleClose={handleClose}/>
       </Container>
     </>
   );

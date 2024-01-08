@@ -4,7 +4,7 @@ const Loading = (props) => {
   const { fileName } = props;
   return (
     <>
-      <Button variant="primary" disabled>
+      <Button variant="success" disabled>
         <Spinner
           as="span"
           animation="border"

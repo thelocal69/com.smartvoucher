@@ -1,11 +1,16 @@
 import React from "react";
 import { Container, Form, Offcanvas, Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Loading from "../Util/Loading";
 import { toast } from "react-toastify";
 import "../User/Profile.scss";
 import { selectAccessToken } from "../../Redux/data/AuthSlice";
-import { getUserInfor, updateImage, editProfile } from "../../services/UserServices";
+import { avatar, username } from "../../Redux/data/UserSlice";
+import {
+  getUserInfor,
+  updateImage,
+  editProfile,
+} from "../../services/UserServices";
 
 const Profile = () => {
   const ref = React.useRef(null);
@@ -18,6 +23,7 @@ const Profile = () => {
   const [isShowModalUpdate, setIsShowModalUpdate] = React.useState(false);
 
   const accessToken = useSelector(selectAccessToken);
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     getUserInformation();
@@ -28,6 +34,16 @@ const Profile = () => {
       .then((rs) => {
         if (rs) {
           setObjInfor(rs.data);
+          dispatch(
+            avatar({
+              avatarUrl: rs.data.avatarUrl,
+            })
+          );
+          dispatch(
+            username({
+              username: rs.data.userName,
+            })
+          );
         }
       })
       .catch((err) => toast.error(err.message));
@@ -45,6 +61,11 @@ const Profile = () => {
             setFile(null);
             toast.success("Change avatar successfully !");
             getUserInformation();
+            dispatch(
+              avatar({
+                avatarUrl: rs.data,
+              })
+            );
           }
         })
         .catch((err) => {
@@ -59,18 +80,23 @@ const Profile = () => {
   const handleUpdateProfile = async () => {
     setLoading(true);
     await editProfile(objEdit)
-    .then((rs) => {
-      if(rs){
+      .then((rs) => {
+        if (rs) {
+          setLoading(false);
+          toast.success("Update information is successfully !");
+          getUserInformation();
+          handleClose();
+          dispatch(
+            username({
+              username: rs.data.userName,
+            })
+          );
+        }
+      })
+      .catch((err) => {
         setLoading(false);
-        toast.success("Update information is successfully !");
-        getUserInformation();
-        handleClose();
-      }
-    })
-    .catch((err) => {
-      setLoading(false);
-      toast.error(err.message);
-    });
+        toast.error(err.message);
+      });
   };
 
   const handClickEditProfile = () => {
@@ -148,14 +174,19 @@ const Profile = () => {
                             className="btn btn-success my-3"
                             onClick={() => handleUploadAvatar()}
                           >
-                            <i class="fa-solid fa-check"></i>
-                            Accept
+                            {loading ? (
+                              <>
+                                <div className="loading">
+                                  <Loading fileName={file.name} />
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <i class="fa-solid fa-check"></i>
+                                Accept
+                              </>
+                            )}
                           </Form.Label>
-                          {loading && (
-                            <div className="loading">
-                              <Loading fileName={file.name} />
-                            </div>
-                          )}
                         </>
                       ) : (
                         <>
