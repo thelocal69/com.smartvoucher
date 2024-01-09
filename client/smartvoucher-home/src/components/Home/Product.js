@@ -5,6 +5,7 @@ import "../Home/HomePage.scss";
 import { getAllWarehouseByLabel } from "../../services/WarehouseServices";
 import { getAllLabelName } from "../../services/LabelServices";
 import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 
 const Product = () => {
   const [pageSpecial, setPageSpecial] = React.useState(1);
@@ -20,7 +21,7 @@ const Product = () => {
   const [totalPageFood, setTotalPageFood] = React.useState(0);
   const [totalPageTechnologiesLife, setTotalPageTechnologiesLife] =
     React.useState(0);
-  const [totalPageHealthy, setTotalPageHealthy] =React.useState(0);
+  const [totalPageHealthy, setTotalPageHealthy] = React.useState(0);
   const [limit, setLimit] = React.useState(8);
   const [lableName, setLabelName] = React.useState([]);
   const [listWarehouseSpecial, setListWarehouseSpecial] = React.useState([]);
@@ -30,7 +31,7 @@ const Product = () => {
   const [listWarehouseFood, setListWarehouseFood] = React.useState([]);
   const [listWarehouseTechnologiesLife, setListWarehouseTechnologiesLife] =
     React.useState([]);
-  const [listWarehouseHealthy, setListWarehouseHealthy] =React.useState([]);
+  const [listWarehouseHealthy, setListWarehouseHealthy] = React.useState([]);
   const [special, setSpecial] = React.useState("special");
   const [festival, setFestival] = React.useState("festival");
   const [onlySmartvoucher, setOnlySmartvoucher] =
@@ -43,6 +44,7 @@ const Product = () => {
   // const [weekend, setWeekend] = React.useState("weekend");
   // const [saleMonth, setSaleMonth] = React.useState("sale-month");
   // const [moment, setMoment] = React.useState("moment");
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     getLable();
@@ -144,19 +146,12 @@ const Product = () => {
 
   React.useEffect(() => {
     const getWarehouseByHealthy = async () => {
-      await getAllWarehouseByLabel(
-        healthy,
-        pageHealthy,
-        limit
-      )
+      await getAllWarehouseByLabel(healthy, pageHealthy, limit)
         .then((rs) => {
           if (rs) {
             setPageHealthy(rs.page);
             setTotalPageHealthy(rs.totalPage);
-            setListWarehouseHealthy([
-              ...listWarehouseHealthy,
-              ...rs.data,
-            ]);
+            setListWarehouseHealthy([...listWarehouseHealthy, ...rs.data]);
           }
         })
         .catch((err) => toast.error(err.message));
@@ -192,18 +187,31 @@ const Product = () => {
                       className="custom-card"
                       style={{ width: "18rem", border: "none" }}
                     >
-                      <Image loading="lazy" src={item.bannerUrl} className="img" />
+                      <Image
+                        loading="lazy"
+                        src={item.bannerUrl}
+                        className="img"
+                      />
                       <Card.Body>
-                        <Card.Link className="a">{item.name}</Card.Link>
+                        <div
+                          onClick={() => {
+                            navigate(`/Product/Detail/${item.id}`);
+                          }}
+                          className="a"
+                        >
+                          {item.name}
+                        </div>
                         <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">89.000đ</span>
+                          <span className="price">{item.price}đ</span>
                           <span className="discount-price">
                             {item.maxDiscountAmount > 0 && (
                               <>
-                                {item.price}
-                                <Badge bg="danger">
-                                  -{item.maxDiscountAmount}%
-                                </Badge>
+                                {item.originalPrice}đ
+                                <span className="ps-3">
+                                  <Badge bg="danger">
+                                    -{item.maxDiscountAmount}%
+                                  </Badge>
+                                </span>
                               </>
                             )}
                           </span>
@@ -244,18 +252,31 @@ const Product = () => {
                       className="custom-card"
                       style={{ width: "18rem", border: "none" }}
                     >
-                      <Image loading="lazy" src={item.bannerUrl} className="img" />
+                      <Image
+                        loading="lazy"
+                        src={item.bannerUrl}
+                        className="img"
+                      />
                       <Card.Body>
-                        <Card.Link className="a">{item.name}</Card.Link>
+                        <div
+                          onClick={() => {
+                            navigate(`/Product/Detail/${item.id}`);
+                          }}
+                          className="a"
+                        >
+                          {item.name}
+                        </div>
                         <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">89.000đ</span>
+                          <span className="price">{item.price}đ</span>
                           <span className="discount-price">
                             {item.maxDiscountAmount > 0 && (
                               <>
-                                {item.price}
-                                <Badge bg="danger">
-                                  -{item.maxDiscountAmount}%
-                                </Badge>
+                                {item.originalPrice}đ
+                                <span className="ps-3">
+                                  <Badge bg="danger">
+                                    -{item.maxDiscountAmount}%
+                                  </Badge>
+                                </span>
                               </>
                             )}
                           </span>
@@ -296,18 +317,31 @@ const Product = () => {
                       className="custom-card"
                       style={{ width: "18rem", border: "none" }}
                     >
-                      <Image loading="lazy" src={item.bannerUrl} className="img" />
+                      <Image
+                        loading="lazy"
+                        src={item.bannerUrl}
+                        className="img"
+                      />
                       <Card.Body>
-                        <Card.Link className="a">{item.name}</Card.Link>
+                        <div
+                          onClick={() => {
+                            navigate(`/Product/Detail/${item.id}`);
+                          }}
+                          className="a"
+                        >
+                          {item.name}
+                        </div>
                         <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">89.000đ</span>
+                          <span className="price">{item.price}đ</span>
                           <span className="discount-price">
                             {item.maxDiscountAmount > 0 && (
                               <>
-                                {item.price}
-                                <Badge bg="danger">
-                                  -{item.maxDiscountAmount}%
-                                </Badge>
+                                {item.originalPrice}đ
+                                <span className="ps-3">
+                                  <Badge bg="danger">
+                                    -{item.maxDiscountAmount}%
+                                  </Badge>
+                                </span>
                               </>
                             )}
                           </span>
@@ -350,18 +384,31 @@ const Product = () => {
                       className="custom-card"
                       style={{ width: "18rem", border: "none" }}
                     >
-                      <Image loading="lazy" src={item.bannerUrl} className="img" />
+                      <Image
+                        loading="lazy"
+                        src={item.bannerUrl}
+                        className="img"
+                      />
                       <Card.Body>
-                        <Card.Link className="a">{item.name}</Card.Link>
+                        <div
+                          onClick={() => {
+                            navigate(`/Product/Detail/${item.id}`);
+                          }}
+                          className="a"
+                        >
+                          {item.name}
+                        </div>
                         <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">89.000đ</span>
+                          <span className="price">{item.price}đ</span>
                           <span className="discount-price">
                             {item.maxDiscountAmount > 0 && (
                               <>
-                                {item.price}
-                                <Badge bg="danger">
-                                  -{item.maxDiscountAmount}%
-                                </Badge>
+                                {item.originalPrice}đ
+                                <span className="ps-3">
+                                  <Badge bg="danger">
+                                    -{item.maxDiscountAmount}%
+                                  </Badge>
+                                </span>
                               </>
                             )}
                           </span>
@@ -402,18 +449,31 @@ const Product = () => {
                       className="custom-card"
                       style={{ width: "18rem", border: "none" }}
                     >
-                      <Image loading="lazy" src={item.bannerUrl} className="img" />
+                      <Image
+                        loading="lazy"
+                        src={item.bannerUrl}
+                        className="img"
+                      />
                       <Card.Body>
-                        <Card.Link className="a">{item.name}</Card.Link>
+                        <div
+                          onClick={() => {
+                            navigate(`/Product/Detail/${item.id}`);
+                          }}
+                          className="a"
+                        >
+                          {item.name}
+                        </div>
                         <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">89.000đ</span>
+                          <span className="price">{item.price}đ</span>
                           <span className="discount-price">
                             {item.maxDiscountAmount > 0 && (
                               <>
-                                {item.price}
-                                <Badge bg="danger">
-                                  -{item.maxDiscountAmount}%
-                                </Badge>
+                                {item.originalPrice}đ
+                                <span className="ps-3">
+                                  <Badge bg="danger">
+                                    -{item.maxDiscountAmount}%
+                                  </Badge>
+                                </span>
                               </>
                             )}
                           </span>
@@ -456,18 +516,31 @@ const Product = () => {
                       className="custom-card"
                       style={{ width: "18rem", border: "none" }}
                     >
-                      <Image loading="lazy" src={item.bannerUrl} className="img" />
+                      <Image
+                        loading="lazy"
+                        src={item.bannerUrl}
+                        className="img"
+                      />
                       <Card.Body>
-                        <Card.Link className="a">{item.name}</Card.Link>
+                        <div
+                          onClick={() => {
+                            navigate(`/Product/Detail/${item.id}`);
+                          }}
+                          className="a"
+                        >
+                          {item.name}
+                        </div>
                         <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">89.000đ</span>
+                          <span className="price">{item.price}đ</span>
                           <span className="discount-price">
                             {item.maxDiscountAmount > 0 && (
                               <>
-                                {item.price}
-                                <Badge bg="danger">
-                                  -{item.maxDiscountAmount}%
-                                </Badge>
+                                {item.originalPrice}đ
+                                <span className="ps-3">
+                                  <Badge bg="danger">
+                                    -{item.maxDiscountAmount}%
+                                  </Badge>
+                                </span>
                               </>
                             )}
                           </span>
@@ -484,9 +557,7 @@ const Product = () => {
             <>
               <button
                 className="btn-more my-3"
-                onClick={() =>
-                  setPageHealthy(pageHealthy + 1)
-                }
+                onClick={() => setPageHealthy(pageHealthy + 1)}
               >
                 Load more
               </button>

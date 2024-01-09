@@ -1,8 +1,15 @@
 import React from "react";
 import "../Footer/Footer.scss";
 import { Image, Container } from "react-bootstrap";
+import Account from "../Security/Account";
 
 const Footer = () => {
+  const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
+
+  const handleClose = () => {
+    setIsShowModalLogin(false);
+  };
+
   return (
     <>
       <div className="bg-footer mt-3">
@@ -19,10 +26,20 @@ const Footer = () => {
                 trình Giới thiệu bạn bè nhận hoa hồng vĩnh viễn tại Divine Shop.
               </div>
               <div className="d-flex">
-                <button className="btn btn-primary">Đăng ký ngay</button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setIsShowModalLogin(true)}
+                >
+                  Đăng ký ngay
+                </button>
                 <div className="p-2">
                   Hoặc bạn đã có tài khoản?{" "}
-                  <button className="btn-footer">Đăng nhập</button>
+                  <button
+                    className="btn-footer"
+                    onClick={() => setIsShowModalLogin(true)}
+                  >
+                    Đăng nhập
+                  </button>
                 </div>
               </div>
             </div>
@@ -114,6 +131,7 @@ const Footer = () => {
             </div>
           </div>
         </Container>
+        <Account show={isShowModalLogin} handleClose={handleClose} />
       </div>
     </>
   );

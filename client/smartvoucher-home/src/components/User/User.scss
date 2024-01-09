@@ -17,10 +17,13 @@
     opacity: 1;
     &:hover {
       transform: translateY(-4px);
-      background-color: gray;
+      background-color: #000;
       transition: all 0.3s;
       box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
       opacity: 1;
     }
+  }
+  .oL{
+    margin-bottom: 1rem;
   }
 }

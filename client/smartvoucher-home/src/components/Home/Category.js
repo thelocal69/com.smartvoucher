@@ -71,21 +71,21 @@ const Category = () => {
         >
           {listCategory.map((item, key) => {
             return (
-              <>
-                <Carousel.Item key={key}>
-                  <img
-                    src={item.bannerUrl}
-                    alt={item.name}
-                    style={{
-                      width: 40 + "rem",
-                      height: 20 + "rem",
-                    }}
-                  />
-                  <Carousel.Caption>
-                    <p>{item.name}</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-              </>
+              <Carousel.Item key={key}>
+                <img
+                  src={item.bannerUrl}
+                  alt={item.name}
+                  style={{
+                    width: 40 + "rem",
+                    height: 20 + "rem",
+                  }}
+                />
+                <Carousel.Caption>
+                  <h3 style={{
+                    background: "rgba(0, 0, 0)"
+                  }}>{item.name}</h3>
+                </Carousel.Caption>
+              </Carousel.Item>
             );
           })}
         </Carousel>

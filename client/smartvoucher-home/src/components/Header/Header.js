@@ -251,6 +251,9 @@ const Header = () => {
 
         <Account show={isShowModalLogin}  handleClose={handleClose}/>
       </Container>
+      <div>
+        <hr />
+      </div>
     </>
   );
 };

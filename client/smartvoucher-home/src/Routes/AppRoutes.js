@@ -3,16 +3,15 @@ import HomePage from "../components/Home/HomePage";
 import NotFound from "../components/Error/NotFound";
 import PrivateRoutes from "../Routes/PrivateRoutes";
 import User from "../components/User/User";
+import ProductInfor from "../components/Home/Detail/ProductInfor";
 
 const AppRoutes = () => {
   return (
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route
-          path="/User/*"
-          element={<PrivateRoutes Component={User}  />}
-        />
+        <Route path="/Product/Detail/:id" element={<ProductInfor />} />
+        <Route path="/User/*" element={<PrivateRoutes Component={User} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
