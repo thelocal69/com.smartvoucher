@@ -122,6 +122,11 @@ public class WareHouseController {
                         .replace("-","")
                         .substring(0,18)
         );
+        wareHouseDTO.setPrice(
+                (wareHouseDTO.getOriginalPrice()
+                        *
+                        wareHouseDTO.getMaxDiscountAmount()) / 100
+        );
         log.info("Insert is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject(

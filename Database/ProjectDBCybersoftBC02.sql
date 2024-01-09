@@ -69,7 +69,8 @@ CREATE TABLE warehouse(
 	thumbnail_url varchar(255),
 	id_discount_type bigint not null,
 	discount_amount decimal(8,3),
-	price decimal(8,3),
+	price decimal(12,2),
+    original_price decimal(12,2),
 	max_discount_amount decimal(8,3),
 	available_from timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	available_to timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
@@ -109,7 +110,7 @@ CREATE TABLE verification_token(
 CREATE TABLE label(
 id int auto_increment,
 name varchar(50),
-
+slug varchar(255),
 primary key(id)
 );
 

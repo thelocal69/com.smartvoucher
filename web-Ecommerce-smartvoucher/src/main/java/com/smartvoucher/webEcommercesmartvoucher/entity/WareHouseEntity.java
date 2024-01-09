@@ -48,6 +48,8 @@ public class WareHouseEntity{
     private String thumbnailUrl;
     @Column(name= "price")
     private Double price;
+    @Column(name= "original_price")
+    private Double originalPrice;
     @Column(name = "discount_amount")
     private Double discountAmount;
     @Column(name = "max_discount_amount")
