@@ -64,6 +64,20 @@ public class OrderController {
         );
     }
 
+    @GetMapping("/api/get/{id}")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getOrder(@PathVariable long id){
+        log.info("All order is below: ");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "All order is below: ",
+                        this.ordersService.getOrderDetail(id)
+                )
+        );
+    }
+
+
     @GetMapping("/api/get/all")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseOutput> getOrderByUser(

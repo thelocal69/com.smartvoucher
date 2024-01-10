@@ -10,6 +10,7 @@ import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import com.smartvoucher.webEcommercesmartvoucher.exception.*;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
 import com.smartvoucher.webEcommercesmartvoucher.util.EmailUtil;
@@ -17,6 +18,9 @@ import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -102,6 +106,28 @@ public class TicketService implements ITicketService {
             log.info("List Ticket is empty");
             throw new ObjectNotFoundException(404, "List Ticket is empty");
         }
+    }
+
+    @Override
+    public ResponseOutput getAllTicket(long id, int page, int limit) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        OrderEntity order = orderRepository.findOneById(id);
+        List<TicketDTO> ticketDTOList = ticketConverter.toTicketDTOList(
+                ticketRepository.findAllByIdOrder(order, pageable)
+        );
+        if (ticketDTOList.isEmpty()){
+            log.info("List Ticket is empty");
+            throw new ObjectNotFoundException(404, "List Ticket is empty");
+        }
+        int totalItem = ticketRepository.countByIdOrder(id);
+        int totalPage = (int) Math.ceil((double) totalItem / limit);
+        log.info("Get all ticket is completed !");
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                ticketDTOList
+        );
     }
 
     @Override

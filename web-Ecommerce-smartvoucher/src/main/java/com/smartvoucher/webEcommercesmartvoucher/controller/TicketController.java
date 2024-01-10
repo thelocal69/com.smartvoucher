@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,17 @@ public class TicketController {
     public ResponseEntity<?> getAllTicket(){
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.ticketService.getAllTicket());
+    }
+
+    @GetMapping("/api/get/all")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseOutput> getAllTicketByOrder(
+            @RequestParam long id,
+            @RequestParam int page,
+            @RequestParam int limit
+    ){
+        return new ResponseEntity<>(this.ticketService.getAllTicket(
+                id, page, limit), HttpStatus.OK);
     }
 
 

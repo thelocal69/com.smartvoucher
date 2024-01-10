@@ -105,6 +105,19 @@ public class OrderService implements IOrderService {
         );
     }
 
+    @Override
+    public OrderDTO getOrderDetail(long id) {
+        OrderDTO orderDTO = orderConverter.toOrdersDTO(
+                orderRepository.findOneById(id)
+        );
+        if (orderDTO == null){
+            log.info("Order detail not found or not exist !");
+            throw new ObjectNotFoundException(404, "Order detail not found or not exist !");
+        }
+        log.info("Get Order detail is completed !");
+        return orderDTO;
+    }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
