@@ -37,8 +37,9 @@ const ProductInfor = () => {
             }}
           />
         </div>
-        <div>
+        <div className="ms-3">
           <h3 className="fW">{warehouse.name}</h3>
+            <h4 className="fW">Mã sản phẩm: {warehouse.warehouseCode}</h4>
           <p className="fW">
             Tình trạng:
             <span
@@ -76,8 +77,8 @@ const ProductInfor = () => {
             )}
           </h6>
           <hr />
-          <div className="d-flex justify-content-between">
-            <span>
+          <div className="">
+            <span className="pe-3">
               <button className="btn btn-primary">
                 <i class="fa-solid fa-credit-card"></i>
                 Mua ngay
@@ -90,9 +91,9 @@ const ProductInfor = () => {
               </button>
             </span>
           </div>
-        </div>
-        <div>
-          <h4 className="fW">Mã sản phẩm: {warehouse.warehouseCode}</h4>
+          <div className="pt-3">
+            <h6 className="fW">{warehouse.termOfUse}</h6>
+          </div>
         </div>
       </div>
       <div>

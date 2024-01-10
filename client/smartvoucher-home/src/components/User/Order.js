@@ -1,9 +1,115 @@
-import React from 'react'
+import React from "react";
+import { Container, Table } from "react-bootstrap";
+import { selectAccessToken } from "../../Redux/data/AuthSlice";
+import { useSelector } from "react-redux";
+import { getAllOrder } from "../../services/OrderServices";
+import { toast } from "react-toastify";
+import Paging from "../Util/Paginate";
+import "../User/Order.scss";
+import { useNavigate, useParam } from "react-router-dom";
+import Moment from "moment";
 
 const Order = () => {
-  return (
-    <div>Order</div>
-  )
-}
+  const accessToken = useSelector(selectAccessToken);
+  const navigate = useNavigate();
 
-export default Order
+  const [listOrder, setListOrder] = React.useState([]);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [limit, setLimit] = React.useState(6);
+  const [totalPage, setTotalPage] = React.useState(0);
+  const [totalItem, setTotalItem] = React.useState(0);
+  const [sortBy, setSortBy] = React.useState("desc");
+  const [sortField, setSortField] = React.useState("id");
+
+  React.useEffect(() => {
+    getOrder(currentPage, limit, sortBy, sortField);
+  }, []);
+
+  const getOrder = async (page, limit, sortBy, sortField) => {
+    await getAllOrder(page, limit, sortBy, sortField)
+      .then((rs) => {
+        if (rs) {
+          setCurrentPage(rs.page);
+          setTotalItem(rs.totalItem);
+          setTotalPage(rs.totalPage);
+          setListOrder(rs.data);
+        }
+      })
+      .catch((err) => toast.error(err.message));
+  };
+
+  const handlePageClick = (event) => {
+    getOrder(+event.selected + 1, limit, sortBy, sortField);
+  };
+
+  return (
+    <>
+      {accessToken && (
+        <>
+          <Container>
+            <div className="p-3 list-profile">
+              <div>
+                <h3>Lịch sử đơn hàng</h3>
+                <p className="fD">
+                  Hiển thị thông tin các sản phẩm bạn đã mua tại Smart voucher
+                </p>
+              </div>
+              <div>
+                <Table bordered hover>
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Thời gian</th>
+                      <th>Mã đơn hàng</th>
+                      <th>Sản phẩm</th>
+                      <th>Trạng thái</th>
+                      <th>Chi tiết</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {listOrder
+                      ? listOrder?.map((item, key) => {
+                          return (
+                            <tr key={key} className="fD">
+                              <td>{key + 1}</td>
+                              <td>
+                                {Moment(item?.createdAt).format(
+                                  "YYYY/DD/MM hh:mm:ss"
+                                )}
+                              </td>
+                              <td>{item?.orderNo}</td>
+                              <td className="d-flex justify-content-between">
+                                <span>{item?.idWarehouseDTO.name}</span>
+                                <span> x{item.quantity}</span>
+                              </td>
+                              <td
+                                className={
+                                  item?.status ? "ac active" : "ac deactive"
+                                }
+                              >
+                                {item?.status ? "Đã xử lí" : "Chưa xử lí"}
+                              </td>
+                              <td onClick={() =>{
+                                navigate(`/User/Ticket/${item.id}`);
+                              }} className="Ul">Chi tiết</td>
+                            </tr>
+                          );
+                        })
+                      : "No data"}
+                  </tbody>
+                </Table>
+              </div>
+
+              <Paging
+                totalPages={totalPage}
+                handlePageClick={handlePageClick}
+              />
+            </div>
+          </Container>
+        </>
+      )}
+    </>
+  );
+};
+
+export default Order;

@@ -1,0 +1,27 @@
+.list-profile {
+  border: 1px solid #fff;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 10px;
+
+  .ad {
+    &.active {
+      color: rgb(43, 191, 43);
+      font-weight: 600;
+    }
+    &.deactive {
+      color: rgb(174, 20, 20);
+      font-weight: 600;
+    }
+  }
+  .fD {
+    font-weight: 500;
+  }
+  .Ul {
+    color: blue;
+    &:hover {
+      cursor: pointer;
+      color: blue;
+      text-decoration: underline;
+    }
+  }
+}

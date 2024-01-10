@@ -3,9 +3,34 @@ import { getAllMerchant } from "../../services/MerchantServices";
 import { toast } from "react-toastify";
 import "../Home/Merchant.scss";
 import { Container } from "react-bootstrap";
+import Slider from "react-slick";
 
 const Merchant = () => {
   const [listMerchantLogo, setListMerchantLogo] = React.useState([]);
+
+  const settings = {
+    slidesToShow: 6,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 1000,
+    arrows: false,
+    dots: false,
+    pauseOnHover: false,
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 4,
+        },
+      },
+      {
+        breakpoint: 520,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+    ],
+  };
 
   React.useEffect(() => {
     getMerchant();
@@ -28,167 +53,23 @@ const Merchant = () => {
         <div className="p-3">
           <h4>Thuơng hiệu mới</h4>
         </div>
-        <div className="d-flex justify-content-between flex-wrap">
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[0]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[1]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[2]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[3]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[4]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[5]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[6]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[7]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[8]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[9]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[10]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[11]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[12]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[13]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          {/* <div className="p-3">
-            <img
-              src={listMerchantLogo[14]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div>
-          <div className="p-3">
-            <img
-              src={listMerchantLogo[15]}
-              alt=""
-              style={{
-                width: 8 + "rem",
-                borderRadius: 10
-              }}
-            />
-          </div> */}
+        <div className="p-3">
+          <Slider {...settings}>
+            {listMerchantLogo.map((item, key) => {
+              return (
+                <div className="">
+                  <img
+                    src={item}
+                    alt=""
+                    style={{
+                      width: 8 + "rem",
+                      borderRadius: 10,
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </Slider>
         </div>
       </Container>
     </>

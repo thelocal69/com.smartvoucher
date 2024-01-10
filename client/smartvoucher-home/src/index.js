@@ -5,35 +5,41 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import Store from "./Redux/Store";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 let persistor = persistStore(Store);
 root.render(
   <Provider store={Store}>
     <PersistGate loading={null} persistor={persistor}>
-      <React.StrictMode>
-        <BrowserRouter>
-          <App />
-          <ToastContainer
-            position="top-center"
-            autoClose={2000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="colored"
-          />
-        </BrowserRouter>
-      </React.StrictMode>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <React.StrictMode>
+          <BrowserRouter>
+            <App />
+            <ToastContainer
+              position="top-center"
+              autoClose={2000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="colored"
+            />
+          </BrowserRouter>
+        </React.StrictMode>
+      </LocalizationProvider>
     </PersistGate>
   </Provider>
 );

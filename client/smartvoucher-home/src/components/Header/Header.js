@@ -45,7 +45,6 @@ const Header = () => {
       }
     });
   };
-  console.log(isShowModalLogin);
 
   return (
     <>
