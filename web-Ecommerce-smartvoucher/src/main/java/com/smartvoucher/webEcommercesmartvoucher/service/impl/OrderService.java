@@ -8,10 +8,12 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.OrderEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.exception.DuplicationCodeException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectEmptyException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.OrderRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.TicketRepository;
@@ -20,9 +22,13 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IOrderService;
 import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -72,6 +78,46 @@ public class OrderService implements IOrderService {
             throw new ObjectNotFoundException(404, "List Order is empty");
         }
     }
+
+    @Override
+    public ResponseOutput getAllOrder(int page, int limit, String sortBy, String sortField, Principal connectedUser) {
+        Pageable pageable = PageRequest.of(
+                page - 1, limit, Sort.by(Sort.Direction.fromString(sortBy), sortField)
+        );
+        UserEntity user = userRepository.findByEmailAndProvider(
+                connectedUser.getName(), Provider.local.name()
+        );
+        List<OrderDTO> orderDTOList = orderConverter.orderDTOList(
+                orderRepository.findAllByIdUser(user, pageable)
+        );
+        if(orderDTOList.isEmpty()){
+            log.info("All orders of user is empty!");
+            throw new ObjectNotFoundException(404, "All orders of user is empty!");
+        }
+        int totalItem = orderRepository.countOrderByIdUser(user.getId());
+        int totalPage = (int) Math.ceil((double) totalItem / limit);
+        log.info("Get all orders of user is completed  !");
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                orderDTOList
+        );
+    }
+
+    @Override
+    public OrderDTO getOrderDetail(long id) {
+        OrderDTO orderDTO = orderConverter.toOrdersDTO(
+                orderRepository.findOneById(id)
+        );
+        if (orderDTO == null){
+            log.info("Order detail not found or not exist !");
+            throw new ObjectNotFoundException(404, "Order detail not found or not exist !");
+        }
+        log.info("Get Order detail is completed !");
+        return orderDTO;
+    }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -132,11 +178,11 @@ public class OrderService implements IOrderService {
     public List<OrderDTO> getAllOrderByIdUser(long id){
         List<OrderEntity> getAllOrder = orderRepository.findAllOrderByIdUser(id);
         List<OrderDTO> orderDTOList = orderConverter.orderDTOList(getAllOrder);
-            if(getAllOrder.isEmpty()){
-                log.info("All orders of user is empty!");
-                throw new ObjectNotFoundException(404, "All orders of user is empty!");
-            }
-            orderDTOList = addTicketInListOrder(orderDTOList, id);
+        if(getAllOrder.isEmpty()){
+            log.info("All orders of user is empty!");
+            throw new ObjectNotFoundException(404, "All orders of user is empty!");
+        }
+        orderDTOList = addTicketInListOrder(orderDTOList, id);
         log.info("Get all orders of user is completed  !");
         return orderDTOList;
     }

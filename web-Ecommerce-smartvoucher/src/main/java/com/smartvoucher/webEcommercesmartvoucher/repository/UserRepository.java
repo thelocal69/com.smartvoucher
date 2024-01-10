@@ -17,6 +17,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findOneByMemberCode(String memberCode);
     List<UserEntity> findAllByMemberCode(String memberCode);
     UserEntity findOneByIdAndProvider(long id, String provider);
-   UserEntity findByEmailAndProvider(String email, String provider);
    List<UserEntity> searchAllByEmailContainingIgnoreCase(String email);
+   UserEntity findByEmailAndProvider(String email, String provider);
+    UserEntity findByEmailAndProviderAndStatus(String email, String provider, int status);
 }

@@ -1,0 +1,26 @@
+.fo {
+  background-color: #000;
+  border-radius: 10px;
+}
+.h-128 {
+  width: 40.5rem;
+  height: 15.5rem;
+}
+
+.list{
+  text-decoration: none;
+  list-style: none;
+}
+
+.list-box{
+  border: 1px solid #fff;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 10px;
+  a{
+    font-weight: 500;
+    i{
+      opacity: .5;
+      padding-right: .5rem;
+    }
+  }
+}

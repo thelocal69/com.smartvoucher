@@ -165,15 +165,15 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public ResponseObject signInUser(String email, String password) {
+    public ResponseObject signInUser(SignInDTO signInDTO) {
         RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(
-                email, Provider.local.name()
+                signInDTO.getEmail(), Provider.local.name()
         );
-        if (!(rolesUsers.getIdRole().getName().equals("ROLE_ADMIN"))){
+        if (rolesUsers.getIdRole().getName().equals("ROLE_USER")){
             return new ResponseObject(
                     200,
-                    "Sig-In by user !",
-                    token(email, password)
+                    "sign-In by user !",
+                    token(signInDTO.getEmail(), signInDTO.getPassword())
             );
         }else {
             throw new PermissionDenyException(403, "Permission Denied !", null);

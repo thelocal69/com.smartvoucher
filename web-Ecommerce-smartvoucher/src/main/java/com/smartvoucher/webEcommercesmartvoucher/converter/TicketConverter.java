@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class TicketConverter {
@@ -60,6 +62,10 @@ public class TicketConverter {
             ticketDTO.setIdStoreDTO(storeConverter.toStoreDTO(ticketEntity.getIdStore()));
             ticketDTO.setStatus(1);
         return ticketDTO;
+    }
+
+    public List<TicketDTO> toTicketDTOList(List<TicketEntity> ticketEntityList){
+        return ticketEntityList.stream().map(this::toTicketDTO).collect(Collectors.toList());
     }
 
     public TicketEntity insertTicket(TicketDTO ticketDTO

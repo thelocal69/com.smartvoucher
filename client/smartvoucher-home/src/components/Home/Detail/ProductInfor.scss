@@ -1,0 +1,17 @@
+.dp {
+  text-decoration-line: line-through;
+  color: #9ca3af;
+}
+.ac {
+  &.active {
+    color: rgb(43, 191, 43);
+    font-weight: 600;
+  }
+  &.deactive {
+    color: rgb(174, 20, 20);
+    font-weight: 600;
+  }
+}
+.fW{
+  font-weight: 500;
+}

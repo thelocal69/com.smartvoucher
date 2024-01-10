@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
+import com.smartvoucher.webEcommercesmartvoucher.dto.BlockUserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.ChangePasswordDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
@@ -160,6 +161,23 @@ public class UserController {
                         )
                 )
         );
+    }
+
+    @PutMapping("/api/block/{id}")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<ResponseObject>blockUser(
+            @RequestBody BlockUserDTO blockUserDTO,
+            @PathVariable Long id
+    ){
+        blockUserDTO.setId(id);
+        log.info("Block user is completed !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Block user is completed !",
+                        userService.blockUser(blockUserDTO)
+                        )
+                );
     }
 
     @PutMapping("/api/editAdmin")

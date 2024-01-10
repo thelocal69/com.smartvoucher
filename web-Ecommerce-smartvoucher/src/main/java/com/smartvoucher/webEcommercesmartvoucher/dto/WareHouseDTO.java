@@ -30,8 +30,9 @@ public class WareHouseDTO{
     private String bannerUrl;
     @NotBlank(message = "Please fill all data !")
     private String thumbnailUrl;
-    @NotNull
     private Double price;
+    @NotNull
+    private Double originalPrice;
     @NotNull
     private Double discountAmount;
     @NotNull

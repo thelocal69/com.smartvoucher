@@ -12,6 +12,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IMerchantService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,6 +29,8 @@ public class MerchantService implements IMerchantService {
     private final IMerchantRepository merchantRepository;
     private final MerchantConverter merchantConverter;
     private final UploadUtil uploadUtil;
+    @Value("${drive_view}")
+    private String driveUrl;
 
     @Autowired
     public MerchantService(final  IMerchantRepository merchantRepository,
@@ -160,7 +163,7 @@ public class MerchantService implements IMerchantService {
     public String uploadMerchantImages(MultipartFile fileName) {
         String folderId = "1z6B_EyGuGN5AJX8tqrGnZkT6XMiKuTg5";
         File file = uploadUtil.uploadImages(fileName, folderId);
-        return "https://drive.google.com/uc?export=view&id="+file.getId();
+        return driveUrl+file.getId();
     }
 
     @Override

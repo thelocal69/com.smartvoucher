@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.service.IOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Slf4j
 @RestController
@@ -62,7 +64,32 @@ public class OrderController {
         );
     }
 
+    @GetMapping("/api/get/{id}")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> getOrder(@PathVariable long id){
+        log.info("All order is below: ");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "All order is below: ",
+                        this.ordersService.getOrderDetail(id)
+                )
+        );
+    }
 
 
+    @GetMapping("/api/get/all")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseOutput> getOrderByUser(
+            @RequestParam int page,
+            @RequestParam int limit,
+            @RequestParam String sortBy,
+            @RequestParam String sortField,
+            Principal connectedUser
+    ){
+        log.info("All order of user  is below: ");
+        return new ResponseEntity<>(this.ordersService.getAllOrder(
+                page, limit, sortBy, sortField, connectedUser), HttpStatus.OK);
+    }
 
 }

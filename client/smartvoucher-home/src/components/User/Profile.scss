@@ -1,0 +1,26 @@
+.list-profile {
+  border: 1px solid #fff;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 10px;
+  .Ava {
+    width: 11rem;
+    height: 11rem;
+    border-radius: 9999px;
+  }
+}
+.ka {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+.yi {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+.lu {
+  border: 1 solid rgba(156, 163, 175, 0.25);
+}
+.loading{
+  div {
+    background-color: #2579f2;
+  }
+}

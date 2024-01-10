@@ -1,0 +1,78 @@
+.discount-price {
+  text-decoration-line: line-through;
+  color: #9ca3af;
+}
+
+.label-font {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.a {
+  text-decoration: none;
+  color: #000;
+  font-weight: 500;
+  &:hover {
+    cursor: pointer;
+    color: #000;
+    text-decoration: underline;
+  }
+}
+
+.price {
+  color: #000;
+  font-weight: 500;
+}
+
+.btn-more {
+  border: none;
+  background: none;
+  color: #2579f2;
+  font-weight: 500;
+}
+
+.app {
+  box-sizing: content-box;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.se {
+  margin-top: 2.5rem;
+}
+
+.Re {
+  margin-top: 1.5rem;
+}
+
+.ta {
+  display: flex;
+}
+
+.gc {
+  flex-wrap: wrap;
+}
+
+.Pe {
+  margin: -0.75rem;
+}
+
+.Jc{
+  border-bottom-width: 1px;
+}
+
+.custom-card {
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+}
+
+.img{
+    width: 100%;
+    height: 50%;
+    border-radius: 0.5rem;
+}
+

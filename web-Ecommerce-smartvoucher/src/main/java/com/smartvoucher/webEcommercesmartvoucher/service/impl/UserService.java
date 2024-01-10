@@ -2,6 +2,7 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
+import com.smartvoucher.webEcommercesmartvoucher.dto.BlockUserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.ChangePasswordDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
@@ -17,6 +18,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2U
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,6 +38,8 @@ public class UserService implements IUserService {
     private final UserConverter userConverter;
     private final UploadUtil uploadUtil;
     private final PasswordEncoder passwordEncoder;
+    @Value("${drive_view}")
+    private String driveUrl;
 
     @Autowired
     public UserService(final UserRepository userRepository,
@@ -56,7 +60,7 @@ public class UserService implements IUserService {
         UserEntity userEntity = userRepository.findByEmailAndProvider(email, Provider.local.name());
         if (userEntity != null){
             File file = uploadUtil.uploadImages(fileName, folderId);
-            userEntity.setAvatarUrl("https://drive.google.com/uc?export=view&id="+file.getId());
+            userEntity.setAvatarUrl(driveUrl+file.getId());
             this.userRepository.save(userEntity);
         }else {
             log.info("User not found data");
@@ -196,5 +200,20 @@ public class UserService implements IUserService {
         }
         log.info("Update your profile is successfully !");
         return "Update your profile is successfully !";
+    }
+
+    @Override
+    public Boolean blockUser(BlockUserDTO blockUserDTO) {
+        UserEntity user = userRepository.findOneById(blockUserDTO.getId());
+        boolean isBlockUser;
+        if (user != null){
+            isBlockUser = blockUserDTO.isEnable();
+            user.setEnable(isBlockUser);
+            user.setStatus(blockUserDTO.getStatus());
+            this.userRepository.save(user);
+        }else {
+            throw new UserNotFoundException(404, "User not found data !");
+        }
+        return isBlockUser;
     }
 }

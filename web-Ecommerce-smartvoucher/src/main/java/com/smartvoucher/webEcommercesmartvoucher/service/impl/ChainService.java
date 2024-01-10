@@ -15,6 +15,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IChainService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,6 +32,8 @@ public class ChainService implements IChainService {
     private final IMerchantRepository merchantRepository;
     private final ChainConverter chainConverter;
     private final UploadUtil uploadUtil;
+    @Value("${drive_view}")
+    private String driveUrl;
 
     @Autowired
     public ChainService(final IChainRepository chainRepository,
@@ -177,6 +180,6 @@ public class ChainService implements IChainService {
     public String uploadChainImages(MultipartFile fileName) {
         String folderId = "1u73jDfQwDXvzlmKSVLb5CAI6DNPvylRH";
         File file = uploadUtil.uploadImages(fileName, folderId);
-       return "https://drive.google.com/uc?export=view&id="+file.getId();
+       return driveUrl+file.getId();
     }
     }

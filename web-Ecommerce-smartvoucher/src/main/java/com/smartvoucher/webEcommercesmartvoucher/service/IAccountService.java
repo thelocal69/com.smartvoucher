@@ -17,7 +17,7 @@ import java.util.List;
 public interface IAccountService {
     RefreshTokenDTO refreshToken(HttpServletRequest request, HttpServletResponse response);
     ResponseObject signInAdmin(SignInDTO signInDTO);
-    ResponseObject signInUser(String email, String password);
+    ResponseObject signInUser(SignInDTO signInDTO);
     SignUpDTO SignUp(SignUpDTO signUpDTO);
     void saveUserVerificationToken(UserEntity user, String token);
     String verifyEmail(String token);

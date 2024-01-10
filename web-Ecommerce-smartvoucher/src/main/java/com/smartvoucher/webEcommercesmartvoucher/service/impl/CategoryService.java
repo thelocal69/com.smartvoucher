@@ -13,6 +13,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.ICategoryService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,6 +30,8 @@ public class CategoryService implements ICategoryService {
     private final ICategoryRepository categoryRepository;
     private final CategoryConverter categoryConverter;
     private final UploadUtil uploadUtil;
+    @Value("${drive_view}")
+    private String driveUrl;
 
     @Autowired
     public CategoryService(final ICategoryRepository categoryRepository,
@@ -154,6 +157,6 @@ public class CategoryService implements ICategoryService {
     public String uploadCategoryImages(MultipartFile fileName) {
         String folderId = "17pJEY12p30od5F0aw2BETsguQZK5sTCZ";
         File file = uploadUtil.uploadImages(fileName, folderId);
-        return "https://drive.google.com/uc?export=view&id="+file.getId();
+        return driveUrl+file.getId();
     }
 }

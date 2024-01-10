@@ -19,6 +19,8 @@ public class LabelEntity {
     private int id;
     @Column(name = "name")
     private String name;
+    @Column(name = "slug")
+    private  String slug;
 
     @OneToMany(mappedBy = "label")
     private List<WareHouseEntity> wareHouseEntityList;

@@ -20,6 +20,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -39,6 +40,8 @@ public class WareHouseService implements IWareHouseService {
     private final ICategoryRepository categoryRepository;
     private final ILabelRepository labelRepository;
     private final UploadUtil uploadUtil;
+    @Value("${drive_view}")
+    private String driveUrl;
 
 
     @Autowired
@@ -185,7 +188,7 @@ public class WareHouseService implements IWareHouseService {
     public String uploadWarehouseImages(MultipartFile fileName) {
         String folderId = "101aTGIyIgR4tIq88tT3lCE3_QWZcVP03";
         File file = uploadUtil.uploadImages(fileName, folderId);
-        return "https://drive.google.com/uc?export=view&id="+file.getId();
+        return driveUrl+file.getId();
     }
 
     @Override
@@ -208,12 +211,33 @@ public class WareHouseService implements IWareHouseService {
                 wareHouseRepository.findAllByLabel(id)
         );
         if (wareHouseDTOList.isEmpty()){
-            log.info("List warehouse bt label is empty !");
+            log.info("List warehouse label is empty !");
             throw new ObjectEmptyException(500, "List warehouse bt label is empty !");
         }
         log.info("Get all warehouse by lable is completed !");
         return wareHouseDTOList;
         }
+
+    @Override
+    public ResponseOutput getAllWarehousesByLabel(String slug, int page, int limit) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        List<WareHouseDTO> wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(
+                wareHouseRepository.findAllByLabelSlug(slug, pageable)
+        );
+        if (wareHouseDTOList.isEmpty()){
+            log.info("List warehouse label is empty !");
+            throw new ObjectEmptyException(500, "List warehouse bt label is empty !");
+        }
+        int totalItem = wareHouseRepository.countByLabel(slug);
+        int totalPage = (int) Math.ceil((double) totalItem / limit);
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                wareHouseDTOList
+        );
+    }
+
     @Override
     @Transactional(readOnly = true)
     public List<WareHouseDTO> getAllWarehouseByCategoryId(long id) {
