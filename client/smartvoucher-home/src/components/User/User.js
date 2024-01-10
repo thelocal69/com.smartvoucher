@@ -3,7 +3,7 @@ import { Link, Routes, Route } from "react-router-dom";
 import "../User/User.scss";
 import Profile from "./Profile";
 import Order from "./Order";
-import Ticket from "./Ticket";
+import OrderInfor from "../Home/Detail/OrderInfor";
 
 const User = () => {
   return (
@@ -23,7 +23,7 @@ const User = () => {
           <Routes>
             <Route path="Profile" element={<Profile />} />
             <Route path="Order" element={<Order />} />
-            <Route path="Ticket/:id" element={<Ticket />}/>
+            <Route path="Infor/:id" element={<OrderInfor />}/>
           </Routes>
         </div>
       </div>

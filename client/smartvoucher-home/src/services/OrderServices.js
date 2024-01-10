@@ -5,3 +5,7 @@ export const getAllOrder = (page, limit, sortBy, sortField) => {
     `/order/api/get/all?page=${page}&limit=${limit}&sortBy=${sortBy}&sortField=${sortField}`
   );
 };
+
+export const getOrder = (id) => {
+  return Http.get(`/order/api/get/${id}`);
+};

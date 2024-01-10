@@ -58,10 +58,10 @@ const Order = () => {
                 <Table bordered hover>
                   <thead>
                     <tr>
-                      <th>No</th>
                       <th>Thời gian</th>
                       <th>Mã đơn hàng</th>
                       <th>Sản phẩm</th>
+                      <th>Tổng tiền</th>
                       <th>Trạng thái</th>
                       <th>Chi tiết</th>
                     </tr>
@@ -71,7 +71,6 @@ const Order = () => {
                       ? listOrder?.map((item, key) => {
                           return (
                             <tr key={key} className="fD">
-                              <td>{key + 1}</td>
                               <td>
                                 {Moment(item?.createdAt).format(
                                   "YYYY/DD/MM hh:mm:ss"
@@ -82,6 +81,9 @@ const Order = () => {
                                 <span>{item?.idWarehouseDTO.name}</span>
                                 <span> x{item.quantity}</span>
                               </td>
+                              <td className="">
+                                {item.idWarehouseDTO.price * item.quantity}đ
+                              </td>
                               <td
                                 className={
                                   item?.status ? "ac active" : "ac deactive"
@@ -89,9 +91,14 @@ const Order = () => {
                               >
                                 {item?.status ? "Đã xử lí" : "Chưa xử lí"}
                               </td>
-                              <td onClick={() =>{
-                                navigate(`/User/Ticket/${item.id}`);
-                              }} className="Ul">Chi tiết</td>
+                              <td
+                                onClick={() => {
+                                  navigate(`/User/Infor/${item.id}`);
+                                }}
+                                className="Ul"
+                              >
+                                Chi tiết
+                              </td>
                             </tr>
                           );
                         })
