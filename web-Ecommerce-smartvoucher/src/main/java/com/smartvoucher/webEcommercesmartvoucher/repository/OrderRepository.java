@@ -1,6 +1,8 @@
 package com.smartvoucher.webEcommercesmartvoucher.repository;
 
 import com.smartvoucher.webEcommercesmartvoucher.entity.OrderEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,4 +27,9 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
             "JOIN users u ON o.idUser.id = u.id " +
             "WHERE u.id = ?1 ")
     OrderEntity findOneByIdUser(long id);
+
+    List<OrderEntity> findAllByIdUser(UserEntity idUser, Pageable pageable);
+    @Query("SELECT count(*) FROM orders o JOIN users u ON o.idUser.id = u.id" +
+            " WHERE u.id=:id")
+    int countOrderByIdUser(Long id);
 }

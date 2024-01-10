@@ -168,6 +168,7 @@ public class SecurityConfig {
                     //order
                     .antMatchers(HttpMethod.GET, "/order/api/list-order").hasRole("USER")
                     .antMatchers(HttpMethod.GET, "/order/api/get_all_oder_user/{id}").hasRole("USER")
+                    .antMatchers(HttpMethod.GET, "/order/api/get/all").hasRole("USER")
                     .antMatchers(HttpMethod.POST, "/order/api/add-order").hasRole("USER")
                     .antMatchers(HttpMethod.DELETE, "/order/api/delete-order").hasRole("USER")
                     //order
