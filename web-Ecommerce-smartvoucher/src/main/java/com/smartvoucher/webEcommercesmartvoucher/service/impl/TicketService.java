@@ -6,6 +6,7 @@ import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketHistoryConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.WareHouseConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import com.smartvoucher.webEcommercesmartvoucher.exception.*;
@@ -20,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -112,10 +112,10 @@ public class TicketService implements ITicketService {
     public ResponseOutput getAllTicket(long id, int page, int limit) {
         Pageable pageable = PageRequest.of(page - 1, limit);
         OrderEntity order = orderRepository.findOneById(id);
-        List<TicketDTO> ticketDTOList = ticketConverter.toTicketDTOList(
+        List<TicketDetailDTO> ticketDTODetailList = ticketConverter.listTicketDetailDTO(
                 ticketRepository.findAllByIdOrder(order, pageable)
         );
-        if (ticketDTOList.isEmpty()){
+        if (ticketDTODetailList.isEmpty()){
             log.info("List Ticket is empty");
             throw new ObjectNotFoundException(404, "List Ticket is empty");
         }
@@ -126,7 +126,7 @@ public class TicketService implements ITicketService {
                 page,
                 totalItem,
                 totalPage,
-                ticketDTOList
+                ticketDTODetailList
         );
     }
 

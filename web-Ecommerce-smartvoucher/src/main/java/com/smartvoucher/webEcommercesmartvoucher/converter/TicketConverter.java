@@ -68,6 +68,36 @@ public class TicketConverter {
         return ticketEntityList.stream().map(this::toTicketDTO).collect(Collectors.toList());
     }
 
+    public TicketDetailDTO toTicketDetailDTO(TicketEntity ticketEntity) {
+        TicketDetailDTO ticketDetailDTO = new TicketDetailDTO(); // This is ticketDTO
+        ticketDetailDTO.setSerialCode(ticketEntity.getIdSerial().getSerialCode()); // set id serial
+        ticketDetailDTO.setWarehouseName(ticketEntity.getIdWarehouse().getName()); // set id warehouse
+        ticketDetailDTO.setCategoryName(ticketEntity.getIdCategory().getName()); // set id category
+        ticketDetailDTO.setOrderNo(ticketEntity.getIdOrder().getOrderNo()); // set id order
+        ticketDetailDTO.setEmail(ticketEntity.getIdUser().getEmail()); // set id User
+        ticketDetailDTO.setId(ticketEntity.getId());
+        ticketDetailDTO.setClaimedTime(ticketEntity.getClaimedTime());
+        ticketDetailDTO.setRedeemedtimeTime(ticketEntity.getRedeemedtimeTime());
+        ticketDetailDTO.setExpiredTime(ticketEntity.getExpiredTime());
+        ticketDetailDTO.setDiscountType(ticketEntity.getDiscountType());
+        ticketDetailDTO.setDiscountAmount(ticketEntity.getDiscountAmount());
+        ticketDetailDTO.setBannerUrl(ticketEntity.getBannerUrl());
+        ticketDetailDTO.setThumbnailUrl(ticketEntity.getThumbnailUrl());
+        ticketDetailDTO.setAcquirerLogoUrl(ticketEntity.getAcquirerLogoUrl());
+        ticketDetailDTO.setTermOfUse(ticketEntity.getTermOfUse());
+        ticketDetailDTO.setDescription(ticketEntity.getDescription());
+        ticketDetailDTO.setVoucherChannel(ticketEntity.getVoucherChannel());
+        ticketDetailDTO.setAvailableFrom(ticketEntity.getAvailbleFrom());
+        ticketDetailDTO.setAvailableTo(ticketEntity.getAvaibleTo());
+        ticketDetailDTO.setStoreName(ticketEntity.getIdStore().getName());
+        ticketDetailDTO.setStatus(ticketEntity.getStatus());
+        return ticketDetailDTO;
+    }
+
+   public List<TicketDetailDTO> listTicketDetailDTO(List<TicketEntity> ticketEntityList){
+        return ticketEntityList.stream().map(this::toTicketDetailDTO).collect(Collectors.toList());
+   }
+
     public TicketEntity insertTicket(TicketDTO ticketDTO
                                             , SerialEntity serialEntity
                                             , WareHouseEntity wareHouseEntity

@@ -198,7 +198,7 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.DELETE,"/warehouse_store/api/delete").hasRole("ADMIN")
                     //warehouse_merchant
                     //warehouse_store
-                    .antMatchers(HttpMethod.GET, "/warehouse_serial").permitAll()
+                    .antMatchers(HttpMethod.GET, "/warehouse_serial/api/all").hasRole("USER")
                     .antMatchers(HttpMethod.POST,"/warehouse_serial/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/warehouse_serial/api/delete").hasRole("ADMIN")
                     //warehouse_store

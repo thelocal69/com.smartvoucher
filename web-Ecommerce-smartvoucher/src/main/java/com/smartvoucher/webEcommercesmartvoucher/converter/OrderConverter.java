@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.OrderEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class OrderConverter {
@@ -39,6 +41,26 @@ public class OrderConverter {
         return orderDTO;
     }
 
+    public OrderDetailDTO toOrderDetailDTO (OrderEntity orderEntity) {
+        OrderDetailDTO orderDetailDTO = new OrderDetailDTO();
+        orderDetailDTO.setId(orderEntity.getId());
+        orderDetailDTO.setIdWarehouse(orderEntity.getIdWarehouse().getId());
+        orderDetailDTO.setOrderNo(orderEntity.getOrderNo());
+        orderDetailDTO.setStatus(orderEntity.getStatus());
+        orderDetailDTO.setQuantity(orderEntity.getQuantity());
+        orderDetailDTO.setEmail(orderEntity.getIdUser().getEmail());
+        orderDetailDTO.setPrice(orderEntity.getIdWarehouse().getPrice());
+        orderDetailDTO.setWarehouseName(orderEntity.getIdWarehouse().getName());
+        orderDetailDTO.setCreatedBy(orderEntity.getCreatedBy());
+        orderDetailDTO.setCreatedAt(orderEntity.getCreatedAt());
+        orderDetailDTO.setUpdatedBy(orderEntity.getUpdatedBy());
+        orderDetailDTO.setUpdatedAt(orderEntity.getUpdatedAt());
+        return orderDetailDTO;
+    }
+
+    public List<OrderDetailDTO> toOrderDetailDTOList(List<OrderEntity> orderEntityList){
+        return orderEntityList.stream().map(this::toOrderDetailDTO).collect(Collectors.toList());
+    }
 
     public OrderEntity insertOrder(OrderDTO orderDTO, UserEntity idUser, WareHouseEntity idWareHouse, String orderNoRandom) {
         OrderEntity order = new OrderEntity();

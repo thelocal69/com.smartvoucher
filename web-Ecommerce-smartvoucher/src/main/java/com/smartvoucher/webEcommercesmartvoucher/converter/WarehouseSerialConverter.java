@@ -30,6 +30,9 @@ public class WarehouseSerialConverter {
         warehouseSerialDTO.setKeys(warehouseSerialEntity.getKeys());
         warehouseSerialDTO.setSerialCode(warehouseSerialEntity.getIdSerial().getSerialCode());
         warehouseSerialDTO.setWarehouseCode(warehouseSerialEntity.getIdWarehouse().getWarehouseCode());
+        warehouseSerialDTO.setBannerUrl(warehouseSerialEntity.getIdWarehouse().getBannerUrl());
+        warehouseSerialDTO.setWarehouseName(warehouseSerialEntity.getIdWarehouse().getName());
+        warehouseSerialDTO.setCategoryName(warehouseSerialEntity.getIdWarehouse().getCategory().getName());
         warehouseSerialDTO.setCreatedAt(warehouseSerialEntity.getCreatedAt());
         warehouseSerialDTO.setUpdatedAt(warehouseSerialEntity.getUpdateAt());
         warehouseSerialDTO.setCreatedBy(warehouseSerialEntity.getCreatedBy());
@@ -38,6 +41,7 @@ public class WarehouseSerialConverter {
         warehouseSerialDTO.setIdWarehouse(warehouseSerialEntity.getIdWarehouse().getId());
         return warehouseSerialDTO;
     }
+
     public List<WarehouseSerialDTO> toWarehouseSerialDTOList(List<WarehouseSerialEntity> warehouseSerialEntityList){
         List<WarehouseSerialDTO> list = new ArrayList<>();
         for(WarehouseSerialEntity data : warehouseSerialEntityList){

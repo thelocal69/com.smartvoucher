@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.WarehouseSerialDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
+import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWarehouseSerialService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,21 @@ public class WarehouseSerialController {
                 )
         );
     }
+
+    @GetMapping("/api/all")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseOutput> getAllWarehouseSerial(
+            @RequestParam Long id,
+            @RequestParam int page,
+            @RequestParam int limit
+    ){
+        log.info("Get all WarehouseSerial");
+        return  new ResponseEntity<>(
+                this.warehouseSerialService.getAllWarehouseSerial(
+                        id, page, limit),HttpStatus.OK
+        );
+    }
+
     @PostMapping("/api/insert")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> insertWarehouseSerial(@Valid @RequestBody WarehouseSerialDTO warehouseSerialDTO){

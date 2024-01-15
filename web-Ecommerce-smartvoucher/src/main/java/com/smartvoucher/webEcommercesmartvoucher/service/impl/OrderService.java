@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 import com.smartvoucher.webEcommercesmartvoucher.converter.OrderConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.OrderDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.OrderEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
@@ -87,10 +88,10 @@ public class OrderService implements IOrderService {
         UserEntity user = userRepository.findByEmailAndProvider(
                 connectedUser.getName(), Provider.local.name()
         );
-        List<OrderDTO> orderDTOList = orderConverter.orderDTOList(
+        List<OrderDetailDTO> orderDetailDTOList = orderConverter.toOrderDetailDTOList(
                 orderRepository.findAllByIdUser(user, pageable)
         );
-        if(orderDTOList.isEmpty()){
+        if(orderDetailDTOList.isEmpty()){
             log.info("All orders of user is empty!");
             throw new ObjectNotFoundException(404, "All orders of user is empty!");
         }
@@ -101,21 +102,21 @@ public class OrderService implements IOrderService {
                 page,
                 totalItem,
                 totalPage,
-                orderDTOList
+                orderDetailDTOList
         );
     }
 
     @Override
-    public OrderDTO getOrderDetail(long id) {
-        OrderDTO orderDTO = orderConverter.toOrdersDTO(
+    public OrderDetailDTO getOrderDetail(long id) {
+        OrderDetailDTO orderDetailDTO = orderConverter.toOrderDetailDTO(
                 orderRepository.findOneById(id)
         );
-        if (orderDTO == null){
+        if (orderDetailDTO == null){
             log.info("Order detail not found or not exist !");
             throw new ObjectNotFoundException(404, "Order detail not found or not exist !");
         }
         log.info("Get Order detail is completed !");
-        return orderDTO;
+        return orderDetailDTO;
     }
 
 
