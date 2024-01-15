@@ -1,13 +1,27 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getWarehouseById } from "../../../services/WarehouseServices";
 import { toast } from "react-toastify";
 import { Badge } from "react-bootstrap";
 import "../Detail/ProductInfor.scss";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../../Redux/data/CartSlice";
 
 const ProductInfor = () => {
   const { id } = useParams();
   const [warehouse, setWareHouse] = React.useState({});
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  let thumbnailUrl = warehouse.thumbnailUrl;
+  let title = warehouse.name;
+  let status = warehouse.status;
+  let voucherChannel = warehouse.voucherChannel;
+  let categoryName = warehouse.categoryName;
+  let price = warehouse.price;
+  let maxDiscountAmount = warehouse.maxDiscountAmount;
+  let originalPrice = warehouse.originalPrice;
+  let warehouseCode = warehouse.warehouseCode;
 
   React.useEffect(() => {
     getWareHouse();
@@ -29,7 +43,7 @@ const ProductInfor = () => {
         <div>
           <img
             alt=""
-            src={warehouse.thumbnailUrl}
+            src={thumbnailUrl}
             style={{
               width: 30 + "rem",
               height: 20 + "rem",
@@ -38,40 +52,46 @@ const ProductInfor = () => {
           />
         </div>
         <div className="ms-3">
-          <h3 className="fW">{warehouse.name}</h3>
-            <h4 className="fW">Mã sản phẩm: {warehouse.warehouseCode}</h4>
-          <p className="fW">
-            Tình trạng:
-            <span
-              className={
-                warehouse.status ? "ps-3 ac active" : "ps-3 ac deactive"
-              }
-            >
-              {warehouse.status ? "Còn hàng" : "Hết hàng"}
-            </span>
-          </p>
+          <h3 className="fW">{title}</h3>
+          <h4 className="fW">Mã sản phẩm: {warehouseCode}</h4>
+          <div className="d-flex">
+            <p className="fW">
+              Tình trạng:
+              <span className={status ? "ps-3 ac active" : "ps-3 ac deactive"}>
+                {status ? "Còn hàng" : "Hết hàng"}
+              </span>
+            </p>
+            <p className="fW ps-3">
+              Hình thức:
+              <span
+                className={
+                  voucherChannel ? "ps-3 ac active" : "ps-3 ac deactive"
+                }
+              >
+                {voucherChannel ? "Online" : "Offline"}
+              </span>
+            </p>
+          </div>
           <p>
             Thể loại:
             <span
-              className={
-                warehouse.categoryName ? "ps-3 ac active" : "ps-3 ac deactive"
-              }
+              className={categoryName ? "ps-3 ac active" : "ps-3 ac deactive"}
             >
-              {warehouse.categoryName}
+              {categoryName}
             </span>
           </p>
           <div className="d-flex">
-            <h4 className="fW">{warehouse.price}đ</h4>
+            <h4 className="fW">{price}đ</h4>
             <span className="ps-3">
               <i class="fa-solid fa-heart"></i>
             </span>
           </div>
           <h6 className="dp fW">
-            {warehouse.maxDiscountAmount > 0 && (
+            {maxDiscountAmount > 0 && (
               <>
-                {warehouse.originalPrice}đ
+                {originalPrice}đ
                 <span className="ps-3">
-                  <Badge bg="danger">-{warehouse.maxDiscountAmount}%</Badge>
+                  <Badge bg="danger">-{maxDiscountAmount}%</Badge>
                 </span>
               </>
             )}
@@ -79,13 +99,28 @@ const ProductInfor = () => {
           <hr />
           <div className="">
             <span className="pe-3">
-              <button className="btn btn-primary">
+              <button 
+              className="btn btn-primary"
+              onClick={() => {
+                let element = null;
+                element = {...warehouse, quantity: 1}
+                dispatch(addToCart(element));
+                navigate("/Cart ")
+              }}
+              >
                 <i class="fa-solid fa-credit-card"></i>
                 Mua ngay
               </button>
             </span>
             <span>
-              <button className="btn btn-info">
+              <button
+                className="btn btn-info"
+                onClick={() => {
+                  let element = null;
+                  element = {...warehouse, quantity: 1}
+                  dispatch(addToCart(element)); 
+                }}
+              >
                 <i class="fa-solid fa-cart-shopping"></i>
                 Thêm vào giỏ hàng
               </button>

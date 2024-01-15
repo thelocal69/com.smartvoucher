@@ -2,10 +2,12 @@ import React from "react";
 import { Card, Badge, Image } from "react-bootstrap";
 import "./HomePage.scss";
 import "../Home/HomePage.scss";
-import { getAllWarehouseByLabel } from "../../services/WarehouseServices";
+import { getAllWarehouseByLabel, getAllWarehouse } from "../../services/WarehouseServices";
 import { getAllLabelName } from "../../services/LabelServices";
 import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { addToCart } from "../../Redux/data/CartSlice";
 
 const Product = () => {
   const [pageSpecial, setPageSpecial] = React.useState(1);
@@ -45,10 +47,21 @@ const Product = () => {
   // const [saleMonth, setSaleMonth] = React.useState("sale-month");
   // const [moment, setMoment] = React.useState("moment");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     getLable();
   }, []);
+
+  // const getWareHouse = async() => {
+  //   await getAllWarehouse()
+  //   .then((rs)=>{
+  //       if(rs){
+  //         dispatch(addToCart(rs.data));
+  //       }
+  //   })
+  //   .catch((err) => toast.error(err.message));
+  // }
 
   React.useEffect(() => {
     const getWarehouseBySpecial = async () => {

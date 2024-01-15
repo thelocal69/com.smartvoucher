@@ -2,47 +2,46 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../Redux/data/AuthSlice";
 import { Container } from "react-bootstrap";
-import { getAllTicket } from "../../services/TicketServices";
 import { toast } from "react-toastify";
 import Paginate from "../Util/Paginate";
+import { getAllWarehouseSerial } from '../../services/WarehouseSerialService';
 
-const Ticket = (props) => {
+const WarehouseSerial = (props) => {
   const { id } = props;
-  const textAreaRef = React.useRef(null);
   const accessToken = useSelector(selectAccessToken);
-  const [listTicket, setListTicket] = React.useState([]);
+  const [listWarehouseSerial, setListWarehouseSerial] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [limit, setLimit] = React.useState(3);
   const [totalItem, setTotalItem] = React.useState(0);
   const [totalPage, setTotalPage] = React.useState(0);
 
-  React.useEffect(() => {
-    getTicket(id, currentPage, limit);
-  }, []);
+//   React.useEffect(() => {
+//     getWarehouseSerial(id, currentPage, limit);
+//   }, []);
 
-  const getTicket = async (id, page, limit) => {
-    await getAllTicket(id, page, limit)
+  const getWarehouseSerial = async (id, page, limit) => {
+    await getAllWarehouseSerial(id, page, limit)
       .then((rs) => {
         if (rs) {
           setCurrentPage(rs.page);
           setTotalItem(rs.totalItem);
           setTotalPage(rs.totalPage);
-          setListTicket(rs.data);
+          setListWarehouseSerial(rs.data);
         }
       })
       .catch((err) => toast.error(err.message));
   };
 
   const handlePageClick = (event) => {
-    getTicket(id, +event.selected + 1, limit);
+    getWarehouseSerial(id, +event.selected + 1, limit);
   };
 
   return (
     <>
       {accessToken && (
         <Container>
-          {listTicket
-            ? listTicket.map((item, key) => {
+          {listWarehouseSerial
+            ? listWarehouseSerial.map((item, key) => {
                 return (
                   <div key={key} className="d-flex p-3">
                     <div className="pe-3">
@@ -52,7 +51,7 @@ const Ticket = (props) => {
                         style={{
                           width: 20 + "rem",
                           height: 10 + "rem",
-                          borderRadius: 10
+                          borderRadius: 10,
                         }}
                       />
                     </div>
@@ -79,4 +78,4 @@ const Ticket = (props) => {
   );
 };
 
-export default Ticket;
+export default WarehouseSerial;

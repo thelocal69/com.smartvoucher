@@ -78,11 +78,11 @@ const Order = () => {
                               </td>
                               <td>{item?.orderNo}</td>
                               <td className="d-flex justify-content-between">
-                                <span>{item?.idWarehouseDTO.name}</span>
-                                <span> x{item.quantity}</span>
+                                <span>{item?.warehouseName}</span>
+                                <span> x{item?.quantity}</span>
                               </td>
                               <td className="">
-                                {item.idWarehouseDTO.price * item.quantity}đ
+                                {item?.price * item?.quantity}đ
                               </td>
                               <td
                                 className={

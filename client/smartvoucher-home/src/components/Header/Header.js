@@ -1,13 +1,7 @@
 import React from "react";
-import {
-  Container,
-  Navbar,
-  Nav,
-  Badge,
-  NavDropdown,
-} from "react-bootstrap";
+import { Container, Navbar, Nav, Badge, NavDropdown } from "react-bootstrap";
 import "../Header/Header.scss";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo/logo.png";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -19,6 +13,7 @@ import { selectAvatar, selectUsername } from "../../Redux/data/UserSlice";
 import { logoutUser } from "../../services/AccountServices";
 import { toast } from "react-toastify";
 import Account from "../Security/Account";
+import { selectIdCarts } from "../../Redux/data/CartSlice";
 
 const Header = () => {
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
@@ -26,8 +21,10 @@ const Header = () => {
   const refreshToken = useSelector(selectRefreshToken);
   const avatar = useSelector(selectAvatar);
   const username = useSelector(selectUsername);
+  const cart = useSelector(selectIdCarts);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleClickLogin = () => {
     setIsShowModalLogin(true);
@@ -44,6 +41,14 @@ const Header = () => {
         toast.success(rs.message);
       }
     });
+  };
+
+  const getTotalQuantity = () => {
+    let total = 0;
+    cart.forEach((item) => {
+      total += item.quantity;
+    });
+    return total;
   };
 
   return (
@@ -165,7 +170,7 @@ const Header = () => {
                     onClick={() => handleClickLogin()}
                   >
                     Đăng nhập
-                  </NavLink >
+                  </NavLink>
                   <span className="form-auth mx-2">/</span>
                   <NavLink
                     className="form-auth"
@@ -178,9 +183,14 @@ const Header = () => {
             </Navbar>
           </Nav>
           <Nav>
-            <button className="btn btn-light custom-cart">
+            <button
+             className="btn btn-light custom-cart"
+             onClick={() => {
+              navigate("/Cart")
+             }}
+             >
               <i class="fa-solid fa-cart-shopping"></i>
-              Cart <Badge bg="secondary">9</Badge>
+              Cart <Badge bg="danger">{cart.length}</Badge>
               <span className="visually-hidden">unread messages</span>
             </button>
           </Nav>
@@ -248,7 +258,7 @@ const Header = () => {
           </Nav>
         </div>
 
-        <Account show={isShowModalLogin}  handleClose={handleClose}/>
+        <Account show={isShowModalLogin} handleClose={handleClose} />
       </Container>
       <div>
         <hr />

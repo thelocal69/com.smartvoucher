@@ -23,7 +23,7 @@ const User = () => {
           <Routes>
             <Route path="Profile" element={<Profile />} />
             <Route path="Order" element={<Order />} />
-            <Route path="Infor/:id" element={<OrderInfor />}/>
+            <Route path="Infor/:id/*" element={<OrderInfor />}/>
           </Routes>
         </div>
       </div>

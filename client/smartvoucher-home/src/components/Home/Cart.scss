@@ -1,0 +1,22 @@
+.Ct {
+    &.active {
+      color: rgb(43, 191, 43);
+      font-weight: 600;
+    }
+    &.deactive {
+      color: rgb(174, 20, 20);
+      font-weight: 600;
+    }
+  }
+
+.s{
+    &:hover{
+        background: none;
+    }
+}
+.xk{
+    margin: 0 auto;
+}
+.mg{
+    flex-basis: 45.83333333%;
+  }
