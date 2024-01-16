@@ -32,6 +32,7 @@ public class SignUpDTO {
     @Pattern(regexp = "0+(\\d*)", message = "Please enter the correct phone number format!")
     private String phone;
     private String roleName;
+    private String token;
     private boolean isEnable;
     private Timestamp createdAt;
 }

@@ -41,6 +41,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
+
 @Slf4j
 @Service
 public class AccountService implements IAccountService {
@@ -182,7 +184,7 @@ public class AccountService implements IAccountService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public SignUpDTO SignUp(SignUpDTO signUpDTO) {
+    public String SignUp(SignUpDTO signUpDTO) throws MessagingException, UnsupportedEncodingException {
         if (userRepository.findByEmailAndProviderOrPhone(
                 signUpDTO.getEmail(),
                 Provider.local.name(),
@@ -201,8 +203,12 @@ public class AccountService implements IAccountService {
             this.roleUserRepository.save(
                     roleUsersConverter.toRoleUserEntity(rolesUsersDTO)
             );
+            String verifyCode = UUID.randomUUID().toString().replace("-", "").substring(0, 6);
+            VerificationToken verificationToken = new VerificationToken(verifyCode, user);
+            this.verificationTokenRepository.save(verificationToken);
+            this.emailUtil.sendVerificationEmail(user.getEmail(), verifyCode);
             log.info("Success!  Please, check your email for to complete your registration");
-            return userConverter.signUp(userDTO);
+            return "Success!  Please, check your email for to complete your registration";
         } else {
             log.info("Email or Phone is available! Please try again !");
             throw new UserAlreadyExistException(406, "Email or Phone is available! Please try again !");
@@ -210,20 +216,13 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void saveUserVerificationToken(UserEntity user, String token) {
-        VerificationToken verificationToken = new VerificationToken(token, user);
-        this.verificationTokenRepository.save(verificationToken);
-    }
-
-    @Override
-    public String verifyEmail(String token) {
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+    public String verifyEmail(SignUpDTO signUpDTO) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(signUpDTO.getToken());
         if (verificationToken.getUser().isEnable()){
             log.info("This account has already been verified, please login!");
             return "This account has already been verified, please, login.";
         }
-        String verificationResult = validateToken(token);
+        String verificationResult = validateToken(signUpDTO.getToken());
         if (verificationResult.equalsIgnoreCase("Valid")){
             log.info("Email verified successfully. Now you can login to your account");
             return "Email verified successfully. Now you can login to your account";
@@ -232,22 +231,41 @@ public class AccountService implements IAccountService {
         return "Invalid verification token !";
     }
 
-    @Override
     public String validateToken(String verifyToken) {
-        VerificationToken token = verificationTokenRepository.findByToken(verifyToken);
-        if(token == null){
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(verifyToken);
+        if(verificationToken == null){
             log.info("Invalid verification token !");
             throw new VerificationTokenException(500, "Invalid verification token !");
         }
-        UserEntity userEntity = token.getUser();
+        if (verificationToken.getUser().isEnable()){
+            log.info("This account has already been verified, please login!");
+            return "This account has already been verified, please, login.";
+        }
+        UserEntity userEntity = verificationToken.getUser();
         Calendar calendar = Calendar.getInstance();
-        if ((token.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
-            verificationTokenRepository.delete(token);
+        if ((verificationToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
+            verificationTokenRepository.delete(verificationToken);
             log.info("Token already expired !");
             throw new VerificationTokenException(500, "Token already expired !");
         }
         userEntity.setEnable(true);
         userRepository.save(userEntity);
+        log.info("Token valid");
+        return "Valid";
+    }
+
+    public String validateTokenReset(String verifyToken) {
+        VerificationToken tokenReset = verificationTokenRepository.findByToken(verifyToken);
+        if(tokenReset == null){
+            log.info("Invalid verification token !");
+            throw new VerificationTokenException(500, "Invalid verification token !");
+        }
+        Calendar calendar = Calendar.getInstance();
+        if ((tokenReset.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
+            verificationTokenRepository.delete(tokenReset);
+            log.info("Token already expired !");
+            throw new VerificationTokenException(500, "Token already expired !");
+        }
         log.info("Token valid");
         return "Valid";
     }
@@ -259,7 +277,10 @@ public class AccountService implements IAccountService {
             log.info("User not exist !");
             throw new UserNotFoundException(404, "User not exist !");
         }
-        this.emailUtil.sendResetPassword(email);
+        String verifyCode = UUID.randomUUID().toString().replace("-", "").substring(0, 6);
+        VerificationToken verificationToken = new VerificationToken(verifyCode, user);
+        this.verificationTokenRepository.save(verificationToken);
+        this.emailUtil.sendResetPassword(email, verifyCode);
         log.info("Check your email to reset password if account was registered !");
         return "Check your email to reset password if account was register !";
     }
@@ -271,8 +292,13 @@ public class AccountService implements IAccountService {
             log.info("User not exist !");
             throw new UserNotFoundException(404, "User not exist !");
         }
-        user.setPwd(this.passwordEncoder.encode(resetPasswordDTO.getNewPassword()));
-        this.userRepository.save(user);
+        String verificationResult = validateTokenReset(resetPasswordDTO.getToken());
+        if (verificationResult.equalsIgnoreCase("valid")) {
+            user.setPwd(this.passwordEncoder.encode(resetPasswordDTO.getNewPassword()));
+            this.userRepository.save(user);
+        }else {
+            return "Verify code is not correct !";
+        }
         log.info("Set new password successfully !");
         return "Set new password successfully !";
     }

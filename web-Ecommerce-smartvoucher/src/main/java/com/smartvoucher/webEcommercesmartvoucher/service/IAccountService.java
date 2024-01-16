@@ -18,10 +18,8 @@ public interface IAccountService {
     RefreshTokenDTO refreshToken(HttpServletRequest request, HttpServletResponse response);
     ResponseObject signInAdmin(SignInDTO signInDTO);
     ResponseObject signInUser(SignInDTO signInDTO);
-    SignUpDTO SignUp(SignUpDTO signUpDTO);
-    void saveUserVerificationToken(UserEntity user, String token);
-    String verifyEmail(String token);
-    String validateToken(String verifyToken);
+    String SignUp(SignUpDTO signUpDTO) throws MessagingException, UnsupportedEncodingException;
+    String verifyEmail(SignUpDTO signUpDTO);
     String forgotPassword(String email) throws MessagingException, UnsupportedEncodingException;
     String setPassword(ResetPasswordDTO resetPasswordDTO);
 }
