@@ -15,3 +15,15 @@ export const logoutUser = (refreshToken) =>{
 export const registerUser = (obj) =>{
     return Http.post(`/account/api/signup`, obj);
 }
+
+export const registerVerify = (obj) =>{
+    return Http.put(`/account/api/verify_email`, obj);
+}
+
+export const forgotPassword = (email) => {
+  return Http.post(`/account/api/forgot_password?email=${email}`);
+}
+
+export const resetPassword = (obj) => {
+  return Http.put(`/account/api/set_password`, obj);
+}

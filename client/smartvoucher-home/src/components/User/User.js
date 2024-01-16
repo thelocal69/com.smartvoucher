@@ -4,6 +4,7 @@ import "../User/User.scss";
 import Profile from "./Profile";
 import Order from "./Order";
 import OrderInfor from "../Home/Detail/OrderInfor";
+import ChangePassword from "./ChangePassword";
 
 const User = () => {
   return (
@@ -17,12 +18,16 @@ const User = () => {
             <Link to="/User/Order" className="sideBar oL">
               Order
             </Link>
+            <Link to="/User/Security" className="sideBar oL">
+              Change password
+            </Link>
           </div>
         </div>
-        <div>
+        <div className="ps-2">
           <Routes>
             <Route path="Profile" element={<Profile />} />
             <Route path="Order" element={<Order />} />
+            <Route path="Security" element={<ChangePassword />}/>
             <Route path="Infor/:id/*" element={<OrderInfor />}/>
           </Routes>
         </div>
