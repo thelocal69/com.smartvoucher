@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -36,10 +37,18 @@ public class OrderController {
 
     @PostMapping("/api/add-order")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<?> insertOrder(@RequestBody @Valid OrderDTO orderDTO){
+    public ResponseEntity<ResponseObject> insertOrder(@RequestBody @Valid OrderDTO orderDTO){
+        orderDTO.setOrderNo(
+                UUID.randomUUID().toString().replace("-", "").substring(0,10)
+        );
         log.info("Add is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.ordersService.insertOrder(orderDTO));
+                new ResponseObject(
+                        200,
+                        "Insert order is complete !",
+                        this.ordersService.insertOrder(orderDTO)
+                )
+        );
     }
 
 
@@ -51,18 +60,6 @@ public class OrderController {
                 this.ordersService.deleteOrder(id));
     }
 
-    @GetMapping("/api/get_all_oder_user/{id}")
-    @Transactional(readOnly = true)
-    public ResponseEntity<ResponseObject> getAllOrderByUser(@PathVariable long id){
-        log.info("All order of user  is below: ");
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(
-                        200,
-                        "All order of user  is below: ",
-                        this.ordersService.getAllOrderByIdUser(id)
-                )
-        );
-    }
 
     @GetMapping("/api/get/{id}")
     @Transactional(readOnly = true)

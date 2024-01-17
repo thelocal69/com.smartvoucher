@@ -14,7 +14,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TicketDTO {
-
     private long id;
     private SerialDTO idSerialDTO;
     @NotNull(message = "Please fill all information!")
@@ -63,4 +62,5 @@ public class TicketDTO {
     private Timestamp createdAt;
 
     private Timestamp updatedAt;
+    private int numberOfSerial;
 }

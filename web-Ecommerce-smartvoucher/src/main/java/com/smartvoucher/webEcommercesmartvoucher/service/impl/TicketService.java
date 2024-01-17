@@ -5,6 +5,7 @@ import com.smartvoucher.webEcommercesmartvoucher.converter.SerialConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketHistoryConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.WareHouseConverter;
+import com.smartvoucher.webEcommercesmartvoucher.dto.BuyTicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
@@ -131,27 +132,28 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public ResponseObject insertTicket(@NotNull TicketDTO ticketDTO
-            ,@NotNull String userEmail
-            ,@NotNull int numberOfSerial) throws MessagingException, UnsupportedEncodingException {
+    public ResponseObject insertTicket(@NotNull BuyTicketDTO buyTicketDTO) throws MessagingException, UnsupportedEncodingException {
         List<TicketDTO> listVoucher = new ArrayList<>();
         List<SerialEntity> listSerial =
-                generateSerial(ticketDTO.getIdWarehouseDTO().getId()
-                            ,numberOfSerial);
-        if (checkExistsObject(ticketDTO)) {
+                generateSerial(buyTicketDTO.getIdWarehouse()
+                            , buyTicketDTO.getNumberOfSerial());
+        if (checkExistsObject(buyTicketDTO)) {
             for (SerialEntity serialEntity : listSerial) {
                     // kiểm tra ticket có duplicate ở database
                     if (checkDuplicateTicket(serialEntity)) {
-                        TicketEntity ticket =
-                                ticketRepository.save(
-                                        ticketConverter.insertTicket(
-                                                ticketDTO
-                                                ,serialEntity
-                                                ,createWarehouse(ticketDTO)
-                                                ,createCategory(ticketDTO)
-                                                ,createOrder(ticketDTO)
-                                                ,createUser(ticketDTO)
-                                                ,createStore(ticketDTO)));
+                        WareHouseEntity wareHouseEntity = wareHouseRepository.findOneById(buyTicketDTO.getIdWarehouse());
+                        CategoryEntity categoryEntity = iCategoryRepository.findOneById(buyTicketDTO.getIdCategory());
+                        OrderEntity orderEntity = orderRepository.findOneById(buyTicketDTO.getIdOrder());
+                        UserEntity user = userRepository.findOneById(buyTicketDTO.getIdUser());
+                        StoreEntity store = storeRepository.findOneById(buyTicketDTO.getIdStore());
+                        TicketEntity ticket = ticketConverter.toBuyTicketEntity(buyTicketDTO, wareHouseEntity);
+                        ticket.setIdSerial(serialEntity);
+                        ticket.setIdWarehouse(wareHouseEntity);
+                        ticket.setIdCategory(categoryEntity);
+                        ticket.setIdOrder(orderEntity);
+                        ticket.setIdUser(user);
+                        ticket.setIdStore(store);
+                        this.ticketRepository.save(ticket);
                         ticketHistoryRepository.save(
                                 new TicketHistoryEntity(
                                         ticket,
@@ -172,7 +174,6 @@ public class TicketService implements ITicketService {
             throw new ObjectEmptyException(406,
                     "Serial, Warehouse, Category, Order, User, Store is empty, please check and fill all data");
         }
-        this.emailUtil.sendTicketCode(userEmail,listVoucher);
         log.info("Buy Ticket success");
         return new ResponseObject(200,
                 "Buy Ticket success",
@@ -311,14 +312,14 @@ public class TicketService implements ITicketService {
         }
     }
 
-    public boolean checkExistsObject(TicketDTO ticketDTO) {
+    public boolean checkExistsObject(BuyTicketDTO buyTicketDTO) {
         List<String> listName = Arrays.asList("Warehouse", "Category" , "Order", "User", "Store");
         List<Optional<?>> listObject = Arrays.asList(
-                            iWareHouseRepository.findById(ticketDTO.getIdWarehouseDTO().getId()),
-                                iCategoryRepository.findById(ticketDTO.getIdCategoryDTO().getId()),
-                                orderRepository.findById(ticketDTO.getIdOrderDTO().getId()),
-                                userRepository.findById(ticketDTO.getIdUserDTO().getId()),
-                                storeRepository.findById(ticketDTO.getIdStoreDTO().getId()));
+                            iWareHouseRepository.findById(buyTicketDTO.getIdWarehouse()),
+                                iCategoryRepository.findById(buyTicketDTO.getIdCategory()),
+                                orderRepository.findById(buyTicketDTO.getIdOrder()),
+                                userRepository.findById(buyTicketDTO.getIdUser()),
+                                storeRepository.findById(buyTicketDTO.getIdStore()));
         for(int i = 0; i < listObject.size(); i++ ) {
             if(listObject.get(i).isEmpty()) {
                 throw new ObjectEmptyException(406, listName.get(i) + " is empty, pls check and try again !");

@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
+import com.smartvoucher.webEcommercesmartvoucher.dto.BuyTicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
@@ -51,11 +52,9 @@ public class TicketController {
 
     @PostMapping("/api/buy-ticket")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<?> insertTicket(@RequestBody @Valid TicketDTO ticketDTO,
-                                          @RequestParam String userEmail,
-                                          @RequestParam int numberOfSerial) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<?> insertTicket(@RequestBody @Valid BuyTicketDTO buyTicketDTO) throws MessagingException, UnsupportedEncodingException {
         return ResponseEntity.status(HttpStatus.OK).body(
-                this.ticketService.insertTicket(ticketDTO, userEmail, numberOfSerial));
+                this.ticketService.insertTicket(buyTicketDTO));
     }
 
     @PutMapping("/api/update-ticket")
