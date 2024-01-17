@@ -10,12 +10,79 @@ import {
 import "./Cart.scss";
 import Account from "../Security/Account";
 import { selectAccessToken } from "../../Redux/data/AuthSlice";
+import { addOrder } from "../../services/OrderServices";
+import { buyTicket } from "../../services/TicketServices";
+import Loading from "../Util/Loading";
+import { selectUserId } from "../../Redux/data/UserSlice";
+import { toast } from "react-toastify";
+import { getIdStore } from "../../services/WarehouseStoreSrvices";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector(selectIdCarts);
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const accessToken = useSelector(selectAccessToken);
+  const idUser = useSelector(selectUserId);
+  const [status, setStatus] = React.useState(1);
+
+  const handleBuyTicket = async () => {
+    if (cart) {
+      for (let index = 0; index < cart.length; index++) {
+        const element = cart[index];
+        const objOrder = {
+          idUser: idUser.id,
+          idWarehouse: element.id,
+          status: status,
+          quantity: element.quantity,
+        };
+        setLoading(true);
+        await addOrder(objOrder)
+          .then((rs) => {
+            if (rs) {
+              let objStore = {
+                idOrder: rs.data.id,
+                idWarehouse: rs.data.idWarehouse,
+                idUser: rs.data.idUser,
+                numberOfSerial: element.quantity,
+                idCategory: element.idCategory,
+                idStore: 0,
+                status: status,
+                discountType: element.discountTypeName,
+                discountAmount: element.discountAmount,
+              };
+              getIdStore(objStore.idWarehouse)
+                .then((rs) => {
+                  if (rs) {
+                    let objTicket = { ...objStore };
+                    objTicket.idStore = rs.data.keys.idStore;
+                    buyTicket(objTicket)
+                      .then((rs) => {
+                        if (rs) {
+                          setLoading(false);
+                          toast.success("Kiểm tra đơn hàng hàng ở trang tài khoản !");
+                          dispatch(removeItem(element));
+                        }
+                      })
+                      .catch((err) => {
+                        toast.error(err.message);
+                        setLoading(false);
+                      });
+                  }
+                })
+                .catch((err) => {
+                  toast.error(err.message);
+                  setLoading(false);
+                });
+            }
+          })
+          .catch((err) => {
+            toast.error(err.message);
+            setLoading(false);
+          });
+      }
+    }
+  };
 
   const handleClose = () => {
     setIsShowModalLogin(false);
@@ -146,7 +213,9 @@ const Cart = () => {
                         );
                       })}
                     </div>
-                    {cart.length < 1 ? (<></>) : (
+                    {cart.length < 1 ? (
+                      <></>
+                    ) : (
                       <>
                         <div>
                           <h5>Thanh toán</h5>
@@ -171,8 +240,18 @@ const Cart = () => {
                           <div>
                             {accessToken ? (
                               <>
-                                <button className="btn btn-primary">
-                                  Thanh toán
+                                <button
+                                  className="btn btn-primary"
+                                  onClick={() => handleBuyTicket()}
+                                >
+                                  {loading && (
+                                    <>
+                                      <Loading fileName={"Waiting"} />
+                                    </>
+                                  )}
+                                  <span hidden={loading ? true : false}>
+                                    Thanh toán
+                                  </span>
                                 </button>
                               </>
                             ) : (
@@ -181,7 +260,14 @@ const Cart = () => {
                                   className="btn btn-primary"
                                   onClick={() => setIsShowModalLogin(true)}
                                 >
-                                  Đăng nhập để thanh toán
+                                  {loading && (
+                                    <>
+                                      <Loading fileName={"Waiting"} />
+                                    </>
+                                  )}
+                                  <span hidden={loading ? true : false}>
+                                    Đăng nhập để thanh toán
+                                  </span>
                                 </button>
                               </>
                             )}

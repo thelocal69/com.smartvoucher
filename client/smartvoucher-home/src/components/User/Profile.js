@@ -5,7 +5,7 @@ import Loading from "../Util/Loading";
 import { toast } from "react-toastify";
 import "../User/Profile.scss";
 import { selectAccessToken } from "../../Redux/data/AuthSlice";
-import { avatar, username } from "../../Redux/data/UserSlice";
+import { avatar, username, userId } from "../../Redux/data/UserSlice";
 import {
   getUserInfor,
   updateImage,
@@ -42,6 +42,11 @@ const Profile = () => {
           dispatch(
             username({
               username: rs.data.userName,
+            })
+          );
+          dispatch(
+            userId({
+              id: rs.data.id,
             })
           );
         }
