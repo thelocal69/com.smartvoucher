@@ -27,3 +27,7 @@ export const forgotPassword = (email) => {
 export const resetPassword = (obj) => {
   return Http.put(`/account/api/set_password`, obj);
 }
+
+export const resendActiveAccount = (email) => {
+  return Http.post(`/account/api/resend_token?email=${email}`);
+}

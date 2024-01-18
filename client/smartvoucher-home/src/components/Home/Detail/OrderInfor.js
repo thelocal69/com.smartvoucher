@@ -46,7 +46,7 @@ const OrderInfor = () => {
                 </h6>
                 <p>Mã đơn hàng: #{listOrderInfor.orderNo}</p>
                 <p>
-                  Ngày tạo:
+                  Ngày tạo:{" "}
                   <span>
                     {Moment(listOrderInfor.createdAt).format(
                       "YYYY/DD/MM hh:mm:ss"
@@ -54,7 +54,7 @@ const OrderInfor = () => {
                   </span>
                 </p>
                 <p>
-                  Trạng thái đơn hàng:
+                  Trạng thái đơn hàng:{" "}
                   <span
                     className={
                       listOrderInfor.status ? "ac active" : "ac deactive"

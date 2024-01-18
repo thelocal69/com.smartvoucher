@@ -7,6 +7,7 @@ import {
   forgotPassword,
   resetPassword,
   registerVerify,
+  resendActiveAccount,
 } from "../../services/AccountServices";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
@@ -18,12 +19,16 @@ const Account = (props) => {
   const { show, handleClose } = props;
 
   const [isShowPassword, setIsShowPassword] = React.useState(false);
-  const [isShowPasswordConfirm, setIsShowPasswordConfirm] = React.useState(false);
+  const [isShowPasswordConfirm, setIsShowPasswordConfirm] =
+    React.useState(false);
+  const [showActiveInput, setShowActiveInput] = React.useState(false);
+  const [showInputRegister, setShowInputRegister] = React.useState(true);
   const [authMode, setAuthMode] = React.useState("signin");
 
   const [loading, setLoading] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [emailRegister, setEmailRegister] = React.useState("");
+  const [activeEmail, setActiveEmail] = React.useState("");
   const [forgotEmail, setForgotEmail] = React.useState("");
   const [newPassword, setNewPassword] = React.useState("");
   const [confirmNewPassword, setConfirmNewPassword] = React.useState("");
@@ -52,7 +57,7 @@ const Account = (props) => {
 
   const objVerifyAccount = {
     token: token,
-  }
+  };
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -123,6 +128,22 @@ const Account = (props) => {
       });
   };
 
+  const handleResendActive = async () => {
+    setLoading(true);
+    await resendActiveAccount(activeEmail)
+      .then((rs) => {
+        if (rs) {
+          toast.success(rs.data);
+          setLoading(false);
+          setAuthMode("verifyEmail");
+        }
+      })
+      .catch((err) => {
+        toast.error(err.message);
+        setLoading(false);
+      });
+  };
+
   const handleForgotPassword = async () => {
     if (!forgotEmail || !newPassword || !confirmNewPassword) {
       toast.error("Please fill all !");
@@ -175,12 +196,19 @@ const Account = (props) => {
     }
   };
 
+  const handleShowActive = () => {
+    setShowActiveInput(true);
+    setShowInputRegister(false);
+  };
+
   const changeAuthMode = () => {
     setAuthMode("signin");
   };
 
   const changeAuthModeV2 = () => {
     setAuthMode("signup");
+    setShowActiveInput(false);
+    setShowInputRegister(true);
   };
 
   const handleCloseReset = () => {
@@ -197,6 +225,9 @@ const Account = (props) => {
     setConfirmNewPassword("");
     setToken("");
     setIsShowPassword(false);
+    setActiveEmail("");
+    setShowActiveInput(false);
+    setShowInputRegister(true);
   };
 
   return (
@@ -339,7 +370,9 @@ const Account = (props) => {
                               : "fa-solid fa-eye-slash"
                           }
                           hidden={confirmNewPassword ? false : true}
-                          onClick={() => setIsShowPasswordConfirm(!isShowPasswordConfirm)}
+                          onClick={() =>
+                            setIsShowPasswordConfirm(!isShowPasswordConfirm)
+                          }
                         ></i>
                       </div>
                       <div className="form-group btn-primary p-2 w-100 mt-3">
@@ -365,80 +398,152 @@ const Account = (props) => {
                 <div className="tabs-content">
                   <div className="login_socnet"></div>
                   <div className="f">
-                    <div class="form-group p-2">
-                      <input
-                        type="email"
-                        class="form-control form-control-user p-2"
-                        placeholder="Enter Email Address..."
-                        value={emailRegister}
-                        onChange={(event) =>
-                          setEmailRegister(event.target.value)
-                        }
-                      />
+                    {showInputRegister && (
+                      <>
+                        <div class="form-group p-2">
+                          <input
+                            type="email"
+                            class="form-control form-control-user p-2"
+                            placeholder="Enter Email Address..."
+                            value={emailRegister}
+                            onChange={(event) =>
+                              setEmailRegister(event.target.value)
+                            }
+                          />
+                        </div>
+                        <div class="form-group p-2 input-pass">
+                          <input
+                            type={isShowPassword ? "text" : "password"}
+                            class="form-control form-control-user p-2"
+                            placeholder="Password"
+                            required
+                            value={passwordRegister}
+                            onChange={(event) =>
+                              setPasswordRegister(event.target.value)
+                            }
+                          />
+                          <i
+                            className={
+                              isShowPassword
+                                ? "fa-solid fa-eye"
+                                : "fa-solid fa-eye-slash"
+                            }
+                            hidden={passwordRegister ? false : true}
+                            onClick={() => setIsShowPassword(!isShowPassword)}
+                          ></i>
+                        </div>
+                        <div class="form-group p-2 input-pass">
+                          <input
+                            type={isShowPasswordConfirm ? "text" : "password"}
+                            class="form-control form-control-user p-2"
+                            placeholder="Confirm password"
+                            required
+                            value={confirmPassword}
+                            onChange={(event) =>
+                              setConfirmPassword(event.target.value)
+                            }
+                          />
+                          <i
+                            className={
+                              isShowPasswordConfirm
+                                ? "fa-solid fa-eye"
+                                : "fa-solid fa-eye-slash"
+                            }
+                            hidden={confirmPassword ? false : true}
+                            onClick={() =>
+                              setIsShowPasswordConfirm(!isShowPasswordConfirm)
+                            }
+                          ></i>
+                        </div>
+                        <div class="form-group p-2">
+                          <input
+                            type="text"
+                            class="form-control form-control-user p-2"
+                            placeholder="Enter phone number..."
+                            required
+                            value={phone}
+                            onChange={(event) => setPhone(event.target.value)}
+                            onKeyDown={(event) => handleKeyPress(event)}
+                          />
+                        </div>
+                        <div className="form-group btn-login p-2 w-100 mt-3">
+                          <button
+                            className={
+                              emailRegister &&
+                              passwordRegister &&
+                              confirmPassword &&
+                              phone &&
+                              loading === false
+                                ? "active"
+                                : ""
+                            }
+                            disabled={
+                              emailRegister &&
+                              passwordRegister &&
+                              confirmPassword &&
+                              phone
+                                ? false
+                                : true
+                            }
+                            hidden={
+                              emailRegister &&
+                              passwordRegister &&
+                              confirmPassword &&
+                              phone
+                                ? false
+                                : true
+                            }
+                            onClick={() => handleRegister()}
+                          >
+                            {loading && (
+                              <>
+                                <Loading fileName={"Sign up"} />
+                              </>
+                            )}
+                            <span hidden={loading ? true : false}>Sign Up</span>
+                          </button>
+                        </div>
+                      </>
+                    )}
+
+                    <div className="text-center pL">
+                      <span onClick={() => handleShowActive()}>
+                        Active account!
+                      </span>
                     </div>
-                    <div class="form-group p-2 input-pass">
-                      <input
-                        type={isShowPassword ? "text" : "password"}
-                        class="form-control form-control-user p-2"
-                        placeholder="Password"
-                        required
-                        value={passwordRegister}
-                        onChange={(event) =>
-                          setPasswordRegister(event.target.value)
-                        }
-                      />
-                      <i
-                        className={
-                          isShowPassword
-                            ? "fa-solid fa-eye"
-                            : "fa-solid fa-eye-slash"
-                        }
-                        hidden={passwordRegister ? false : true}
-                        onClick={() => setIsShowPassword(!isShowPassword)}
-                      ></i>
-                    </div>
-                    <div class="form-group p-2 input-pass">
-                      <input
-                        type={isShowPasswordConfirm ? "text" : "password"}
-                        class="form-control form-control-user p-2"
-                        placeholder="Confirm password"
-                        required
-                        value={confirmPassword}
-                        onChange={(event) =>
-                          setConfirmPassword(event.target.value)
-                        }
-                      />
-                      <i
-                        className={
-                          isShowPasswordConfirm
-                            ? "fa-solid fa-eye"
-                            : "fa-solid fa-eye-slash"
-                        }
-                        hidden={confirmPassword ? false : true}
-                        onClick={() => setIsShowPasswordConfirm(!isShowPasswordConfirm)}
-                      ></i>
-                    </div>
-                    <div class="form-group p-2">
-                      <input
-                        type="text"
-                        class="form-control form-control-user p-2"
-                        placeholder="Enter phone number..."
-                        required
-                        value={phone}
-                        onChange={(event) => setPhone(event.target.value)}
-                        onKeyDown={(event) => handleKeyPress(event)}
-                      />
-                    </div>
-                    <div className="form-group btn-login p-2 w-100 mt-3">
-                      <button onClick={() => handleRegister()}>
-                        {loading && (
-                          <>
-                            <Loading fileName={"Sign up"} />
-                          </>
-                        )}
-                        <span hidden={loading ? true : false}>Sign Up</span>
-                      </button>
-                    </div>
+                    {showActiveInput && (
+                      <>
+                        <div className="form-group p-2">
+                          <input
+                            type="email"
+                            class="form-control form-control-user p-2"
+                            placeholder="Enter email..."
+                            required
+                            value={activeEmail}
+                            onChange={(event) =>
+                              setActiveEmail(event.target.value)
+                            }
+                          />
+                        </div>
+                        <div className="form-group btn-login p-2 w-100 mt-3">
+                          <button
+                            className={
+                              activeEmail && loading === false ? "active" : ""
+                            }
+                            disabled={activeEmail ? false : true}
+                            hidden={activeEmail ? false : true}
+                            onClick={() => handleResendActive()}
+                          >
+                            {loading && (
+                              <>
+                                <Loading fileName={"Please Wait !"} />
+                              </>
+                            )}
+                            <span hidden={loading ? true : false}>Verify</span>
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </>

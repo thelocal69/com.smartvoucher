@@ -69,6 +69,15 @@ input {
   }
 }
 
+.pL{
+  span{
+    &:hover{
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+}
+
   .tabs {
     display: -webkit-flex;
     display: -moz-flex;
