@@ -303,6 +303,20 @@ public class AccountService implements IAccountService {
         return "Set new password successfully !";
     }
 
+    @Override
+    public String resendActiveAccount(String email) throws MessagingException, UnsupportedEncodingException {
+        UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
+        if (user == null){
+            log.info("User not found or exist !");
+            throw new ObjectNotFoundException(404, "User not found or exist !");
+        }
+        String verificationCode = UUID.randomUUID().toString().replace("-", "").substring(0, 6);
+        VerificationToken verificationToken = new VerificationToken(verificationCode, user);
+        this.verificationTokenRepository.save(verificationToken);
+        this.emailUtil.sendVerificationEmail(email, verificationCode);
+        return "Verification code is resend to your email ! please check email to activation account again !";
+    }
+
     private void saveUserToken(UserEntity user, String jwtToken){
         Tokens tokens = Tokens.builder()
                 .user(user)

@@ -9,6 +9,7 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
 import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import com.smartvoucher.webEcommercesmartvoucher.util.StringsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,8 @@ public class  UserConverter {
     private final RandomCodeHandler randomCodeHandler;
     private final PasswordEncoder passwordEncoder;
     private final StringsUtil stringsUtil;
+    @Value("${drive_view}")
+    private String googleDrive;
     @Autowired
     public UserConverter( RandomCodeHandler randomCodeHandler,
                           PasswordEncoder passwordEncoder,
@@ -86,7 +89,7 @@ public class  UserConverter {
         UserEntity userEntity = new UserEntity();
         userEntity.setMemberCode(randomCodeHandler.generateRandomChars(10));
         userEntity.setPwd(passwordEncoder.encode(signUpDTO.getPassword()));
-        userEntity.setAvatarUrl("https://drive.google.com/uc?export=view&id=1rdcr4ukMLFU2CNmLyrCIixanHu4y31JY");
+        userEntity.setAvatarUrl(googleDrive+"1rdcr4ukMLFU2CNmLyrCIixanHu4y31JY");
         userEntity.setPhone(signUpDTO.getPhone());
         userEntity.setEmail(signUpDTO.getEmail());
         userEntity.setUsername(stringsUtil.getUserNameFormDomain(signUpDTO.getEmail()));

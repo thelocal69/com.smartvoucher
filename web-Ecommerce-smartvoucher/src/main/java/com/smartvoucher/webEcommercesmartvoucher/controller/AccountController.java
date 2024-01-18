@@ -82,6 +82,19 @@ public class AccountController {
         );
     }
 
+    @PostMapping("/api/resend_token")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<ResponseObject> resendToken(@RequestParam String email) throws MessagingException, UnsupportedEncodingException {
+        log.info("Verification code is resend to your email ! please check email to activation account again !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Verification code is resend to your email ! please check email to activation account again !",
+                        this.accountService.resendActiveAccount(email)
+                )
+        );
+    }
+
     @PostMapping("/api/forgot_password")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> forgotPassword(@RequestParam String email) throws MessagingException, UnsupportedEncodingException {
