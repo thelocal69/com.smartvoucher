@@ -12,7 +12,7 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IChainRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IChainService;
-import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadGoogleDriveUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +31,7 @@ public class ChainService implements IChainService {
     private final IChainRepository chainRepository;
     private final IMerchantRepository merchantRepository;
     private final ChainConverter chainConverter;
-    private final UploadUtil uploadUtil;
+    private final UploadGoogleDriveUtil uploadGoogleDriveUtil;
     @Value("${drive_view}")
     private String driveUrl;
 
@@ -39,11 +39,11 @@ public class ChainService implements IChainService {
     public ChainService(final IChainRepository chainRepository,
                         final ChainConverter chainConverter,
                         final IMerchantRepository merchantRepository,
-                        final UploadUtil uploadUtil){
+                        final UploadGoogleDriveUtil uploadGoogleDriveUtil){
         this.chainRepository = chainRepository;
         this.chainConverter = chainConverter;
         this.merchantRepository = merchantRepository;
-        this.uploadUtil = uploadUtil;
+        this.uploadGoogleDriveUtil = uploadGoogleDriveUtil;
     }
 
     @Override
@@ -179,7 +179,7 @@ public class ChainService implements IChainService {
     @Override
     public String uploadChainImages(MultipartFile fileName) {
         String folderId = "1u73jDfQwDXvzlmKSVLb5CAI6DNPvylRH";
-        File file = uploadUtil.uploadImages(fileName, folderId);
+        File file = uploadGoogleDriveUtil.uploadImages(fileName, folderId);
        return driveUrl+file.getId();
     }
     }

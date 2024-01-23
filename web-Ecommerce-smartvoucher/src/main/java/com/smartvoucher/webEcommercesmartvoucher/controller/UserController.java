@@ -1,17 +1,16 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.BlockUserDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.BuyVoucherDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.ChangePasswordDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
-import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,19 +65,6 @@ public class UserController {
                 new ResponseObject(200,
                         "search all user completed !",
                         userService.searchUserByEmail(email)
-                )
-        );
-    }
-
-    @GetMapping("/api/auth2/infor")
-    @Transactional(readOnly = true)
-    public ResponseEntity<ResponseObject> getUser(@AuthenticationPrincipal OAuth2UserDetailCustom oAuth2User){
-        log.info("Success !");
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(
-                        200,
-                        "Success !",
-                        userService.getInformationOauth2User(oAuth2User)
                 )
         );
     }
@@ -158,6 +144,24 @@ public class UserController {
                         "Update profile is completed !",
                         userService.editUserProfile(
                                 userDetailDTO, connectedUser
+                        )
+                )
+        );
+    }
+
+    @PutMapping("/api/buy_voucher")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<ResponseObject>buyVoucher(
+            @RequestBody BuyVoucherDTO buyVoucherDTO,
+            Principal connectedUser
+    ){
+        log.info("buy voucher is completed !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Buy voucher is completed !",
+                        userService.buyTicketByBalance(
+                         buyVoucherDTO, connectedUser
                         )
                 )
         );

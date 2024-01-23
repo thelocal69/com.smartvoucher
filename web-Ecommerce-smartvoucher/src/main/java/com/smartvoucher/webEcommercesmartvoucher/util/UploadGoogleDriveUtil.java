@@ -19,11 +19,11 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class UploadUtil {
+public class UploadGoogleDriveUtil {
     private final Drive googleDrive;
 
     @Autowired
-    public UploadUtil(final Drive googleDrive) {
+    public UploadGoogleDriveUtil(final Drive googleDrive) {
         this.googleDrive = googleDrive;
     }
 

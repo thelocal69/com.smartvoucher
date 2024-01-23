@@ -1,5 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.controller;
 
+import com.smartvoucher.webEcommercesmartvoucher.dto.OAuth2TokenDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.ResetPasswordDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SignInDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.security.cert.CertificateException;
 
 @Slf4j
 @RestController
@@ -48,6 +50,13 @@ public class AccountController {
         return new ResponseEntity<>(accountService.signInUser(signInDTO), HttpStatus.OK);
     }
 
+    @PostMapping("/api/oauth2/signin")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<ResponseObject> googleSignin(@RequestBody OAuth2TokenDTO oAuth2TokenDTO) {
+        log.info("Sign-in is successfully !");
+        return new ResponseEntity<>(accountService.signInGoogle(oAuth2TokenDTO), HttpStatus.OK);
+    }
+
     @PostMapping("/api/signinAdmin")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> signinAdmin(@RequestBody SignInDTO signInDTO) {
@@ -57,7 +66,7 @@ public class AccountController {
 
     @PostMapping("/api/refresh_token")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<ResponseObject> refreshToken(HttpServletRequest request, HttpServletResponse response){
+    public ResponseEntity<ResponseObject> refreshToken(HttpServletRequest request, HttpServletResponse response) throws CertificateException {
         log.info("Refresh token is completed !");
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(

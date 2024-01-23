@@ -10,7 +10,6 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
-import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -31,7 +31,6 @@ public class SerialService implements ISerialService {
     private final SerialConverter serialConverter;
     private final WarehouseSerialRepository warehouseSerialRepository;
     private final IWareHouseRepository wareHouseRepository;
-    private final RandomCodeHandler randomCodeHandler;
     private final WareHouseConverter wareHouseConverter;
 
     @Autowired
@@ -39,7 +38,6 @@ public class SerialService implements ISerialService {
                          SerialConverter serialConverter,
                          WarehouseSerialRepository warehouseSerialRepository,
                          IWareHouseRepository wareHouseRepository,
-                         RandomCodeHandler randomCodeHandler,
                          WareHouseConverter wareHouseConverter,
                          TicketHistoryRepository ticketHistoryRepository,
                          TicketRepository ticketRepository) {
@@ -47,7 +45,6 @@ public class SerialService implements ISerialService {
         this.serialConverter = serialConverter;
         this.warehouseSerialRepository = warehouseSerialRepository;
         this.wareHouseRepository = wareHouseRepository;
-        this.randomCodeHandler = randomCodeHandler;
         this.wareHouseConverter = wareHouseConverter;
         this.ticketRepository = ticketRepository;
         this.ticketHistoryRepository = ticketHistoryRepository;
@@ -108,7 +105,7 @@ public class SerialService implements ISerialService {
                         && numberOfSerial <= wareHouseEntity.getCapacity() ) {
                     // generate số lượng Serial = numberOfSerial
                     for (int i = 0; i < numberOfSerial; i++ ) {
-                        String serialCode = randomCodeHandler.generateRandomChars(10);
+                        String serialCode = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
                         // kiểm tra mã serial code có duplicate ở trong DB
                         SerialEntity checkSerial = serialRepository.findBySerialCode(serialCode);
                         if(checkSerial == null){

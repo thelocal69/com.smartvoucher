@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import javax.persistence.*;
 import java.util.Optional;
 
 @Configuration
@@ -17,6 +18,41 @@ public class JpaAuditingConfig {
     public AuditorAware<String> auditorProvider(){
         //tracking date time
         return new AuditorAwareImpl();
+    }
+
+    @PrePersist
+    public void prePersist(Object o) {
+
+    }
+
+    @PreUpdate
+    public void preUpdate(Object o) {
+
+    }
+
+    @PreRemove
+    public void preRemove(Object o) {
+
+    }
+
+    @PostLoad
+    public void postLoad(Object o) {
+
+    }
+
+    @PostRemove
+    public void postRemove(Object o) {
+
+    }
+
+    @PostUpdate
+    public void postUpdate(Object o) {
+
+    }
+
+    @PostPersist
+    public void postPersist(Object o) {
+
     }
 
     public static class AuditorAwareImpl implements AuditorAware<String> {

@@ -45,32 +45,32 @@ public class JWTFilter extends OncePerRequestFilter {
         final String headerValue = request.getHeader("Authorization");
         if (headerValue != null && headerValue.startsWith("Bearer ")){
             final String token = headerValue.substring(7);
-            if (jwtHelper.validationToke(token)){
-                final String data = jwtHelper.parserToken(token);
-                String reqPath = request.getRequestURI();
-                if (data != null && !data.isEmpty()){
-                    if (!reqPath.equals("/account/api/refresh_token")){
-                        try {
-                            ResponseToken responseToken = gson.fromJson(data, ResponseToken.class);
-                            String newData = gson.toJson(responseToken.getRoles());
-                            Type listType = new TypeToken<ArrayList<SimpleGrantedAuthority>>(){}.getType();
-                            List<GrantedAuthority> roles = gson.fromJson(newData, listType);
-                            UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
-                                    responseToken.getUsername(), "", roles
-                            );
-                            SecurityContext contextHolder = SecurityContextHolder.getContext();
-                            contextHolder.setAuthentication(userToken);
-                        }catch (JsonSyntaxException | IllegalStateException e){
-                            log.info("Not accept type !", e);
-                            throw new JsonSyntaxException("Not accept type !", e);
+                if (jwtHelper.validationToke(token)){
+                    final String data = jwtHelper.parserToken(token);
+                    String reqPath = request.getRequestURI();
+                    if (data != null && !data.isEmpty()){
+                        if (!reqPath.equals("/account/api/refresh_token")){
+                            try {
+                                ResponseToken responseToken = gson.fromJson(data, ResponseToken.class);
+                                String newData = gson.toJson(responseToken.getRoles());
+                                Type listType = new TypeToken<ArrayList<SimpleGrantedAuthority>>(){}.getType();
+                                List<GrantedAuthority> roles = gson.fromJson(newData, listType);
+                                UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(
+                                        responseToken.getUsername(), "", roles
+                                );
+                                SecurityContext contextHolder = SecurityContextHolder.getContext();
+                                contextHolder.setAuthentication(userToken);
+                            }catch (JsonSyntaxException | IllegalStateException e){
+                                log.info("Not accept type !", e);
+                                throw new JsonSyntaxException("Not accept type !", e);
+                            }
                         }
+                    }else {
+                        log.info("Data is not exist !");
+                        throw new JwtFilterException(403, "Data is not exist !", null);
                     }
-                }else {
-                    log.info("Data is not exist !");
-                    throw new JwtFilterException(403, "Data is not exist !", null);
                 }
             }
-        }
         filterChain.doFilter(request, response);
     }
 }

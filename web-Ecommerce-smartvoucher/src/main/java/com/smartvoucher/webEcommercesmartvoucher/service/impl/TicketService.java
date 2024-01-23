@@ -16,14 +16,12 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
 import com.smartvoucher.webEcommercesmartvoucher.util.EmailUtil;
-import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
-import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadGoogleDriveUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,12 +46,11 @@ public class TicketService implements ITicketService {
     private final IStoreRepository storeRepository;
     private final TicketHistoryRepository ticketHistoryRepository;
     private final TicketHistoryConverter ticketHistoryConverter;
-    private final UploadUtil uploadUtil;
+    private final UploadGoogleDriveUtil uploadGoogleDriveUtil;
     private final EmailUtil emailUtil;
     private final SerialConverter serialConverter;
     private final WarehouseSerialRepository warehouseSerialRepository;
     private final IWareHouseRepository wareHouseRepository;
-    private final RandomCodeHandler randomCodeHandler;
     private final WareHouseConverter wareHouseConverter;
 
     @Autowired
@@ -67,12 +64,11 @@ public class TicketService implements ITicketService {
                 , IStoreRepository storeRepository
                 , TicketHistoryRepository ticketHistoryRepository
                 , TicketHistoryConverter ticketHistoryConverter
-                , UploadUtil uploadUtil
+                , UploadGoogleDriveUtil uploadGoogleDriveUtil
                 , EmailUtil emailUtil
                 , SerialConverter serialConverter
                 ,  WarehouseSerialRepository warehouseSerialRepository
                 , IWareHouseRepository wareHouseRepository
-                , RandomCodeHandler randomCodeHandler
                 , WareHouseConverter wareHouseConverter) {
         this.ticketRepository = ticketRepository;
         this.ticketConverter = ticketConverter;
@@ -84,12 +80,11 @@ public class TicketService implements ITicketService {
         this.storeRepository = storeRepository;
         this.ticketHistoryRepository = ticketHistoryRepository;
         this.ticketHistoryConverter = ticketHistoryConverter;
-        this.uploadUtil = uploadUtil;
+        this.uploadGoogleDriveUtil = uploadGoogleDriveUtil;
         this.emailUtil = emailUtil;
         this.serialConverter = serialConverter;
         this.warehouseSerialRepository = warehouseSerialRepository;
         this.wareHouseRepository = wareHouseRepository;
-        this.randomCodeHandler = randomCodeHandler;
         this.wareHouseConverter = wareHouseConverter;
     }
 
@@ -194,10 +189,10 @@ public class TicketService implements ITicketService {
                 kiểm tra so với capacity (lấy capacity - total = total serial có thể gen tt)*/
                 if(numberOfSerial <= (wareHouseEntity.getCapacity() - total)
                         && numberOfSerial <= wareHouseEntity.getCapacity() ) {
-                    String batchCode = randomCodeHandler.generateRandomChars(10);
+                    String batchCode = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
                     // generate số lượng Serial = numberOfSerial
                     for (int i = 0; i < numberOfSerial; i++ ) {
-                        String serialCode = randomCodeHandler.generateRandomChars(10);
+                        String serialCode = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
                         // kiểm tra mã serial code có duplicate ở trong DB
                         SerialEntity checkSerial = serialRepository.findBySerialCode(serialCode);
                         if(checkSerial == null){
@@ -299,18 +294,18 @@ public class TicketService implements ITicketService {
         return presentTime().before(ticketEntity.getExpiredTime());
     }
 
-    @Scheduled(cron = "0 0 * * * ?") // cứ mỗi 00:00 AM thì method này sẽ tự động chạy để kiểm tra hàng loạt ticket
-    public void checkExpiredAllVoucher() {
-        Timestamp presentTime = new Timestamp(System.currentTimeMillis());
-        for(TicketEntity ticketEntity : ticketRepository.findAll()) {
-            if(presentTime.equals(ticketEntity.getExpiredTime()) ||
-                    presentTime.after(ticketEntity.getExpiredTime())) {
-                TicketHistoryEntity ticketHistory = ticketHistoryRepository.findBySerialCode(ticketEntity.getIdSerial().getSerialCode());
-                ticketHistory.setIsLatest(3);
-                ticketEntity.setStatus(3);
-            }
-        }
-    }
+//    @Scheduled(cron = "0 0 * * * ?") // cứ mỗi 00:00 AM thì method này sẽ tự động chạy để kiểm tra hàng loạt ticket
+//    public void checkExpiredAllVoucher() {
+//        Timestamp presentTime = new Timestamp(System.currentTimeMillis());
+//        for(TicketEntity ticketEntity : ticketRepository.findAll()) {
+//            if(presentTime.equals(ticketEntity.getExpiredTime()) ||
+//                    presentTime.after(ticketEntity.getExpiredTime())) {
+//                TicketHistoryEntity ticketHistory = ticketHistoryRepository.findBySerialCode(ticketEntity.getIdSerial().getSerialCode());
+//                ticketHistory.setIsLatest(3);
+//                ticketEntity.setStatus(3);
+//            }
+//        }
+//    }
 
     public boolean checkExistsObject(BuyTicketDTO buyTicketDTO) {
         List<String> listName = Arrays.asList("Warehouse", "Category" , "Order", "User", "Store");
@@ -339,27 +334,10 @@ public class TicketService implements ITicketService {
         return ticketRepository.findByIdSerial(serialEntity).isEmpty();
     }
 
-    public WareHouseEntity createWarehouse(TicketDTO ticketDTO) {
-        return iWareHouseRepository.findById(ticketDTO.getIdWarehouseDTO().getId()).orElse(null);
-    }
-    public CategoryEntity createCategory(TicketDTO ticketDTO) {
-        return iCategoryRepository.findById(ticketDTO.getIdCategoryDTO().getId()).orElse(null);
-    }
-    public OrderEntity createOrder(TicketDTO ticketDTO) {
-        return orderRepository.findById(ticketDTO.getIdOrderDTO().getId()).orElse(null);
-    }
-    public UserEntity createUser(TicketDTO ticketDTO) {
-        return userRepository.findById(ticketDTO.getIdUserDTO().getId()).orElse(null);
-    }
-
-    public StoreEntity createStore(TicketDTO ticketDTO) {
-        return storeRepository.findById(ticketDTO.getIdStoreDTO().getId()).orElse(null);
-    }
-
     @Override
     public String uploadTicketImages(MultipartFile fileName) {
         String folderId = "1D3tkdIWmKLQuRgdabrIfLYRkDeJyrflu";
-        File file = uploadUtil.uploadImages(fileName, folderId);
+        File file = uploadGoogleDriveUtil.uploadImages(fileName, folderId);
         return "https://drive.google.com/uc?export=view&id="+file.getId();
     }
 

@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.entity;
 
 
+import com.smartvoucher.webEcommercesmartvoucher.config.JpaAuditingConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class UserEntity {
 
     @Id
@@ -60,6 +62,9 @@ public class UserEntity {
 
     @Column(name = "address")
     private String address;
+
+    @Column(name = "balance")
+    private double balance;
 
     @Column(name = "enable")
     private boolean isEnable;
