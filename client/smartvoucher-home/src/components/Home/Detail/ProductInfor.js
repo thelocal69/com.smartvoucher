@@ -6,12 +6,14 @@ import { Badge } from "react-bootstrap";
 import "../Detail/ProductInfor.scss";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../Redux/data/CartSlice";
+import parse from "html-react-parser";
 
 const ProductInfor = () => {
   const { id } = useParams();
   const [warehouse, setWareHouse] = React.useState({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [description, setDescription] = React.useState("");
 
   let thumbnailUrl = warehouse.thumbnailUrl;
   let title = warehouse.name;
@@ -32,6 +34,7 @@ const ProductInfor = () => {
       .then((rs) => {
         if (rs.data) {
           setWareHouse(rs.data);
+          setDescription(rs.data.description);
         }
       })
       .catch((err) => toast.error(err.message));
@@ -81,7 +84,12 @@ const ProductInfor = () => {
             </span>
           </p>
           <div className="d-flex">
-            <h4 className="fW">{price}đ</h4>
+            <h4 className="fW">
+              {new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(price)}
+            </h4>
             <span className="ps-3">
               <i class="fa-solid fa-heart"></i>
             </span>
@@ -89,7 +97,10 @@ const ProductInfor = () => {
           <h6 className="dp fW">
             {maxDiscountAmount > 0 && (
               <>
-                {originalPrice}đ
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(originalPrice)}
                 <span className="ps-3">
                   <Badge bg="danger">-{maxDiscountAmount}%</Badge>
                 </span>
@@ -99,14 +110,14 @@ const ProductInfor = () => {
           <hr />
           <div className="">
             <span className="pe-3">
-              <button 
-              className="btn btn-primary"
-              onClick={() => {
-                let element = null;
-                element = {...warehouse, quantity: 1}
-                dispatch(addToCart(element));
-                navigate("/Cart ")
-              }}
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  let element = null;
+                  element = { ...warehouse, quantity: 1 };
+                  dispatch(addToCart(element));
+                  navigate("/Cart ");
+                }}
               >
                 <i class="fa-solid fa-credit-card"></i>
                 Mua ngay
@@ -117,8 +128,8 @@ const ProductInfor = () => {
                 className="btn btn-info"
                 onClick={() => {
                   let element = null;
-                  element = {...warehouse, quantity: 1}
-                  dispatch(addToCart(element)); 
+                  element = { ...warehouse, quantity: 1 };
+                  dispatch(addToCart(element));
                 }}
               >
                 <i class="fa-solid fa-cart-shopping"></i>
@@ -131,9 +142,7 @@ const ProductInfor = () => {
           </div>
         </div>
       </div>
-      <div>
-        <hr />
-      </div>
+      {parse(description)}
     </>
   );
 };

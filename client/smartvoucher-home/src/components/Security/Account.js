@@ -14,6 +14,13 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logIn } from "../../Redux/data/AuthSlice";
 import Loading from "../Util/Loading";
+import OAuth2Login from "./OAuth2Login";
+import {
+  avatar,
+  username,
+  balance,
+  infoLogin,
+} from "../../Redux/data/UserSlice";
 
 const Account = (props) => {
   const { show, handleClose } = props;
@@ -308,6 +315,7 @@ const Account = (props) => {
                         <span hidden={loading ? true : false}>login</span>
                       </button>
                     </div>
+                    <OAuth2Login handleClose={handleClose} />
                   </div>
                   <div className="forgot-password f text-center" action="">
                     <input id="forgot-password-toggle" type="checkbox" />

@@ -12,6 +12,10 @@ export const  editProfile = (obj) =>{
     return Http.put(`/user/api/edit`, obj);
 }
 
+export const  buyVoucher = (obj) =>{
+    return Http.put(`/user/api/buy_voucher`, obj);
+}
+
 export const  changePassword = (obj) =>{
     return Http.put(`/user/api/change_pwd`, obj);
 }

@@ -13,9 +13,11 @@ import { selectAccessToken } from "../../Redux/data/AuthSlice";
 import { addOrder } from "../../services/OrderServices";
 import { buyTicket } from "../../services/TicketServices";
 import Loading from "../Util/Loading";
-import { selectUserId } from "../../Redux/data/UserSlice";
+import { selectUserId, selectUserBalance } from "../../Redux/data/UserSlice";
 import { toast } from "react-toastify";
 import { getIdStore } from "../../services/WarehouseStoreSrvices";
+import { buyVoucher } from "../../services/UserServices";
+import { balance } from "../../Redux/data/UserSlice";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -24,44 +26,79 @@ const Cart = () => {
   const [loading, setLoading] = React.useState(false);
   const accessToken = useSelector(selectAccessToken);
   const idUser = useSelector(selectUserId);
+  const balanceL = useSelector(selectUserBalance);
   const [status, setStatus] = React.useState(1);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      cart.map((item) => {
+        dispatch(removeItem(item));
+      });
+    }, 1800000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleBuyTicket = async () => {
     if (cart) {
       for (let index = 0; index < cart.length; index++) {
         const element = cart[index];
-        const objOrder = {
-          idUser: idUser.id,
-          idWarehouse: element.id,
-          status: status,
-          quantity: element.quantity,
+        const total = cart.reduce(
+          (acc, item) => (acc += item.price * item.quantity),
+          0
+        );
+        const objBuyVoucher = {
+          balance: balanceL.balance,
+          total: total,
         };
         setLoading(true);
-        await addOrder(objOrder)
+        await buyVoucher(objBuyVoucher)
           .then((rs) => {
             if (rs) {
-              let objStore = {
-                idOrder: rs.data.id,
-                idWarehouse: rs.data.idWarehouse,
-                idUser: rs.data.idUser,
-                numberOfSerial: element.quantity,
-                idCategory: element.idCategory,
-                idStore: 0,
+              toast.success("Cập nhật số dư trong tài khoản !");
+              dispatch(
+                balance({
+                  balance: rs.data.balance,
+                })
+              );
+              const objOrder = {
+                idUser: idUser.id,
+                idWarehouse: element.id,
                 status: status,
-                discountType: element.discountTypeName,
-                discountAmount: element.discountAmount,
+                quantity: element.quantity,
               };
-              getIdStore(objStore.idWarehouse)
+              addOrder(objOrder)
                 .then((rs) => {
                   if (rs) {
-                    let objTicket = { ...objStore };
-                    objTicket.idStore = rs.data.keys.idStore;
-                    buyTicket(objTicket)
+                    let objStore = {
+                      idOrder: rs.data.id,
+                      idWarehouse: rs.data.idWarehouse,
+                      idUser: rs.data.idUser,
+                      numberOfSerial: element.quantity,
+                      idCategory: element.idCategory,
+                      idStore: 0,
+                      status: status,
+                      discountType: element.discountTypeName,
+                      discountAmount: element.discountAmount,
+                    };
+                    getIdStore(objStore.idWarehouse)
                       .then((rs) => {
                         if (rs) {
-                          setLoading(false);
-                          toast.success("Kiểm tra đơn hàng hàng ở trang tài khoản !");
-                          dispatch(removeItem(element));
+                          let objTicket = { ...objStore };
+                          objTicket.idStore = rs.data.keys.idStore;
+                          buyTicket(objTicket)
+                            .then((rs) => {
+                              if (rs) {
+                                setLoading(false);
+                                toast.success(
+                                  "Kiểm tra đơn hàng hàng ở trang tài khoản !"
+                                );
+                                dispatch(removeItem(element));
+                              }
+                            })
+                            .catch((err) => {
+                              toast.error(err.message);
+                              setLoading(false);
+                            });
                         }
                       })
                       .catch((err) => {
@@ -219,23 +256,29 @@ const Cart = () => {
                       <>
                         <div>
                           <h5>Thanh toán</h5>
-                          <div>Số dư: đ</div>
-                          <div className="pt-2 pb-2 d-flex justify-content-between">
-                            <div>
-                              <p>Tổng giá trị phải thanh toán:</p>
-                            </div>
-                            <div>
-                              <p>
-                                <b>
-                                  {cart.reduce(
+                          <div>
+                            Số dư:{" "}
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(balanceL.balance)}
+                          </div>
+                          <div className="pt-2 pb-2">
+                            <p>
+                              Tổng giá trị phải thanh toán:{" "}
+                              <b>
+                                {new Intl.NumberFormat("vi-VN", {
+                                  style: "currency",
+                                  currency: "VND",
+                                }).format(
+                                  cart.reduce(
                                     (acc, item) =>
                                       (acc += item.price * item.quantity),
                                     0
-                                  )}
-                                  đ
-                                </b>
-                              </p>
-                            </div>
+                                  )
+                                )}
+                              </b>
+                            </p>
                           </div>
                           <div>
                             {accessToken ? (
