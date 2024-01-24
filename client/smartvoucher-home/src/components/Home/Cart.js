@@ -261,7 +261,7 @@ const Cart = () => {
                             {new Intl.NumberFormat("vi-VN", {
                               style: "currency",
                               currency: "VND",
-                            }).format(balanceL.balance)}
+                            }).format(balanceL ? balanceL.balance : 0)}
                           </div>
                           <div className="pt-2 pb-2">
                             <p>

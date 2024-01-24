@@ -268,8 +268,6 @@ const Account = (props) => {
                       <input
                         type="email"
                         class="form-control form-control-user p-2"
-                        id="exampleInputEmail"
-                        aria-describedby="emailHelp"
                         placeholder="Enter Email Address..."
                         required
                         value={email}
@@ -280,7 +278,6 @@ const Account = (props) => {
                       <input
                         type={isShowPassword ? "text" : "password"}
                         class="form-control form-control-user p-2"
-                        id="exampleInputPassword"
                         placeholder="Password"
                         required
                         value={password}
@@ -325,8 +322,6 @@ const Account = (props) => {
                         <input
                           type="email"
                           class="form-control form-control-user p-2"
-                          id="exampleInputEmail"
-                          aria-describedby="emailHelp"
                           placeholder="Enter Email..."
                           required
                           value={forgotEmail}
@@ -339,7 +334,6 @@ const Account = (props) => {
                         <input
                           type={isShowPassword ? "text" : "password"}
                           class="form-control form-control-user p-2"
-                          id="exampleInputPassword"
                           placeholder="New password"
                           required
                           value={newPassword}
@@ -362,7 +356,6 @@ const Account = (props) => {
                         <input
                           type={isShowPasswordConfirm ? "text" : "password"}
                           class="form-control form-control-user p-2"
-                          id="exampleInputPassword"
                           placeholder="New password"
                           required
                           value={confirmNewPassword}

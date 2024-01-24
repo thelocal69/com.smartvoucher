@@ -7,6 +7,7 @@ import "../Detail/ProductInfor.scss";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../Redux/data/CartSlice";
 import parse from "html-react-parser";
+import Comment from "./Comment";
 
 const ProductInfor = () => {
   const { id } = useParams();
@@ -143,6 +144,9 @@ const ProductInfor = () => {
         </div>
       </div>
       {parse(description)}
+      <div>
+            <Comment idWarehouse={id} />
+      </div>
     </>
   );
 };

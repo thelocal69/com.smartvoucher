@@ -42,6 +42,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     dispatch(logOut());
+    dispatch(reset());
     await logoutUser(refreshToken).then((rs) => {
       if (rs) {
         toast.success(rs.message);
