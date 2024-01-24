@@ -61,6 +61,7 @@ public class ChainService implements IChainService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseOutput getAllChain(int page, int limit, String sortBy, String sortField) {
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(Sort.Direction.fromString(sortBy), sortField));
         List<ChainDTO> chainDTOList = chainConverter.toChainDTOList(
@@ -133,6 +134,7 @@ public class ChainService implements IChainService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ChainDTO> searchAllChainName(String name) {
         return chainConverter.toChainDTOList(
                 chainRepository.searchAllByNameContainingIgnoreCase(name)
@@ -140,6 +142,7 @@ public class ChainService implements IChainService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<String> getAllChainName() {
         List<String> getAllName = chainRepository.getChainName();
         if (getAllName.isEmpty()){

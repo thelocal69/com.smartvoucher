@@ -97,4 +97,7 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "idUser")
     private Set<RolesUsersEntity> rolesUsersEntities;
+
+    @OneToMany(mappedBy = "idUser")
+    private List<CommentEntity> commentEntities;
 }

@@ -87,8 +87,8 @@ public class SecurityConfig {
                     .authorizeHttpRequests()
                     .antMatchers("/account/**").permitAll()
                     .antMatchers("**/upload").permitAll()
-                    .antMatchers("/oauth/**").permitAll()
-                    .antMatchers("/login/", "/login/oauth2/**", "/oauth2/**", "/auth/**").permitAll()
+                    .antMatchers("/comment/**").permitAll()
+                    .antMatchers("/reply/**").permitAll()
                     //merchant
                     .antMatchers(HttpMethod.GET, "/merchant").permitAll()
                     .antMatchers(HttpMethod.GET, "/merchant/api/getAll").hasRole("ADMIN")
