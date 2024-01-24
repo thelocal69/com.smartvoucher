@@ -11,7 +11,7 @@ CREATE TABLE merchant(
 	address varchar(100),	
 	phone varchar(20),
 	email varchar(50),
-	description varchar(512),
+	description text,
 	status int NOT null, -- giá trị 0:inactive và giá trị 1:active
 	created_by varchar(50),
 	updated_by varchar(50),
@@ -29,7 +29,7 @@ CREATE TABLE chains(
 	address varchar(100),
 	phone varchar(20),
 	email varchar(50),
-	description varchar(512),
+	description text,
 	status int NOT null, -- giá trị 0:inactive và giá trị 1:active
 	id_merchant bigint NOT null,
 	created_by varchar(50),
@@ -47,7 +47,7 @@ CREATE TABLE store(
 	address varchar(100),
 	phone varchar(20),
 	status int NOT null, -- giá trị 0:inactive và giá trị 1:active
-	description varchar(512),
+	description text,
 	id_chain bigint NOT null,
 	id_merchant bigint NOT null,
 	created_by varchar(50),
@@ -63,7 +63,7 @@ CREATE TABLE warehouse(
 	warehouse_code varchar(20) unique,
 	id_label int not null,
 	name varchar(100),
-	description varchar(512),
+	description text,
 	term_of_use varchar(255),
 	banner_url varchar(255),
 	thumbnail_url varchar(255),
@@ -89,7 +89,7 @@ CREATE TABLE warehouse(
 
 CREATE TABLE token(
 id bigint auto_increment,
-token varchar(255),
+token text,
 token_type varchar(100),
 expired tinyint,
 revokes tinyint,
@@ -204,7 +204,7 @@ CREATE TABLE ticket(
 	thumbnail_url varchar(150),
 	acquirer_logo_url varchar(150),
 	term_of_use varchar(512),
-	description varchar(512),
+	description text,
 	vouncher_channel varchar(100),
 	available_from timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	available_to timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
@@ -260,6 +260,7 @@ CREATE TABLE users(
 	status int NOT null,
 	ava_url varchar(100),
 	address varchar(100),
+    balance decimal(12, 2),
 	enable tinyint,
 	provider varchar(50),
 	created_by varchar(50),
@@ -283,14 +284,40 @@ CREATE TABLE roles(
 );
 
 CREATE TABLE roles_users(
-	id_role bigint,
-	id_user bigint,
+	id_role bigint not null ,
+	id_user bigint not null ,
 	created_by varchar(50),
 	updated_by varchar(50),
 	created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
 	updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss	
 	
 	PRIMARY KEY(id_role, id_user)
+);
+
+CREATE TABLE comment(
+    id bigint auto_increment,
+    id_warehouse bigint not null ,
+    id_user bigint not null ,
+    comment_user varchar(512),
+    created_by varchar(50),
+    updated_by varchar(50),
+    created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+    updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE reply_comment(
+                        id bigint auto_increment,
+                        id_comment bigint not null ,
+                        id_user bigint not null ,
+                        reply_comment varchar(512),
+                        created_by varchar(50),
+                        updated_by varchar(50),
+                        created_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+                        updated_at timestamp, -- nhập định dạng yyyy-mm-dd hh:mm:ss
+
+                        PRIMARY KEY(id)
 );
 
 
@@ -332,6 +359,14 @@ ALTER TABLE roles_users ADD CONSTRAINT FK_id_user_roles_users FOREIGN KEY (id_us
 ALTER TABLE token ADD CONSTRAINT FK_id_user_token FOREIGN KEY (id_user) REFERENCES users(id);
 
 ALTER TABLE verification_token ADD CONSTRAINT FK_user_verification_token FOREIGN KEY (users_id) REFERENCES users(id);
+
+ALTER TABLE comment ADD CONSTRAINT FK_comment_warehouse FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
+ALTER TABLE comment ADD CONSTRAINT FK_comment_user FOREIGN KEY (id_user) REFERENCES users(id);
+
+ALTER TABLE reply_comment ADD CONSTRAINT  FK_reply_comment FOREIGN KEY (id_comment) REFERENCES comment(id);
+ALTER TABLE reply_comment ADD CONSTRAINT  FK_reply_user FOREIGN KEY (id_user) REFERENCES users(id);
+
+
 
 -- INSERT
 
