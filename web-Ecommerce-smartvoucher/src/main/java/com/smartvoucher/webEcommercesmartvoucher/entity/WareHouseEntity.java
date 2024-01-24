@@ -91,4 +91,7 @@ public class WareHouseEntity{
     @ManyToOne
     @JoinColumn(name = "id_label")
     private LabelEntity label;
+
+    @OneToMany(mappedBy = "idWarehouse")
+    private List<CommentEntity> commentEntities;
 }

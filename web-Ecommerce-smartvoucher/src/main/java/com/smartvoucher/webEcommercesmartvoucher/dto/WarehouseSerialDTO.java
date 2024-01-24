@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.boot.SpringApplicationRunListener;
 
 import java.sql.Timestamp;
 
@@ -17,6 +18,9 @@ public class WarehouseSerialDTO {
     private WarehouseSerialKeys keys;
     private long idWarehouse;
     private long idSerial;
+    private String bannerUrl;
+    private String warehouseName;
+    private String categoryName;
     private String createdBy;
     private String updatedBy;
     private Timestamp createdAt;

@@ -5,7 +5,7 @@ import "../Home/HomePage.scss";
 import { getAllWarehouseByLabel } from "../../services/WarehouseServices";
 import { getAllLabelName } from "../../services/LabelServices";
 import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Product = () => {
   const [pageSpecial, setPageSpecial] = React.useState(1);
@@ -202,11 +202,19 @@ const Product = () => {
                           {item.name}
                         </div>
                         <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">{item.price}đ</span>
+                          <span className="price">
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(item.price)}
+                          </span>
                           <span className="discount-price">
                             {item.maxDiscountAmount > 0 && (
                               <>
-                                {item.originalPrice}đ
+                                {new Intl.NumberFormat("vi-VN", {
+                                  style: "currency",
+                                  currency: "VND",
+                                }).format(item.originalPrice)}
                                 <span className="ps-3">
                                   <Badge bg="danger">
                                     -{item.maxDiscountAmount}%
@@ -267,11 +275,19 @@ const Product = () => {
                           {item.name}
                         </div>
                         <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">{item.price}đ</span>
+                          <span className="price">
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(item.price)}
+                          </span>
                           <span className="discount-price">
                             {item.maxDiscountAmount > 0 && (
                               <>
-                                {item.originalPrice}đ
+                                {new Intl.NumberFormat("vi-VN", {
+                                  style: "currency",
+                                  currency: "VND",
+                                }).format(item.originalPrice)}
                                 <span className="ps-3">
                                   <Badge bg="danger">
                                     -{item.maxDiscountAmount}%
@@ -332,11 +348,19 @@ const Product = () => {
                           {item.name}
                         </div>
                         <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">{item.price}đ</span>
+                          <span className="price">
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(item.price)}
+                          </span>
                           <span className="discount-price">
                             {item.maxDiscountAmount > 0 && (
                               <>
-                                {item.originalPrice}đ
+                                {new Intl.NumberFormat("vi-VN", {
+                                  style: "currency",
+                                  currency: "VND",
+                                }).format(item.originalPrice)}
                                 <span className="ps-3">
                                   <Badge bg="danger">
                                     -{item.maxDiscountAmount}%
@@ -399,11 +423,19 @@ const Product = () => {
                           {item.name}
                         </div>
                         <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">{item.price}đ</span>
+                          <span className="price">
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(item.price)}
+                          </span>
                           <span className="discount-price">
                             {item.maxDiscountAmount > 0 && (
                               <>
-                                {item.originalPrice}đ
+                                {new Intl.NumberFormat("vi-VN", {
+                                  style: "currency",
+                                  currency: "VND",
+                                }).format(item.originalPrice)}
                                 <span className="ps-3">
                                   <Badge bg="danger">
                                     -{item.maxDiscountAmount}%
@@ -464,11 +496,19 @@ const Product = () => {
                           {item.name}
                         </div>
                         <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">{item.price}đ</span>
+                          <span className="price">
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(item.price)}
+                          </span>
                           <span className="discount-price">
                             {item.maxDiscountAmount > 0 && (
                               <>
-                                {item.originalPrice}đ
+                                {new Intl.NumberFormat("vi-VN", {
+                                  style: "currency",
+                                  currency: "VND",
+                                }).format(item.originalPrice)}
                                 <span className="ps-3">
                                   <Badge bg="danger">
                                     -{item.maxDiscountAmount}%
@@ -531,11 +571,19 @@ const Product = () => {
                           {item.name}
                         </div>
                         <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">{item.price}đ</span>
+                          <span className="price">
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(item.price)}
+                          </span>
                           <span className="discount-price">
                             {item.maxDiscountAmount > 0 && (
                               <>
-                                {item.originalPrice}đ
+                                {new Intl.NumberFormat("vi-VN", {
+                                  style: "currency",
+                                  currency: "VND",
+                                }).format(item.originalPrice)}
                                 <span className="ps-3">
                                   <Badge bg="danger">
                                     -{item.maxDiscountAmount}%

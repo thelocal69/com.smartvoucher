@@ -17,7 +17,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IDiscountTypeReposit
 import com.smartvoucher.webEcommercesmartvoucher.repository.ILabelRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
-import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadGoogleDriveUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +39,7 @@ public class WareHouseService implements IWareHouseService {
     private final IDiscountTypeRepository discountTypeRepository;
     private final ICategoryRepository categoryRepository;
     private final ILabelRepository labelRepository;
-    private final UploadUtil uploadUtil;
+    private final UploadGoogleDriveUtil uploadGoogleDriveUtil;
     @Value("${drive_view}")
     private String driveUrl;
 
@@ -49,14 +49,14 @@ public class WareHouseService implements IWareHouseService {
                             final WareHouseConverter wareHouseConverter,
                             final IDiscountTypeRepository discountTypeRepository,
                             final ICategoryRepository categoryRepository,
-                            final UploadUtil uploadUtil,
+                            final UploadGoogleDriveUtil uploadGoogleDriveUtil,
                             final ILabelRepository labelRepository
     ) {
         this.wareHouseRepository = wareHouseRepository;
         this.wareHouseConverter = wareHouseConverter;
         this.discountTypeRepository = discountTypeRepository;
         this.categoryRepository = categoryRepository;
-        this.uploadUtil = uploadUtil;
+        this.uploadGoogleDriveUtil = uploadGoogleDriveUtil;
         this.labelRepository = labelRepository;
     }
 
@@ -187,7 +187,7 @@ public class WareHouseService implements IWareHouseService {
     @Override
     public String uploadWarehouseImages(MultipartFile fileName) {
         String folderId = "101aTGIyIgR4tIq88tT3lCE3_QWZcVP03";
-        File file = uploadUtil.uploadImages(fileName, folderId);
+        File file = uploadGoogleDriveUtil.uploadImages(fileName, folderId);
         return driveUrl+file.getId();
     }
 

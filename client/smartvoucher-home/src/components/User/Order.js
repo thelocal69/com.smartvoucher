@@ -26,16 +26,15 @@ const Order = () => {
   }, []);
 
   const getOrder = async (page, limit, sortBy, sortField) => {
-    await getAllOrder(page, limit, sortBy, sortField)
-      .then((rs) => {
-        if (rs) {
-          setCurrentPage(rs.page);
-          setTotalItem(rs.totalItem);
-          setTotalPage(rs.totalPage);
-          setListOrder(rs.data);
-        }
-      })
-      .catch((err) => toast.error(err.message));
+    await getAllOrder(page, limit, sortBy, sortField).then((rs) => {
+      if (rs) {
+        setCurrentPage(rs.page);
+        setTotalItem(rs.totalItem);
+        setTotalPage(rs.totalPage);
+        setListOrder(rs.data);
+      }
+    })
+    .catch((err) => console.log(err.message));
   };
 
   const handlePageClick = (event) => {
@@ -67,42 +66,42 @@ const Order = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {listOrder
-                      ? listOrder?.map((item, key) => {
-                          return (
-                            <tr key={key} className="fD">
-                              <td>
-                                {Moment(item?.createdAt).format(
-                                  "YYYY/DD/MM hh:mm:ss"
-                                )}
-                              </td>
-                              <td>{item?.orderNo}</td>
-                              <td className="d-flex justify-content-between">
-                                <span>{item?.idWarehouseDTO.name}</span>
-                                <span> x{item.quantity}</span>
-                              </td>
-                              <td className="">
-                                {item.idWarehouseDTO.price * item.quantity}đ
-                              </td>
-                              <td
-                                className={
-                                  item?.status ? "ac active" : "ac deactive"
-                                }
-                              >
-                                {item?.status ? "Đã xử lí" : "Chưa xử lí"}
-                              </td>
-                              <td
-                                onClick={() => {
-                                  navigate(`/User/Infor/${item.id}`);
-                                }}
-                                className="Ul"
-                              >
-                                Chi tiết
-                              </td>
-                            </tr>
-                          );
-                        })
-                      : "No data"}
+                    {listOrder ? (
+                      listOrder?.map((item, key) => {
+                        return (
+                          <tr key={key} className="fD">
+                            <td>
+                              {Moment(item?.createdAt).format(
+                                "YYYY/DD/MM hh:mm:ss"
+                              )}
+                            </td>
+                            <td>{item?.orderNo}</td>
+                            <td className="d-flex justify-content-between">
+                              <span>{item?.warehouseName}</span>
+                              <span> x{item?.quantity}</span>
+                            </td>
+                            <td className="">
+                              {item?.price * item?.quantity}đ
+                            </td>
+                            <td
+                              className={
+                                item?.status ? "ac active" : "ac deactive"
+                              }
+                            >
+                              {item?.status ? "Đã xử lí" : "Chưa xử lí"}
+                            </td>
+                            <td
+                              onClick={() => {
+                                navigate(`/User/Infor/${item.id}`);
+                              }}
+                              className="Ul"
+                            >
+                              Chi tiết
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : <></>}
                   </tbody>
                 </Table>
               </div>

@@ -8,7 +8,6 @@ import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WarehouseStoreEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.keys.WarehouseStoreKeys;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
-import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IStoreRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.WarehouseStoreRepository;
@@ -92,6 +91,17 @@ public class WarehouseStoreService implements IWarehouseStoreService {
         this.warehouseStoreRepository.deleteByKeys(warehouseStoreCheck.getKeys());
     }
 
+    @Override
+    public WarehouseStoreDTO getWarehouseStoreByIdWarehouse(Long idWarehouse) {
+        WarehouseStoreEntity warehouseStoreEntity = warehouseStoreRepository.getWarehouseStoreEntitiesByIdWarehouse(
+                idWarehouse
+        );
+        if (warehouseStoreEntity == null){
+            log.info("Id store or warehouse not found !");
+            throw new ObjectNotFoundException(404, "Id store or warehouse not found !");
+        }
+        return warehouseStoreConverter.toWarehouseStoreDTO(warehouseStoreEntity);
+    }
 
 
 }

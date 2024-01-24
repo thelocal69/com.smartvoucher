@@ -15,30 +15,34 @@ import { Provider } from "react-redux";
 import Store from "./Redux/Store";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 let persistor = persistStore(Store);
+const clientId = "1028629541569-b4jlhamfsg85h658fhqmrs3c4c1t3s51.apps.googleusercontent.com";
 root.render(
   <Provider store={Store}>
     <PersistGate loading={null} persistor={persistor}>
       <LocalizationProvider dateAdapter={AdapterMoment}>
-        <React.StrictMode>
-          <BrowserRouter>
-            <App />
-            <ToastContainer
-              position="top-center"
-              autoClose={2000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="colored"
-            />
-          </BrowserRouter>
-        </React.StrictMode>
+        <GoogleOAuthProvider clientId={clientId}>
+          <React.StrictMode>
+            <BrowserRouter>
+              <App />
+              <ToastContainer
+                position="top-center"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+              />
+            </BrowserRouter>
+          </React.StrictMode>
+        </GoogleOAuthProvider>
       </LocalizationProvider>
     </PersistGate>
   </Provider>

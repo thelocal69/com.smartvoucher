@@ -1,13 +1,7 @@
 import React from "react";
-import {
-  Container,
-  Navbar,
-  Nav,
-  Badge,
-  NavDropdown,
-} from "react-bootstrap";
+import { Container, Navbar, Nav, Badge, NavDropdown } from "react-bootstrap";
 import "../Header/Header.scss";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo/logo.png";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -15,19 +9,28 @@ import {
   selectRefreshToken,
   logOut,
 } from "../../Redux/data/AuthSlice";
-import { selectAvatar, selectUsername } from "../../Redux/data/UserSlice";
+import {
+  selectAvatar,
+  selectUsername,
+  selectUserBalance,
+} from "../../Redux/data/UserSlice";
 import { logoutUser } from "../../services/AccountServices";
 import { toast } from "react-toastify";
 import Account from "../Security/Account";
+import { selectIdCarts } from "../../Redux/data/CartSlice";
+import { reset } from "../../Redux/data/UserSlice";
 
 const Header = () => {
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const refreshToken = useSelector(selectRefreshToken);
-  const avatar = useSelector(selectAvatar);
-  const username = useSelector(selectUsername);
+  const avatarL = useSelector(selectAvatar);
+  const usernameL = useSelector(selectUsername);
+  const cart = useSelector(selectIdCarts);
+  const balanceL = useSelector(selectUserBalance);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleClickLogin = () => {
     setIsShowModalLogin(true);
@@ -39,6 +42,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     dispatch(logOut());
+    dispatch(reset());
     await logoutUser(refreshToken).then((rs) => {
       if (rs) {
         toast.success(rs.message);
@@ -61,13 +65,13 @@ const Header = () => {
               </Nav>
               <div className="d-flex">
                 <Nav>
-                  <NavLink to="/" className="form-auth">
+                  <NavLink to="/" className="form-auth pe-3">
                     <i class="fa-solid fa-mobile-screen-button"></i>
                     Hướng dẫn mua hàng
                   </NavLink>
                 </Nav>
                 <Nav>
-                  <NavLink to="/" className="form-auth">
+                  <NavLink to="/" className="form-auth pe-3">
                     <i class="fa-solid fa-gift"></i>
                     Ưu đãi khách hàng
                   </NavLink>
@@ -136,14 +140,24 @@ const Header = () => {
                 <>
                   <Navbar>
                     <NavLink>
-                      <img alt="" src={avatar.avatarUrl} className="aval" />
+                      <img alt="" src={avatarL.avatar} className="aval" />
                     </NavLink>
                   </Navbar>
                   <NavDropdown
-                    title={<span className="ft">{username.username}</span>}
+                    title={<span className="ft">{usernameL.username}</span>}
                     id="basic-nav-dropdown"
                     className="ft"
                   >
+                    <NavDropdown.Item>
+                      Số dư tài khoản
+                      <br />
+                      <b>
+                        {new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        }).format(balanceL.balance)}
+                      </b>
+                    </NavDropdown.Item>
                     <NavLink to="/User/Profile" className="dropdown-item">
                       Quản lí tài khoản
                     </NavLink>
@@ -165,7 +179,7 @@ const Header = () => {
                     onClick={() => handleClickLogin()}
                   >
                     Đăng nhập
-                  </NavLink >
+                  </NavLink>
                   <span className="form-auth mx-2">/</span>
                   <NavLink
                     className="form-auth"
@@ -178,9 +192,14 @@ const Header = () => {
             </Navbar>
           </Nav>
           <Nav>
-            <button className="btn btn-light custom-cart">
+            <button
+              className="btn btn-light custom-cart"
+              onClick={() => {
+                navigate("/Cart");
+              }}
+            >
               <i class="fa-solid fa-cart-shopping"></i>
-              Cart <Badge bg="secondary">9</Badge>
+              Cart <Badge bg="danger">{cart.length}</Badge>
               <span className="visually-hidden">unread messages</span>
             </button>
           </Nav>
@@ -222,33 +241,37 @@ const Header = () => {
       </div>
       <Container>
         <div className="p-2 d-flex justify-content-between sub-header">
-          <Nav>
-            <NavLink to="/" className="form-sub">
-              <i class="fa-solid fa-bars"></i>
-              Danh mục sản phẩm
-            </NavLink>
-          </Nav>
-          <Nav>
-            <NavLink to="/" className="form-sub">
-              <i class="fa-solid fa-mobile-screen-button"></i>
-              Thủ thuật & Tin Tức
-            </NavLink>
-          </Nav>
-          <Nav>
-            <NavLink to="/" className="form-sub">
-              <i class="fa-regular fa-handshake"></i>
-              Liên hệ hợp tác
-            </NavLink>
-          </Nav>
-          <Nav>
-            <NavLink to="/" className="form-sub">
-              <i class="fa-regular fa-gem"></i>
-              Ưu đãi khách hàng VIP
-            </NavLink>
-          </Nav>
+          <div>
+            <Nav>
+              <NavLink to="/" className="form-sub">
+                <i class="fa-solid fa-bars"></i>
+                Danh mục sản phẩm
+              </NavLink>
+            </Nav>
+          </div>
+          <div className="d-flex">
+            <Nav>
+              <NavLink to="/" className="form-sub pe-3">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                Checkin nhận quà !
+              </NavLink>
+            </Nav>
+            <Nav>
+              <NavLink to="/" className="form-sub pe-3">
+                <i class="fa-regular fa-handshake"></i>
+                Liên hệ hợp tác
+              </NavLink>
+            </Nav>
+            <Nav>
+              <NavLink to="/" className="form-sub">
+                <i class="fa-regular fa-gem"></i>
+                Ưu đãi khách hàng VIP
+              </NavLink>
+            </Nav>
+          </div>
         </div>
 
-        <Account show={isShowModalLogin}  handleClose={handleClose}/>
+        <Account show={isShowModalLogin} handleClose={handleClose} />
       </Container>
       <div>
         <hr />

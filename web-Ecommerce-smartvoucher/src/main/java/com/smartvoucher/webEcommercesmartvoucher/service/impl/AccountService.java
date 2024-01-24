@@ -38,9 +38,10 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.math.BigInteger;
+import java.security.cert.CertificateException;
+import java.util.*;
+
 @Slf4j
 @Service
 public class AccountService implements IAccountService {
@@ -108,8 +109,27 @@ public class AccountService implements IAccountService {
                 .build();
     }
 
+    public ResponseAuthentication googleToken(String email){
+        RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(email, Provider.local.name());
+        List<SimpleGrantedAuthority> roles = Collections.
+                singletonList(new SimpleGrantedAuthority(rolesUsers.getIdRole().getName()));
+        ResponseToken data = new ResponseToken();
+        data.setUsername(email);
+        data.setRoles(roles);
+        String token = jwtHelper.generateToken(gson.toJson(data));
+        String refreshToken = jwtHelper.generateRefreshToken(email);
+        revokeAllUserTokens(rolesUsers.getIdUser());
+        saveUserToken(rolesUsers.getIdUser(), refreshToken);
+        log.info("Generate token is successfully !");
+        return ResponseAuthentication.builder()
+                .accessToken(token)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
     @Override
-    public RefreshTokenDTO refreshToken(HttpServletRequest request, HttpServletResponse response) {
+    @Transactional(rollbackFor = Exception.class)
+    public RefreshTokenDTO refreshToken(HttpServletRequest request, HttpServletResponse response) throws CertificateException {
         final String headerValue = request.getHeader("Authorization");
         String accessToken = "";
         if (headerValue != null && headerValue.startsWith("Bearer ")){
@@ -149,6 +169,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseObject signInAdmin(SignInDTO signInDTO) {
         RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(
                 signInDTO.getEmail(), Provider.local.name()
@@ -165,6 +186,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseObject signInUser(SignInDTO signInDTO) {
         RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(
                 signInDTO.getEmail(), Provider.local.name()
@@ -181,8 +203,43 @@ public class AccountService implements IAccountService {
     }
 
     @Override
+    public ResponseObject signInGoogle(OAuth2TokenDTO oAuth2TokenDTO) {
+        OAuth2DTO data = jwtHelper.parserTokenGoogle(oAuth2TokenDTO.getToken());
+        UserEntity user = userRepository.findByEmailAndProvider(
+                data.getEmailGoogle(), Provider.local.name()
+        );
+        if (user == null){
+            UserDTO userDTO = userConverter.toUserDTO(
+                    userRepository.save(
+                            userConverter.toGoogleUserEntity(data)
+                    ));
+            RoleEntity role = roleRepository.findOneByName("ROLE_USER");
+            UserEntity userEntity = userRepository.findOneByMemberCode(userDTO.getMemberCode());
+            RolesUsersDTO rolesUsersDTO = roleUsersConverter.toRoleUserDTO(userEntity, role);
+            RolesUsersEntity rolesUsers = roleUsersConverter.toRoleUserEntity(rolesUsersDTO);
+            rolesUsers.setIdUser(userEntity);
+            rolesUsers.setIdRole(role);
+            this.roleUserRepository.save(
+                    rolesUsers
+            );
+        }
+        RolesUsersEntity rolesUsers = roleUserRepository.findOneByEmailAndProvider(
+                data.getEmailGoogle(), Provider.local.name());
+        if (rolesUsers.getIdRole().getName().equals("ROLE_USER")){
+            return new ResponseObject(
+                    200,
+                    "sign-In by user !",
+                    this.googleToken(data.getEmailGoogle())
+            );
+        }else {
+            throw new PermissionDenyException(403, "Permission Denied !", null);
+        }
+    }
+
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    public SignUpDTO SignUp(SignUpDTO signUpDTO) {
+    public String SignUp(SignUpDTO signUpDTO) throws MessagingException, UnsupportedEncodingException {
         if (userRepository.findByEmailAndProviderOrPhone(
                 signUpDTO.getEmail(),
                 Provider.local.name(),
@@ -201,8 +258,14 @@ public class AccountService implements IAccountService {
             this.roleUserRepository.save(
                     roleUsersConverter.toRoleUserEntity(rolesUsersDTO)
             );
+            String verifyCode = String.format("%040d", new BigInteger(
+                    UUID.randomUUID().toString().replace("-", ""), 16)
+            );
+            VerificationToken verificationToken = new VerificationToken(verifyCode.substring(0, 6), user);
+            this.verificationTokenRepository.save(verificationToken);
+            this.emailUtil.sendVerificationEmail(user.getEmail(), verifyCode.substring(0, 6));
             log.info("Success!  Please, check your email for to complete your registration");
-            return userConverter.signUp(userDTO);
+            return "Success!  Please, check your email for to complete your registration";
         } else {
             log.info("Email or Phone is available! Please try again !");
             throw new UserAlreadyExistException(406, "Email or Phone is available! Please try again !");
@@ -211,19 +274,13 @@ public class AccountService implements IAccountService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveUserVerificationToken(UserEntity user, String token) {
-        VerificationToken verificationToken = new VerificationToken(token, user);
-        this.verificationTokenRepository.save(verificationToken);
-    }
-
-    @Override
-    public String verifyEmail(String token) {
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+    public String verifyEmail(SignUpDTO signUpDTO) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(signUpDTO.getToken());
         if (verificationToken.getUser().isEnable()){
             log.info("This account has already been verified, please login!");
             return "This account has already been verified, please, login.";
         }
-        String verificationResult = validateToken(token);
+        String verificationResult = validateToken(signUpDTO.getToken());
         if (verificationResult.equalsIgnoreCase("Valid")){
             log.info("Email verified successfully. Now you can login to your account");
             return "Email verified successfully. Now you can login to your account";
@@ -232,17 +289,20 @@ public class AccountService implements IAccountService {
         return "Invalid verification token !";
     }
 
-    @Override
     public String validateToken(String verifyToken) {
-        VerificationToken token = verificationTokenRepository.findByToken(verifyToken);
-        if(token == null){
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(verifyToken);
+        if(verificationToken == null){
             log.info("Invalid verification token !");
             throw new VerificationTokenException(500, "Invalid verification token !");
         }
-        UserEntity userEntity = token.getUser();
+        if (verificationToken.getUser().isEnable()){
+            log.info("This account has already been verified, please login!");
+            return "This account has already been verified, please, login.";
+        }
+        UserEntity userEntity = verificationToken.getUser();
         Calendar calendar = Calendar.getInstance();
-        if ((token.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
-            verificationTokenRepository.delete(token);
+        if ((verificationToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
+            verificationTokenRepository.delete(verificationToken);
             log.info("Token already expired !");
             throw new VerificationTokenException(500, "Token already expired !");
         }
@@ -252,29 +312,74 @@ public class AccountService implements IAccountService {
         return "Valid";
     }
 
+    public String validateTokenReset(String verifyToken) {
+        VerificationToken tokenReset = verificationTokenRepository.findByToken(verifyToken);
+        if(tokenReset == null){
+            log.info("Invalid verification token !");
+            throw new VerificationTokenException(500, "Invalid verification token !");
+        }
+        Calendar calendar = Calendar.getInstance();
+        if ((tokenReset.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
+            verificationTokenRepository.delete(tokenReset);
+            log.info("Token already expired !");
+            throw new VerificationTokenException(500, "Token already expired !");
+        }
+        log.info("Token valid");
+        return "Valid";
+    }
+
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String forgotPassword(String email) throws MessagingException, UnsupportedEncodingException {
         UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
         if (user == null){
             log.info("User not exist !");
             throw new UserNotFoundException(404, "User not exist !");
         }
-        this.emailUtil.sendResetPassword(email);
+        String verifyCode = String.format("%040d", new BigInteger(
+                UUID.randomUUID().toString().replace("-", ""), 16)
+        );
+        VerificationToken verificationToken = new VerificationToken(verifyCode.substring(0, 6), user);
+        this.verificationTokenRepository.save(verificationToken);
+        this.emailUtil.sendResetPassword(email, verifyCode.substring(0, 6));
         log.info("Check your email to reset password if account was registered !");
         return "Check your email to reset password if account was register !";
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String setPassword(ResetPasswordDTO resetPasswordDTO) {
         UserEntity user = userRepository.findByEmailAndProvider(resetPasswordDTO.getEmail(), Provider.local.name());
         if (user == null){
             log.info("User not exist !");
             throw new UserNotFoundException(404, "User not exist !");
         }
-        user.setPwd(this.passwordEncoder.encode(resetPasswordDTO.getNewPassword()));
-        this.userRepository.save(user);
+        String verificationResult = validateTokenReset(resetPasswordDTO.getToken());
+        if (verificationResult.equalsIgnoreCase("valid")) {
+            user.setPwd(this.passwordEncoder.encode(resetPasswordDTO.getNewPassword()));
+            this.userRepository.save(user);
+        }else {
+            return "Verify code is not correct !";
+        }
         log.info("Set new password successfully !");
         return "Set new password successfully !";
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String resendActiveAccount(String email) throws MessagingException, UnsupportedEncodingException {
+        UserEntity user = userRepository.findByEmailAndProvider(email, Provider.local.name());
+        if (user == null){
+            log.info("User not found or exist !");
+            throw new ObjectNotFoundException(404, "User not found or exist !");
+        }
+        String verifyCode = String.format("%040d", new BigInteger(
+                UUID.randomUUID().toString().replace("-", ""), 16)
+        );
+        VerificationToken verificationToken = new VerificationToken(verifyCode.substring(0, 6), user);
+        this.verificationTokenRepository.save(verificationToken);
+        this.emailUtil.sendVerificationEmail(email, verifyCode.substring(0, 6));
+        return "Verification code is resend to your email ! please check email to activation account again !";
     }
 
     private void saveUserToken(UserEntity user, String jwtToken){

@@ -1,6 +1,8 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
-import com.smartvoucher.webEcommercesmartvoucher.dto.*;
+import com.smartvoucher.webEcommercesmartvoucher.dto.BuyTicketDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDetailDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,9 +43,9 @@ public class TicketConverter {
     public TicketDTO toTicketDTO(TicketEntity ticketEntity) {
             TicketDTO ticketDTO = new TicketDTO(); // This is ticketDTO
             ticketDTO.setIdSerialDTO(serialConverter.toSerialDTO(ticketEntity.getIdSerial())); // set id serial
-            ticketDTO.setIdWarehouseDTO(wareHouseConverter.toWareHouseDTO(ticketEntity.getIdWarehouse())); // set id warehouse
+            ticketDTO.setIdWarehouseDTO(wareHouseConverter.toWareHouseDTO(ticketEntity.getIdWarehouse()));
+            ticketDTO.setIdOrderDTO(orderConverter.toOrderDTO(ticketEntity.getIdOrder()));// set id warehouse
             ticketDTO.setIdCategoryDTO(categoryConverter.toCategoryDTO(ticketEntity.getIdCategory())); // set id category
-            ticketDTO.setIdOrderDTO(orderConverter.toOrdersDTO(ticketEntity.getIdOrder())); // set id order
             ticketDTO.setIdUserDTO(userConverter.toUserDTO(ticketEntity.getIdUser())); // set id User
             ticketDTO.setId(ticketEntity.getId());
             ticketDTO.setClaimedTime(ticketEntity.getClaimedTime());
@@ -67,6 +69,36 @@ public class TicketConverter {
     public List<TicketDTO> toTicketDTOList(List<TicketEntity> ticketEntityList){
         return ticketEntityList.stream().map(this::toTicketDTO).collect(Collectors.toList());
     }
+
+    public TicketDetailDTO toTicketDetailDTO(TicketEntity ticketEntity) {
+        TicketDetailDTO ticketDetailDTO = new TicketDetailDTO(); // This is ticketDTO
+        ticketDetailDTO.setSerialCode(ticketEntity.getIdSerial().getSerialCode()); // set id serial
+        ticketDetailDTO.setWarehouseName(ticketEntity.getIdWarehouse().getName()); // set id warehouse
+        ticketDetailDTO.setCategoryName(ticketEntity.getIdCategory().getName()); // set id category
+        ticketDetailDTO.setOrderNo(ticketEntity.getIdOrder().getOrderNo()); // set id order
+        ticketDetailDTO.setEmail(ticketEntity.getIdUser().getEmail()); // set id User
+        ticketDetailDTO.setId(ticketEntity.getId());
+        ticketDetailDTO.setClaimedTime(ticketEntity.getClaimedTime());
+        ticketDetailDTO.setRedeemedtimeTime(ticketEntity.getRedeemedtimeTime());
+        ticketDetailDTO.setExpiredTime(ticketEntity.getExpiredTime());
+        ticketDetailDTO.setDiscountType(ticketEntity.getDiscountType());
+        ticketDetailDTO.setDiscountAmount(ticketEntity.getDiscountAmount());
+        ticketDetailDTO.setBannerUrl(ticketEntity.getBannerUrl());
+        ticketDetailDTO.setThumbnailUrl(ticketEntity.getThumbnailUrl());
+        ticketDetailDTO.setAcquirerLogoUrl(ticketEntity.getAcquirerLogoUrl());
+        ticketDetailDTO.setTermOfUse(ticketEntity.getTermOfUse());
+        ticketDetailDTO.setDescription(ticketEntity.getDescription());
+        ticketDetailDTO.setVoucherChannel(ticketEntity.getVoucherChannel());
+        ticketDetailDTO.setAvailableFrom(ticketEntity.getAvailbleFrom());
+        ticketDetailDTO.setAvailableTo(ticketEntity.getAvaibleTo());
+        ticketDetailDTO.setStoreName(ticketEntity.getIdStore().getName());
+        ticketDetailDTO.setStatus(ticketEntity.getStatus());
+        return ticketDetailDTO;
+    }
+
+   public List<TicketDetailDTO> listTicketDetailDTO(List<TicketEntity> ticketEntityList){
+        return ticketEntityList.stream().map(this::toTicketDetailDTO).collect(Collectors.toList());
+   }
 
     public TicketEntity insertTicket(TicketDTO ticketDTO
                                             , SerialEntity serialEntity
@@ -112,5 +144,29 @@ public class TicketConverter {
             oldTicket.setStatus(statusTicket);
         }
         return oldTicket;
+    }
+
+    public TicketEntity toBuyTicketEntity(BuyTicketDTO buyTicketDTO, WareHouseEntity wareHouseEntity){
+        TicketEntity ticketEntity = new TicketEntity();
+        BigDecimal value = new BigDecimal(String.valueOf(buyTicketDTO.getDiscountAmount()));
+
+        buyTicketDTO.setBannerUrl(wareHouseEntity.getBannerUrl());
+        buyTicketDTO.setAvailableFrom(wareHouseEntity.getAvailableFrom());
+        buyTicketDTO.setAvailableTo(wareHouseEntity.getAvailableTo());
+        buyTicketDTO.setClaimedTime(new Timestamp(System.currentTimeMillis()));
+        buyTicketDTO.setExpiredTime(wareHouseEntity.getAvailableTo());
+        buyTicketDTO.setRedeemTime(new Timestamp(System.currentTimeMillis()));
+        buyTicketDTO.setDiscountType(wareHouseEntity.getDiscountType().getName());
+        buyTicketDTO.setDiscountAmount(value);
+
+        ticketEntity.setStatus(buyTicketDTO.getStatus());
+        ticketEntity.setBannerUrl(buyTicketDTO.getBannerUrl());
+        ticketEntity.setClaimedTime(buyTicketDTO.getClaimedTime());
+        ticketEntity.setAvailbleFrom(buyTicketDTO.getAvailableFrom());
+        ticketEntity.setAvaibleTo(buyTicketDTO.getAvailableTo());
+        ticketEntity.setRedeemedtimeTime(buyTicketDTO.getRedeemTime());
+        ticketEntity.setDiscountType(buyTicketDTO.getDiscountType());
+        ticketEntity.setDiscountAmount(buyTicketDTO.getDiscountAmount());
+        return  ticketEntity;
     }
 }

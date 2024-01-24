@@ -2,20 +2,17 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
 import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.UserConverter;
-import com.smartvoucher.webEcommercesmartvoucher.dto.BlockUserDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.ChangePasswordDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.*;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
+import com.smartvoucher.webEcommercesmartvoucher.exception.BadRequestException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ChangePasswordException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.exception.UserNotFoundException;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IUserService;
-import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustom;
-import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadGoogleDriveUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +33,7 @@ public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private final UserConverter userConverter;
-    private final UploadUtil uploadUtil;
+    private final UploadGoogleDriveUtil uploadGoogleDriveUtil;
     private final PasswordEncoder passwordEncoder;
     @Value("${drive_view}")
     private String driveUrl;
@@ -44,11 +41,11 @@ public class UserService implements IUserService {
     @Autowired
     public UserService(final UserRepository userRepository,
                        final UserConverter userConverter,
-                       final UploadUtil uploadUtil,
+                       final UploadGoogleDriveUtil uploadGoogleDriveUtil,
                        final PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
-        this.uploadUtil = uploadUtil;
+        this.uploadGoogleDriveUtil = uploadGoogleDriveUtil;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -59,7 +56,7 @@ public class UserService implements IUserService {
         String email = connectedUser.getName();
         UserEntity userEntity = userRepository.findByEmailAndProvider(email, Provider.local.name());
         if (userEntity != null){
-            File file = uploadUtil.uploadImages(fileName, folderId);
+            File file = uploadGoogleDriveUtil.uploadImages(fileName, folderId);
             userEntity.setAvatarUrl(driveUrl+file.getId());
             this.userRepository.save(userEntity);
         }else {
@@ -171,21 +168,6 @@ public class UserService implements IUserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public UserDetailDTO getInformationOauth2User(OAuth2UserDetailCustom oAuth2UserDetail) {
-        UserEntity user;
-        String email = oAuth2UserDetail.getUsername();
-        if (this.userRepository.findByEmailAndProvider(email, Provider.google.name()) != null) {
-            user = userRepository.findByEmailAndProvider(email, Provider.google.name());
-            log.info("Get information oAuth2User completed !");
-            return userConverter.toUserDetailDTO(user);
-        }else {
-            log.info("Get information oAuth2User failed, User not found data");
-            throw new UserNotFoundException(404, "User not found data");
-        }
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public String editUserProfile(UserDetailDTO userDetailDTO,
                                   Principal connectedUser) {
@@ -215,5 +197,26 @@ public class UserService implements IUserService {
             throw new UserNotFoundException(404, "User not found data !");
         }
         return isBlockUser;
+    }
+
+    @Override
+    public BuyVoucherDTO buyTicketByBalance(BuyVoucherDTO buyVoucherDTO, Principal connectedUser) {
+        UserEntity user = userRepository.findByEmailAndProvider(connectedUser.getName(), Provider.local.name());
+        if (user == null){
+            log.info("User not found !");
+            throw new UserNotFoundException(404, "User not found !");
+        }
+        if (buyVoucherDTO.getBalance() < buyVoucherDTO.getTotal()){
+            log.info("Số dư nhỏ hơn giá trị thanh toán, vui lòng nạp thêm !");
+            throw new BadRequestException(400, "Số dư nhỏ hơn giá trị thanh toán, vui lòng nạp thêm !");
+        }
+        if (buyVoucherDTO.getBalance() == 0){
+            log.info("vui lòng nạp thêm !");
+            throw new BadRequestException(400, "vui lòng nạp thêm !");
+        }
+        double currentAmount = buyVoucherDTO.getBalance() - buyVoucherDTO.getTotal();
+        user.setBalance(currentAmount);
+        log.info("Cập nhật số dư trong tài khoản !");
+        return userConverter.toBuyVoucherDTO(userRepository.save(user));
     }
 }

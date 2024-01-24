@@ -33,6 +33,7 @@ public class UserDetailDTO {
     private String email;
 
     private String address;
+    private double balance;
 
     private Timestamp createdAt;
 

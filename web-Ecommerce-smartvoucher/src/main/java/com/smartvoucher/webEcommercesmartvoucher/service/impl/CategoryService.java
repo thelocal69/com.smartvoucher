@@ -10,7 +10,7 @@ import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundExcepti
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.ICategoryRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.ICategoryService;
-import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadGoogleDriveUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,17 +29,17 @@ public class CategoryService implements ICategoryService {
 
     private final ICategoryRepository categoryRepository;
     private final CategoryConverter categoryConverter;
-    private final UploadUtil uploadUtil;
+    private final UploadGoogleDriveUtil uploadGoogleDriveUtil;
     @Value("${drive_view}")
     private String driveUrl;
 
     @Autowired
     public CategoryService(final ICategoryRepository categoryRepository,
                            final CategoryConverter categoryConverter,
-                           final UploadUtil uploadUtil) {
+                           final UploadGoogleDriveUtil uploadGoogleDriveUtil) {
         this.categoryRepository = categoryRepository;
         this.categoryConverter = categoryConverter;
-        this.uploadUtil = uploadUtil;
+        this.uploadGoogleDriveUtil = uploadGoogleDriveUtil;
     }
 
     @Override
@@ -156,7 +156,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public String uploadCategoryImages(MultipartFile fileName) {
         String folderId = "17pJEY12p30od5F0aw2BETsguQZK5sTCZ";
-        File file = uploadUtil.uploadImages(fileName, folderId);
+        File file = uploadGoogleDriveUtil.uploadImages(fileName, folderId);
         return driveUrl+file.getId();
     }
 }

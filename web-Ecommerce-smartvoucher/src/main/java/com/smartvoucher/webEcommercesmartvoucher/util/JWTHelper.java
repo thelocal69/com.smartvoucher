@@ -1,30 +1,72 @@
 package com.smartvoucher.webEcommercesmartvoucher.util;
 
+import com.google.gson.Gson;
+import com.smartvoucher.webEcommercesmartvoucher.dto.OAuth2DTO;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 @Slf4j
 @Component
 public class JWTHelper {
-
-    @Value("${jwt.token.key}")
-    private String jwtKey;
+    @Value("${public-key}")
+    private String publicKey;
+    @Value("${private-key}")
+    private String privateKey;
     @Value("${access.token.expired}")
     private Long accessTokenExpired;
     @Value("${refresh.token.expired}")
     private Long refreshTokenExpired;
+    private final Gson gson;
 
-    private SecretKey getKeys(){
-        return Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(jwtKey));
+    @Autowired
+    public JWTHelper(Gson gson) {
+        this.gson = gson;
+    }
+
+    private RSAPrivateKey getPrivateKeys() {
+        PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(
+                Base64.getDecoder().decode(privateKey)
+        );
+        RSAPrivateKey rsaPrivateKey = null;
+        try {
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            rsaPrivateKey = (RSAPrivateKey) keyFactory.generatePrivate(privateKeySpec);
+
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            log.info(e.getMessage());
+        }
+        return rsaPrivateKey;
+    }
+
+    private RSAPublicKey getPublicKeys() {
+        X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
+                Base64.getDecoder().decode(publicKey)
+        );
+        RSAPublicKey rsaPublicKey = null;
+        try {
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            rsaPublicKey = (RSAPublicKey) keyFactory.generatePublic(publicKeySpec);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            log.info(e.getMessage());
+        }
+        return rsaPublicKey;
     }
 
     public String generateToken(String data){
@@ -33,7 +75,7 @@ public class JWTHelper {
         return Jwts.builder()
                 .setSubject(data)
                 .setIssuer("com.smartvoucher")
-                .signWith(getKeys())
+                .signWith(getPrivateKeys())
                 .setExpiration(newExpiredTime)
                 .compact();
     }
@@ -43,7 +85,7 @@ public class JWTHelper {
         Date newExpiredTime = new Date(expiredTime);
         return Jwts.builder()
                 .setSubject(data)
-                .signWith(getKeys())
+                .signWith(getPrivateKeys())
                 .setExpiration(newExpiredTime)
                 .compact();
     }
@@ -55,34 +97,53 @@ public class JWTHelper {
                 .setSubject(data)
                 .setIssuedAt(new Date())
                 .setExpiration(newExpiredTime)
-                .signWith(getKeys())
+                .signWith(getPrivateKeys())
                 .compact();
     }
 
-    public String getUserIdFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getKeys()).build()
-                .parseClaimsJws(token)
-                .getBody();
 
-        return claims.getSubject();
-    }
-
-    public String parserToken(String token){
+    public String parserToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getKeys()).build()
+                .setSigningKey(getPublicKeys()).build()
                 .parseClaimsJws(token).getBody()
                 .getSubject();
     }
 
-    public boolean validationToke(String token){
-        try {
-            Jwts.parserBuilder().setSigningKey(getKeys()).build()
-                    .parseClaimsJws(token);
-            return true;
-        }catch (ExpiredJwtException exception){
-            log.info("Expired token", exception);
-        }
-        return false;
+    public OAuth2DTO parserTokenGoogle(String token) {
+        String[] chunks = token.split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+        String payload = new String(decoder.decode(chunks[1]));
+        Map<String, Object> mapping = gson.fromJson(payload, HashMap.class);
+        OAuth2DTO oAuth2DTO = new OAuth2DTO();
+        oAuth2DTO.setEmailGoogle(mapping.get("email").toString());
+        oAuth2DTO.setNameGoogle(mapping.get("name").toString());
+        oAuth2DTO.setAvatarGoogle(mapping.get("picture").toString());
+        return oAuth2DTO;
+    }
+
+    public Date getExpirationDateFromToken(String token) {
+        return getClaimFromToken(token, Claims::getExpiration);
+    }
+
+    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims getAllClaimsFromToken(String token) {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getPublicKeys())
+                .build()
+                .parseClaimsJws(token).getBody();
+    }
+
+    private Boolean isTokenExpired(String token) {
+        final Date expiration = getExpirationDateFromToken(token);
+        return expiration.before(new Date());
+    }
+
+    public boolean validationToke(String token) {
+        return !isTokenExpired((token));
     }
 }

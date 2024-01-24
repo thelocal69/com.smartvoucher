@@ -46,6 +46,20 @@ public class WarehouseStoreController {
                 )
         );
     }
+
+    @GetMapping("/api/getId_Store")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<ResponseObject> getIdStore(@RequestParam Long idWarehouse){
+        log.info("get id store is completed !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "get id store is completed !",
+                        this.warehouseStoreService.getWarehouseStoreByIdWarehouse(idWarehouse)
+                )
+        );
+    }
+
     @DeleteMapping("/api/delete")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ResponseObject> deleteWarehouseStore(@RequestBody WarehouseStoreDTO warehouseStoreDTO,

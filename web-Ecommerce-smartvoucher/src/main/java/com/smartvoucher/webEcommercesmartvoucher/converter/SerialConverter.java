@@ -1,23 +1,16 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.SerialDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
-import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
 public class SerialConverter {
-
-    private final RandomCodeHandler randomCodeHandler;
-
-    public SerialConverter(RandomCodeHandler randomCodeHandler){
-        this.randomCodeHandler = randomCodeHandler;
-    }
 
     public SerialDTO toSerialDTO(SerialEntity serialEntity) {
             SerialDTO serialDTO = new SerialDTO();
@@ -37,7 +30,7 @@ public class SerialConverter {
             SerialEntity serialEntity = new SerialEntity();
             serialEntity.setBatchCode(serialDTO.getBatchCode());
             serialEntity.setNumberOfSerial(serialDTO.getNumberOfSerial());
-            serialEntity.setSerialCode(randomCodeHandler.generateRandomChars(10));
+            serialEntity.setSerialCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
             serialEntity.setStatus(1);
         return serialEntity;
     }

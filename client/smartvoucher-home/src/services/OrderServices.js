@@ -9,3 +9,7 @@ export const getAllOrder = (page, limit, sortBy, sortField) => {
 export const getOrder = (id) => {
   return Http.get(`/order/api/get/${id}`);
 };
+
+export const addOrder = (obj) => {
+  return Http.post(`/order/api/add-order`, obj);
+};

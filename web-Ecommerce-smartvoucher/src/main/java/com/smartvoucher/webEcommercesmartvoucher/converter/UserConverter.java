@@ -1,31 +1,28 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
-import com.smartvoucher.webEcommercesmartvoucher.dto.SignInDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.SignUpDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.UserDetailDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.*;
 import com.smartvoucher.webEcommercesmartvoucher.entity.UserEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.enums.Provider;
-import com.smartvoucher.webEcommercesmartvoucher.util.RandomCodeHandler;
 import com.smartvoucher.webEcommercesmartvoucher.util.StringsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
 public class  UserConverter {
 
-    private final RandomCodeHandler randomCodeHandler;
     private final PasswordEncoder passwordEncoder;
     private final StringsUtil stringsUtil;
+    @Value("${drive_view}")
+    private String googleDrive;
     @Autowired
-    public UserConverter( RandomCodeHandler randomCodeHandler,
-                          PasswordEncoder passwordEncoder,
+    public UserConverter(PasswordEncoder passwordEncoder,
                           final StringsUtil stringsUtil){
-        this.randomCodeHandler = randomCodeHandler;
         this.passwordEncoder = passwordEncoder;
         this.stringsUtil = stringsUtil;
     }
@@ -75,35 +72,35 @@ public class  UserConverter {
         return userEntity;
     }
 
-    public UserEntity signIn(SignInDTO signInDTO){
-        UserEntity userEntity = new UserEntity();
-        userEntity.setEmail(signInDTO.getEmail());
-        userEntity.setPwd(signInDTO.getPassword());
-        return  userEntity;
-    }
-
     public UserEntity signUp(SignUpDTO signUpDTO) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setMemberCode(randomCodeHandler.generateRandomChars(10));
+        userEntity.setMemberCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
         userEntity.setPwd(passwordEncoder.encode(signUpDTO.getPassword()));
-        userEntity.setAvatarUrl("https://drive.google.com/uc?export=view&id=1rdcr4ukMLFU2CNmLyrCIixanHu4y31JY");
+        userEntity.setAvatarUrl(googleDrive+"1rdcr4ukMLFU2CNmLyrCIixanHu4y31JY");
         userEntity.setPhone(signUpDTO.getPhone());
         userEntity.setEmail(signUpDTO.getEmail());
         userEntity.setUsername(stringsUtil.getUserNameFormDomain(signUpDTO.getEmail()));
         userEntity.setEnable(false);
         userEntity.setStatus(1);
         userEntity.setProvider(Provider.local.name());
+        userEntity.setBalance(10000000.00);
         userEntity.setCreatedAt(signUpDTO.getCreatedAt());
         return userEntity;
     }
 
-
-    public SignUpDTO signUp(UserDTO userDTO) {
-        SignUpDTO signUpDTO = new SignUpDTO();
-        signUpDTO.setEmail(userDTO.getEmail());
-        signUpDTO.setPhone(userDTO.getPhone());
-        return signUpDTO;
+    public UserEntity toGoogleUserEntity(OAuth2DTO oAuth2DTO){
+        UserEntity user = new UserEntity();
+        user.setEmail(oAuth2DTO.getEmailGoogle());
+        user.setFullName(oAuth2DTO.getNameGoogle());
+        user.setAvatarUrl(oAuth2DTO.getAvatarGoogle());
+        user.setUsername(stringsUtil.getUserNameFormDomain(oAuth2DTO.getEmailGoogle()));
+        user.setMemberCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
+        user.setEnable(true);
+        user.setProvider(Provider.local.name());
+        user.setBalance(10000000.00);
+        return  user;
     }
+
     public UserDetailDTO toUserDetailDTO (UserEntity userEntity) {
         UserDetailDTO userDetailDTO = new UserDetailDTO();
         userDetailDTO.setId(userEntity.getId());
@@ -115,6 +112,7 @@ public class  UserConverter {
         userDetailDTO.setPhone(userEntity.getPhone());
         userDetailDTO.setEmail(userEntity.getEmail());
         userDetailDTO.setAddress(userEntity.getAddress());
+        userDetailDTO.setBalance(userEntity.getBalance());
         userDetailDTO.setCreatedAt(userEntity.getCreatedAt());
         return userDetailDTO;
     }
@@ -126,7 +124,13 @@ public class  UserConverter {
         userEntity.setUsername(userDetailDTO.getUserName());
         userEntity.setPhone(userDetailDTO.getPhone());
         userEntity.setAddress(userDetailDTO.getAddress());
+        userEntity.setBalance(userDetailDTO.getBalance());
         return userEntity;
     }
 
+    public BuyVoucherDTO toBuyVoucherDTO(UserEntity userEntity){
+        BuyVoucherDTO buyVoucherDTO = new BuyVoucherDTO();
+        buyVoucherDTO.setBalance(userEntity.getBalance());
+        return buyVoucherDTO;
+    }
 }

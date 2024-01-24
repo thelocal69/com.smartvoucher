@@ -9,7 +9,7 @@ import com.smartvoucher.webEcommercesmartvoucher.exception.ObjectNotFoundExcepti
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IMerchantService;
-import com.smartvoucher.webEcommercesmartvoucher.util.UploadUtil;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadGoogleDriveUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,17 +28,17 @@ public class MerchantService implements IMerchantService {
 
     private final IMerchantRepository merchantRepository;
     private final MerchantConverter merchantConverter;
-    private final UploadUtil uploadUtil;
+    private final UploadGoogleDriveUtil uploadGoogleDriveUtil;
     @Value("${drive_view}")
     private String driveUrl;
 
     @Autowired
     public MerchantService(final  IMerchantRepository merchantRepository,
                            final MerchantConverter merchantConverter,
-                           final UploadUtil uploadUtil){
+                           final UploadGoogleDriveUtil uploadGoogleDriveUtil){
         this.merchantRepository = merchantRepository;
         this.merchantConverter = merchantConverter;
-        this.uploadUtil = uploadUtil;
+        this.uploadGoogleDriveUtil = uploadGoogleDriveUtil;
     }
 
     @Override
@@ -162,7 +162,7 @@ public class MerchantService implements IMerchantService {
     @Override
     public String uploadMerchantImages(MultipartFile fileName) {
         String folderId = "1z6B_EyGuGN5AJX8tqrGnZkT6XMiKuTg5";
-        File file = uploadUtil.uploadImages(fileName, folderId);
+        File file = uploadGoogleDriveUtil.uploadImages(fileName, folderId);
         return driveUrl+file.getId();
     }
 

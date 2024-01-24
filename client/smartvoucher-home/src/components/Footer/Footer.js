@@ -2,9 +2,12 @@ import React from "react";
 import "../Footer/Footer.scss";
 import { Image, Container } from "react-bootstrap";
 import Account from "../Security/Account";
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "../../Redux/data/AuthSlice";
 
 const Footer = () => {
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
+  const authenticated = useSelector(selectIsAuthenticated);
 
   const handleClose = () => {
     setIsShowModalLogin(false);
@@ -12,40 +15,43 @@ const Footer = () => {
 
   return (
     <>
-      <div className="bg-footer mt-3">
-        <Container>
-          <div className="d-flex align-items-center p-3">
-            <div>
-              <Image src="https://cdn.divineshop.vn/static/528b91cfa29c7ffd85418f4b1e8cc8ce.svg" />
-            </div>
-            <div className="font-color p-3">
-              <h3>Bạn chưa có tài khoản?</h3>
-              <div className="py-3">
-                Hãy tạo ngay một tài khoản để sử dụng đầy đủ các tính năng, tích
-                lũy ưu đãi khi thanh toán các sản phẩm và tham gia vào chương
-                trình Giới thiệu bạn bè nhận hoa hồng vĩnh viễn tại Divine Shop.
+      {authenticated === false && (
+        <div className="bg-footer mt-3">
+          <Container>
+            <div className="d-flex align-items-center p-3">
+              <div>
+                <Image src="https://cdn.divineshop.vn/static/528b91cfa29c7ffd85418f4b1e8cc8ce.svg" />
               </div>
-              <div className="d-flex">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => setIsShowModalLogin(true)}
-                >
-                  Đăng ký ngay
-                </button>
-                <div className="p-2">
-                  Hoặc bạn đã có tài khoản?{" "}
+              <div className="font-color p-3">
+                <h3>Bạn chưa có tài khoản?</h3>
+                <div className="py-3">
+                  Hãy tạo ngay một tài khoản để sử dụng đầy đủ các tính năng,
+                  tích lũy ưu đãi khi thanh toán các sản phẩm và tham gia vào
+                  chương trình Giới thiệu bạn bè nhận hoa hồng vĩnh viễn tại
+                  Divine Shop.
+                </div>
+                <div className="d-flex">
                   <button
-                    className="btn-footer"
+                    className="btn btn-primary"
                     onClick={() => setIsShowModalLogin(true)}
                   >
-                    Đăng nhập
+                    Đăng ký ngay
                   </button>
+                  <div className="p-2">
+                    Hoặc bạn đã có tài khoản?{" "}
+                    <button
+                      className="btn-footer"
+                      onClick={() => setIsShowModalLogin(true)}
+                    >
+                      Đăng nhập
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </Container>
-      </div>
+          </Container>
+        </div>
+      )}
       <Container>
         <div className="p-3">
           <Image

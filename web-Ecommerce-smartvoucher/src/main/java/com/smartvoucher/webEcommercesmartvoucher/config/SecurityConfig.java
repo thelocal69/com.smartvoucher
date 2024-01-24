@@ -3,10 +3,6 @@ package com.smartvoucher.webEcommercesmartvoucher.config;
 
 import com.smartvoucher.webEcommercesmartvoucher.filter.JWTFilter;
 import com.smartvoucher.webEcommercesmartvoucher.provider.CustomAuthenticationProvider;
-import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.OAuth2UserDetailCustomService;
-import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.handler.OAuth2FailureHandlerCustom;
-import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.handler.OAuth2SuccessHandlerCustom;
-import com.smartvoucher.webEcommercesmartvoucher.service.oauth2.security.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,30 +33,18 @@ public class SecurityConfig {
     private final JWTFilter jwtFilter;
     private final LogoutHandler logoutHandler;
     private final UserDetailsService userDetailsService;
-    private final OAuth2UserDetailCustomService oAuth2UserDetailCustomService;
-    private final OAuth2FailureHandlerCustom oAuth2FailureHandlerCustom;
-    private final OAuth2SuccessHandlerCustom oAuth2SuccessHandlerCustom;
-    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     @Value("${frontend_utl}")
     private String frontEndURL;
     @Autowired
     public SecurityConfig(final CustomAuthenticationProvider customAuthenticationProvider,
                           final JWTFilter jwtFilter,
                           final LogoutHandler logoutHandler,
-                          final UserDetailsService userDetailsService,
-                          final OAuth2UserDetailCustomService oAuth2UserDetailCustomService,
-                          final OAuth2FailureHandlerCustom oAuth2FailureHandlerCustom,
-                          final OAuth2SuccessHandlerCustom oAuth2SuccessHandlerCustom,
-                          final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository
+                          final UserDetailsService userDetailsService
     ) {
         this.customAuthenticationProvider = customAuthenticationProvider;
         this.jwtFilter = jwtFilter;
         this.logoutHandler = logoutHandler;
         this.userDetailsService = userDetailsService;
-        this.oAuth2UserDetailCustomService = oAuth2UserDetailCustomService;
-        this.oAuth2FailureHandlerCustom = oAuth2FailureHandlerCustom;
-        this.oAuth2SuccessHandlerCustom = oAuth2SuccessHandlerCustom;
-        this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
     }
 
     @Bean
@@ -76,10 +60,6 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Bean
-    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository(){
-        return new HttpCookieOAuth2AuthorizationRequestRepository();
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
@@ -107,6 +87,8 @@ public class SecurityConfig {
                     .authorizeHttpRequests()
                     .antMatchers("/account/**").permitAll()
                     .antMatchers("**/upload").permitAll()
+                    .antMatchers("/comment/**").permitAll()
+                    .antMatchers("/reply/**").permitAll()
                     //merchant
                     .antMatchers(HttpMethod.GET, "/merchant").permitAll()
                     .antMatchers(HttpMethod.GET, "/merchant/api/getAll").hasRole("ADMIN")
@@ -125,10 +107,10 @@ public class SecurityConfig {
                     .antMatchers("/label/api/getAll").hasRole("ADMIN")
                     //user
                     .antMatchers(HttpMethod.GET,"/user/api/infor").hasRole("USER")
-                    .antMatchers(HttpMethod.GET,"/user/api/auth2/infor").hasRole("USER")
                     .antMatchers(HttpMethod.PUT,"/user/api/edit").hasRole("USER")
                     .antMatchers(HttpMethod.POST,"/user/api/upload").hasRole("USER")
                     .antMatchers(HttpMethod.PUT,"/user/api/change_pwd").hasRole("USER")
+                    .antMatchers(HttpMethod.PUT, "/user/api/buy_voucher").hasRole("USER")
                     .antMatchers(HttpMethod.GET, "/user/api/getAll").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/user/api/search").hasRole("ADMIN")
                     .antMatchers(HttpMethod.PUT, "/user/api/block/{id}").hasRole("ADMIN")
@@ -167,10 +149,9 @@ public class SecurityConfig {
                     //store
                     //order
                     .antMatchers(HttpMethod.GET, "/order/api/list-order").hasRole("USER")
-                    .antMatchers(HttpMethod.GET, "/order/api/get_all_oder_user/{id}").hasRole("USER")
                     .antMatchers(HttpMethod.GET, "/order/api/get/{id}").hasRole("USER")
                     .antMatchers(HttpMethod.GET, "/order/api/get/all").hasRole("USER")
-                    .antMatchers(HttpMethod.POST, "/order/api/add-order").hasRole("USER")
+                        .antMatchers(HttpMethod.POST, "/order/api/add-order").hasRole("USER")
                     .antMatchers(HttpMethod.DELETE, "/order/api/delete-order").hasRole("USER")
                     //order
                     //warehouse
@@ -194,11 +175,12 @@ public class SecurityConfig {
                     //warehouse_store
                     //warehouse_merchant
                     .antMatchers(HttpMethod.GET, "/warehouse_store").permitAll()
+                    .antMatchers(HttpMethod.GET, "/warehouse_store/api/getId_Store").permitAll()
                     .antMatchers(HttpMethod.POST,"/warehouse_store/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/warehouse_store/api/delete").hasRole("ADMIN")
                     //warehouse_merchant
                     //warehouse_store
-                    .antMatchers(HttpMethod.GET, "/warehouse_serial").permitAll()
+                    .antMatchers(HttpMethod.GET, "/warehouse_serial/api/all").hasRole("USER")
                     .antMatchers(HttpMethod.POST,"/warehouse_serial/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/warehouse_serial/api/delete").hasRole("ADMIN")
                     //warehouse_store
@@ -225,7 +207,7 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.PUT,"/serial/api/update-serial").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/serial/api/delete-serial").hasRole("ADMIN")
                     //serial
-                    .anyRequest().authenticated()// tất cả những cái còn lại đều cần phải chứng thực
+                    .anyRequest().authenticated()
                     .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                     .logout()
                     .deleteCookies("JSESSIONID")

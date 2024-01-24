@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import Moment from "moment";
 import { toast } from "react-toastify";
 import "../Detail/OrderInfor.scss";
+import Ticket from '../../User/Ticket';
 
 const OrderInfor = () => {
   const { id } = useParams();
@@ -45,7 +46,7 @@ const OrderInfor = () => {
                 </h6>
                 <p>Mã đơn hàng: #{listOrderInfor.orderNo}</p>
                 <p>
-                  Ngày tạo:
+                  Ngày tạo:{" "}
                   <span>
                     {Moment(listOrderInfor.createdAt).format(
                       "YYYY/DD/MM hh:mm:ss"
@@ -53,7 +54,7 @@ const OrderInfor = () => {
                   </span>
                 </p>
                 <p>
-                  Trạng thái đơn hàng:
+                  Trạng thái đơn hàng:{" "}
                   <span
                     className={
                       listOrderInfor.status ? "ac active" : "ac deactive"
@@ -62,19 +63,22 @@ const OrderInfor = () => {
                     {listOrderInfor.status ? "Đã xử lý" : "Chưa xử lí"}
                   </span>
                 </p>
-                <p>Người nhận: {}</p>
+                <p>Người nhận: {listOrderInfor.email}</p>
               </div>
               <div>
                 <h6>
                   <b>Giá trị đơn hàng</b>
                 </h6>
                 <p>
-                  Tổng giá trị sản phẩm
-                  
+                  Tổng giá trị sản phẩm:{" "}
+                  {listOrderInfor.price * listOrderInfor.quantity}đ
                 </p>
               </div>
             </div>
             <hr />
+            <div>
+              <Ticket id={id}/>
+            </div>
           </div>
         </Container>
       )}

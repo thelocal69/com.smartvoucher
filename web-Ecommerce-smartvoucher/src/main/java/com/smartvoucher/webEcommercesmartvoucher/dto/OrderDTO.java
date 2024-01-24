@@ -17,20 +17,21 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderDTO {
     private long id;
+    @NotNull(message = "Please fill all information!")
+    private long idWarehouse;
+    @NotNull(message = "Please fill all information!")
+    private long idUser;
     private String orderNo;
     @NotNull(message = "Please fill all information!")
     @Min(value = 1)
     @Max(value = 3)
     private int status;
-    @NotNull(message = "Please fill all information!")
-    private UserDTO idUserDTO;
+    private String email;
     @NotNull(message = "Please fill all information!")
     @Min(value = 1)
     private int quantity;
-    @NotNull(message = "Please fill all information!")
-    private WareHouseDTO idWarehouseDTO;
-    private List<TicketDTO> listTicketDTO;
-    private String discountName;
+    private double price;
+    private String warehouseName;
     private String createdBy;
     private String updatedBy;
     private Timestamp createdAt;

@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.service;
 
 
+import com.smartvoucher.webEcommercesmartvoucher.dto.BuyTicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.dto.UserDTO;
@@ -15,7 +16,7 @@ import java.io.UnsupportedEncodingException;
 public interface ITicketService {
     ResponseObject getAllTicket();
     ResponseOutput getAllTicket(long id, int page, int limit);
-    ResponseObject insertTicket(TicketDTO ticketDTO,String userEmail,int numberOfSerial) throws MessagingException, UnsupportedEncodingException;
+    ResponseObject insertTicket(BuyTicketDTO buyTicketDTO) throws MessagingException, UnsupportedEncodingException;
     ResponseObject updateTicket(TicketDTO ticketDTO);
     ResponseObject deleteTicket(long idTicket);
     ResponseObject userUseTicket(String serialCode);

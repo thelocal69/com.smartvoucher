@@ -26,7 +26,7 @@ Http.interceptors.response.use(
     return response.data;
   },
   function (error) {
-    toast.error(error.response.data.error);
+    console.log(error.response.data.error);
     return Promise.reject(error);
   }
 );

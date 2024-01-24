@@ -5,12 +5,13 @@ import Loading from "../Util/Loading";
 import { toast } from "react-toastify";
 import "../User/Profile.scss";
 import { selectAccessToken } from "../../Redux/data/AuthSlice";
-import { avatar, username } from "../../Redux/data/UserSlice";
+import { avatar, username, userId, balance } from "../../Redux/data/UserSlice";
 import {
   getUserInfor,
   updateImage,
   editProfile,
 } from "../../services/UserServices";
+import Moment from "moment";
 
 const Profile = () => {
   const ref = React.useRef(null);
@@ -36,12 +37,22 @@ const Profile = () => {
           setObjInfor(rs.data);
           dispatch(
             avatar({
-              avatarUrl: rs.data.avatarUrl,
+              avatar: rs.data.avatarUrl,
             })
           );
           dispatch(
             username({
               username: rs.data.userName,
+            })
+          );
+          dispatch(
+            userId({
+              id: rs.data.id,
+            })
+          );
+          dispatch(
+            balance({
+              balance: rs.data.balance,
             })
           );
         }
@@ -145,7 +156,12 @@ const Profile = () => {
                     <div className="pe-5">
                       <span>Số dư</span>
                       <p>
-                        <b>{}đ</b>
+                        <b>
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(objInfor.balance)}
+                        </b>
                       </p>
                     </div>
                     <div className="pe-5">
@@ -157,7 +173,11 @@ const Profile = () => {
                     <div className="pe-5">
                       <span>Ngày tham gia</span>
                       <p>
-                        <b>2020-03-31 23:14:47</b>
+                        <b>
+                          {Moment(objInfor.createdAt).format(
+                            "YYYY/MM/DD HH:mm:ss"
+                          )}
+                        </b>
                       </p>
                     </div>
                   </div>
