@@ -96,6 +96,7 @@ public class  UserConverter {
         user.setUsername(stringsUtil.getUserNameFormDomain(oAuth2DTO.getEmailGoogle()));
         user.setMemberCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
         user.setEnable(true);
+        user.setStatus(1);
         user.setProvider(Provider.local.name());
         user.setBalance(10000000.00);
         return  user;

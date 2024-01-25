@@ -13,6 +13,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IChainRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IChainService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadGoogleDriveUtil;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,18 +33,23 @@ public class ChainService implements IChainService {
     private final IMerchantRepository merchantRepository;
     private final ChainConverter chainConverter;
     private final UploadGoogleDriveUtil uploadGoogleDriveUtil;
+    private final UploadLocalUtil uploadLocalUtil;
     @Value("${drive_view}")
     private String driveUrl;
+    @Value("${domain_file}")
+    private String domainFile;
 
     @Autowired
     public ChainService(final IChainRepository chainRepository,
                         final ChainConverter chainConverter,
                         final IMerchantRepository merchantRepository,
-                        final UploadGoogleDriveUtil uploadGoogleDriveUtil){
+                        final UploadGoogleDriveUtil uploadGoogleDriveUtil,
+                        final UploadLocalUtil uploadLocalUtil){
         this.chainRepository = chainRepository;
         this.chainConverter = chainConverter;
         this.merchantRepository = merchantRepository;
         this.uploadGoogleDriveUtil = uploadGoogleDriveUtil;
+        this.uploadLocalUtil = uploadLocalUtil;
     }
 
     @Override
@@ -185,4 +191,17 @@ public class ChainService implements IChainService {
         File file = uploadGoogleDriveUtil.uploadImages(fileName, folderId);
        return driveUrl+file.getId();
     }
+
+    @Override
+    public String uploadLocalChainImages(MultipartFile fileName) {
+        String folderName = "chain";
+        String imageName = uploadLocalUtil.storeFile(fileName, folderName);
+        return domainFile+"/chain/"+imageName;
     }
+
+    @Override
+    public byte[] readImageUrl(String fileName) {
+        String folderName = "chain";
+        return uploadLocalUtil.readFileContent(fileName, folderName);
+    }
+}

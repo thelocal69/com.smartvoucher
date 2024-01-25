@@ -1,8 +1,6 @@
 package com.smartvoucher.webEcommercesmartvoucher.service;
 
-import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.dto.CategoryDTO;
-import com.smartvoucher.webEcommercesmartvoucher.dto.MerchantDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,4 +16,6 @@ public interface ICategoryService {
     void deleteCategory(CategoryDTO categoryDTO);
     Boolean exitsCategory(CategoryDTO categoryDTO);
     String uploadCategoryImages(MultipartFile fileName);
+    String uploadLocalCategoryImages(MultipartFile fileName);
+    byte[] readImageUrl(String fileName);
 }

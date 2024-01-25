@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.util;
 
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,9 @@ import java.util.stream.Stream;
 @Component
 public class UploadLocalUtil {
 
+    @Value("${root_path}")
+    private String rootPath;
+
     private boolean isImageFile(MultipartFile file) {
         String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
         assert fileExtension != null;
@@ -38,12 +42,17 @@ public class UploadLocalUtil {
             if(fileSizeInMegabytes > 5.0f) {
                 throw new RuntimeException("File must be <= 5Mb");
             }
-            Path storageFolder = Paths.get(folderName);
+            String pathFolder = rootPath+folderName;
+            Path storageFolder = Paths.get(pathFolder);
+            if (!(Files.exists(storageFolder))){
+                Files.createDirectories(storageFolder);
+            }
             String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
             String generatedFileName = UUID.randomUUID().toString().replace("-", "");
             generatedFileName = generatedFileName+"."+fileExtension;
+            String pathImage = pathFolder + "/" + generatedFileName;
             Path destinationFilePath = storageFolder.resolve(
-                            Paths.get(generatedFileName))
+                            pathImage)
                     .normalize().toAbsolutePath();
             if (!destinationFilePath.getParent().equals(storageFolder.toAbsolutePath())) {
                 throw new RuntimeException(
@@ -74,7 +83,8 @@ public class UploadLocalUtil {
 
     public byte[] readFileContent(String fileName,String folderName) {
         try {
-            Path storageFolder = Paths.get(folderName);
+            String pathFolder = rootPath+folderName;
+            Path storageFolder = Paths.get(pathFolder);
             Path file = storageFolder.resolve(fileName);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {

@@ -91,11 +91,13 @@ public class SecurityConfig {
                     .antMatchers("/reply/**").permitAll()
                     //merchant
                     .antMatchers(HttpMethod.GET, "/merchant").permitAll()
+                    .antMatchers(HttpMethod.GET, "/merchant/{fileName}").permitAll()
                     .antMatchers(HttpMethod.GET, "/merchant/api/getAll").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/merchant/api/getName").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/merchant/api/getAll").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/merchant/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/merchant/api/upload").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/merchant/api/local_upload").hasRole("ADMIN")
                     .antMatchers(HttpMethod.PUT, "/merchant/api/{id}").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE, "/merchant/api/{id}").hasRole("ADMIN")
                     //merchant
@@ -122,11 +124,13 @@ public class SecurityConfig {
                     //user
                     //category
                     .antMatchers(HttpMethod.GET, "/category/api/all").permitAll()
+                    .antMatchers(HttpMethod.GET, "/category/{fileName}").permitAll()
                     .antMatchers(HttpMethod.GET, "/category/api/getName").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/category/api/getAll").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/category/api/search").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/category/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.POST, "/category/api/upload").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/category/api/local_upload").hasRole("ADMIN")
                     .antMatchers(HttpMethod.PUT, "/category/api/{id}").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE, "/category/api/{id}").hasRole("ADMIN")
                     //category

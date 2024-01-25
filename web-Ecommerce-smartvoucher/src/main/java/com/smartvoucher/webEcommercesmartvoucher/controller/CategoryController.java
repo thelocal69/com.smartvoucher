@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.ICategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,19 @@ public class CategoryController {
         );
     }
 
+    @GetMapping("/{fileName}")
+    @Transactional(readOnly = true)
+    public ResponseEntity<byte[]> getImageCategory(
+            @PathVariable String fileName
+    ) {
+        log.info("Get image category success !");
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(
+                        this.categoryService.readImageUrl(fileName)
+                );
+    }
+
     @GetMapping("/api/search")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> searchAllByName(@RequestParam String name) {
@@ -86,6 +100,18 @@ public class CategoryController {
                         200,
                         "Upload images is completed !",
                         categoryService.uploadCategoryImages(fileName)
+                )
+        );
+    }
+
+    @PostMapping ("/api/local_upload")
+    public ResponseEntity<ResponseObject> uploadLocalFiles(@RequestParam MultipartFile fileName){
+        log.info("Upload images is completed !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Upload images is completed !",
+                        categoryService.uploadLocalCategoryImages(fileName)
                 )
         );
     }

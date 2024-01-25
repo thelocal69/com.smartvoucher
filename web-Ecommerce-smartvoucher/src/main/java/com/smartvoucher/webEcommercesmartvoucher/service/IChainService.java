@@ -1,6 +1,5 @@
 package com.smartvoucher.webEcommercesmartvoucher.service;
 
-import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.dto.ChainDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,4 +17,6 @@ public interface IChainService {
     Boolean existChain(ChainDTO chainDTO);
     Boolean existMerchantName(ChainDTO chainDTO);
     String uploadChainImages(MultipartFile fileName);
+    String uploadLocalChainImages(MultipartFile fileName);
+    byte[] readImageUrl(String fileName);
 }
