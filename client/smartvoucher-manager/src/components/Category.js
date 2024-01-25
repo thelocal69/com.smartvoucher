@@ -1,11 +1,12 @@
-import React, { useRef } from "react";
+import React from "react";
 import {
   getAllCategory,
   insertCategory,
   uploadBanner,
   editCategory,
   deleteCategory,
-  searchAllByName
+  searchAllByName,
+  uploadLocalBanner
 } from "../services/CategoryService";
 import {
   Table,
@@ -157,7 +158,7 @@ const Category = () => {
         const form = new FormData();
         form.append("fileName", file);
         setLoading(true);
-        await uploadBanner(form)
+        await uploadLocalBanner(form)
         .then((rs) => {
             if(rs){
                 toast.success("Upload banner is successfully !");
@@ -180,7 +181,7 @@ const Category = () => {
         const form = new FormData();
         form.append("fileName", file);
         setLoading(true);
-        await uploadBanner(form)
+        await uploadLocalBanner(form)
         .then((rs) => {
             if(rs){
                 toast.success("Upload banner is successfully !");

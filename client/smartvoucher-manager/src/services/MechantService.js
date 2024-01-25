@@ -21,6 +21,10 @@ export const uploadImage = (obj) => {
     return Http.post(`/merchant/api/upload`, obj);
 }
 
+export const uploadLocalImage = (obj) => {
+    return Http.post(`/merchant/api/local_upload`, obj);
+}
+
 export const updateMerchant = (obj) => {
     return Http.put(`/merchant/api/${obj?.id}`, obj);
 }

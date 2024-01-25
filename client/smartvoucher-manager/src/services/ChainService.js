@@ -21,6 +21,10 @@ export const uploadLogoChain = (obj) => {
     return Http.post(`/chain/api/upload`, obj);
 }
 
+export const uploadLocalChain = (obj) => {
+    return Http.post(`/chain/api/local_upload`, obj);
+}
+
 export const editChain = (obj) => {
     return Http.put(`/chain/api/${obj.id}`, obj);
 }

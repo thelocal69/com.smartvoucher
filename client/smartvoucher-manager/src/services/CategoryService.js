@@ -21,6 +21,10 @@ export const uploadBanner = (obj) => {
     return Http.post(`/category/api/upload`, obj);
 }
 
+export const uploadLocalBanner = (obj) => {
+    return Http.post(`/category/api/local_upload`, obj);
+}
+
 export const editCategory = (obj) => {
     return Http.put(`/category/api/${obj.id}`, obj);
 }
