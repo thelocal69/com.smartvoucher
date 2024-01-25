@@ -12,12 +12,22 @@ const reducers = combineReducers({
   cart: CartSlice,
 });
 
+const initialState = reducers({}, {}, {});
+
 const persistConfig = {
   key: "root",
   storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, reducers);
+const rootReducer = (state, action) => {
+  if (action.type === 'LOG_OUT') {
+    state = initialState
+  }
+
+  return reducers(state, action)
+}
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const Store = configureStore({
   reducer: persistedReducer
