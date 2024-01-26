@@ -3,10 +3,10 @@ import {
   getAllWarehouse,
   searchAllByName,
   insertWarehouse,
-  uploadWarehouseBanner,
-  uploadWarehouseThumbnail,
   editWarehouse,
   deleteWarehouse,
+  uploadLocalWarehouseBanner,
+  uploadLocalWarehouseThumbnail,
 } from "../services/WarehouseService";
 import {
   Table,
@@ -26,7 +26,7 @@ import { getAllLabelName } from "../services/LabelService";
 import Moment from "moment";
 import Loading from "./Loading";
 import { DateTimePicker } from "@mui/x-date-pickers";
-import './Warehouse.scss';
+import "./Warehouse.scss";
 
 const Warehouse = () => {
   const ref = React.useRef(null);
@@ -307,7 +307,7 @@ const Warehouse = () => {
       const form = new FormData();
       form.append("fileName", file);
       setLoading(true);
-      await uploadWarehouseBanner(form)
+      await uploadLocalWarehouseBanner(form)
         .then((rs) => {
           if (rs) {
             setLoading(false);
@@ -330,7 +330,7 @@ const Warehouse = () => {
       const form = new FormData();
       form.append("fileName", file);
       setLoading(true);
-      await uploadWarehouseBanner(form)
+      await uploadLocalWarehouseBanner(form)
         .then((rs) => {
           if (rs) {
             setLoading(false);
@@ -353,7 +353,7 @@ const Warehouse = () => {
       const form = new FormData();
       form.append("fileName", fileClone);
       setLoading(true);
-      await uploadWarehouseThumbnail(form)
+      await uploadLocalWarehouseThumbnail(form)
         .then((rs) => {
           if (rs) {
             setLoading(false);
@@ -376,7 +376,7 @@ const Warehouse = () => {
       const form = new FormData();
       form.append("fileName", fileClone);
       setLoading(true);
-      await uploadWarehouseThumbnail(form)
+      await uploadLocalWarehouseThumbnail(form)
         .then((rs) => {
           if (rs) {
             setLoading(false);
@@ -602,10 +602,12 @@ const Warehouse = () => {
                       </td>
                       <td>
                         <label
-                        className={
-                          item?.showOnWeb ? "ac active" : "ac deactive"
-                        }
-                        >{item?.showOnWeb ? "Show" : "Nope"}</label>
+                          className={
+                            item?.showOnWeb ? "ac active" : "ac deactive"
+                          }
+                        >
+                          {item?.showOnWeb ? "Show" : "Nope"}
+                        </label>
                       </td>
                       <td>
                         <label
@@ -633,10 +635,10 @@ const Warehouse = () => {
                       </td>
                       <td>
                         <label
-                        className={
-                          item?.status ? "ac active" : "ac deactive"
-                        }
-                        >{item?.status ? "Active" : "Deactive"}</label>
+                          className={item?.status ? "ac active" : "ac deactive"}
+                        >
+                          {item?.status ? "Active" : "Deactive"}
+                        </label>
                       </td>
                       <td>
                         <label
