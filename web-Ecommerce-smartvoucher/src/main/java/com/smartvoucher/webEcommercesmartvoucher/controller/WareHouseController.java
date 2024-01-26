@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,20 @@ public class WareHouseController {
                         this.wareHouseService.getAllWareHouse()
                 )
         );
+    }
+
+    @GetMapping("/{fileName}")
+    @Transactional(readOnly = true)
+    public ResponseEntity<byte[]> getLocalImage(
+            @PathVariable String fileName
+    ) {
+        log.info("Get image is completed !");
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(
+                        this.wareHouseService.readImageUrl(fileName)
+                );
     }
 
     @GetMapping("/api/getAll")
@@ -109,6 +124,30 @@ public class WareHouseController {
                         200,
                         "Upload thumbnail is completed !",
                         wareHouseService.uploadWarehouseImages(fileName)
+                )
+        );
+    }
+
+    @PostMapping ("/api/local_banner")
+    public ResponseEntity<ResponseObject> uploadLocalBanner(@RequestParam MultipartFile fileName){
+        log.info("Upload images is completed !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Upload images is completed !",
+                        wareHouseService.uploadLocalWarehouseImages(fileName)
+                )
+        );
+    }
+
+    @PostMapping ("/api/local_thumbnail")
+    public ResponseEntity<ResponseObject> uploadLocalThumbnail(@RequestParam MultipartFile fileName){
+        log.info("Upload images is completed !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Upload images is completed !",
+                        wareHouseService.uploadLocalWarehouseImages(fileName)
                 )
         );
     }
