@@ -2,19 +2,19 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../Redux/data/AuthSlice";
 import { Container } from "react-bootstrap";
-import { getAllTicket } from "../../services/TicketServices";
+import { getAllTicket, userUseVoucher } from "../../services/TicketServices";
 import { toast } from "react-toastify";
 import Paginate from "../Util/Paginate";
 
 const Ticket = (props) => {
   const { id } = props;
-  const textAreaRef = React.useRef(null);
   const accessToken = useSelector(selectAccessToken);
   const [listTicket, setListTicket] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [limit, setLimit] = React.useState(3);
   const [totalItem, setTotalItem] = React.useState(0);
   const [totalPage, setTotalPage] = React.useState(0);
+  const [openTicket, setOpenTicket] = React.useState(false);
 
   React.useEffect(() => {
     getTicket(id, currentPage, limit);
@@ -30,7 +30,18 @@ const Ticket = (props) => {
           setListTicket(rs.data);
         }
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => console.log(err.message));
+  };
+
+  const handleUseVoucher = async (serialCode) => {
+    await userUseVoucher(serialCode)
+      .then((rs) => {
+        if (rs) {
+          toast.success("Use voucher is successfully !");
+          setOpenTicket(true);
+        }
+      })
+      .catch((err) => console.log(err.message));
   };
 
   const handlePageClick = (event) => {
@@ -52,7 +63,7 @@ const Ticket = (props) => {
                         style={{
                           width: 20 + "rem",
                           height: 10 + "rem",
-                          borderRadius: 10
+                          borderRadius: 10,
                         }}
                       />
                     </div>
@@ -62,10 +73,17 @@ const Ticket = (props) => {
                         <p>{item.categoryName}</p>
                       </div>
                       <div>
-                        <label htmlFor="clipboard" className="btn btn-primary">
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handleUseVoucher(item.serialCode)}
+                        >
                           <i class="fa-solid fa-copy"></i>
-                        </label>
-                        <input id="clipboard" value={item.serialCode} />
+                        </button>
+                        {openTicket && (
+                          <>
+                            <input value={item.serialCode} />
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
