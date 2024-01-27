@@ -196,10 +196,9 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.GET, "/ticket/api/list-ticket").hasRole("ADMIN")
                     .antMatchers(HttpMethod.PUT, "/ticket/api/update-ticket").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE, "/ticket/api/delete-ticket").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.POST, "/ticket/api/upload").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/ticket/api/get/all").hasRole("USER")
                     .antMatchers(HttpMethod.POST, "/ticket/api/buy-ticket").hasRole("USER")
-                    .antMatchers(HttpMethod.PUT, "/ticket/api/use-ticket").hasRole("USER")
+                    .antMatchers(HttpMethod.PUT, "/ticket/api/use_ticket").hasRole("USER")
                     .antMatchers(HttpMethod.GET, "/ticket/api/ticket_detail").hasRole("USER")
                     //ticket
                     //role_user

@@ -1,6 +1,5 @@
 package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 
-import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.SerialConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketConverter;
 import com.smartvoucher.webEcommercesmartvoucher.converter.TicketHistoryConverter;
@@ -15,16 +14,12 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
-import com.smartvoucher.webEcommercesmartvoucher.util.EmailUtil;
-import com.smartvoucher.webEcommercesmartvoucher.util.UploadGoogleDriveUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.validation.constraints.NotNull;
@@ -33,7 +28,6 @@ import java.sql.Timestamp;
 import java.util.*;
 
 @Service
-@EnableScheduling
 @Slf4j
 public class TicketService implements ITicketService {
     private final TicketRepository ticketRepository;
@@ -46,8 +40,6 @@ public class TicketService implements ITicketService {
     private final IStoreRepository storeRepository;
     private final TicketHistoryRepository ticketHistoryRepository;
     private final TicketHistoryConverter ticketHistoryConverter;
-    private final UploadGoogleDriveUtil uploadGoogleDriveUtil;
-    private final EmailUtil emailUtil;
     private final SerialConverter serialConverter;
     private final WarehouseSerialRepository warehouseSerialRepository;
     private final IWareHouseRepository wareHouseRepository;
@@ -64,8 +56,6 @@ public class TicketService implements ITicketService {
                 , IStoreRepository storeRepository
                 , TicketHistoryRepository ticketHistoryRepository
                 , TicketHistoryConverter ticketHistoryConverter
-                , UploadGoogleDriveUtil uploadGoogleDriveUtil
-                , EmailUtil emailUtil
                 , SerialConverter serialConverter
                 ,  WarehouseSerialRepository warehouseSerialRepository
                 , IWareHouseRepository wareHouseRepository
@@ -80,9 +70,7 @@ public class TicketService implements ITicketService {
         this.storeRepository = storeRepository;
         this.ticketHistoryRepository = ticketHistoryRepository;
         this.ticketHistoryConverter = ticketHistoryConverter;
-        this.uploadGoogleDriveUtil = uploadGoogleDriveUtil;
-        this.emailUtil = emailUtil;
-        this.serialConverter = serialConverter;
+       this.serialConverter = serialConverter;
         this.warehouseSerialRepository = warehouseSerialRepository;
         this.wareHouseRepository = wareHouseRepository;
         this.wareHouseConverter = wareHouseConverter;
@@ -255,35 +243,36 @@ public class TicketService implements ITicketService {
         }
     }
 
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseObject userUseTicket(String serialCode) {
-        // kiểm tra mã serial của ticket có tồn tại trong csdl hay không
+    public String userUseTicket(String serialCode) {
         TicketEntity ticketEntity = ticketRepository.findBySerialCode(serialRepository.findBySerialCode(serialCode));
         if(ticketEntity != null) {
-                if(checkExpiredVoucher(ticketEntity)){
-                    if(ticketEntity.getStatus() == 1) {
-                        ticketHistoryRepository.save(
-                                ticketHistoryConverter.updateStatusTicketHistory(
-                                        ticketHistoryRepository.findBySerialCode(serialCode),2));
-                        ticketEntity.setStatus(2);
-                        ticketEntity.setRedeemedtimeTime(presentTime());
-                        ticketRepository.save(ticketEntity);
-                        // Khi user bấm mua rồi thì ticket này không thể sử dụng được nữa
-                        log.info("Used Ticket Success !");
-                        return new ResponseObject(200, "Used Ticket Success !", true);
-                    } else {
-                        log.info("Voucher used !");
-                        throw new UsedVoucherException(405, "Voucher used !");
-                    }
+            if(checkExpiredVoucher(ticketEntity)){
+                if(ticketEntity.getStatus() == 1) {
+                    ticketHistoryRepository.save(
+                            ticketHistoryConverter.updateStatusTicketHistory(
+                                    ticketHistoryRepository.findBySerialCode(serialCode),2));
+                    ticketEntity.setStatus(2);
+                    ticketEntity.setRedeemedtimeTime(presentTime());
+                    ticketRepository.save(ticketEntity);
+                    // Khi user bấm mua rồi thì ticket này không thể sử dụng được nữa
+                    log.info("Used Ticket Success !");
+                    return "Used Ticket Success !";
                 } else {
-                    log.info("Expired Voucher !");
-                    throw new ExpiredVoucherException(410, "Expired Voucher !");
+                    log.info("Voucher used !");
+                    throw new UsedVoucherException(405, "Voucher used !");
                 }
+            } else {
+                log.info("Expired Voucher !");
+                throw new ExpiredVoucherException(410, "Expired Voucher !");
+            }
         } else {
             log.info("Voucher code is wrong, pls check and try again!");
             throw new ObjectNotFoundException(404, "Voucher code is wrong, pls check and try again!");
         }
     }
+
 
     public Timestamp presentTime(){
         return new Timestamp(System.currentTimeMillis());
@@ -332,13 +321,6 @@ public class TicketService implements ITicketService {
 
     public boolean checkDuplicateTicket(SerialEntity serialEntity) {
         return ticketRepository.findByIdSerial(serialEntity).isEmpty();
-    }
-
-    @Override
-    public String uploadTicketImages(MultipartFile fileName) {
-        String folderId = "1D3tkdIWmKLQuRgdabrIfLYRkDeJyrflu";
-        File file = uploadGoogleDriveUtil.uploadImages(fileName, folderId);
-        return "https://drive.google.com/uc?export=view&id="+file.getId();
     }
 
     @Override

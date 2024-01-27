@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -22,7 +21,7 @@ import java.io.UnsupportedEncodingException;
 @Slf4j
 @RestController
 @RequestMapping("/ticket")
-public class TicketController {
+public class    TicketController {
 
     private final ITicketService ticketService;
 
@@ -71,24 +70,18 @@ public class TicketController {
                 this.ticketService.deleteTicket(id));
     }
 
-    @PutMapping("/api/use-ticket")
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<?> userUseVoucher(@RequestParam String serialCode) {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                this.ticketService.userUseTicket(serialCode));
-    }
-
-    @PostMapping("/api/upload")
-    public ResponseEntity<ResponseObject> uploadFiles(@RequestParam MultipartFile fileName){
-        log.info("Upload images is completed !");
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(
-                        200,
-                        "Upload images is completed !",
-                        ticketService.uploadTicketImages(fileName)
-                )
-        );
-    }
+@PutMapping("/api/use_ticket")
+@Transactional(rollbackFor = Exception.class)
+public ResponseEntity<ResponseObject> useTicket(@RequestParam String serial){
+    log.info("Used Ticket Success !");
+    return ResponseEntity.status(HttpStatus.OK).body(
+            new ResponseObject(
+                    200,
+                    "Used Ticket Success !",
+                    this.ticketService.userUseTicket(serial)
+            )
+    );
+}
     @GetMapping("/api/ticket_detail")
     public ResponseEntity<ResponseObject> getTicketDetail(@RequestBody @Valid UserDTO userDTO){
         log.info("Ticket detail of user " + userDTO.getUserName() + " is below:");
