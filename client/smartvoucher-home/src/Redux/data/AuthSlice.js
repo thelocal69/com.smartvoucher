@@ -20,9 +20,9 @@ export const AuthSlice = createSlice({
     logOut: (state) => {
       state.accessToken = null;
       state.refreshToken = null;
-      localStorage.removeItem("token");
       state.isAuthenticated = false;
       toast.success("Logout Successfully");
+      localStorage.removeItem("token");
     },
   },
   extraReducers: (builder) => {},

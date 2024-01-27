@@ -1,9 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.service;
 
-import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.dto.MerchantDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -18,5 +16,7 @@ public interface IMerchantService {
     void deleteMerchant(MerchantDTO merchantDTO);
     Boolean existMerchant(MerchantDTO merchantDTO);
     String uploadMerchantImages(MultipartFile fileName);
+    String uploadLocalMerchantImages(MultipartFile fileName);
+    byte[] readImageUrl(String fileName);
     List<MerchantDTO> searchMerchantByName(String name);
 }

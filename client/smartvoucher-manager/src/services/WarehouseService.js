@@ -20,6 +20,14 @@ export const uploadWarehouseThumbnail = (obj) => {
     return Http.post(`/warehouse/api/upload/thumbnail`, obj);
 }
 
+export const uploadLocalWarehouseBanner = (obj) => {
+    return Http.post(`/warehouse/api/local_banner`, obj);
+}
+
+export const uploadLocalWarehouseThumbnail = (obj) => {
+    return Http.post(`/warehouse/api/local_thumbnail`, obj);
+}
+
 export const editWarehouse = (obj) => {
     return Http.put(`/warehouse/api/${obj.id}`, obj);
 }

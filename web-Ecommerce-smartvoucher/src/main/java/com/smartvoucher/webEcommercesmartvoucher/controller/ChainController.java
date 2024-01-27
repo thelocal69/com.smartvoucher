@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IChainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,19 @@ public class ChainController {
         );
     }
 
+    @GetMapping("/{fileName}")
+    @Transactional(readOnly = true)
+    public ResponseEntity<byte[]> getImageChain(
+            @PathVariable String fileName
+    ) {
+        log.info("Get image chain success !");
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(
+                        this.chainService.readImageUrl(fileName)
+                );
+    }
+
     @GetMapping("/api/getAll")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseOutput> getAllChain(
@@ -87,6 +101,18 @@ public class ChainController {
                         200,
                         "Upload images is completed !",
                         chainService.uploadChainImages(fileName)
+                )
+        );
+    }
+
+    @PostMapping ("/api/local_upload")
+    public ResponseEntity<ResponseObject> uploadLocalFiles(@RequestParam MultipartFile fileName){
+        log.info("Upload images is completed !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Upload images is completed !",
+                        chainService.uploadLocalChainImages(fileName)
                 )
         );
     }

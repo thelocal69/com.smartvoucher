@@ -18,6 +18,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.ILabelRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadGoogleDriveUtil;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,8 +41,11 @@ public class WareHouseService implements IWareHouseService {
     private final ICategoryRepository categoryRepository;
     private final ILabelRepository labelRepository;
     private final UploadGoogleDriveUtil uploadGoogleDriveUtil;
+    private final UploadLocalUtil uploadLocalUtil;
     @Value("${drive_view}")
     private String driveUrl;
+    @Value("${domain_file}")
+    private String domainFile;
 
 
     @Autowired
@@ -50,7 +54,8 @@ public class WareHouseService implements IWareHouseService {
                             final IDiscountTypeRepository discountTypeRepository,
                             final ICategoryRepository categoryRepository,
                             final UploadGoogleDriveUtil uploadGoogleDriveUtil,
-                            final ILabelRepository labelRepository
+                            final ILabelRepository labelRepository,
+                            final UploadLocalUtil uploadLocalUtil
     ) {
         this.wareHouseRepository = wareHouseRepository;
         this.wareHouseConverter = wareHouseConverter;
@@ -58,6 +63,7 @@ public class WareHouseService implements IWareHouseService {
         this.categoryRepository = categoryRepository;
         this.uploadGoogleDriveUtil = uploadGoogleDriveUtil;
         this.labelRepository = labelRepository;
+        this.uploadLocalUtil = uploadLocalUtil;
     }
 
     @Override
@@ -250,6 +256,19 @@ public class WareHouseService implements IWareHouseService {
         }
         log.info("Get all warehouse by category code is completed !");
         return wareHouseDTOList;
+    }
+
+    @Override
+    public String uploadLocalWarehouseImages(MultipartFile fileName) {
+        String folderName = "warehouse";
+        String imageName = uploadLocalUtil.storeFile(fileName, folderName);
+        return domainFile+"/warehouse/"+imageName;
+    }
+
+    @Override
+    public byte[] readImageUrl(String fileName) {
+        String folderName = "warehouse";
+        return uploadLocalUtil.readFileContent(fileName, folderName);
     }
 
 

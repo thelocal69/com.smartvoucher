@@ -7,3 +7,7 @@ export const getAllTicket = (id, page, limit) =>{
 export const buyTicket = (payload) =>{
     return Http.post(`/ticket/api/buy-ticket`, payload);
 }
+
+export const userUseVoucher = (serialCode) =>{
+    return Http.put(`/ticket/api/use_ticket?serial=${serialCode}`);
+}

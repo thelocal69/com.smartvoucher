@@ -11,6 +11,7 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.ICategoryRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.ICategoryService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadGoogleDriveUtil;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,16 +31,21 @@ public class CategoryService implements ICategoryService {
     private final ICategoryRepository categoryRepository;
     private final CategoryConverter categoryConverter;
     private final UploadGoogleDriveUtil uploadGoogleDriveUtil;
+    private final UploadLocalUtil uploadLocalUtil;
     @Value("${drive_view}")
     private String driveUrl;
+    @Value("${domain_file}")
+    private String domainFile;
 
     @Autowired
     public CategoryService(final ICategoryRepository categoryRepository,
                            final CategoryConverter categoryConverter,
-                           final UploadGoogleDriveUtil uploadGoogleDriveUtil) {
+                           final UploadGoogleDriveUtil uploadGoogleDriveUtil,
+                           final UploadLocalUtil uploadLocalUtil) {
         this.categoryRepository = categoryRepository;
         this.categoryConverter = categoryConverter;
         this.uploadGoogleDriveUtil = uploadGoogleDriveUtil;
+        this.uploadLocalUtil = uploadLocalUtil;
     }
 
     @Override
@@ -158,5 +164,18 @@ public class CategoryService implements ICategoryService {
         String folderId = "17pJEY12p30od5F0aw2BETsguQZK5sTCZ";
         File file = uploadGoogleDriveUtil.uploadImages(fileName, folderId);
         return driveUrl+file.getId();
+    }
+
+    @Override
+    public String uploadLocalCategoryImages(MultipartFile fileName) {
+        String folderName = "category";
+        String imageName = uploadLocalUtil.storeFile(fileName, folderName);
+        return domainFile+"/category/"+imageName;
+    }
+
+    @Override
+    public byte[] readImageUrl(String fileName) {
+        String folderName = "category";
+        return uploadLocalUtil.readFileContent(fileName, folderName);
     }
 }

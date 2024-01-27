@@ -7,6 +7,7 @@ import com.smartvoucher.webEcommercesmartvoucher.service.IMerchantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +67,20 @@ public class MerchantController {
         );
     }
 
+    @GetMapping("/{fileName}")
+    @Transactional(readOnly = true)
+    public ResponseEntity<byte[]> getLocalImage(
+            @PathVariable String fileName
+    ) {
+        log.info("Get image is completed !");
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(
+                        this.merchantService.readImageUrl(fileName)
+                );
+    }
+
     @GetMapping("/api/getAll")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseOutput> getAllPageMerchant(
@@ -87,6 +102,18 @@ public class MerchantController {
                         200,
                         "Upload images is completed !",
                         merchantService.uploadMerchantImages(fileName)
+                )
+        );
+    }
+
+    @PostMapping ("/api/local_upload")
+    public ResponseEntity<ResponseObject> uploadLocalFiles(@RequestParam MultipartFile fileName){
+        log.info("Upload images is completed !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Upload images is completed !",
+                        merchantService.uploadLocalMerchantImages(fileName)
                 )
         );
     }

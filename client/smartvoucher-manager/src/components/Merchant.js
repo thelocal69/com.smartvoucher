@@ -5,7 +5,7 @@ import {
   updateMerchant,
   deleteMerchant,
   searchMerchantByName,
-  uploadImage,
+  uploadLocalImage,
 } from "../services/MechantService";
 import {
   Table,
@@ -166,7 +166,6 @@ const Merchant = () => {
       .catch((err) => toast.error("Cannot delete parent row because FK !"));
   };
 
-
   const handClickEditMerchant = (merchant) => {
     setIsShowModalUpdate(true);
     setObjEdit(merchant);
@@ -182,7 +181,7 @@ const Merchant = () => {
       const form = new FormData();
       form.append("fileName", file);
       setLoading(true);
-      await uploadImage(form)
+      await uploadLocalImage(form)
         .then((rs) => {
           if (rs) {
             setLoading(false);
@@ -205,7 +204,7 @@ const Merchant = () => {
       const form = new FormData();
       form.append("fileName", file);
       setLoading(true);
-      await uploadImage(form)
+      await uploadLocalImage(form)
         .then((rs) => {
           if (rs) {
             setLoading(false);
@@ -239,7 +238,7 @@ const Merchant = () => {
   const handleShowImage = (image) => {
     setImageItem(image);
     setImageShow(true);
-  }
+  };
 
   const handleClose = () => {
     setSmShow(false);
@@ -248,7 +247,6 @@ const Merchant = () => {
     setIsShowModalUpdate(false);
     setIsShowModalDelete(false);
   };
-
 
   return (
     <>
@@ -382,10 +380,10 @@ const Merchant = () => {
                       </td>
                       <td>
                         <label
-                        className={
-                          item?.status ? "ac active" : "ac deactive"
-                        }
-                        >{item?.status ? "Active" : "Deactive"}</label>
+                          className={item?.status ? "ac active" : "ac deactive"}
+                        >
+                          {item?.status ? "Active" : "Deactive"}
+                        </label>
                       </td>
                       <td>
                         <div className="d-flex">
@@ -757,9 +755,7 @@ const Merchant = () => {
             Small info
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          {merchantItem}
-        </Modal.Body>
+        <Modal.Body>{merchantItem}</Modal.Body>
       </Modal>
 
       <Modal
@@ -774,9 +770,9 @@ const Merchant = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-              <Col xs={10} md={8}>
-                <Image src={imageItem}  thumbnail/>
-              </Col>
+          <Col xs={10} md={8}>
+            <Image src={imageItem} thumbnail />
+          </Col>
         </Modal.Body>
       </Modal>
 

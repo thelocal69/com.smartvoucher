@@ -10,6 +10,7 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IMerchantRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IMerchantService;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadGoogleDriveUtil;
+import com.smartvoucher.webEcommercesmartvoucher.util.UploadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,16 +30,21 @@ public class MerchantService implements IMerchantService {
     private final IMerchantRepository merchantRepository;
     private final MerchantConverter merchantConverter;
     private final UploadGoogleDriveUtil uploadGoogleDriveUtil;
+    private final UploadLocalUtil uploadLocalUtil;
     @Value("${drive_view}")
     private String driveUrl;
+    @Value("${domain_file}")
+    private String domainUrl;
 
     @Autowired
     public MerchantService(final  IMerchantRepository merchantRepository,
                            final MerchantConverter merchantConverter,
-                           final UploadGoogleDriveUtil uploadGoogleDriveUtil){
+                           final UploadGoogleDriveUtil uploadGoogleDriveUtil,
+                           final UploadLocalUtil uploadLocalUtil){
         this.merchantRepository = merchantRepository;
         this.merchantConverter = merchantConverter;
         this.uploadGoogleDriveUtil = uploadGoogleDriveUtil;
+        this.uploadLocalUtil = uploadLocalUtil;
     }
 
     @Override
@@ -164,6 +170,19 @@ public class MerchantService implements IMerchantService {
         String folderId = "1z6B_EyGuGN5AJX8tqrGnZkT6XMiKuTg5";
         File file = uploadGoogleDriveUtil.uploadImages(fileName, folderId);
         return driveUrl+file.getId();
+    }
+
+    @Override
+    public String uploadLocalMerchantImages(MultipartFile fileName) {
+        String folderName = "merchant";
+        String imageName = uploadLocalUtil.storeFile(fileName, folderName);
+        return domainUrl+"/merchant/"+imageName;
+    }
+
+    @Override
+    public byte[] readImageUrl(String fileName) {
+        String folderName = "merchant";
+        return uploadLocalUtil.readFileContent(fileName, folderName);
     }
 
     @Override
