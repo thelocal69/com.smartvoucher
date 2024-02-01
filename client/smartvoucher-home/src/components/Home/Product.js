@@ -4,7 +4,6 @@ import "./HomePage.scss";
 import "../Home/HomePage.scss";
 import { getAllWarehouseByLabel } from "../../services/WarehouseServices";
 import { getAllLabelName } from "../../services/LabelServices";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const Product = () => {
@@ -60,7 +59,7 @@ const Product = () => {
             setListWarehouseSpecial([...listWarehouseSpecial, ...rs.data]);
           }
         })
-        .catch((err) => toast.error(err.message));
+        .catch((err) => console.log(err.message));
     };
 
     getWarehouseBySpecial();
@@ -76,7 +75,7 @@ const Product = () => {
             setListWarehouseFestival([...listWarehouseFestival, ...rs.data]);
           }
         })
-        .catch((err) => toast.error(err.message));
+        .catch((err) => console.log(err.message));
     };
 
     getWarehouseByFestival();
@@ -99,7 +98,7 @@ const Product = () => {
             ]);
           }
         })
-        .catch((err) => toast.error(err.message));
+        .catch((err) => console.log(err.message));
     };
 
     getWarehouseByOnlySmartvoucher();
@@ -115,7 +114,7 @@ const Product = () => {
             setListWarehouseFood([...listWarehouseFood, ...rs.data]);
           }
         })
-        .catch((err) => toast.error(err.message));
+        .catch((err) => console.log(err.message));
     };
 
     getWarehouseByFood();
@@ -138,7 +137,7 @@ const Product = () => {
             ]);
           }
         })
-        .catch((err) => toast.error(err.message));
+        .catch((err) => console.log(err.message));
     };
 
     getWarehouseByTechnologiesLife();
@@ -154,7 +153,7 @@ const Product = () => {
             setListWarehouseHealthy([...listWarehouseHealthy, ...rs.data]);
           }
         })
-        .catch((err) => toast.error(err.message));
+        .catch((err) => console.log(err.message));
     };
 
     getWarehouseByHealthy();
@@ -168,7 +167,7 @@ const Product = () => {
           setLabelName(name);
         }
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => console.log(err.message));
   };
 
   return (

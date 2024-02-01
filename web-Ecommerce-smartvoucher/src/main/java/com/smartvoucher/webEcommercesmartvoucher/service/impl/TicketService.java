@@ -21,9 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
 import javax.validation.constraints.NotNull;
-import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -115,7 +113,7 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public ResponseObject insertTicket(@NotNull BuyTicketDTO buyTicketDTO) throws MessagingException, UnsupportedEncodingException {
+    public ResponseObject insertTicket(@NotNull BuyTicketDTO buyTicketDTO) {
         List<TicketDTO> listVoucher = new ArrayList<>();
         List<SerialEntity> listSerial =
                 generateSerial(buyTicketDTO.getIdWarehouse()

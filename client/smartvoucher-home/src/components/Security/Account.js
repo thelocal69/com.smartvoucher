@@ -15,15 +15,9 @@ import { useNavigate } from "react-router-dom";
 import { logIn } from "../../Redux/data/AuthSlice";
 import Loading from "../Util/Loading";
 import OAuth2Login from "./OAuth2Login";
-import {
-  avatar,
-  username,
-  balance,
-  infoLogin,
-} from "../../Redux/data/UserSlice";
 
 const Account = (props) => {
-  const { show, handleClose } = props;
+  const { show, handleClose, mode } = props;
 
   const [isShowPassword, setIsShowPassword] = React.useState(false);
   const [isShowPasswordConfirm, setIsShowPasswordConfirm] =
@@ -86,6 +80,7 @@ const Account = (props) => {
         }
       })
       .catch((err) => {
+        console.log(err.message);
         setLoading(false);
       });
   };
@@ -109,7 +104,7 @@ const Account = (props) => {
         }
       })
       .catch((err) => {
-        toast.error(err.message);
+        console.log(err.message);
         setLoading(false);
       });
   };
@@ -130,7 +125,7 @@ const Account = (props) => {
         }
       })
       .catch((err) => {
-        toast.error(err.message);
+        console.log(err.message);
         setLoading(false);
       });
   };
@@ -146,7 +141,7 @@ const Account = (props) => {
         }
       })
       .catch((err) => {
-        toast.error(err.message);
+        console.log(err.message);
         setLoading(false);
       });
   };
@@ -170,7 +165,7 @@ const Account = (props) => {
         }
       })
       .catch((err) => {
-        toast.error(err.message);
+        console.log(err.message);
         setLoading(false);
       });
   };
@@ -191,7 +186,7 @@ const Account = (props) => {
         }
       })
       .catch((err) => {
-        toast.error(err.message);
+        console.log(err.message);
         setLoading(false);
       });
   };

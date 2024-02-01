@@ -38,7 +38,7 @@ const Ticket = (props) => {
       .then((rs) => {
         if (rs) {
           toast.success("Use voucher is successfully !");
-          setOpenTicket(true);
+          openTicket(true);
         }
       })
       .catch((err) => console.log(err.message));

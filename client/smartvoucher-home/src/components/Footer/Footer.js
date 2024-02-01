@@ -7,10 +7,16 @@ import { selectIsAuthenticated } from "../../Redux/data/AuthSlice";
 
 const Footer = () => {
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
+  const [mode, setMode] = React.useState("signin");
   const authenticated = useSelector(selectIsAuthenticated);
 
   const handleClose = () => {
     setIsShowModalLogin(false);
+  };
+
+  const handleSetMode = () => {
+    setIsShowModalLogin(true);
+    setMode("signup");
   };
 
   return (
@@ -33,7 +39,7 @@ const Footer = () => {
                 <div className="d-flex">
                   <button
                     className="btn btn-primary"
-                    onClick={() => setIsShowModalLogin(true)}
+                    onClick={() => handleSetMode()}
                   >
                     Đăng ký ngay
                   </button>
@@ -137,7 +143,11 @@ const Footer = () => {
             </div>
           </div>
         </Container>
-        <Account show={isShowModalLogin} handleClose={handleClose} />
+        <Account
+          show={isShowModalLogin}
+          handleClose={handleClose}
+          mode={mode}
+        />
       </div>
     </>
   );

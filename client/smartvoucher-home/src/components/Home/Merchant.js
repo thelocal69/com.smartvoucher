@@ -1,6 +1,5 @@
 import React from "react";
 import { getAllMerchant } from "../../services/MerchantServices";
-import { toast } from "react-toastify";
 import "../Home/Merchant.scss";
 import { Container } from "react-bootstrap";
 import Slider from "react-slick";
@@ -44,7 +43,7 @@ const Merchant = () => {
           setListMerchantLogo(logo);
         }
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => console.log(err.message));
   };
 
   return (

@@ -38,7 +38,7 @@ const ProductInfor = () => {
           setDescription(rs.data.description);
         }
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => console.log(err.message));
   };
 
   return (

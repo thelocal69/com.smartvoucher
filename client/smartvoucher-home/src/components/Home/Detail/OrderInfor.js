@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { Container } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Moment from "moment";
-import { toast } from "react-toastify";
 import "../Detail/OrderInfor.scss";
 import Ticket from '../../User/Ticket';
 
@@ -24,7 +23,7 @@ const OrderInfor = () => {
       .then((rs) => {
         setListOrderInfor(rs.data);
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => console.log(err.message));
   };
 
   return (

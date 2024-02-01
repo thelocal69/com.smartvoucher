@@ -57,7 +57,7 @@ const Profile = () => {
           );
         }
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => console.log(err.message));
   };
 
   const handleUploadAvatar = async () => {
@@ -81,7 +81,7 @@ const Profile = () => {
         })
         .catch((err) => {
           setLoading(false);
-          toast.error(err.message);
+          console.log(err.message);
         });
     } else {
       toast.error("Please choose an avatar !");
@@ -106,7 +106,7 @@ const Profile = () => {
       })
       .catch((err) => {
         setLoading(false);
-        toast.error(err.message);
+        console.log(err.message);
       });
   };
 

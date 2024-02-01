@@ -1,5 +1,4 @@
 import axios from "axios";
-import { toast } from "react-toastify";
 import Store from "../Redux/Store";
 
 const Http = axios.create({

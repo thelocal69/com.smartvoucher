@@ -96,25 +96,25 @@ const Cart = () => {
                               }
                             })
                             .catch((err) => {
-                              toast.error(err.message);
+                              console.log(err.message);
                               setLoading(false);
                             });
                         }
                       })
                       .catch((err) => {
-                        toast.error(err.message);
+                        console.log(err.message);
                         setLoading(false);
                       });
                   }
                 })
                 .catch((err) => {
-                  toast.error(err.message);
+                  console.log(err.message);
                   setLoading(false);
                 });
             }
           })
           .catch((err) => {
-            toast.error(err.message);
+            console.log(err.message);
             setLoading(false);
           });
       }
