@@ -1,7 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getWarehouseById } from "../../../services/WarehouseServices";
-import { toast } from "react-toastify";
 import { Badge } from "react-bootstrap";
 import "../Detail/ProductInfor.scss";
 import { useDispatch } from "react-redux";
