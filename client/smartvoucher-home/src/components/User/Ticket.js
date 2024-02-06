@@ -14,7 +14,6 @@ const Ticket = (props) => {
   const [limit, setLimit] = React.useState(3);
   const [totalItem, setTotalItem] = React.useState(0);
   const [totalPage, setTotalPage] = React.useState(0);
-  const [openTicket, setOpenTicket] = React.useState(false);
 
   React.useEffect(() => {
     getTicket(id, currentPage, limit);
@@ -38,7 +37,7 @@ const Ticket = (props) => {
       .then((rs) => {
         if (rs) {
           toast.success("Use voucher is successfully !");
-          openTicket(true);
+          getTicket(id, currentPage, limit);
         }
       })
       .catch((err) => console.log(err.message));
@@ -54,41 +53,41 @@ const Ticket = (props) => {
         <Container>
           {listTicket
             ? listTicket.map((item, key) => {
-                return (
-                  <div key={key} className="d-flex p-3">
-                    <div className="pe-3">
-                      <img
-                        alt=""
-                        src={item.bannerUrl}
-                        style={{
-                          width: 20 + "rem",
-                          height: 10 + "rem",
-                          borderRadius: 10,
-                        }}
-                      />
+              return (
+                <div key={key} className="d-flex p-3">
+                  <div className="pe-3">
+                    <img
+                      alt=""
+                      src={item.bannerUrl}
+                      style={{
+                        width: 20 + "rem",
+                        height: 10 + "rem",
+                        borderRadius: 10,
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <div>
+                      <h4>{item.warehouseName}</h4>
+                      <p>{item.categoryName}</p>
                     </div>
                     <div>
-                      <div>
-                        <h4>{item.warehouseName}</h4>
-                        <p>{item.categoryName}</p>
-                      </div>
-                      <div>
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => handleUseVoucher(item.serialCode)}
-                        >
-                          <i class="fa-solid fa-copy"></i>
-                        </button>
-                        {openTicket && (
-                          <>
-                            <input value={item.serialCode} />
-                          </>
-                        )}
-                      </div>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleUseVoucher(item.serialCode)}
+                      >
+                        <i class="fa-solid fa-copy"></i>
+                      </button>
+                      <label
+                        className="ps-3"
+                      >{
+                          item.status === 2 ? item.serialCode : ""
+                        }</label>
                     </div>
                   </div>
-                );
-              })
+                </div>
+              );
+            })
             : "No data"}
           <Paginate totalPages={totalPage} handlePageClick={handlePageClick} />
         </Container>

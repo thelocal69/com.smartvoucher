@@ -18,9 +18,11 @@ import { toast } from "react-toastify";
 import { getIdStore } from "../../services/WarehouseStoreSrvices";
 import { buyVoucher } from "../../services/UserServices";
 import { balance } from "../../Redux/data/UserSlice";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cart = useSelector(selectIdCarts);
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -89,10 +91,8 @@ const Cart = () => {
                             .then((rs) => {
                               if (rs) {
                                 setLoading(false);
-                                toast.success(
-                                  "Kiểm tra đơn hàng hàng ở trang tài khoản !"
-                                );
                                 dispatch(removeItem(element));
+                                navigate("/User/Order");
                               }
                             })
                             .catch((err) => {

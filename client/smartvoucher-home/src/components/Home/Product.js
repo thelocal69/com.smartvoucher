@@ -541,7 +541,7 @@ const Product = () => {
         <hr />
       </div>
 
-      <div className="app se">
+      {/* <div className="app se">
         <div className="p-4 label-font ta gc Pe">
           <h4>{lableName[8]}</h4>
         </div>
@@ -612,7 +612,7 @@ const Product = () => {
           )}
         </div>
         <hr />
-      </div>
+      </div> */}
       <br />
     </>
   );

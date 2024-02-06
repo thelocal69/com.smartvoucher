@@ -1,5 +1,5 @@
 import React from "react";
-import { Carousel, Container, Image } from "react-bootstrap";
+import { Carousel, Image } from "react-bootstrap";
 import { getAllCategory } from "../../services/CategoryServices";
 import { toast } from "react-toastify";
 import "../Home/Category.scss";
@@ -24,42 +24,27 @@ const Category = () => {
   return (
     <>
       <div className="m-2 p-2 d-flex justify-content-between">
-        <div className="p-3 list-box">
-          <div className="py-2">
-            <a>
-              <i class="fa-solid fa-sack-dollar"></i>
-              Ưu đãi đặc biệt
-            </a>
+        <div>
+          <div>
+            <Image
+              src="https://giadinh.mediacdn.vn/296230595582509056/2022/12/21/an-gi-102-16715878746102005998080.jpg"
+              style={{
+                width: 17 + "rem",
+                height: 9 + "rem",
+                borderRadius: "10px",
+              }}
+            />
           </div>
-          <div className="pb-2">
-            <a>
-              <i class="fa-regular fa-snowflake"></i>
-              Ngày lễ
-            </a>
-          </div>
-          <div className="pb-2">
-            <a>
-              <i class="fa-solid fa-trademark"></i>
-              Chỉ có tại SmartVoucher
-            </a>
-          </div>
-          <div className="pb-2">
-            <a>
-              <i class="fa-solid fa-bowl-food"></i>
-              Ăn ngon
-            </a>
-          </div>
-          <div className="pb-2">
-            <a>
-              <i class="fa-solid fa-microchip"></i>
-              Công nghệ và Đời sống
-            </a>
-          </div>
-          <div className="pb-2">
-            <a>
-              <i class="fa-solid fa-house-medical"></i>
-              Khỏe đẹp
-            </a>
+          <br />
+          <div>
+            <Image
+              src="https://file.hstatic.net/200000472237/file/tong-quan-flash-sale_e1c32736c1ce4449b845bc1fb8dc98aa_grande.png"
+              style={{
+                width: 17 + "rem",
+                height: 9 + "rem",
+                borderRadius: "10px",
+              }}
+            />
           </div>
         </div>
         <Carousel

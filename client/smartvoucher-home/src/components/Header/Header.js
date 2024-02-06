@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 import Account from "../Security/Account";
 import { selectIdCarts } from "../../Redux/data/CartSlice";
 import { reset } from "../../Redux/data/UserSlice";
+import DropdownItem from "react-bootstrap/esm/DropdownItem";
 
 const Header = () => {
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
@@ -92,8 +93,8 @@ const Header = () => {
           data-bs-theme="dark"
           style={{
             paddingTop: 2 + "rem",
-            paddingLeft: 4.5 + "rem",
-            paddingRight: 4.5 + "rem",
+            paddingLeft: 7.5 + "rem",
+            paddingRight: 7.5 + "rem",
           }}
         >
           <Nav>
@@ -200,7 +201,6 @@ const Header = () => {
             >
               <i class="fa-solid fa-cart-shopping"></i>
               Cart <Badge bg="danger">{cart.length}</Badge>
-              <span className="visually-hidden">unread messages</span>
             </button>
           </Nav>
         </Navbar>
@@ -242,18 +242,52 @@ const Header = () => {
       <Container>
         <div className="p-2 d-flex justify-content-between sub-header">
           <div>
-            <Nav>
-              <NavLink to="/" className="form-sub">
-                <i class="fa-solid fa-bars"></i>
-                Danh mục sản phẩm
-              </NavLink>
-            </Nav>
+            <NavDropdown
+              title={
+                <span className="form-sub">
+                  <i class="fa-solid fa-bars"></i>
+                  Danh mục sản phẩm
+                </span>
+              }
+              className="form-sub"
+            >
+              <DropdownItem>
+                <NavLink className="dropItem">
+                  <i class="fa-solid fa-sack-dollar"></i>
+                  Ưu đãi đặc biệt
+                </NavLink>
+              </DropdownItem>
+              <DropdownItem>
+                <NavLink className="dropItem">
+                  <i class="fa-regular fa-snowflake"></i>
+                  Cuối tuần
+                </NavLink>
+              </DropdownItem>
+              <DropdownItem>
+                <NavLink className="dropItem">
+                  <i class="fa-solid fa-trademark"></i>
+                  Chỉ có tại SmartVoucher
+                </NavLink>
+              </DropdownItem>
+              <DropdownItem>
+                <NavLink className="dropItem">
+                  <i class="fa-solid fa-house-medical"></i>
+                  Khỏe đẹp
+                </NavLink>
+              </DropdownItem>
+              <DropdownItem>
+                <NavLink className="dropItem">
+                  <i class="fa-solid fa-microchip"></i>
+                  Công nghệ và Đời sống
+                </NavLink>
+              </DropdownItem>
+            </NavDropdown>
           </div>
           <div className="d-flex">
             <Nav>
               <NavLink to="/" className="form-sub pe-3">
                 <i class="fa-solid fa-mobile-screen-button"></i>
-                Checkin nhận quà !
+                Checkin !
               </NavLink>
             </Nav>
             <Nav>
@@ -270,10 +304,9 @@ const Header = () => {
             </Nav>
           </div>
         </div>
-
         <Account show={isShowModalLogin} handleClose={handleClose} />
       </Container>
-      <div>
+      <div className="pm">
         <hr />
       </div>
     </>

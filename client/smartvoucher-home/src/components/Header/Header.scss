@@ -81,6 +81,9 @@
     text-align: center;
     border-radius: 10pxs;
   }
+  .nav-link{
+    padding: 0;
+  }
 }
 
 .sub-font {
@@ -122,6 +125,15 @@
   &:hover {
     color: #000;
   }
+  .dropdown-toggle::after{
+    content: none;
+  }
+  .dropdown-item{
+    a:hover{
+      color: #000;
+    }
+    width: 95%;
+  }
 }
 
 .aval {
@@ -133,4 +145,18 @@
 .ft {
   color: #fff;
   font-weight: 500;
+  .dropdown-toggle::after{
+    content: none;
+  }
+}
+
+.dropItem{
+  text-decoration: none;
+  color: #000;
+}
+
+.pm{
+  hr{
+    margin: 0;
+  }
 }

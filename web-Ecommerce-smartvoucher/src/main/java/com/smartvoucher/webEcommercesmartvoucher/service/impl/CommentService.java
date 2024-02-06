@@ -84,7 +84,7 @@ public class CommentService implements ICommentService {
 
     public Boolean existWarehouseAndUser(CommentDTO commentDTO) {
         boolean warehouse = wareHouseRepository.existsById(commentDTO.getIdWarehouse());
-        boolean user = wareHouseRepository.existsById(commentDTO.getIdUser());
+        boolean user = userRepository.existsById(commentDTO.getIdUser());
         return warehouse && user;
     }
 }

@@ -256,7 +256,7 @@ public class TicketService implements ITicketService {
                     ticketRepository.save(ticketEntity);
                     // Khi user bấm mua rồi thì ticket này không thể sử dụng được nữa
                     log.info("Used Ticket Success !");
-                    return "Used Ticket Success !";
+                    return serialCode;
                 } else {
                     log.info("Voucher used !");
                     throw new UsedVoucherException(405, "Voucher used !");

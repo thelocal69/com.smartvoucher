@@ -50,7 +50,7 @@ const Merchant = () => {
     <>
       <Container>
         <div className="p-3">
-          <h4>Thuơng hiệu mới</h4>
+          <h4>Thuơng hiệu hợp tác</h4>
         </div>
         <div className="p-3">
           <Slider {...settings}>
