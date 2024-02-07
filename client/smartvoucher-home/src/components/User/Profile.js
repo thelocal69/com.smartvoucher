@@ -182,7 +182,7 @@ const Profile = () => {
                     </div>
                   </div>
                 </div>
-                <div className="d-flex ka lu">
+                <div className="d-flex ka ro">
                   <div className="yi">
                     <img alt="" src={objInfor.avatarUrl} className="Ava" />
                   </div>

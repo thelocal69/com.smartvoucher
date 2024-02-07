@@ -5,6 +5,7 @@ import PrivateRoutes from "../Routes/PrivateRoutes";
 import User from "../components/User/User";
 import ProductInfor from "../components/Home/Detail/ProductInfor";
 import Cart from "../components/Home/Cart";
+import CategoryInfor from "../components/Home/Detail/CategoryInfor";
 
 const AppRoutes = () => {
   return (
@@ -14,6 +15,7 @@ const AppRoutes = () => {
         <Route path="/Product/Detail/:id" element={<ProductInfor />} />
         <Route path="/User/*" element={<PrivateRoutes Component={User} />} />
         <Route path="/Cart" element={<Cart />} />
+        <Route path="/Category/:name" element={<CategoryInfor />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

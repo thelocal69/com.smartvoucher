@@ -159,7 +159,7 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.DELETE, "/order/api/delete-order").hasRole("USER")
                     //order
                     //warehouse
-                    .antMatchers(HttpMethod.GET, "/warehouse/CategoryId/{id}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/warehouse/api/category_name").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/all").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/get/label").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/{id}").permitAll()

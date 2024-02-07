@@ -225,6 +225,7 @@ public class WareHouseService implements IWareHouseService {
         }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseOutput getAllWarehousesByLabel(String slug, int page, int limit) {
         Pageable pageable = PageRequest.of(page - 1, limit);
         List<WareHouseDTO> wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(
@@ -232,7 +233,7 @@ public class WareHouseService implements IWareHouseService {
         );
         if (wareHouseDTOList.isEmpty()){
             log.info("List warehouse label is empty !");
-            throw new ObjectEmptyException(500, "List warehouse bt label is empty !");
+            throw new ObjectEmptyException(500, "List warehouse by label is empty !");
         }
         int totalItem = wareHouseRepository.countByLabel(slug);
         int totalPage = (int) Math.ceil((double) totalItem / limit);
@@ -246,19 +247,28 @@ public class WareHouseService implements IWareHouseService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<WareHouseDTO> getAllWarehouseByCategoryId(long id) {
+    public ResponseOutput getAllWarehouseByCategoryName(String name, int page, int limit) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
         List<WareHouseDTO> wareHouseDTOList = wareHouseConverter.toWareHouseDTOList(
-                wareHouseRepository.findAllByCategoryId(id)
+                wareHouseRepository.findAllByCategoryName(name, pageable)
         );
         if (wareHouseDTOList.isEmpty()){
-            log.info("List warehouse by category is empty !");
-            throw new ObjectEmptyException(500, "List warehouse by category is empty !");
+            log.info("List warehouse category is empty !");
+            throw new ObjectEmptyException(500, "List warehouse bt category is empty !");
         }
-        log.info("Get all warehouse by category code is completed !");
-        return wareHouseDTOList;
+        int totalItem = wareHouseRepository.countByCategory(name);
+        int totalPage = (int) Math.ceil((double) totalItem / limit);
+        return new ResponseOutput(
+                page,
+                totalItem,
+                totalPage,
+                wareHouseDTOList
+        );
     }
 
+
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String uploadLocalWarehouseImages(MultipartFile fileName) {
         String folderName = "warehouse";
         String imageName = uploadLocalUtil.storeFile(fileName, folderName);
@@ -266,6 +276,7 @@ public class WareHouseService implements IWareHouseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public byte[] readImageUrl(String fileName) {
         String folderName = "warehouse";
         return uploadLocalUtil.readFileContent(fileName, folderName);

@@ -1,6 +1,5 @@
 import React from "react";
 import { Card, Badge, Image } from "react-bootstrap";
-import "./HomePage.scss";
 import "../Home/HomePage.scss";
 import { getAllWarehouseByLabel } from "../../services/WarehouseServices";
 import { getAllLabelName } from "../../services/LabelServices";

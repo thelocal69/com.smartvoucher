@@ -19,7 +19,7 @@ public interface IWareHouseService {
     WareHouseDTO getWarehouseById(Long id);
     List<WareHouseDTO> getAllWarehousesByLabel(int id);
     ResponseOutput getAllWarehousesByLabel(String  id, int page, int limit);
-    List<WareHouseDTO> getAllWarehouseByCategoryId(long id);
+    ResponseOutput getAllWarehouseByCategoryName(String name, int page, int limit);
     String uploadLocalWarehouseImages(MultipartFile fileName);
     byte[] readImageUrl(String fileName);
 }

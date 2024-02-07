@@ -73,10 +73,12 @@ const Ticket = (props) => {
                     </div>
                     <div>
                       <button
-                        className="btn btn-primary"
+                        className={item.status === 2 ? "btn btn-danger" : "btn btn-primary"}
+                        disabled={item.status === 2}
                         onClick={() => handleUseVoucher(item.serialCode)}
                       >
-                        <i class="fa-solid fa-copy"></i>
+                        {item.status === 2 ? 'Used' : 'Redeem'}
+                        <i class={item.status === 2 ? "fa-solid fa-check" : "fa-solid fa-hand-point-down"}></i>
                       </button>
                       <label
                         className="ps-3"

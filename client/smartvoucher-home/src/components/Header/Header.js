@@ -252,33 +252,63 @@ const Header = () => {
               className="form-sub"
             >
               <DropdownItem>
-                <NavLink className="dropItem">
-                  <i class="fa-solid fa-sack-dollar"></i>
-                  Ưu đãi đặc biệt
+                <NavLink to="/Category/Du lịch" className="dropItem">
+                <i class="fa-solid fa-plane"></i>
+                  Du lịch
                 </NavLink>
               </DropdownItem>
               <DropdownItem>
-                <NavLink className="dropItem">
-                  <i class="fa-regular fa-snowflake"></i>
-                  Cuối tuần
+                <NavLink to="/Category/Điện tử" className="dropItem">
+                <i class="fa-solid fa-lightbulb"></i>
+                  Điện tử
                 </NavLink>
               </DropdownItem>
               <DropdownItem>
-                <NavLink className="dropItem">
-                  <i class="fa-solid fa-trademark"></i>
-                  Chỉ có tại SmartVoucher
+                <NavLink to="/Category/Thời trang" className="dropItem">
+                <i class="fa-solid fa-shirt"></i>
+                  Thời trang
                 </NavLink>
               </DropdownItem>
               <DropdownItem>
-                <NavLink className="dropItem">
-                  <i class="fa-solid fa-house-medical"></i>
-                  Khỏe đẹp
+                <NavLink to="/Category/Ẩm thực" className="dropItem">
+                <i class="fa-solid fa-bowl-food"></i>
+                  Ẩm thực
                 </NavLink>
               </DropdownItem>
               <DropdownItem>
-                <NavLink className="dropItem">
+                <NavLink to="/Category/Sách và Học nghệ thuật" className="dropItem">
+                <i class="fa-solid fa-book"></i>
+                  Sách hay
+                </NavLink>
+              </DropdownItem>
+              <DropdownItem>
+                <NavLink to="/Category/Sức khỏe và Làm đẹp" className="dropItem">
+                <i class="fa-solid fa-notes-medical"></i>
+                  Sức khỏe
+                </NavLink>
+              </DropdownItem>
+              <DropdownItem>
+                <NavLink to="/Category/Nội thất và Gia đình" className="dropItem">
+                <i class="fa-solid fa-people-roof"></i>
+                  Gia đình
+                </NavLink>
+              </DropdownItem>
+              <DropdownItem>
+                <NavLink to="/Category/Công nghệ" className="dropItem">
                   <i class="fa-solid fa-microchip"></i>
-                  Công nghệ và Đời sống
+                  Công nghệ
+                </NavLink>
+              </DropdownItem>
+              <DropdownItem>
+                <NavLink to="/Category/Thể thao và Hoạt động ngoại ô" className="dropItem">
+                <i class="fa-solid fa-bicycle"></i>
+                  Thể thao
+                </NavLink>
+              </DropdownItem>
+              <DropdownItem>
+                <NavLink to="/Category/Trò chơi" className="dropItem">
+                <i class="fa-solid fa-gamepad"></i>
+                  Trò chơi
                 </NavLink>
               </DropdownItem>
             </NavDropdown>

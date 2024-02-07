@@ -491,7 +491,7 @@ src="http://localhost:8082/warehouse/thumbnail_vega.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -533,7 +533,7 @@ src="http://localhost:8082/warehouse/thumbnail_thai.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -575,7 +575,7 @@ src="http://localhost:8082/warehouse/thumbnail_thai.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -617,7 +617,7 @@ src="http://localhost:8082/warehouse/thumbnail_steak.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -659,7 +659,7 @@ src="http://localhost:8082/warehouse/thumbnail_spa.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -701,7 +701,7 @@ src="http://localhost:8082/warehouse/thumbnail_shower.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -743,7 +743,7 @@ src="http://localhost:8082/warehouse/thumbnail_tech.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -785,7 +785,7 @@ src="http://localhost:8082/warehouse/thumbnail_sport.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -827,7 +827,7 @@ src="http://localhost:8082/warehouse/thumbnail_sushi.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -869,7 +869,7 @@ src="http://localhost:8082/warehouse/banner_art.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -911,7 +911,7 @@ src="http://localhost:8082/warehouse/thumbnail_makeup.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -953,7 +953,7 @@ src="http://localhost:8082/warehouse/thumbnail_organe.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -995,7 +995,7 @@ src="http://localhost:8082/warehouse/thumbnail_culow.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -1037,7 +1037,7 @@ src="http://localhost:8082/warehouse/thumbnail_game.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -1079,7 +1079,7 @@ src="http://localhost:8082/warehouse/318a83e10d0e4988bb6be294d82f2523.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng
@@ -1121,7 +1121,7 @@ src="http://localhost:8082/warehouse/318a83e10d0e4988bb6be294d82f2523.png" />
 <hr />
 <div>
 <h3>Điều kiện sử dụng</h3>
-            <p>{warehouse.termOfUse}</p>
+            <p>Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.</p>
             <h3>Hướng dẫn sử dụng voucher</h3>
             <p>
               <b>Bước 1: </b>Khách hàng đổi điểm lấy voucher và nhấn sử dụng

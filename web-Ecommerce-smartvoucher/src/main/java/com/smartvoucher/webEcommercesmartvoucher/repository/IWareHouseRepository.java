@@ -18,9 +18,7 @@ public interface IWareHouseRepository extends JpaRepository<WareHouseEntity, Lon
     @Query(value="SELECT * from warehouse WHERE warehouse.id_label= :id and warehouse.status = 1", nativeQuery = true)
     List<WareHouseEntity> findAllByLabel (@Param("id") int id);
     List<WareHouseEntity> searchAllByNameContainingIgnoreCase(String name);
-    @Query("SELECT w FROM warehouse w JOIN category c ON w.category.id=c.id" +
-            " WHERE w.category.id = :id")
-    List<WareHouseEntity>findAllByCategoryId(long id);
+    List<WareHouseEntity>findAllByCategoryName(String name, Pageable pageable);
 
 //    @Query("SELECT w FROM warehouse w JOIN label la ON w.label.id = la.id" +
 //            " WHERE w.label.id = :id AND w.status = 1" +
@@ -30,4 +28,8 @@ public interface IWareHouseRepository extends JpaRepository<WareHouseEntity, Lon
     @Query("SELECT count(*) FROM warehouse w JOIN label la ON w.label.id=la.id" +
             " WHERE la.slug = :slug")
     int countByLabel(String slug);
+
+    @Query("SELECT count(*) FROM warehouse w JOIN category c ON w.category.id=c.id" +
+            " WHERE c.name = :name")
+    int countByCategory(String name);
 }
