@@ -19,10 +19,10 @@ import { toast } from "react-toastify";
 import Account from "../Security/Account";
 import { selectIdCarts } from "../../Redux/data/CartSlice";
 import { reset } from "../../Redux/data/UserSlice";
-import NavbarCollapse from "react-bootstrap/esm/NavbarCollapse";
 
 const Header = () => {
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
+  const [isShowMenu, setIsShowMenu] = React.useState(false);
   const [sizes, setSizes] = React.useState("");
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const refreshToken = useSelector(selectRefreshToken);
@@ -46,6 +46,7 @@ const Header = () => {
 
   const handleClose = () => {
     setIsShowModalLogin(false);
+    setIsShowMenu(false);
   };
 
   const handleLogout = async () => {
@@ -95,12 +96,16 @@ const Header = () => {
         </Container>
       </div>
       <Container>
-        
+
       </Container>
       <Navbar expand="sm" className="bg-body-tertiary custom-header">
         <Container>
-          <Navbar.Toggle aria-controls="offcanvasNavbar-expand-sm" />
-          <Navbar.Collapse id="offcanvasNavbar-expand-sm" className="d-lg-flex justify-content-between">
+          <div className="LH">
+            <Button
+              onClick={() => setIsShowMenu(true)}
+            ><i class="fa-solid fa-bars"></i></Button>
+          </div>
+          <Navbar.Collapse className="d-lg-flex justify-content-between">
             <Navbar.Brand>
               <div className="oh">
                 <NavLink to="/" className="custom-font">
@@ -124,83 +129,328 @@ const Header = () => {
                 </NavLink>
               </div>
             </Navbar.Brand>
-            <Navbar.Offcanvas
+            <Offcanvas
+              show={isShowMenu}
+              onHide={handleClose}
               id={`offcanvasNavbar-expand-sm`}
               aria-labelledby={`offcanvasNavbarLabel-expand-sm`}
               placement="start"
               responsive="sm"
             >
-              <Offcanvas.Header className="custom-header" closeButton>
+              <Offcanvas.Header className="custom-header">
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-sm`}>
-                  {isAuthenticated ? (
-                    <>
-                      <Navbar>
-                        <NavLink>
-                          <img alt="" src={avatarL.avatar} className="aval" />
-                        </NavLink>
-                      </Navbar>
-                      <NavDropdown
-                        title={<span className="ft">{usernameL.username}</span>}
-                        id="basic-nav-dropdown"
-                        className="ft"
-                      >
-                        <NavDropdown.Item>
-                          Số dư tài khoản
-                          <br />
-                          <b>
-                            {new Intl.NumberFormat("vi-VN", {
-                              style: "currency",
-                              currency: "VND",
-                            }).format(balanceL.balance)}
-                          </b>
-                        </NavDropdown.Item>
-                        <NavLink to="/User/Profile" className="dropdown-item">
-                          Quản lí tài khoản
-                        </NavLink>
-                        <NavDropdown.Item onClick={() => handleLogout()}>
-                          Logout
-                        </NavDropdown.Item>
-                      </NavDropdown>
-                    </>
-                  ) : (
-                    <>
-                      <NavLink className="custom-font mx-2">
-                        <i
-                          class="fa-regular fa-circle-user"
-                          onClick={() => handleClickMobile()}
-                        ></i>
-                      </NavLink>
-                      <NavLink
-                        className="form-auth"
-                        onClick={() => handleClickMobile()}
-                      >
-                        Đăng nhập
-                      </NavLink>
-                      <span className="form-auth mx-2">/</span>
-                      <NavLink
-                        className="form-auth"
-                        onClick={() => handleClickMobile()}
-                      >
-                        Đăng ký
-                      </NavLink>
-                    </>
-                  )}
+                  {
+                    isAuthenticated ? (
+                      <>
+                        <Container>
+                          <Row xs='auto'>
+                            <Col>
+                              <div>
+                                <img
+                                  alt=""
+                                  src={avatarL.avatar}
+                                  className="EE" />
+                              </div>
+                            </Col>
+                            <Col className="HH">
+                              <div className="lG">
+                                {usernameL.username}
+                              </div>
+                              <div className="lG">
+                                <span>Số dư: </span>
+                                <span>
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(balanceL.balance)}
+                                </span>
+                              </div>
+                            </Col>
+                          </Row>
+                        </Container>
+                      </>
+                    ) : (
+                        <>
+                          <NavLink className="custom-font mx-2">
+                            <i
+                              class="fa-regular fa-circle-user"
+                              onClick={() => handleClickLogin()}
+                            ></i>
+                          </NavLink>
+                          <NavLink
+                            className="form-auth"
+                            onClick={() => handleClickLogin()}
+                          >
+                            Đăng nhập
+                          </NavLink>
+                          <span className="form-auth mx-2">/</span>
+                          <NavLink
+                            className="form-auth"
+                            onClick={() => handleClickLogin()}
+                          >
+                            Đăng ký
+                          </NavLink>
+                        </>
+                    )
+                  }
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
-                <Nav className="justify-content-end flex-grow-1 pe-3">
-                  <Form className="d-flex">
-                    <Form.Control
-                      type="search"
-                      placeholder="Search"
-                      className="me-2"
-                      aria-label="Search"
-                    />
-                    <Button variant="outline-success">Search</Button>
-                  </Form>
-                </Nav>
+                <Container>
+                  <Row xs={1}>
+                    <Col>
+                      <Nav className="justify-content-end flex-grow-1 pe-3">
+                        <Form className="d-flex">
+                          <Form.Control
+                            type="search"
+                            placeholder="Search"
+                            className="me-2"
+                            aria-label="Search"
+                          />
+                          <Button
+                            className="btn btn-primary"
+                          >Search</Button>
+                        </Form>
+                      </Nav>
+                    </Col>
+                    <Col>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-house"></i>
+                          Home
+                        </div>
+                        <hr />
+                      </div>
+                    </Col>
+                    <Col>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/User/Profile");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-user"></i>
+                          Quản lí tài khoản
+                        </div>
+                      </div>
+
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/User/Order");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-cart-shopping"></i>
+                          Lịch sử đơn hàng
+                        </div>
+                        <hr />
+                      </div>
+                    </Col>
+                    <Col>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/Category/Du lịch");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-plane"></i>
+                          Du lịch
+                        </div>
+                      </div>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/Category/Điện tử");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-lightbulb"></i>
+                          Điện tử
+                        </div>
+                      </div>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/Category/Thời trang");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-shirt"></i>
+                          Thời trang
+                        </div>
+                      </div>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/Category/Ẩm thực");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-bowl-food"></i>
+                          Ẩm thực
+                        </div>
+                      </div>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/Category/Sách và Học nghệ thuật");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-book"></i>
+                          Sách hay
+                        </div>
+                      </div>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/Category/Sức khỏe và Làm đẹp");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-notes-medical"></i>
+                          Sức khỏe
+                        </div>
+                      </div>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/Category/Nội thất và Gia đình");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-people-roof"></i>
+                          Gia đình
+                        </div>
+                      </div>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/Category/Công nghệ");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-microchip"></i>
+                          Công nghệ
+                        </div>
+                      </div>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/Category/Thể thao và Hoạt động ngoại ô");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-bicycle"></i>
+                          Thể thao
+                        </div>
+                      </div>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => {
+                              navigate("/Category/Trò chơi");
+                              handleClose();
+                            }
+                          }
+                        >
+                          <i class="fa-solid fa-gamepad"></i>
+                          Trò chơi
+                        </div>
+                        <hr />
+                      </div>
+                    </Col>
+                    <Col>
+                      <div style={{
+                        paddingTop: 0.5 + 'rem'
+                      }}>
+                        <div
+                          className="KK"
+                          onClick={
+                            () => handleLogout()
+                          }
+                        >
+                          <i class="fa-solid fa-right-from-bracket"></i>
+                          Đăng xuất
+                        </div>
+                        <hr />
+                      </div>
+                    </Col>
+                  </Row>
+                </Container>
               </Offcanvas.Body>
-            </Navbar.Offcanvas>
+            </Offcanvas>
             <Nav>
               <div className="oh">
                 <div className="search-wrapper">
@@ -216,7 +466,7 @@ const Header = () => {
                 </div>
               </div>
             </Nav>
-            <div className="oh">
+            <div className="oh d-flex">
               {isAuthenticated ? (
                 <>
                   <Navbar>

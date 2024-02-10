@@ -60,8 +60,6 @@
       display: none;
     }
    }
-
-
 .search-wrapper {
   display: flex;
   width: 436px;
@@ -185,7 +183,8 @@
 .ft {
   color: #fff;
   font-weight: 500;
-
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
   .dropdown-toggle::after {
     content: none;
   }
@@ -199,5 +198,45 @@
 .pm {
   hr {
     margin: 0;
+  }
+}
+
+.lG{
+  color: #fff;
+  font-weight: 500;
+}
+
+.EE{
+  width: 5rem;
+  height: 5rem;
+  border-radius: 99999px;
+}
+
+.HH{
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.YY{
+  padding-top: 1 rem;
+}
+
+.KK{
+  color: #000;
+  font-weight: 500;
+  text-decoration: none;
+
+  &:hover {
+    color: #000;
+  }
+}
+
+.LH{
+  display: none;
+}
+
+@media (max-width: 575.98px) {
+  .LH{
+    display: block;
   }
 }
