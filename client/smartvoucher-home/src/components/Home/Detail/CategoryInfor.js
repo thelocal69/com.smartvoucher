@@ -2,37 +2,42 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAllWarehouseByCategory } from '../../../services/WarehouseServices';
 import { Card, Image, Badge } from 'react-bootstrap';
+import Paginate from '../../Util/Paginate';
 
 const CategoryInfor = () => {
 
-    const {name} = useParams();
-    const navigate = useNavigate();
-    const [listWarehouse, setListWarehouse] = React.useState([]);
-    const [currentPage, setCurrentPage] = React.useState(1);
-    const [limit, setLimit] = React.useState(6);
-    const [totalPage, setTotalPage] = React.useState(0);
-    const [totalItem, setTotalItem] = React.useState(0);
+  const { name } = useParams();
+  const navigate = useNavigate();
+  const [listWarehouse, setListWarehouse] = React.useState([]);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [limit, setLimit] = React.useState(6);
+  const [totalPage, setTotalPage] = React.useState(0);
+  const [totalItem, setTotalItem] = React.useState(0);
 
-    React.useEffect(() => {
-        const getWarehouseByCategory = async() => {
-            await getAllWarehouseByCategory(name, currentPage, limit)
-            .then((rs) => {
-                if(rs){
-                    setCurrentPage(rs.page);
-                    setTotalPage(rs.totalPage);
-                    setTotalItem(rs.totalItem);
-                    setListWarehouse([...listWarehouse, ...rs.data]);
-                }
-            })
-            .catch((err) => console.log(err.message));
+  React.useEffect(() => {
+    getWarehouseByCategory(name, currentPage, limit);
+    setListWarehouse([]);
+  }, [name]);
+
+  const handlePageClick = (event) => {
+    getWarehouseByCategory(name, +event.selected + 1, limit);
+  }
+
+  const getWarehouseByCategory = async (name, currentPage, limit) => {
+    await getAllWarehouseByCategory(name, currentPage, limit)
+      .then((rs) => {
+        if (rs) {
+          setCurrentPage(rs.page);
+          setTotalPage(rs.totalPage);
+          setTotalItem(rs.totalItem);
+          setListWarehouse(rs.data);
         }
-    
-        getWarehouseByCategory();
-      }, [name]);
-
+      })
+      .catch((err) => console.log(err.message));
+  }
   return (
     <>
-       <div className="app se">
+      <div className="app se">
         <div className="p-4 label-font ta gc Pe">
           <h4>{name}</h4>
         </div>
@@ -90,18 +95,7 @@ const CategoryInfor = () => {
               );
             })}
         </div>
-        <div className="d-flex justify-content-center">
-          {totalPage !== currentPage && (
-            <>
-              <button
-                className="btn-more my-3"
-                onClick={() => setCurrentPage(currentPage + 1)}
-              >
-                Load more
-              </button>
-            </>
-          )}
-        </div>
+        <Paginate totalPages={totalPage} handlePageClick={handlePageClick} />
         <hr />
       </div>
     </>

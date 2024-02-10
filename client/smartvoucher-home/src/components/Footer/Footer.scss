@@ -28,3 +28,39 @@
     font-weight: 500;
     text-transform: uppercase;
 }
+
+.eR{
+    margin-left: 3.5rem;
+    margin-right: 3.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.LM{
+    width: 50rem;
+}
+
+@media (max-width: 575.98px) {
+    .LM{
+        width: 20rem;
+        padding-bottom: 1rem;
+    }
+}
+
+.qM{
+    width: 40rem;
+   .ll{
+    width: 9rem;
+   }
+}
+
+@media (max-width: 575.98px) {
+    .qM{
+        width: 20rem;
+        .ll{
+            font-size: smaller;
+            width: 50%;
+        }
+        padding-bottom: 1rem;
+    }
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Badge, Image } from "react-bootstrap";
+import { Card, Badge, Image, Row, Col, Container } from "react-bootstrap";
 import "../Home/HomePage.scss";
 import { getAllWarehouseByLabel } from "../../services/WarehouseServices";
 import { getAllLabelName } from "../../services/LabelServices";
@@ -171,375 +171,369 @@ const Product = () => {
 
   return (
     <>
-      <div className="app se">
-        <div className="p-4 label-font ta gc Pe">
-          <h4>{lableName[0]}</h4>
-        </div>
-        <div className="d-flex align-content-center justify-content-center flex-wrap">
-          {listWarehouseSpecial &&
-            listWarehouseSpecial.map((item, key) => {
-              return (
-                <>
-                  <div className="ta gc Pe p-4" key={key}>
-                    <Card
-                      className="custom-card"
-                      style={{ width: "18rem", border: "none" }}
-                    >
-                      <Image
-                        loading="lazy"
-                        src={item.bannerUrl}
-                        className="img"
-                      />
-                      <Card.Body>
-                        <div
-                          onClick={() => {
-                            navigate(`/Product/Detail/${item.id}`);
-                          }}
-                          className="a"
-                        >
-                          {item.name}
-                        </div>
-                        <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">
-                            {new Intl.NumberFormat("vi-VN", {
-                              style: "currency",
-                              currency: "VND",
-                            }).format(item.price)}
-                          </span>
-                          <span className="discount-price">
-                            {item.maxDiscountAmount > 0 && (
-                              <>
-                                {new Intl.NumberFormat("vi-VN", {
-                                  style: "currency",
-                                  currency: "VND",
-                                }).format(item.originalPrice)}
-                                <span className="ps-3">
-                                  <Badge bg="danger">
-                                    -{item.maxDiscountAmount}%
-                                  </Badge>
+      <Container>
+        <Row xs={1} md={1}>
+          <Col>
+            <div>
+              <div className="p-4 label-font">
+                <h4>{lableName[0]}</h4>
+              </div>
+              <div className="d-flex align-content-center justify-content-center flex-wrap">
+                {listWarehouseSpecial &&
+                  listWarehouseSpecial.map((item, key) => {
+                    return (
+                      <>
+                        <div className="ta gc Pe p-4" key={key}>
+                          <Card >
+                            <Image
+                              loading="lazy"
+                              src={item.bannerUrl}
+                              className="img"
+                            />
+                            <Card.Body>
+                              <div
+                                onClick={() => {
+                                  navigate(`/Product/Detail/${item.id}`);
+                                }}
+                                className="a"
+                              >
+                                {item.name}
+                              </div>
+                              <Card.Text className="d-flex justify-content-between my-2">
+                                <span className="price">
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(item.price)}
                                 </span>
-                              </>
-                            )}
-                          </span>
-                        </Card.Text>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                </>
-              );
-            })}
-        </div>
-        <div className="d-flex justify-content-center">
-          {totalPageSpecial !== pageSpecial && (
-            <>
-              <button
-                className="btn-more my-3"
-                onClick={() => setPageSpecial(pageSpecial + 1)}
-              >
-                Load more
-              </button>
-            </>
-          )}
-        </div>
-        <hr />
-      </div>
-
-      <div className="app se">
-        <div className="p-4 label-font ta gc Pe">
-          <h4>{lableName[1]}</h4>
-        </div>
-        <div className="d-flex align-content-center justify-content-center flex-wrap">
-          {listWarehouseFestival &&
-            listWarehouseFestival.map((item, key) => {
-              return (
-                <>
-                  <div className="ta gc Pe p-4" key={key}>
-                    <Card
-                      className="custom-card"
-                      style={{ width: "18rem", border: "none" }}
-                    >
-                      <Image
-                        loading="lazy"
-                        src={item.bannerUrl}
-                        className="img"
-                      />
-                      <Card.Body>
-                        <div
-                          onClick={() => {
-                            navigate(`/Product/Detail/${item.id}`);
-                          }}
-                          className="a"
-                        >
-                          {item.name}
-                        </div>
-                        <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">
-                            {new Intl.NumberFormat("vi-VN", {
-                              style: "currency",
-                              currency: "VND",
-                            }).format(item.price)}
-                          </span>
-                          <span className="discount-price">
-                            {item.maxDiscountAmount > 0 && (
-                              <>
-                                {new Intl.NumberFormat("vi-VN", {
-                                  style: "currency",
-                                  currency: "VND",
-                                }).format(item.originalPrice)}
-                                <span className="ps-3">
-                                  <Badge bg="danger">
-                                    -{item.maxDiscountAmount}%
-                                  </Badge>
+                                <span className="discount-price">
+                                  {item.maxDiscountAmount > 0 && (
+                                    <>
+                                      {new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                      }).format(item.originalPrice)}
+                                      <span className="ps-3">
+                                        <Badge bg="danger">
+                                          -{item.maxDiscountAmount}%
+                                        </Badge>
+                                      </span>
+                                    </>
+                                  )}
                                 </span>
-                              </>
-                            )}
-                          </span>
-                        </Card.Text>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                </>
-              );
-            })}
-        </div>
-        <div className="d-flex justify-content-center">
-          {totalPageFestival !== pageFestival && (
-            <>
-              <button
-                className="btn-more my-3"
-                onClick={() => setPageFestival(pageFestival + 1)}
-              >
-                Load more
-              </button>
-            </>
-          )}
-        </div>
-        <hr />
-      </div>
-
-      <div className="app se">
-        <div className="p-4 label-font ta gc Pe">
-          <h4>{lableName[2]}</h4>
-        </div>
-        <div className="d-flex align-content-center justify-content-center flex-wrap">
-          {listWarehouseOnlySmartvoucher &&
-            listWarehouseOnlySmartvoucher.map((item, key) => {
-              return (
-                <>
-                  <div className="ta gc Pe p-4" key={key}>
-                    <Card
-                      className="custom-card"
-                      style={{ width: "18rem", border: "none" }}
-                    >
-                      <Image
-                        loading="lazy"
-                        src={item.bannerUrl}
-                        className="img"
-                      />
-                      <Card.Body>
-                        <div
-                          onClick={() => {
-                            navigate(`/Product/Detail/${item.id}`);
-                          }}
-                          className="a"
-                        >
-                          {item.name}
+                              </Card.Text>
+                            </Card.Body>
+                          </Card>
                         </div>
-                        <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">
-                            {new Intl.NumberFormat("vi-VN", {
-                              style: "currency",
-                              currency: "VND",
-                            }).format(item.price)}
-                          </span>
-                          <span className="discount-price">
-                            {item.maxDiscountAmount > 0 && (
-                              <>
-                                {new Intl.NumberFormat("vi-VN", {
-                                  style: "currency",
-                                  currency: "VND",
-                                }).format(item.originalPrice)}
-                                <span className="ps-3">
-                                  <Badge bg="danger">
-                                    -{item.maxDiscountAmount}%
-                                  </Badge>
-                                </span>
-                              </>
-                            )}
-                          </span>
-                        </Card.Text>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                </>
-              );
-            })}
-        </div>
-        <div className="d-flex justify-content-center">
-          {totalPageOnlySmartvoucher !== pageOnlySmartvoucher && (
-            <>
-              <button
-                className="btn-more my-3"
-                onClick={() =>
-                  setPageOnlySmartvoucher(pageOnlySmartvoucher + 1)
-                }
-              >
-                Load more
-              </button>
-            </>
-          )}
-        </div>
-        <hr />
-      </div>
-
-      <div className="app se">
-        <div className="p-4 label-font ta gc Pe">
-          <h4>{lableName[3]}</h4>
-        </div>
-        <div className="d-flex align-content-center justify-content-center flex-wrap">
-          {listWarehouseFood &&
-            listWarehouseFood.map((item, key) => {
-              return (
-                <>
-                  <div className="ta gc Pe p-4" key={key}>
-                    <Card
-                      className="custom-card"
-                      style={{ width: "18rem", border: "none" }}
+                      </>
+                    );
+                  })}
+              </div>
+              <div className="d-flex justify-content-center">
+                {totalPageSpecial !== pageSpecial && (
+                  <>
+                    <button
+                      className="btn-more my-md-3"
+                      onClick={() => setPageSpecial(pageSpecial + 1)}
                     >
-                      <Image
-                        loading="lazy"
-                        src={item.bannerUrl}
-                        className="img"
-                      />
-                      <Card.Body>
-                        <div
-                          onClick={() => {
-                            navigate(`/Product/Detail/${item.id}`);
-                          }}
-                          className="a"
-                        >
-                          {item.name}
-                        </div>
-                        <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">
-                            {new Intl.NumberFormat("vi-VN", {
-                              style: "currency",
-                              currency: "VND",
-                            }).format(item.price)}
-                          </span>
-                          <span className="discount-price">
-                            {item.maxDiscountAmount > 0 && (
-                              <>
-                                {new Intl.NumberFormat("vi-VN", {
-                                  style: "currency",
-                                  currency: "VND",
-                                }).format(item.originalPrice)}
-                                <span className="ps-3">
-                                  <Badge bg="danger">
-                                    -{item.maxDiscountAmount}%
-                                  </Badge>
+                      Load more
+                    </button>
+                  </>
+                )}
+              </div>
+              <hr />
+            </div>
+          </Col>
+          <Col>
+            <div>
+              <div className="p-4 label-font">
+                <h4>{lableName[1]}</h4>
+              </div>
+              <div className="d-flex align-content-center justify-content-center flex-wrap">
+                {listWarehouseFestival &&
+                  listWarehouseFestival.map((item, key) => {
+                    return (
+                      <>
+                        <div className="ta gc Pe p-4" key={key}>
+                          <Card>
+                            <Image
+                              loading="lazy"
+                              src={item.bannerUrl}
+                              className="img"
+                            />
+                            <Card.Body>
+                              <div
+                                onClick={() => {
+                                  navigate(`/Product/Detail/${item.id}`);
+                                }}
+                                className="a"
+                              >
+                                {item.name}
+                              </div>
+                              <Card.Text className="d-flex justify-content-between my-2">
+                                <span className="price">
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(item.price)}
                                 </span>
-                              </>
-                            )}
-                          </span>
-                        </Card.Text>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                </>
-              );
-            })}
-        </div>
-        <div className="d-flex justify-content-center">
-          {totalPageFood !== pageFood && (
-            <>
-              <button
-                className="btn-more my-3"
-                onClick={() => setPageFood(pageFood + 1)}
-              >
-                Load more
-              </button>
-            </>
-          )}
-        </div>
-        <hr />
-      </div>
-
-      <div className="app se">
-        <div className="p-4 label-font ta gc Pe">
-          <h4>{lableName[4]}</h4>
-        </div>
-        <div className="d-flex align-content-center justify-content-center flex-wrap">
-          {listWarehouseTechnologiesLife &&
-            listWarehouseTechnologiesLife.map((item, key) => {
-              return (
-                <>
-                  <div className="ta gc Pe p-4" key={key}>
-                    <Card
-                      className="custom-card"
-                      style={{ width: "18rem", border: "none" }}
+                                <span className="discount-price">
+                                  {item.maxDiscountAmount > 0 && (
+                                    <>
+                                      {new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                      }).format(item.originalPrice)}
+                                      <span className="ps-3">
+                                        <Badge bg="danger">
+                                          -{item.maxDiscountAmount}%
+                                        </Badge>
+                                      </span>
+                                    </>
+                                  )}
+                                </span>
+                              </Card.Text>
+                            </Card.Body>
+                          </Card>
+                        </div>
+                      </>
+                    );
+                  })}
+              </div>
+              <div className="d-flex justify-content-center">
+                {totalPageFestival !== pageFestival && (
+                  <>
+                    <button
+                      className="btn-more my-md-3"
+                      onClick={() => setPageFestival(pageFestival + 1)}
                     >
-                      <Image
-                        loading="lazy"
-                        src={item.bannerUrl}
-                        className="img"
-                      />
-                      <Card.Body>
-                        <div
-                          onClick={() => {
-                            navigate(`/Product/Detail/${item.id}`);
-                          }}
-                          className="a"
-                        >
-                          {item.name}
-                        </div>
-                        <Card.Text className="d-flex justify-content-between my-2">
-                          <span className="price">
-                            {new Intl.NumberFormat("vi-VN", {
-                              style: "currency",
-                              currency: "VND",
-                            }).format(item.price)}
-                          </span>
-                          <span className="discount-price">
-                            {item.maxDiscountAmount > 0 && (
-                              <>
-                                {new Intl.NumberFormat("vi-VN", {
-                                  style: "currency",
-                                  currency: "VND",
-                                }).format(item.originalPrice)}
-                                <span className="ps-3">
-                                  <Badge bg="danger">
-                                    -{item.maxDiscountAmount}%
-                                  </Badge>
+                      Load more
+                    </button>
+                  </>
+                )}
+              </div>
+              <hr />
+            </div>
+          </Col>
+          <Col>
+            <div>
+              <div className="p-4 label-font">
+                <h4>{lableName[2]}</h4>
+              </div>
+              <div className="d-flex align-content-center justify-content-center flex-wrap">
+                {listWarehouseOnlySmartvoucher &&
+                  listWarehouseOnlySmartvoucher.map((item, key) => {
+                    return (
+                      <>
+                        <div className="ta gc Pe p-4" key={key}>
+                          <Card>
+                            <Image
+                              loading="lazy"
+                              src={item.bannerUrl}
+                              className="img"
+                            />
+                            <Card.Body>
+                              <div
+                                onClick={() => {
+                                  navigate(`/Product/Detail/${item.id}`);
+                                }}
+                                className="a"
+                              >
+                                {item.name}
+                              </div>
+                              <Card.Text className="d-flex justify-content-between my-2">
+                                <span className="price">
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(item.price)}
                                 </span>
-                              </>
-                            )}
-                          </span>
-                        </Card.Text>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                </>
-              );
-            })}
-        </div>
-        <div className="d-flex justify-content-center">
-          {totalPageTechnologiesLife !== pageTechnologiesLife && (
-            <>
-              <button
-                className="btn-more my-3"
-                onClick={() =>
-                  setPageTechnologiesLife(pageTechnologiesLife + 1)
-                }
-              >
-                Load more
-              </button>
-            </>
-          )}
-        </div>
-        <hr />
-      </div>
-
+                                <span className="discount-price">
+                                  {item.maxDiscountAmount > 0 && (
+                                    <>
+                                      {new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                      }).format(item.originalPrice)}
+                                      <span className="ps-3">
+                                        <Badge bg="danger">
+                                          -{item.maxDiscountAmount}%
+                                        </Badge>
+                                      </span>
+                                    </>
+                                  )}
+                                </span>
+                              </Card.Text>
+                            </Card.Body>
+                          </Card>
+                        </div>
+                      </>
+                    );
+                  })}
+              </div>
+              <div className="d-flex justify-content-center">
+                {totalPageOnlySmartvoucher !== pageOnlySmartvoucher && (
+                  <>
+                    <button
+                      className="btn-more my-md-3"
+                      onClick={() =>
+                        setPageOnlySmartvoucher(pageOnlySmartvoucher + 1)
+                      }
+                    >
+                      Load more
+                    </button>
+                  </>
+                )}
+              </div>
+              <hr />
+            </div>
+          </Col>
+          <Col>
+            <div>
+              <div className="p-4 label-font">
+                <h4>{lableName[3]}</h4>
+              </div>
+              <div className="d-flex align-content-center justify-content-center flex-wrap">
+                {listWarehouseFood &&
+                  listWarehouseFood.map((item, key) => {
+                    return (
+                      <>
+                        <div className="ta gc Pe p-4" key={key}>
+                          <Card>
+                            <Image
+                              loading="lazy"
+                              src={item.bannerUrl}
+                              className="img"
+                            />
+                            <Card.Body>
+                              <div
+                                onClick={() => {
+                                  navigate(`/Product/Detail/${item.id}`);
+                                }}
+                                className="a"
+                              >
+                                {item.name}
+                              </div>
+                              <Card.Text className="d-flex justify-content-between my-2">
+                                <span className="price">
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(item.price)}
+                                </span>
+                                <span className="discount-price">
+                                  {item.maxDiscountAmount > 0 && (
+                                    <>
+                                      {new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                      }).format(item.originalPrice)}
+                                      <span className="ps-3">
+                                        <Badge bg="danger">
+                                          -{item.maxDiscountAmount}%
+                                        </Badge>
+                                      </span>
+                                    </>
+                                  )}
+                                </span>
+                              </Card.Text>
+                            </Card.Body>
+                          </Card>
+                        </div>
+                      </>
+                    );
+                  })}
+              </div>
+              <div className="d-flex justify-content-center">
+                {totalPageFood !== pageFood && (
+                  <>
+                    <button
+                      className="btn-more my-md-3"
+                      onClick={() => setPageFood(pageFood + 1)}
+                    >
+                      Load more
+                    </button>
+                  </>
+                )}
+              </div>
+              <hr />
+            </div>
+          </Col>
+          <Col>
+            <div>
+              <div className="p-4 label-font">
+                <h4>{lableName[4]}</h4>
+              </div>
+              <div className="d-flex align-content-center justify-content-center flex-wrap">
+                {listWarehouseTechnologiesLife &&
+                  listWarehouseTechnologiesLife.map((item, key) => {
+                    return (
+                      <>
+                        <div className="ta gc Pe p-4" key={key}>
+                          <Card>
+                            <Image
+                              loading="lazy"
+                              src={item.bannerUrl}
+                              className="img"
+                            />
+                            <Card.Body>
+                              <div
+                                onClick={() => {
+                                  navigate(`/Product/Detail/${item.id}`);
+                                }}
+                                className="a"
+                              >
+                                {item.name}
+                              </div>
+                              <Card.Text className="d-flex justify-content-between my-2">
+                                <span className="price">
+                                  {new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                  }).format(item.price)}
+                                </span>
+                                <span className="discount-price">
+                                  {item.maxDiscountAmount > 0 && (
+                                    <>
+                                      {new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                      }).format(item.originalPrice)}
+                                      <span className="ps-3">
+                                        <Badge bg="danger">
+                                          -{item.maxDiscountAmount}%
+                                        </Badge>
+                                      </span>
+                                    </>
+                                  )}
+                                </span>
+                              </Card.Text>
+                            </Card.Body>
+                          </Card>
+                        </div>
+                      </>
+                    );
+                  })}
+              </div>
+              <div className="d-flex justify-content-center">
+                {totalPageTechnologiesLife !== pageTechnologiesLife && (
+                  <>
+                    <button
+                      className="btn-more my-md-3"
+                      onClick={() =>
+                        setPageTechnologiesLife(pageTechnologiesLife + 1)
+                      }
+                    >
+                      Load more
+                    </button>
+                  </>
+                )}
+              </div>
+              <hr />
+            </div>
+          </Col>
+        </Row>
+      </Container>
       {/* <div className="app se">
         <div className="p-4 label-font ta gc Pe">
           <h4>{lableName[8]}</h4>

@@ -17,7 +17,7 @@ import Loading from "../Util/Loading";
 import OAuth2Login from "./OAuth2Login";
 
 const Account = (props) => {
-  const { show, handleClose, mode } = props;
+  const { show, handleClose, mode, sizes } = props;
 
   const [isShowPassword, setIsShowPassword] = React.useState(false);
   const [isShowPasswordConfirm, setIsShowPasswordConfirm] =
@@ -238,7 +238,7 @@ const Account = (props) => {
         <Modal
           show={show}
           onHide={handleCloseReset}
-          size="lg"
+          size={sizes}
           aria-labelledby="contained-modal-title-vcenter"
           centered
           backdrop="static"
