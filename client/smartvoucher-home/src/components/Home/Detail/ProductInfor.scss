@@ -2,22 +2,91 @@
   text-decoration-line: line-through;
   color: #9ca3af;
 }
+
 .ac {
   &.active {
     color: rgb(43, 191, 43);
     font-weight: 600;
   }
+
   &.deactive {
     color: rgb(174, 20, 20);
     font-weight: 600;
   }
 }
+
 .fW {
   font-weight: 500;
 }
+
 .Po {
   display: block;
   margin-left: auto;
   margin-right: auto;
   border-radius: 10px;
+}
+
+.gofo{
+  margin: 0.5rem;
+  padding: 0.5rem;
+}
+
+.RZ {
+  img {
+    width: 30rem;
+    height: 20rem;
+    border-radius: 2rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .gofo{
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .RZ {
+    padding-top: 1rem;
+    img {
+      width: 21rem;
+      height: 15rem;
+      border-radius: 2rem;
+    }
+  }
+}
+
+@media (max-width: 575.98px) {
+  .Po {
+    width: 18rem;
+    height: 15rem;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .lT {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .HE {
+    padding: 0.5rem 0;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .YB {
+    display: flex;
+    width: 100%;
+
+    span {
+      button {
+        font-size: smaller;
+      }
+    }
+  }
 }

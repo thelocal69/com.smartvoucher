@@ -17,3 +17,32 @@
       font-weight: 500;
     }
   }
+
+  .coLI{
+    padding: 1rem;
+  }
+
+  @media (max-width: 575.98px) {
+    .xL {
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+    
+      .ad {
+        &.active {
+          color: rgb(43, 191, 43);
+          font-weight: 600;
+        }
+        &.deactive {
+          color: rgb(174, 20, 20);
+          font-weight: 600;
+        }
+      }
+      .fD {
+        font-weight: 500;
+      }
+    }
+    .coLI{
+      padding: 0;
+    }
+  }

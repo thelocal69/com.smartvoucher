@@ -190,7 +190,7 @@ const Comment = (props) => {
           className="p-3 PO"
         />
       </div>
-      <div className="d-flex justify-content-end">
+      <div className="d-flex justify-content-end OH">
         {auth ? (
           <>
             <button

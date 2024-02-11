@@ -7,8 +7,8 @@
 }
 
 .list-l {
-  width: 15rem;
-  height: 14.25rem;
+  width: auto;
+  height:auto;
   border: 1px solid #fff;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border-radius: 10px;
@@ -25,5 +25,41 @@
   }
   .oL{
     margin-bottom: 1rem;
+  }
+
+  .padluon{
+    padding: 1rem;
+  }
+
+  .papa{
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.xx{
+  padding: 1rem;
+}
+
+@media (max-width: 575.98px) {
+  .xx{
+    padding: 0;
+  }
+
+  .list-l {
+    border:none;
+    box-shadow: none;
+    .papa{
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row;
+    }
+    .sideBar {
+      opacity: 1;
+      span{
+        display: none;
+      }
+
+    }
   }
 }

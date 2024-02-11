@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../Redux/data/AuthSlice";
-import { Container } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { getAllTicket, userUseVoucher } from "../../services/TicketServices";
 import { toast } from "react-toastify";
 import Paginate from "../Util/Paginate";
@@ -50,49 +50,55 @@ const Ticket = (props) => {
   return (
     <>
       {accessToken && (
-        <Container>
+        <div>
           {listTicket
             ? listTicket.map((item, key) => {
               return (
-                <div key={key} className="d-flex p-3">
-                  <div className="pe-3">
-                    <img
-                      alt=""
-                      src={item.bannerUrl}
-                      style={{
-                        width: 20 + "rem",
-                        height: 10 + "rem",
-                        borderRadius: 10,
-                      }}
-                    />
-                  </div>
-                  <div>
+                <Row xs={1} md='auto' key={key} className="justify-content-md-between">
+                  <Col>
                     <div>
-                      <h4>{item.warehouseName}</h4>
-                      <p>{item.categoryName}</p>
+                      <img
+                        alt=""
+                        src={item.bannerUrl}
+                        style={{
+                          width: 20 + "rem",
+                          height: 10 + "rem",
+                          borderRadius: 10,
+                        }}
+                      />
                     </div>
+                    <hr />
+                  </Col>
+                  <Col md={7}>
                     <div>
-                      <button
-                        className={item.status === 2 ? "btn btn-danger" : "btn btn-primary"}
-                        disabled={item.status === 2}
-                        onClick={() => handleUseVoucher(item.serialCode)}
-                      >
-                        {item.status === 2 ? 'Used' : 'Redeem'}
-                        <i class={item.status === 2 ? "fa-solid fa-check" : "fa-solid fa-hand-point-down"}></i>
-                      </button>
-                      <label
-                        className="ps-3"
-                      >{
-                          item.status === 2 ? item.serialCode : ""
-                        }</label>
+                      <div>
+                        <h4>{item.warehouseName}</h4>
+                        <p>{item.categoryName}</p>
+                      </div>
+                      <div>
+                        <button
+                          className={item.status === 2 ? "btn btn-danger" : "btn btn-primary"}
+                          disabled={item.status === 2}
+                          onClick={() => handleUseVoucher(item.serialCode)}
+                        >
+                          {item.status === 2 ? 'Used' : 'Redeem'}
+                          <i class={item.status === 2 ? "fa-solid fa-check" : "fa-solid fa-hand-point-down"}></i>
+                        </button>
+                        <label
+                          className="ps-3"
+                        >{
+                            item.status === 2 ? item.serialCode : ""
+                          }</label>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                    <hr />
+                  </Col>
+                </Row>
               );
             })
             : "No data"}
           <Paginate totalPages={totalPage} handlePageClick={handlePageClick} />
-        </Container>
+        </div>
       )}
     </>
   );

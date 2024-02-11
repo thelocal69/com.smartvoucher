@@ -12,6 +12,7 @@
   text-decoration: none;
   color: #000;
   font-weight: 500;
+
   &:hover {
     cursor: pointer;
     color: #000;
@@ -59,54 +60,67 @@
   margin: -0.75rem;
 }
 
-.Jc{
+.Jc {
   border-bottom-width: 1px;
 }
 
-.img{
-    width: 100%;
-    height: 50%;
-    border-radius: 0.5rem;
+.img {
+  width: 100%;
+  height: 50%;
+  border-radius: 0.5rem;
 }
 
-.card{
-  width: 18rem;
-  border: none;
-  &:hover {
-    transform: translateY(-10px);
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+.bO {
+  .card {
+    width: 18rem;
+    border: none;
+
+    &:hover {
+      transform: translateY(-10px);
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
   }
 }
 
+
 @media (max-width: 575.98px) {
-  .card{
-    width: 9rem;
-    border: none;
-    &:hover {
-      transform: none;
-      box-shadow: none;
-    }
-    img{
+  .bO {
+    .card {
       width: 9rem;
-      height: 5rem;
-    }
-    .card-body{
-      padding: 0 0;
-      .a {
-        text-decoration: none;
-        color: #000;
-        font-weight: 500;
-        font-size: smaller;
-        padding: 6%;
-        &:hover {
-          cursor: none;
-          text-decoration: none;
-        }
+      border: none;
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
       }
-      p{
-        padding: 4%;
-        span{
+
+      img {
+        width: 9rem;
+        height: 5rem;
+      }
+
+      .card-body {
+        padding: 0 0;
+
+        .a {
+          text-decoration: none;
+          color: #000;
+          font-weight: 500;
           font-size: smaller;
+          padding: 6%;
+
+          &:hover {
+            cursor: none;
+            text-decoration: none;
+          }
+        }
+
+        p {
+          padding: 4%;
+
+          span {
+            font-size: smaller;
+          }
         }
       }
     }
@@ -117,7 +131,8 @@
   .label-font {
     font-size: 1.5rem;
     line-height: 2rem;
-    h4{
+
+    h4 {
       text-align: center;
     }
   }

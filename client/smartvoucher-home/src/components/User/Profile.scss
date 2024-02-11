@@ -24,3 +24,53 @@
 .ro{
   border: 1px solid;
 }
+
+.lj{
+  padding: 1rem;
+}
+
+.mL{
+  padding: 3rem 0;
+}
+
+.Mm{
+  padding-bottom: 0;
+}
+
+.GG{
+  display: none;
+}
+
+@media (max-width: 575.98px) {
+  .list{
+    .list-profile {
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+      .lj{
+        padding: 0;
+      }
+      .mL{
+        padding: 0;
+      }
+      .Mm{
+        padding-bottom: 0.5rem;
+      }
+      .Ava {
+        width: 5rem;
+        height: 5rem;
+        border-radius: 9999px;
+      }
+      .ro{
+        border: none;
+      }
+      .GG{
+        display: flex;
+        justify-content: space-between;
+        .form-label{
+          margin: 0;
+        }
+      }
+    }
+  }
+}

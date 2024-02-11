@@ -170,27 +170,27 @@ const Header = () => {
                         </Container>
                       </>
                     ) : (
-                        <>
-                          <NavLink className="custom-font mx-2">
-                            <i
-                              class="fa-regular fa-circle-user"
-                              onClick={() => handleClickLogin()}
-                            ></i>
-                          </NavLink>
-                          <NavLink
-                            className="form-auth"
+                      <>
+                        <NavLink className="custom-font mx-2">
+                          <i
+                            class="fa-regular fa-circle-user"
                             onClick={() => handleClickLogin()}
-                          >
-                            Đăng nhập
-                          </NavLink>
-                          <span className="form-auth mx-2">/</span>
-                          <NavLink
-                            className="form-auth"
-                            onClick={() => handleClickLogin()}
-                          >
-                            Đăng ký
-                          </NavLink>
-                        </>
+                          ></i>
+                        </NavLink>
+                        <NavLink
+                          className="form-auth"
+                          onClick={() => handleClickLogin()}
+                        >
+                          Đăng nhập
+                        </NavLink>
+                        <span className="form-auth mx-2">/</span>
+                        <NavLink
+                          className="form-auth"
+                          onClick={() => handleClickLogin()}
+                        >
+                          Đăng ký
+                        </NavLink>
+                      </>
                     )
                   }
                 </Offcanvas.Title>
@@ -432,20 +432,33 @@ const Header = () => {
                       </div>
                     </Col>
                     <Col>
-                      <div style={{
-                        paddingTop: 0.5 + 'rem'
-                      }}>
-                        <div
-                          className="KK"
-                          onClick={
-                            () => handleLogout()
-                          }
-                        >
-                          <i class="fa-solid fa-right-from-bracket"></i>
-                          Đăng xuất
-                        </div>
-                        <hr />
-                      </div>
+                      {
+                        isAuthenticated ? (
+                          <>
+                            <div style={{
+                              paddingTop: 0.5 + 'rem'
+                            }}>
+                              <div
+                                className="KK"
+                                onClick={
+                                  () => {
+                                    handleLogout();
+                                    navigate("/");
+                                    handleClose();
+                                  }
+                                }
+                              >
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                Đăng xuất
+                              </div>
+                              <hr />
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                          </>
+                        )
+                      }
                     </Col>
                   </Row>
                 </Container>

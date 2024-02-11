@@ -24,7 +24,7 @@ const Category = () => {
   return (
     <>
       <Container>
-        <div className="m-2 p-2 ">
+        <div className="gofolina">
           <Row xs={1} md='auto' className="justify-content-md-between">
             <Col>
               <div>

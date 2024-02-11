@@ -183,7 +183,7 @@ const Product = () => {
                   listWarehouseSpecial.map((item, key) => {
                     return (
                       <>
-                        <div className="ta gc Pe p-4" key={key}>
+                        <div className="ta gc Pe p-4 bO" key={key}>
                           <Card >
                             <Image
                               loading="lazy"
