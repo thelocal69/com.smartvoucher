@@ -35,6 +35,8 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     @Value("${frontend_utl}")
     private String frontEndURL;
+    @Value("${ngrokURL}")
+    private String ngrokURL;
     @Autowired
     public SecurityConfig(final CustomAuthenticationProvider customAuthenticationProvider,
                           final JWTFilter jwtFilter,
@@ -65,14 +67,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
             return http.cors(cors -> cors.configurationSource(request -> {
                         CorsConfiguration configuration = new CorsConfiguration();
-                        configuration.setAllowedOrigins(List.of(frontEndURL));
+                        configuration.setAllowedOrigins(List.of(frontEndURL, ngrokURL));
                         configuration.setAllowedHeaders(Arrays.asList(
                                 "X-CSRF-Token",
                                 "X-Requested-With",
                                 "client-security-token",
+                                "user-agent",
                                 "Content-Type",
                                 "Accept",
-                                "Authorization"));
+                                "Authorization",
+                                "ngrok-skip-browser-warning"));
                         configuration.setAllowedMethods(Arrays.asList(
                                 "GET",
                                 "POST",

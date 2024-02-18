@@ -3,7 +3,14 @@
   text-transform: capitalize;
   font-weight: 500;
   color: #000;
-  opacity: .5;
+  &:hover {
+    cursor: pointer;
+    transform: translateY(-4px);
+    background-color: #fff;
+    transition: all 0.3s;
+    box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+    opacity: 0.5;
+  }
 }
 
 .list-l {

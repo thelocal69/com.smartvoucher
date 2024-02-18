@@ -35,3 +35,7 @@ export const resendActiveAccount = (email) => {
 export const oauth2GoogleLogin = (obj) => {
   return Http.post(`/account/api/oauth2/signin`, obj);
 };
+
+export const getAccessToken = () =>{
+  return Http.post(`/account/api/refresh_token`);
+}

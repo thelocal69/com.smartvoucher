@@ -1,5 +1,15 @@
 import React from "react";
-import { Container, Navbar, Nav, Badge, NavDropdown, Offcanvas, Form, Button, Row, Col } from "react-bootstrap";
+import {
+  Container,
+  Navbar,
+  Nav, Badge,
+  NavDropdown,
+  Offcanvas,
+  Form,
+  Button,
+  Row,
+  Col
+} from "react-bootstrap";
 import "../Header/Header.scss";
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo/logo.png";
@@ -18,9 +28,13 @@ import { logoutUser } from "../../services/AccountServices";
 import { toast } from "react-toastify";
 import Account from "../Security/Account";
 import { selectIdCarts } from "../../Redux/data/CartSlice";
-import { reset } from "../../Redux/data/UserSlice";
+import Store from "../../Redux/Store";
 
-const Header = () => {
+const Header = (props) => {
+
+  const {userName} = props;
+  
+
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
   const [isShowMenu, setIsShowMenu] = React.useState(false);
   const [sizes, setSizes] = React.useState("");
@@ -39,11 +53,6 @@ const Header = () => {
     setSizes("lg");
   };
 
-  const handleClickMobile = () => {
-    setIsShowModalLogin(true);
-    setSizes("sm");
-  }
-
   const handleClose = () => {
     setIsShowModalLogin(false);
     setIsShowMenu(false);
@@ -51,13 +60,14 @@ const Header = () => {
 
   const handleLogout = async () => {
     dispatch(logOut());
-    dispatch(reset());
+    Store.dispatch({type: "RESET"});
     await logoutUser(refreshToken).then((rs) => {
       if (rs) {
         toast.success(rs.message);
       }
     });
   };
+
 
   return (
     <>
@@ -148,13 +158,13 @@ const Header = () => {
                               <div>
                                 <img
                                   alt=""
-                                  src={avatarL.avatar}
+                                  src={avatarL}
                                   className="EE" />
                               </div>
                             </Col>
                             <Col className="HH">
                               <div className="lG">
-                                {usernameL.username}
+                                {usernameL}
                               </div>
                               <div className="lG">
                                 <span>Số dư: </span>
@@ -162,7 +172,7 @@ const Header = () => {
                                   {new Intl.NumberFormat("vi-VN", {
                                     style: "currency",
                                     currency: "VND",
-                                  }).format(balanceL.balance)}
+                                  }).format(balanceL)}
                                 </span>
                               </div>
                             </Col>
@@ -484,11 +494,13 @@ const Header = () => {
                 <>
                   <Navbar>
                     <NavLink>
-                      <img alt="" src={avatarL.avatar} className="aval" />
+                      <img alt="" src={avatarL} className="aval" />
                     </NavLink>
                   </Navbar>
                   <NavDropdown
-                    title={<span className="ft">{usernameL.username}</span>}
+                    title={<span className="ft">
+                      {usernameL}
+                      </span>}
                     id="basic-nav-dropdown"
                     className="ft"
                   >
@@ -499,13 +511,15 @@ const Header = () => {
                         {new Intl.NumberFormat("vi-VN", {
                           style: "currency",
                           currency: "VND",
-                        }).format(balanceL.balance)}
+                        }).format(balanceL)}
                       </b>
                     </NavDropdown.Item>
                     <NavLink to="/User/Profile" className="dropdown-item">
                       Quản lí tài khoản
                     </NavLink>
-                    <NavDropdown.Item onClick={() => handleLogout()}>
+                    <NavDropdown.Item onClick={() => {
+                      handleLogout()
+                    }}>
                       Logout
                     </NavDropdown.Item>
                   </NavDropdown>

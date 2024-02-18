@@ -1,11 +1,11 @@
 import React from "react";
-import { Container, Form, Offcanvas, Button, Row, Col } from "react-bootstrap";
+import { Form, Offcanvas, Button, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import Loading from "../Util/Loading";
 import { toast } from "react-toastify";
 import "../User/Profile.scss";
 import { selectAccessToken } from "../../Redux/data/AuthSlice";
-import { avatar, username, userId, balance } from "../../Redux/data/UserSlice";
+import { userInfor } from "../../Redux/data/UserSlice";
 import {
   getUserInfor,
   updateImage,
@@ -36,24 +36,7 @@ const Profile = () => {
         if (rs) {
           setObjInfor(rs.data);
           dispatch(
-            avatar({
-              avatar: rs.data.avatarUrl,
-            })
-          );
-          dispatch(
-            username({
-              username: rs.data.userName,
-            })
-          );
-          dispatch(
-            userId({
-              id: rs.data.id,
-            })
-          );
-          dispatch(
-            balance({
-              balance: rs.data.balance,
-            })
+            userInfor(rs.data)
           );
         }
       })
@@ -73,9 +56,7 @@ const Profile = () => {
             toast.success("Change avatar successfully !");
             getUserInformation();
             dispatch(
-              avatar({
-                avatarUrl: rs.data,
-              })
+              userInfor(rs.data)
             );
           }
         })
@@ -98,9 +79,7 @@ const Profile = () => {
           getUserInformation();
           handleClose();
           dispatch(
-            username({
-              username: rs.data.userName,
-            })
+            userInfor(rs.data)
           );
         }
       })

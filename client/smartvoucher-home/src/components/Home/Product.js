@@ -171,7 +171,6 @@ const Product = () => {
 
   return (
     <>
-      <Container>
         <Row xs={1} md={1}>
           <Col>
             <div>
@@ -533,7 +532,6 @@ const Product = () => {
             </div>
           </Col>
         </Row>
-      </Container>
       {/* <div className="app se">
         <div className="p-4 label-font ta gc Pe">
           <h4>{lableName[8]}</h4>

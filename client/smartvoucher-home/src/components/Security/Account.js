@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 import { Container, Modal } from "react-bootstrap";
 import "../Security/Account.scss";
 import {
@@ -15,9 +15,11 @@ import { useNavigate } from "react-router-dom";
 import { logIn } from "../../Redux/data/AuthSlice";
 import Loading from "../Util/Loading";
 import OAuth2Login from "./OAuth2Login";
+import { userInfor } from "../../Redux/data/UserSlice";
+import {getUserInfor} from '../../services/UserServices';
 
 const Account = (props) => {
-  const { show, handleClose, mode, sizes } = props;
+  const { show, handleClose, sizes } = props;
 
   const [isShowPassword, setIsShowPassword] = React.useState(false);
   const [isShowPasswordConfirm, setIsShowPasswordConfirm] =
@@ -63,6 +65,18 @@ const Account = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const getInfor = async () => {
+    await getUserInfor()
+      .then((rs) => {
+        if (rs) {
+          dispatch(
+            userInfor(rs.data)
+          );
+        }
+      })
+      .catch((err) => console.log(err.message));
+  }
+
   const handleLogin = async () => {
     if (!email || !password) {
       toast.error("Email or password is required !");
@@ -73,7 +87,8 @@ const Account = (props) => {
       .then((rs) => {
         if (rs) {
           dispatch(logIn(rs.data));
-          toast.success(rs.message);
+          getInfor();
+          toast.success(rs.message);  
           navigate("/");
           setLoading(false);
           handleCloseReset();
@@ -81,6 +96,7 @@ const Account = (props) => {
       })
       .catch((err) => {
         console.log(err.message);
+        toast.error("Login failed ! try again later !");
         setLoading(false);
       });
   };
@@ -105,6 +121,7 @@ const Account = (props) => {
       })
       .catch((err) => {
         console.log(err.message);
+        toast.error("Register failed ! try again later !");
         setLoading(false);
       });
   };
@@ -126,6 +143,7 @@ const Account = (props) => {
       })
       .catch((err) => {
         console.log(err.message);
+        toast.error("Verify failed ! try again later !");
         setLoading(false);
       });
   };
@@ -142,6 +160,7 @@ const Account = (props) => {
       })
       .catch((err) => {
         console.log(err.message);
+        toast.error("Send active failed ! try again later !");
         setLoading(false);
       });
   };
@@ -166,6 +185,7 @@ const Account = (props) => {
       })
       .catch((err) => {
         console.log(err.message);
+        toast.error("Send email failed ! try again later !");
         setLoading(false);
       });
   };
@@ -187,6 +207,7 @@ const Account = (props) => {
       })
       .catch((err) => {
         console.log(err.message);
+        toast.error("Token invalid ! try again later !");
         setLoading(false);
       });
   };
@@ -238,7 +259,6 @@ const Account = (props) => {
         <Modal
           show={show}
           onHide={handleCloseReset}
-          size={sizes}
           aria-labelledby="contained-modal-title-vcenter"
           centered
           backdrop="static"
@@ -466,26 +486,26 @@ const Account = (props) => {
                           <button
                             className={
                               emailRegister &&
-                              passwordRegister &&
-                              confirmPassword &&
-                              phone &&
-                              loading === false
+                                passwordRegister &&
+                                confirmPassword &&
+                                phone &&
+                                loading === false
                                 ? "active"
                                 : ""
                             }
                             disabled={
                               emailRegister &&
-                              passwordRegister &&
-                              confirmPassword &&
-                              phone
+                                passwordRegister &&
+                                confirmPassword &&
+                                phone
                                 ? false
                                 : true
                             }
                             hidden={
                               emailRegister &&
-                              passwordRegister &&
-                              confirmPassword &&
-                              phone
+                                passwordRegister &&
+                                confirmPassword &&
+                                phone
                                 ? false
                                 : true
                             }

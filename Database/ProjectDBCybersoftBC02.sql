@@ -385,7 +385,8 @@ INSERT INTO roles (name, role_code) VALUES ('ROLE_MERCHANT','MERCHANT');
 INSERT INTO category (category_code, name, status, created_by, created_at, banner_url)
 VALUES
     ('cat_travel', 'Du lịch', 1, 'ADMIN', NOW(), 'http://localhost:8082/category/524f0888fcc54b28b2fac26cb3f53d3f.png'),
-    ('cat_electronics', 'Điện tử', 1, 'ADMIN', NOW(), 'http://localhost:8082/category/417db0c36f6e4ce28e9b13a0925c1a31.png'),
+    ('cat_electronics', 'Điện tử', 1, 'ADMIN', NOW(), 'http://localhost:8082https://lh3.google.com/u/0/d/1qlIU_eMPvfCYlaHs8IDrTNQBE4jxhxwB
+/category/417db0c36f6e4ce28e9b13a0925c1a31.png'),
     ('cat_fashion', 'Thời trang', 1, 'ADMIN', NOW(), 'http://localhost:8082/category/030a1455209a470595a8149de663566f.png'),
     ('cat_food', 'Ẩm thực', 1, 'ADMIN', NOW(), 'http://localhost:8082/category/171be693f8d248658e7c5738517d9df0.png'),
     ('cat_books', 'Sách và Học nghệ thuật', 1, 'ADMIN', NOW(), 'http://localhost:8082/category/351501b85bb54b3eb2ee4b17b0252da8.png'),

@@ -17,7 +17,7 @@ import { selectUserId, selectUserBalance } from "../../Redux/data/UserSlice";
 import { toast } from "react-toastify";
 import { getIdStore } from "../../services/WarehouseStoreSrvices";
 import { buyVoucher } from "../../services/UserServices";
-import { balance } from "../../Redux/data/UserSlice";
+import { userInfor } from "../../Redux/data/UserSlice";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
@@ -58,7 +58,7 @@ const Cart = () => {
             if (rs) {
               toast.success("Cập nhật số dư trong tài khoản !");
               dispatch(
-                balance({
+                userInfor({
                   balance: rs.data.balance,
                 })
               );
@@ -159,17 +159,12 @@ const Cart = () => {
                       <div>
                         {cart.map((item, key) => {
                           return (
-                            <Row md='auto' className="mb-3 pb-3 justify-content-md-between" key={key}>
+                            <Row xs={1} md='auto' className="mb-3 pb-3 justify-content-md-between" key={key}>
                               <Col md='auto'>
-                                <div className="pe-2">
+                                <div className="pe-2 MhR">
                                   <img
                                     alt=""
                                     src={item.bannerUrl}
-                                    style={{
-                                      width: 20 + "rem",
-                                      height: 10 + "rem",
-                                      borderRadius: 1 + "rem",
-                                    }}
                                   />
                                 </div>
                               </Col>
