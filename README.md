@@ -34,16 +34,19 @@ WATCH MONTAGE !
 <img src="https://drive.google.com/uc?export=view&id=1JMeXBAc9zOk12KINTEkjT7zVXMnfQ-Ox" width="800" height="400" title="hover text">
 
 ## CONTENT BODY
-<img src="https://lh3.google.com/u/0/d/12NscBIbWqjYrgO9k_iYzjDbyA1MjrF79" width="800" height="400" title="hover text">
+<img src="https://drive.google.com/uc?export=view&id=12NscBIbWqjYrgO9k_iYzjDbyA1MjrF79" width="800" height="400" title="hover text">
 
 ## PRODUCT DETAIL
-<img src="https://lh3.google.com/u/0/d/1kbH1UV8u9XtsBP2WxrN98qEbH_TmI6DL" width="800" height="400" title="hover text">
+<img src="https://drive.google.com/uc?export=view&id=1kbH1UV8u9XtsBP2WxrN98qEbH_TmI6DL" width="800" height="400" title="hover text">
 
 ## MOBILE SITE
-<img src="https://lh3.google.com/u/0/d/1bYoghbgETOAVCDUzegJSP0T-O2Khy2i-" width="200" height="400" title="hover text">
-<img src="https://lh3.google.com/u/0/d/1Kb0k0IcdM5XqScJHOI2bQWU1FoZogeg9" width="200" height="400" title="hover text">
-<img src="https://lh3.google.com/u/0/d/1qUfbgS3UCwEtTbcFVWOjFE0hsXlzzvFm" width="200" height="400" title="hover text">
-<img src="https://lh3.google.com/u/0/d/16TYQvw04wK4Jm9JYL93J6P6wxE3iWk_x" width="200" height="400" title="hover text">
+<div align="center">
+<img src="https://drive.google.com/uc?export=view&id=1bYoghbgETOAVCDUzegJSP0T-O2Khy2i-" width="200" height="400" title="hover text">
+<img src="https://drive.google.com/uc?export=view&id=1Kb0k0IcdM5XqScJHOI2bQWU1FoZogeg9" width="200" height="400" title="hover text">
+<img src="https://drive.google.com/uc?export=view&id=1qUfbgS3UCwEtTbcFVWOjFE0hsXlzzvFm" width="200" height="400" title="hover text">
+<img src="https://drive.google.com/uc?export=view&id=16TYQvw04wK4Jm9JYL93J6P6wxE3iWk_x" width="200" height="400" title="hover text">
+</div>
+
 
 ### AND MORE... !!!
 
