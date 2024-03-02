@@ -31,7 +31,7 @@ WATCH MONTAGE !
 
 # OVERVIEW SMARTVOUCHER.COM PAGE
 ## HOME PAGE
-<img src="https://lh3.google.com/u/0/d/1JMeXBAc9zOk12KINTEkjT7zVXMnfQ-Ox" width="800" height="400" title="hover text">
+<img src="https://drive.google.com/uc?export=view&id=1JMeXBAc9zOk12KINTEkjT7zVXMnfQ-Ox" width="800" height="400" title="hover text">
 
 ## CONTENT BODY
 <img src="https://lh3.google.com/u/0/d/12NscBIbWqjYrgO9k_iYzjDbyA1MjrF79" width="800" height="400" title="hover text">
