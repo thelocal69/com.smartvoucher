@@ -91,6 +91,19 @@ public class WareHouseController {
         );
     }
 
+    @GetMapping("/api/search_name")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> searchWarehouseNameByName(@RequestParam String name) {
+        log.info("Get All warehouse name !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get All warehouse name !",
+                        this.wareHouseService.searchAllWarehouseName(name)
+                )
+        );
+    }
+
     @GetMapping("/api/{id}")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getWarehouseById(@PathVariable Long id){

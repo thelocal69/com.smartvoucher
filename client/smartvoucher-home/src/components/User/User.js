@@ -6,6 +6,7 @@ import Order from "./Order";
 import OrderInfor from "../Home/Detail/OrderInfor";
 import ChangePassword from "./ChangePassword";
 import { Col, Container, Row } from "react-bootstrap";
+import Wishlist from "./Wishlist";
 
 const User = () => {
 
@@ -36,6 +37,12 @@ const User = () => {
                   <i class="fa-solid fa-user-lock"></i>
                   <span>Change password</span>
                 </div>
+                <div className="sideBar oL" onClick={() => {
+                  navigate("/User/Wishlist");
+                }}>
+                  <i class="fa-solid fa-heart"></i>
+                  <span>Wish list</span>
+                </div>
               </div>
             </div>
           </Col>
@@ -45,6 +52,7 @@ const User = () => {
                 <Route path="Profile" element={<Profile />} />
                 <Route path="Order" element={<Order />} />
                 <Route path="Security" element={<ChangePassword />} />
+                <Route path="Wishlist" element={<Wishlist />} />
                 <Route path="Infor/:id/*" element={<OrderInfor />} />
               </Routes>
             </div>

@@ -3,16 +3,25 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getWarehouseById } from "../../../services/WarehouseServices";
 import { Badge, Col, Container, Row } from "react-bootstrap";
 import "../Detail/ProductInfor.scss";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../Redux/data/CartSlice";
 import parse from "html-react-parser";
 import Comment from "./Comment";
+import { insertWishList, getWishListEntity } from "../../../services/WishlistServices";
+import { selectUserId } from "../../../Redux/data/UserSlice";
+import { toast } from "react-toastify";
+import { selectIsAuthenticated } from "../../../Redux/data/AuthSlice";
+import Account from "../../Security/Account";
 
 const ProductInfor = () => {
   const { id } = useParams();
   const [warehouse, setWareHouse] = React.useState({});
+  const [wishList, setWishList] = React.useState({});
+  const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const idCurrentUser = useSelector(selectUserId);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   const [description, setDescription] = React.useState("");
 
   let thumbnailUrl = warehouse.thumbnailUrl;
@@ -27,6 +36,7 @@ const ProductInfor = () => {
 
   React.useEffect(() => {
     getWareHouse();
+    getWishList(idCurrentUser, id);
   }, [id]);
 
   const getWareHouse = async () => {
@@ -39,6 +49,34 @@ const ProductInfor = () => {
       })
       .catch((err) => console.log(err.message));
   };
+
+  const getWishList = async (idUser, idWarehouse) => {
+    await getWishListEntity(idUser, idWarehouse)
+      .then((rs) => {
+        if (rs) {
+          setWishList(rs.data);
+        }
+      })
+      .catch((err) => console.log(err.message));
+  }
+
+  const handleClickWishlist = async () => {
+    const obj = {
+      idUser: idCurrentUser,
+      idWarehouse: id
+    }
+    await insertWishList(obj)
+      .then((rs) => {
+        if (rs) {
+          toast.success("Add wishlist successfully !");
+        }
+      })
+      .catch((err) => console.log(err.message));
+  }
+
+  const handleClose = () => {
+    setIsShowModalLogin(false);
+  }
 
   return (
     <>
@@ -98,9 +136,30 @@ const ProductInfor = () => {
                       currency: "VND",
                     }).format(price)}
                   </h4>
-                  <span className="ps-3">
-                    <i class="fa-solid fa-heart"></i>
-                  </span>
+                  {
+                    isAuthenticated ? (
+                      <>
+                        <span
+                          onClick={() => handleClickWishlist()}
+                          className="ps-3 btn-custom">
+                          <i class={
+                            wishList.status ? "fa-solid fa-heart kaka active" : "fa-solid fa-heart kaka deactive"
+                          }
+                          ></i>
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span
+                          onClick={() => {
+                            setIsShowModalLogin(true);
+                          }}
+                          className="ps-3 btn-custom">
+                          <i class="fa-solid fa-heart"></i>
+                        </span>
+                      </>
+                    )
+                  }
                 </div>
               </Col>
               <Col>
@@ -156,6 +215,10 @@ const ProductInfor = () => {
                 </div>
               </Col>
             </Row>
+            <Account
+              show={isShowModalLogin}
+              handleClose={handleClose}
+            />
           </Col>
         </Row>
         {parse(description)}

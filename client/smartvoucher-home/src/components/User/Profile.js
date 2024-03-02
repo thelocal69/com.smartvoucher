@@ -109,7 +109,7 @@ const Profile = () => {
                   <Col>
                     <div>
                       <h3 className="ps-3">Tổng quan</h3>
-                      <Row xs={1} md={4} className="p-3">
+                      <Row xs={1} md='auto' className="p-3">
                         <Col>
                           <div>
                             <span>Tên đăng nhập</span>

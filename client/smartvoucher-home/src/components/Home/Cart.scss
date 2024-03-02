@@ -24,6 +24,18 @@
   flex-basis: 45.83333333%;
 }
 
+.rolca{
+  margin-left: 20rem;
+  margin-right: 17rem;
+}
+
+@media (max-width: 575.98px) {
+  .rolca{
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 @media (max-width: 575.98px) {
   .lP {
     width: 100%;

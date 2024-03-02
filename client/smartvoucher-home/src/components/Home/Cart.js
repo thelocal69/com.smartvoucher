@@ -19,6 +19,7 @@ import { getIdStore } from "../../services/WarehouseStoreSrvices";
 import { buyVoucher } from "../../services/UserServices";
 import { userInfor } from "../../Redux/data/UserSlice";
 import { useNavigate } from "react-router-dom";
+import { getUserInfor } from "../../services/UserServices";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ const Cart = () => {
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const accessToken = useSelector(selectAccessToken);
-  const idUser = useSelector(selectUserId);
+  const userL = useSelector(selectUserId);
   const balanceL = useSelector(selectUserBalance);
   const [status, setStatus] = React.useState(1);
 
@@ -40,6 +41,18 @@ const Cart = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  const getInfor = async () => {
+    await getUserInfor()
+      .then((rs) => {
+        if (rs) {
+          dispatch(
+            userInfor(rs.data)
+          );
+        }
+      })
+      .catch((err) => console.log(err.message));
+  }
+
   const handleBuyTicket = async () => {
     if (cart) {
       for (let index = 0; index < cart.length; index++) {
@@ -49,7 +62,7 @@ const Cart = () => {
           0
         );
         const objBuyVoucher = {
-          balance: balanceL.balance,
+          balance: balanceL,
           total: total,
         };
         setLoading(true);
@@ -58,12 +71,11 @@ const Cart = () => {
             if (rs) {
               toast.success("Cập nhật số dư trong tài khoản !");
               dispatch(
-                userInfor({
-                  balance: rs.data.balance,
-                })
+                userInfor(rs.data)
               );
+              getInfor();
               const objOrder = {
-                idUser: idUser.id,
+                idUser: userL,
                 idWarehouse: element.id,
                 status: status,
                 quantity: element.quantity,
@@ -144,23 +156,29 @@ const Cart = () => {
                       >
                         <h2>{cart.length < 1 ? "Giỏ hàng trống!" : "Giỏ hàng"}</h2>
                       </div>
-                      {cart.length < 1 && (
-                        <div className="d-flex flex-column justify-content-center align-items-center">
-                          <p>
-                            Thêm sản phẩm vào giỏ và quay lại trang này để thanh
-                            toán nha bạn
-                          </p>
-                          <img
-                            alt=""
-                            src="https://cdn.divineshop.vn/static/4e0db8ffb1e9cac7c7bc91d497753a2c.svg"
-                          />
-                        </div>
-                      )}
+                      <div className="rolca">
+                        {cart.length < 1 && (
+                          <Row xs={1} md='auto' className="flex-column justify-content-md-center align-items-center">
+                            <Col>
+                              <p>
+                                Thêm sản phẩm vào giỏ và quay lại trang này để thanh
+                                toán nha bạn
+                              </p>
+                            </Col>
+                            <Col>
+                              <img
+                                alt=""
+                                src="https://cdn.divineshop.vn/static/4e0db8ffb1e9cac7c7bc91d497753a2c.svg"
+                              />
+                            </Col>
+                          </Row>
+                        )}
+                      </div>
                       <div>
                         {cart.map((item, key) => {
                           return (
                             <Row xs={1} md='auto' className="mb-3 pb-3 justify-content-md-between" key={key}>
-                              <Col md='auto'>
+                              <Col>
                                 <div className="pe-2 MhR">
                                   <img
                                     alt=""
@@ -168,7 +186,7 @@ const Cart = () => {
                                   />
                                 </div>
                               </Col>
-                              <Col md={7}>
+                              <Col >
                                 <div className="d-flex flex-column justify-content-between IU">
                                   <div className="d-flex justify-content-between tranfer-display">
                                     <div className="mg">
@@ -262,10 +280,12 @@ const Cart = () => {
                                 <h5>Thanh toán</h5>
                                 <div>
                                   Số dư:{" "}
-                                  {new Intl.NumberFormat("vi-VN", {
-                                    style: "currency",
-                                    currency: "VND",
-                                  }).format(balanceL ? balanceL.balance : 0)}
+                                  <b>
+                                    {new Intl.NumberFormat("vi-VN", {
+                                      style: "currency",
+                                      currency: "VND",
+                                    }).format(balanceL ? balanceL : 0)}
+                                  </b>
                                 </div>
                                 <div className="pt-2 pb-2">
                                   <p>

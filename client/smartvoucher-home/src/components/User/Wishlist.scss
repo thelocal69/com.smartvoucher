@@ -1,0 +1,47 @@
+.OU {
+    img {
+        width: 18rem;
+        height: 9rem;
+       border-radius: 10px;
+    }
+}
+
+.btn-heart {
+    .ol {
+            &.active {
+                color: rgb(174, 20, 20);
+                font-weight: 600;
+            }
+
+            &.deactive {
+                color: rgb(0, 20, 20);
+                font-weight: 600;
+            }
+    }
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+.btn-cart{
+    color: #0a59cc;
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+.mk{
+    i{
+        display: block;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .OU {
+        img {
+            width: 21rem;
+            height: 10rem;
+           border-radius: 10px;
+        }
+    }
+}

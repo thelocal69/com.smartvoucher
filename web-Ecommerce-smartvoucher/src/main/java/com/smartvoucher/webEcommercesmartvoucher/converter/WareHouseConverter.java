@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.converter;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.WareHouseDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.WarehouseNameDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.SerialEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.WarehouseSerialEntity;
@@ -51,6 +52,17 @@ public class WareHouseConverter {
                 .voucherChannel(wareHouseEntity.getVoucherChannel())
                 .status(wareHouseEntity.getStatus())
                 .build();
+    }
+
+    public WarehouseNameDTO toWareHouseNameDTO(WareHouseEntity wareHouseEntity){
+        WarehouseNameDTO warehouseNameDTO = new WarehouseNameDTO();
+        warehouseNameDTO.setId(wareHouseEntity.getId());
+        warehouseNameDTO.setKeyWord(wareHouseEntity.getName());
+        return warehouseNameDTO;
+    }
+
+    public List<WarehouseNameDTO> toWareHouseNameDTOList(List<WareHouseEntity> wareHouseEntityList){
+        return wareHouseEntityList.stream().map(this::toWareHouseNameDTO).collect(Collectors.toList());
     }
 
     public List<WareHouseDTO> toWareHouseDTOList(List<WareHouseEntity> wareHouseEntityList){

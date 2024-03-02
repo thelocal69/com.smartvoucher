@@ -18,15 +18,7 @@ const persistConfig = {
   storage,
 };
 
-const appReducer = (state, action) => {
-  if (action.type === 'RESET') {
-    return reducers(undefined, action)
-  }
-
-  return reducers(state, action)
-}
-
-const persistedReducer = persistReducer(persistConfig, appReducer);
+const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const Store = configureStore({
   reducer: persistedReducer

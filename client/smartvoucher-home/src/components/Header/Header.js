@@ -8,7 +8,8 @@ import {
   Form,
   Button,
   Row,
-  Col
+  Col,
+  Dropdown
 } from "react-bootstrap";
 import "../Header/Header.scss";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -28,16 +29,17 @@ import { logoutUser } from "../../services/AccountServices";
 import { toast } from "react-toastify";
 import Account from "../Security/Account";
 import { selectIdCarts } from "../../Redux/data/CartSlice";
-import Store from "../../Redux/Store";
+import debounce from "lodash.debounce";
+import { searchAllByWarehouseName } from '../../services/WarehouseServices';
+import { reset } from "../../Redux/data/UserSlice";
 
-const Header = (props) => {
+const Header = () => {
 
-  const {userName} = props;
-  
-
+  const [listKeyword, setListKeyword] = React.useState([]);
   const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
   const [isShowMenu, setIsShowMenu] = React.useState(false);
-  const [sizes, setSizes] = React.useState("");
+  const [toggle, setToggle] = React.useState(false);
+  const [keyword, setKeyWord] = React.useState("");
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const refreshToken = useSelector(selectRefreshToken);
   const avatarL = useSelector(selectAvatar);
@@ -50,7 +52,6 @@ const Header = (props) => {
 
   const handleClickLogin = () => {
     setIsShowModalLogin(true);
-    setSizes("lg");
   };
 
   const handleClose = () => {
@@ -60,7 +61,7 @@ const Header = (props) => {
 
   const handleLogout = async () => {
     dispatch(logOut());
-    Store.dispatch({type: "RESET"});
+    dispatch(reset());
     await logoutUser(refreshToken).then((rs) => {
       if (rs) {
         toast.success(rs.message);
@@ -68,7 +69,26 @@ const Header = (props) => {
     });
   };
 
+  const handleSearchByName = debounce((event) => {
+    const value = event.target.value;
+    setToggle(true);
+    if (value) {
+      setKeyWord(value);
+      searchWarehouseName(value);
+    } else {
+      setToggle(false);
+    }
+  }, 1000);
 
+  const searchWarehouseName = async (keyWord) => {
+    await searchAllByWarehouseName(keyWord)
+      .then((rs) => {
+        if (rs) {
+          setListKeyword(rs.data);
+        }
+      })
+      .catch((err) => console.log(err.message));
+  }
   return (
     <>
       <div className="bg oh">
@@ -79,7 +99,7 @@ const Header = (props) => {
               <NavLink to="/" className="form-auth">
                 <i class="fa-solid fa-chevron-left"></i>
                 <i class="fa-solid fa-chevron-right"></i>
-                <span>dsd</span>
+                <span></span>
               </NavLink>
             </Nav>
             <div className="d-flex">
@@ -111,11 +131,12 @@ const Header = (props) => {
       <Navbar expand="sm" className="bg-body-tertiary custom-header">
         <Container>
           <div className="LH">
-            <Button
+            <button
+              className="btn btn-custom"
               onClick={() => setIsShowMenu(true)}
-            ><i class="fa-solid fa-bars"></i></Button>
+            ><i class="fa-solid fa-bars"></i></button>
           </div>
-          <Navbar.Collapse className="d-lg-flex justify-content-between">
+          <Navbar.Collapse className="oh d-lg-flex justify-content-between">
             <Navbar.Brand>
               <div className="oh">
                 <NavLink to="/" className="custom-font">
@@ -212,6 +233,7 @@ const Header = (props) => {
                       <Nav className="justify-content-end flex-grow-1 pe-3">
                         <Form className="d-flex">
                           <Form.Control
+                            onChange={(event) => handleSearchByName(event)}
                             type="search"
                             placeholder="Search"
                             className="me-2"
@@ -221,6 +243,36 @@ const Header = (props) => {
                             className="btn btn-primary"
                           >Search</Button>
                         </Form>
+                        <div>
+                          <Dropdown.Menu show={toggle}>
+                            {
+                              listKeyword ? listKeyword?.map((item, key) => {
+                                return (
+                                  <Row xs={1} md='auto'>
+                                    <Col>
+                                      <Dropdown.Item>
+                                        <NavLink
+                                          key={key}
+                                          onClick={() => {
+                                            setToggle(false);
+                                            setIsShowMenu(false);
+                                            setListKeyword([]);
+                                          }}
+                                          className="KOTO"
+                                          to={"/Product/Detail/" + item?.id}>
+                                          <h6>
+                                            {item?.keyWord}
+                                          </h6>
+                                        </NavLink>
+                                      </Dropdown.Item>
+                                    </Col>
+                                  </Row>
+                                )
+                              })
+                                : "No data"
+                            }
+                          </Dropdown.Menu>
+                        </div>
                       </Nav>
                     </Col>
                     <Col>
@@ -478,6 +530,7 @@ const Header = (props) => {
               <div className="oh">
                 <div className="search-wrapper">
                   <input
+                    onChange={(event) => handleSearchByName(event)}
                     type="search"
                     name=""
                     id=""
@@ -486,10 +539,39 @@ const Header = (props) => {
                   <div className="ic-wrapper custom-btn">
                     <i class="fa-solid fa-magnifying-glass"></i>
                   </div>
+                  <div>
+                    <Dropdown.Menu show={toggle}>
+                      {
+                        listKeyword ? listKeyword?.map((item, key) => {
+                          return (
+                            <Row xs={1} md='auto'>
+                              <Col>
+                                <Dropdown.Item>
+                                  <NavLink
+                                    key={key}
+                                    onClick={() => {
+                                      setToggle(false);
+                                      setListKeyword([]);
+                                    }}
+                                    className="KOTO"
+                                    to={"/Product/Detail/" + item?.id}>
+                                    <h6>
+                                      {item?.keyWord}
+                                    </h6>
+                                  </NavLink>
+                                </Dropdown.Item>
+                              </Col>
+                            </Row>
+                          )
+                        })
+                          : "No data"
+                      }
+                    </Dropdown.Menu>
+                  </div>
                 </div>
               </div>
             </Nav>
-            <div className="oh d-flex">
+            <div className="d-flex">
               {isAuthenticated ? (
                 <>
                   <Navbar>
@@ -500,7 +582,7 @@ const Header = (props) => {
                   <NavDropdown
                     title={<span className="ft">
                       {usernameL}
-                      </span>}
+                    </span>}
                     id="basic-nav-dropdown"
                     className="ft"
                   >
@@ -682,7 +764,7 @@ const Header = (props) => {
             </div>
             <div className="d-flex">
               <Nav>
-                <NavLink to="/" className="form-sub pe-3">
+                <NavLink to="/Checkin" className="form-sub pe-3">
                   <i class="fa-solid fa-mobile-screen-button"></i>
                   Checkin !
                 </NavLink>
@@ -701,7 +783,7 @@ const Header = (props) => {
               </Nav>
             </div>
           </div>
-          <Account show={isShowModalLogin} handleClose={handleClose} sizes={sizes} />
+          <Account show={isShowModalLogin} handleClose={handleClose} />
         </Container>
         <div className="pm">
           <hr />

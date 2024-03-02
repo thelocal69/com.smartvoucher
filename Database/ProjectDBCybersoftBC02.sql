@@ -320,6 +320,24 @@ CREATE TABLE reply_comment(
                         PRIMARY KEY(id)
 );
 
+CREATE TABLE wishlist(
+    id bigint auto_increment,
+    name varchar(155),
+    banner_url varchar(255),
+    price decimal(12,2),
+    original_price decimal(12,2),
+    max_discount_amount decimal(8,3),
+    category_name varchar(155),
+    id_user bigint not null,
+    id_warehouse bigint not null,
+    status int not null,
+    created_by varchar(50),
+    updated_by varchar(50),
+    created_at timestamp,
+    updated_at timestamp,
+
+    PRIMARY KEY (id)
+);
 
 
 ALTER TABLE chains ADD CONSTRAINT FK_id_merchant_chains FOREIGN KEY (id_merchant) REFERENCES merchant(id);
@@ -366,7 +384,8 @@ ALTER TABLE comment ADD CONSTRAINT FK_comment_user FOREIGN KEY (id_user) REFEREN
 ALTER TABLE reply_comment ADD CONSTRAINT  FK_reply_comment FOREIGN KEY (id_comment) REFERENCES comment(id);
 ALTER TABLE reply_comment ADD CONSTRAINT  FK_reply_user FOREIGN KEY (id_user) REFERENCES users(id);
 
-
+ALTER TABLE wishlist ADD CONSTRAINT FK_wishlist_user FOREIGN KEY (id_user) REFERENCES users(id);
+ALTER TABLE wishlist ADD CONSTRAINT FK_wishlist_warehouse FOREIGN KEY (id_warehouse) REFERENCES warehouse(id);
 
 -- INSERT
 
@@ -469,10 +488,10 @@ VALUES
 
 
 INSERT INTO warehouse
-(warehouse_code, id_label, name, term_of_use, thumbnail_url, banner_url, price, id_discount_type, discount_amount, max_discount_amount, available_from, available_to, status, show_on_web, capacity, voucher_channel, id_category, created_by, created_at, description)
+(warehouse_code, id_label, name, term_of_use, thumbnail_url, banner_url, price, original_price, id_discount_type, discount_amount, max_discount_amount, available_from, available_to, status, show_on_web, capacity, voucher_channel, id_category, created_by, created_at, description)
 VALUES
 
-    ('W01', 1, 'Giảm 50.000 cho đơn hàng cuối tuần', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_vega.png', 'http://localhost:8082/warehouse/banner_vega.png', 20.000, 1, 50.000, 50.000, '2023-01-01 10:00:00', '2024-01-10 10:00:00', 1, 1, 100, 1, 4, 'Admin', '2023-01-01 10:00:00',
+    ('W01', 1, 'Giảm 50.000 cho đơn hàng cuối tuần', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_vega.png', 'http://localhost:8082/warehouse/banner_vega.png', 20.000, 100000, 1, 50.000, 50.000, '2023-01-01 10:00:00', '2024-01-10 10:00:00', 1, 1, 100, 1, 4, 'Admin', '2023-01-01 10:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -514,7 +533,7 @@ src="http://localhost:8082/warehouse/thumbnail_vega.png" />
 <hr/>
 </div>'
     ),
-    ('W02', 1, 'Giảm 100,000đ Món Thái ngon chuẩn vị', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_thai.png', 'http://localhost:8082/warehouse/banner_thai.png', 10.000, 1, 100.000, 100.000, '2023-02-01 11:00:00', '2024-02-10 11:00:00', 1, 1, 150, 1, 4, 'Admin', '2023-02-01 11:00:00',
+    ('W02', 1, 'Giảm 100,000đ Món Thái ngon chuẩn vị', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_thai.png', 'http://localhost:8082/warehouse/banner_thai.png', 10.000, 100000, 1, 100.000, 100.000, '2023-02-01 11:00:00', '2024-02-10 11:00:00', 1, 1, 150, 1, 4, 'Admin', '2023-02-01 11:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -556,7 +575,7 @@ src="http://localhost:8082/warehouse/thumbnail_thai.png" />
 <hr/>
 </div>'
     ),
-    ('W03', 1, 'Giảm 10% tối đa 100% khi mua vé máy bay, khách sạn', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_thai.png', 'http://localhost:8082/warehouse/banner_travel.png', 11.000, 2, 0.1, 100.000, '2023-03-01 12:00:00', '2024-03-10 12:00:00', 1, 1, 200, 1, 1, 'Admin', '2023-03-01 12:00:00',
+    ('W03', 1, 'Giảm 10% tối đa 100% khi mua vé máy bay, khách sạn', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_thai.png', 'http://localhost:8082/warehouse/banner_travel.png', 11.000, 100000, 2, 0.1, 100.000, '2023-03-01 12:00:00', '2024-03-10 12:00:00', 1, 1, 200, 1, 1, 'Admin', '2023-03-01 12:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -598,7 +617,7 @@ src="http://localhost:8082/warehouse/thumbnail_thai.png" />
 <hr/>
 </div>'
     ),
-    ('W04', 1, 'Giảm 20% Set Noel’s Special Menu', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_steak.png', 'http://localhost:8082/warehouse/banner_steak.png', 50.000, 2, 0.2, 150.000, '2023-04-01 13:00:00', '2024-04-10 13:00:00', 1, 1, 250, 1, 4, 'Admin', '2023-04-01 13:00:00',
+    ('W04', 1, 'Giảm 20% Set Noel’s Special Menu', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_steak.png', 'http://localhost:8082/warehouse/banner_steak.png', 50.000, 100000, 2, 0.2, 150.000, '2023-04-01 13:00:00', '2024-04-10 13:00:00', 1, 1, 250, 1, 4, 'Admin', '2023-04-01 13:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -640,7 +659,7 @@ src="http://localhost:8082/warehouse/thumbnail_steak.png" />
 <hr/>
 </div>'
     ),
-    ('W05', 1, 'Giảm 50.000đ dịch vụ gội đầu dưỡng sinh', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_spa.png', 'http://localhost:8082/warehouse/banner_spa.png', 5.000, 1, 50.000, 50.000, '2023-05-01 14:00:00', '2024-05-10 14:00:00', 1, 1, 300, 1, 6, 'Admin', '2023-05-01 14:00:00',
+    ('W05', 1, 'Giảm 50.000đ dịch vụ gội đầu dưỡng sinh', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_spa.png', 'http://localhost:8082/warehouse/banner_spa.png', 5.000, 100000, 1, 50.000, 50.000, '2023-05-01 14:00:00', '2024-05-10 14:00:00', 1, 1, 300, 1, 6, 'Admin', '2023-05-01 14:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -682,7 +701,7 @@ src="http://localhost:8082/warehouse/thumbnail_spa.png" />
 <hr/>
 </div>'
     ),
-    ('W06', 1, 'Giảm 70.000đ mua hàng Black Friday', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_shower.png', 'http://localhost:8082/warehouse/banner_shower.png', 20.000, 1, 70.000, 70.000, '2023-06-01 15:00:00', '2024-06-10 15:00:00', 1, 1, 350, 1, 3, 'Admin', '2023-06-01 15:00:00',
+    ('W06', 1, 'Giảm 70.000đ mua hàng Black Friday', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_shower.png', 'http://localhost:8082/warehouse/banner_shower.png', 20.000, 100000, 1, 70.000, 70.000, '2023-06-01 15:00:00', '2024-06-10 15:00:00', 1, 1, 350, 1, 3, 'Admin', '2023-06-01 15:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -724,7 +743,7 @@ src="http://localhost:8082/warehouse/thumbnail_shower.png" />
 <hr/>
 </div>'
     ),
-    ('W07', 1, 'Sale khủng mua đồ công nghệ', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_tech.png', 'http://localhost:8082/warehouse/banner_tech.png',90.000 ,1, 300.000, 300.000, '2023-07-01 16:00:00', '2024-07-10 16:00:00', 1, 1, 400, 1, 8, 'Admin', '2023-07-01 16:00:00',
+    ('W07', 1, 'Sale khủng mua đồ công nghệ', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_tech.png', 'http://localhost:8082/warehouse/banner_tech.png',90.000, 100000, 1, 300.000, 300.000, '2023-07-01 16:00:00', '2024-07-10 16:00:00', 1, 1, 400, 1, 8, 'Admin', '2023-07-01 16:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -766,7 +785,7 @@ src="http://localhost:8082/warehouse/thumbnail_tech.png" />
 <hr/>
 </div>'
     ),
-    ('W08', 1, 'Mua 1 tặng 1 sản phẩm quần áo thể thao', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_sport.png', 'http://localhost:8082/warehouse/banner_sport.png', 80.000, 3, 0, 0, '2023-08-01 17:00:00', '2024-08-10 17:00:00', 1, 1, 450, 1, 9, 'Admin', '2023-08-01 17:00:00',
+    ('W08', 1, 'Mua 1 tặng 1 sản phẩm quần áo thể thao', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_sport.png', 'http://localhost:8082/warehouse/banner_sport.png', 80.000, 100000, 3, 0, 0, '2023-08-01 17:00:00', '2024-08-10 17:00:00', 1, 1, 450, 1, 9, 'Admin', '2023-08-01 17:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -808,7 +827,7 @@ src="http://localhost:8082/warehouse/thumbnail_sport.png" />
 <hr/>
 </div>'
     ),
-    ('W09', 1, 'Freeship Sushi cuối tuần', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_sushi.png', 'http://localhost:8082/warehouse/banner_sushi.png', 25.000, 4, 0, 0, '2023-09-01 18:00:00', '2024-09-10 18:00:00', 1, 1, 500, 1, 1, 'Admin', '2023-09-01 18:00:00',
+    ('W09', 1, 'Freeship Sushi cuối tuần', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_sushi.png', 'http://localhost:8082/warehouse/banner_sushi.png', 25.000, 100000, 4, 0, 0, '2023-09-01 18:00:00', '2024-09-10 18:00:00', 1, 1, 500, 1, 1, 'Admin', '2023-09-01 18:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -850,7 +869,7 @@ src="http://localhost:8082/warehouse/thumbnail_sushi.png" />
 <hr/>
 </div>'
     ),
-    ('W10', 1, 'Giảm 10% khóa học tại Art Academy', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_art.png', 'http://localhost:8082/warehouse/banner_art.png',200.000, 2, 0.1, 500.000, '2023-10-01 19:00:00', '2024-10-10 19:00:00', 1, 1, 550, 1, 5, 'Admin', '2023-10-01 19:00:00',
+    ('W10', 1, 'Giảm 10% khóa học tại Art Academy', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_art.png', 'http://localhost:8082/warehouse/banner_art.png',200.000, 100000, 2, 0.1, 500.000, '2023-10-01 19:00:00', '2024-10-10 19:00:00', 1, 1, 550, 1, 5, 'Admin', '2023-10-01 19:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -892,7 +911,7 @@ src="http://localhost:8082/warehouse/banner_art.png" />
 <hr/>
 </div>'
     ),
-    ('W11', 1, 'Giảm 70.000đ dưỡng da, trang điểm', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_makeup.png', 'http://localhost:8082/warehouse/banner_makeup.png', 30.000, 1, 70.000, 70.000, '2023-11-01 20:00:00', '2023-12-10 20:00:00', 1, 1, 600, 1, 6, 'Admin', '2023-11-01 20:00:00',
+    ('W11', 1, 'Giảm 70.000đ dưỡng da, trang điểm', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_makeup.png', 'http://localhost:8082/warehouse/banner_makeup.png', 30.000, 100000, 1, 70.000, 70.000, '2023-11-01 20:00:00', '2023-12-10 20:00:00', 1, 1, 600, 1, 6, 'Admin', '2023-11-01 20:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -934,7 +953,7 @@ src="http://localhost:8082/warehouse/thumbnail_makeup.png" />
 <hr/>
 </div>'
     ),
-    ('W12', 1, 'Tặng 1kg Cam khi mua Cam Úc', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_organe.png', 'http://localhost:8082/warehouse/banner_organe.png', 20.000, 3, 0, 0, '2023-12-01 21:00:00', '2023-12-10 21:00:00', 1, 1, 650, 1, 4, 'Admin', '2023-12-01 21:00:00',
+    ('W12', 1, 'Tặng 1kg Cam khi mua Cam Úc', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_organe.png', 'http://localhost:8082/warehouse/banner_organe.png', 20.000, 100000, 3, 0, 0, '2023-12-01 21:00:00', '2023-12-10 21:00:00', 1, 1, 650, 1, 4, 'Admin', '2023-12-01 21:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -976,7 +995,7 @@ src="http://localhost:8082/warehouse/thumbnail_organe.png" />
 <hr/>
 </div>'
     ),
-    ('W13', 1, 'Giảm 10% tour Cù Lao Câu', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_culow.png', 'http://localhost:8082/warehouse/banner_culow.png', 50.000, 2, 0.1, 100.000, '2023-11-01 22:00:00', '2024-01-10 22:00:00', 1, 1, 700, 1, 1, 'Admin', '2024-01-01 22:00:00',
+    ('W13', 1, 'Giảm 10% tour Cù Lao Câu', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_culow.png', 'http://localhost:8082/warehouse/banner_culow.png', 50.000, 100000, 2, 0.1, 100.000, '2023-11-01 22:00:00', '2024-01-10 22:00:00', 1, 1, 700, 1, 1, 'Admin', '2024-01-01 22:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -1018,7 +1037,7 @@ src="http://localhost:8082/warehouse/thumbnail_culow.png" />
 <hr/>
 </div>'
     ),
-        ('W14', 1, 'Giảm 50.000đ thẻ nạp Game', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_game.png', 'http://localhost:8082/warehouse/banner_game.png', 20.000, 1, 50.000, 50.000, '2023-02-01 23:00:00', '2024-02-10 23:00:00', 1, 1, 750, 1, 10, 'Admin', '2024-02-01 23:00:00',
+        ('W14', 1, 'Giảm 50.000đ thẻ nạp Game', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/thumbnail_game.png', 'http://localhost:8082/warehouse/banner_game.png', 20.000, 100000, 1, 50.000, 50.000, '2023-02-01 23:00:00', '2024-02-10 23:00:00', 1, 1, 750, 1, 10, 'Admin', '2024-02-01 23:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -1060,7 +1079,7 @@ src="http://localhost:8082/warehouse/thumbnail_game.png" />
 <hr/>
 </div>'
     ),
-    ('W15', 1, 'Giảm 50.000đ trên tổng hóa đơn', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/318a83e10d0e4988bb6be294d82f2523.png', 'http://localhost:8082/warehouse/318a83e10d0e4988bb6be294d82f2523.png', 18.000, 1, 50.000, 50.000, '2023-03-01 00:00:00', '2024-03-10 00:00:00', 1, 1, 800, 1, 3, 'Admin', '2024-03-01 00:00:00',
+    ('W15', 1, 'Giảm 50.000đ trên tổng hóa đơn', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/318a83e10d0e4988bb6be294d82f2523.png', 'http://localhost:8082/warehouse/318a83e10d0e4988bb6be294d82f2523.png', 18.000, 100000, 1, 50.000, 50.000, '2023-03-01 00:00:00', '2024-03-10 00:00:00', 1, 1, 800, 1, 3, 'Admin', '2024-03-01 00:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>
@@ -1102,7 +1121,7 @@ src="http://localhost:8082/warehouse/318a83e10d0e4988bb6be294d82f2523.png" />
 <hr/>
 </div>'
     ),
-    ('W16', 1, 'Giảm 50.000đ trên tổng hóa đơn', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/318a83e10d0e4988bb6be294d82f2523.png', 'http://localhost:8082/warehouse/318a83e10d0e4988bb6be294d82f2523.png', 18.000, 1, 50.000, 50.000, '2023-03-01 00:00:00', '2024-03-10 00:00:00', 1, 1, 800, 1, 3, 'Admin', '2024-03-01 00:00:00',
+    ('W16', 1, 'Giảm 50.000đ trên tổng hóa đơn', 'Mỗi voucher chỉ được sử dụng 01 lần. Không áp dụng cho Combo. Không được tách hoặc cộng gộp hóa đơn.', 'http://localhost:8082/warehouse/318a83e10d0e4988bb6be294d82f2523.png', 'http://localhost:8082/warehouse/318a83e10d0e4988bb6be294d82f2523.png', 18.000, 100000, 1, 50.000, 50.000, '2023-03-01 00:00:00', '2024-03-10 00:00:00', 1, 1, 800, 1, 3, 'Admin', '2024-03-01 00:00:00',
      '<div>
 <div>
 <h2>Chi tiết sản phẩm</h2>

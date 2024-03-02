@@ -3,6 +3,7 @@ package com.smartvoucher.webEcommercesmartvoucher.service.impl;
 import com.google.api.services.drive.model.File;
 import com.smartvoucher.webEcommercesmartvoucher.converter.WareHouseConverter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.WareHouseDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.WarehouseNameDTO;
 import com.smartvoucher.webEcommercesmartvoucher.entity.CategoryEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.DiscountTypeEntity;
 import com.smartvoucher.webEcommercesmartvoucher.entity.LabelEntity;
@@ -110,6 +111,13 @@ public class WareHouseService implements IWareHouseService {
     @Override
     public List<WareHouseDTO> searchByWarehouseName(String name) {
         return wareHouseConverter.toWareHouseDTOList(
+                wareHouseRepository.searchAllByNameContainingIgnoreCase(name)
+        );
+    }
+
+    @Override
+    public List<WarehouseNameDTO> searchAllWarehouseName(String name) {
+        return wareHouseConverter.toWareHouseNameDTOList(
                 wareHouseRepository.searchAllByNameContainingIgnoreCase(name)
         );
     }

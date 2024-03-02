@@ -1,65 +1,79 @@
+.custom-header {
+  background-color: #2579f2;
 
-  .custom-header {
+  .custom-bg {
     background-color: #2579f2;
-
-    .custom-bg {
-      background-color: #2579f2;
-    }
-
-    .custom-font {
-      color: #ffff;
-      text-decoration: none;
-      font-size: 1.5rem;
-      line-height: 2rem;
-      font-weight: 500;
-    }
-
-    .custom-form {
-      border-radius: 5px;
-    }
-
-    .custom-search {
-      border: none;
-    }
-
-    .custom-btn-bg {
-      background-color: #0a59cc;
-      border-radius: 0 5px 5px 0;
-    }
-
-    .custom-btn {
-      background-color: #0a59cc;
-      border: none;
-      color: #ffff;
-    }
-
-    .custom-cart {
-      background-color: #2579f2;
-      text-decoration: solid;
-      border-color: #f9fafb;
-      color: #ffff;
-    }
   }
 
-  .lm{
-    display: none;
+  .custom-font {
+    color: #ffff;
+    text-decoration: none;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 500;
   }
 
-  .oh{
+  .custom-form {
+    border-radius: 5px;
+  }
+
+  .custom-search {
+    border: none;
+  }
+
+  .custom-btn-bg {
+    background-color: #0a59cc;
+    border-radius: 0 5px 5px 0;
+  }
+
+  .custom-btn {
+    background-color: #0a59cc;
+    border: none;
+    color: #ffff;
+  }
+
+  .custom-cart {
+    background-color: #2579f2;
+    text-decoration: solid;
+    border-color: #f9fafb;
+    color: #ffff;
+  }
+}
+
+
+.KOTO {
+  text-decoration: none;
+  color: #000;
+  h6{
+    overflow: hidden;
+  }
+  &:hover {
+    text-decoration: underline;
+    color: #000;
+  }
+}
+
+
+.lm {
+  display: none;
+}
+
+.oh {
+  display: block;
+}
+
+@media (max-width: 575.98px) {
+  .lm {
     display: block;
   }
+}
 
-  @media (max-width: 575.98px) {
-    .lm{
-      display: block;
-    }
-   }
+@media (max-width: 575.98px) {
+  .oh {
+    display: none;
+  }
+}
 
-  @media (max-width: 575.98px) {
-    .oh{
-      display: none;
-    }
-   }
 .search-wrapper {
   display: flex;
   width: 436px;
@@ -185,6 +199,7 @@
   font-weight: 500;
   padding-top: 0.5rem;
   padding-bottom: 1rem;
+
   .dropdown-toggle::after {
     content: none;
   }
@@ -201,27 +216,27 @@
   }
 }
 
-.lG{
+.lG {
   color: #fff;
   font-weight: 500;
 }
 
-.EE{
+.EE {
   width: 5rem;
   height: 5rem;
   border-radius: 99999px;
 }
 
-.HH{
+.HH {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
 
-.YY{
+.YY {
   padding-top: 1 rem;
 }
 
-.KK{
+.KK {
   color: #000;
   font-weight: 500;
   text-decoration: none;
@@ -231,12 +246,16 @@
   }
 }
 
-.LH{
+.LH {
   display: none;
+  .btn-custom{
+    color: #fff;
+    border-color: #fff;
+  }
 }
 
 @media (max-width: 575.98px) {
-  .LH{
+  .LH {
     display: block;
   }
 }

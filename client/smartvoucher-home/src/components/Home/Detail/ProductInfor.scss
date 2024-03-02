@@ -19,6 +19,24 @@
   font-weight: 500;
 }
 
+.btn-custom{
+  .kaka {
+    &.active {
+      color: rgb(174, 20, 20);
+      font-weight: 600;
+    }
+  
+    &.deactive {
+      color: rgb(0, 20, 20);
+      font-weight: 600;
+    }
+  }
+
+  &:hover{
+    cursor: pointer;
+  }
+}
+
 .Po {
   display: block;
   margin-left: auto;

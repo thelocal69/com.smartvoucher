@@ -163,6 +163,7 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.DELETE, "/order/api/delete-order").hasRole("USER")
                     //order
                     //warehouse
+                    .antMatchers(HttpMethod.GET, "/warehouse/api/search_name").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/category_name").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/all").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/get/label").permitAll()
@@ -190,6 +191,12 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.POST,"/warehouse_store/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/warehouse_store/api/delete").hasRole("ADMIN")
                     //warehouse_merchant
+                    //wishlist
+                    .antMatchers(HttpMethod.GET, "/wishlist/api/get_all").hasRole("USER")
+                    .antMatchers(HttpMethod.GET, "/wishlist/api/get").hasRole("USER")
+                    .antMatchers(HttpMethod.POST, "/wishlist/api/insert").hasRole("USER")
+                    .antMatchers(HttpMethod.DELETE, "/wishlist/api/delete").hasRole("USER")
+                    //wishlist
                     //warehouse_store
                     .antMatchers(HttpMethod.GET, "/warehouse_serial/api/all").hasRole("USER")
                     .antMatchers(HttpMethod.POST,"/warehouse_serial/api/insert").hasRole("ADMIN")

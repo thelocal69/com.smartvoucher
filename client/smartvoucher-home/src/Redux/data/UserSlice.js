@@ -17,11 +17,17 @@ export const UserSlice = createSlice({
       state.id = action.payload.id;
       state.balance = action.payload.balance;
     },
+    reset: (state) => {
+      state.avatarUrl = "";
+      state.userName = "";
+      state.id = 0;
+      state.balance = 0;
+    },
   },
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => { },
 });
 
-export const { userInfor } =
+export const { userInfor, reset } =
   UserSlice.actions;
 
 export const selectAvatar = (state) => state.user.avatarUrl;
