@@ -47,7 +47,6 @@ export const CartSlice = createSlice({
        state.carts = state.carts.filter(
         product => product.id !== removeItem.id
       );
-      toast.success("Remove item into cart is success !")
     },
   },
   extraReducers: (builder) => {},

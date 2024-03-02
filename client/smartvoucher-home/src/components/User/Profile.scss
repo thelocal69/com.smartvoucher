@@ -16,11 +16,61 @@
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
-.lu {
-  border: 1 solid rgba(156, 163, 175, 0.25);
-}
 .loading{
   div {
     background-color: #2579f2;
+  }
+}
+.ro{
+  border: 1px solid;
+}
+
+.lj{
+  padding: 1rem;
+}
+
+.mL{
+  padding: 3rem 0;
+}
+
+.Mm{
+  padding-bottom: 0;
+}
+
+.GG{
+  display: block;
+}
+
+@media (max-width: 575.98px) {
+  .list{
+    .list-profile {
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+      .lj{
+        padding: 0;
+      }
+      .mL{
+        padding: 0;
+      }
+      .Mm{
+        padding-bottom: 0.5rem;
+      }
+      .Ava {
+        width: 5rem;
+        height: 5rem;
+        border-radius: 9999px;
+      }
+      .ro{
+        border: none;
+      }
+      .GG{
+        display: flex;
+        justify-content: space-between;
+        .form-label{
+          margin: 0;
+        }
+      }
+    }
   }
 }

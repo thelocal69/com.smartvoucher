@@ -91,6 +91,19 @@ public class WareHouseController {
         );
     }
 
+    @GetMapping("/api/search_name")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseObject> searchWarehouseNameByName(@RequestParam String name) {
+        log.info("Get All warehouse name !");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(
+                        200,
+                        "Get All warehouse name !",
+                        this.wareHouseService.searchAllWarehouseName(name)
+                )
+        );
+    }
+
     @GetMapping("/api/{id}")
     @Transactional(readOnly = true)
     public ResponseEntity<ResponseObject> getWarehouseById(@PathVariable Long id){
@@ -216,15 +229,15 @@ public class WareHouseController {
         );
     }
 
-    @GetMapping("/CategoryId/{id}")
-    public ResponseEntity<ResponseObject> getWarehouseByCategoryCode(@PathVariable long id){
-        log.info("Get all Warehouse by category code is successfully !");
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(
-                        200,
-                        "Get all Warehouse by category code is successfully !",
-                        this.wareHouseService.getAllWarehouseByCategoryId(id)
-                )
-        );
+    @GetMapping("/api/category_name")
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResponseOutput> getWarehouseByCategoryName(
+            @RequestParam String name,
+            @RequestParam int page,
+            @RequestParam int limit
+    ){
+        log.info("Get all Warehouse by category name is successfully !");
+        return new ResponseEntity<>(wareHouseService.getAllWarehouseByCategoryName(
+                name, page, limit), HttpStatus.OK);
     }
 }

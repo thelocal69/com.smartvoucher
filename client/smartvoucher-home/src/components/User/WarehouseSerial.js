@@ -2,7 +2,6 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../Redux/data/AuthSlice";
 import { Container } from "react-bootstrap";
-import { toast } from "react-toastify";
 import Paginate from "../Util/Paginate";
 import { getAllWarehouseSerial } from '../../services/WarehouseSerialService';
 
@@ -29,7 +28,7 @@ const WarehouseSerial = (props) => {
           setListWarehouseSerial(rs.data);
         }
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => console.log(err.message));
   };
 
   const handlePageClick = (event) => {

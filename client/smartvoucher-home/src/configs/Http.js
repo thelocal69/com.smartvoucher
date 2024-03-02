@@ -1,9 +1,9 @@
 import axios from "axios";
-import { toast } from "react-toastify";
 import Store from "../Redux/Store";
 
 const Http = axios.create({
   baseURL: `http://localhost:8082`,
+  //baseURL: `http://13.213.52.74:8082`,
 });
 
 Http.interceptors.request.use(
@@ -20,6 +20,7 @@ Http.interceptors.request.use(
 );
 
 Http.defaults.withCredentials = true;
+//Http.defaults.headers.common['ngrok-skip-browser-warning'] = "any value";
 
 Http.interceptors.response.use(
   function (response) {

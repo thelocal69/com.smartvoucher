@@ -3,12 +3,12 @@ package com.smartvoucher.webEcommercesmartvoucher.converter;
 import com.smartvoucher.webEcommercesmartvoucher.dto.BuyTicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDTO;
 import com.smartvoucher.webEcommercesmartvoucher.dto.TicketDetailDTO;
-import com.smartvoucher.webEcommercesmartvoucher.entity.*;
+import com.smartvoucher.webEcommercesmartvoucher.entity.TicketEntity;
+import com.smartvoucher.webEcommercesmartvoucher.entity.WareHouseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
@@ -66,10 +66,6 @@ public class TicketConverter {
         return ticketDTO;
     }
 
-    public List<TicketDTO> toTicketDTOList(List<TicketEntity> ticketEntityList){
-        return ticketEntityList.stream().map(this::toTicketDTO).collect(Collectors.toList());
-    }
-
     public TicketDetailDTO toTicketDetailDTO(TicketEntity ticketEntity) {
         TicketDetailDTO ticketDetailDTO = new TicketDetailDTO(); // This is ticketDTO
         ticketDetailDTO.setSerialCode(ticketEntity.getIdSerial().getSerialCode()); // set id serial
@@ -100,44 +96,6 @@ public class TicketConverter {
         return ticketEntityList.stream().map(this::toTicketDetailDTO).collect(Collectors.toList());
    }
 
-    public TicketEntity insertTicket(TicketDTO ticketDTO
-                                            , SerialEntity serialEntity
-                                            , WareHouseEntity wareHouseEntity
-                                            , CategoryEntity categoryEntity
-                                            , OrderEntity orderEntity
-                                            , UserEntity userEntity
-                                            , StoreEntity storeEntity) {
-        // lấy DiscountAmount có kiểu dữ liệu BigDecimal để làm tròn
-        BigDecimal value = new BigDecimal(String.valueOf(ticketDTO.getDiscountAmount()));
-//        BigDecimal value = new BigDecimal(String.valueOf(99999.099));
-
-        TicketEntity ticket = new TicketEntity();
-        ticket.setIdSerial(serialEntity);
-        ticket.setIdWarehouse(wareHouseEntity);
-        ticket.setIdCategory(categoryEntity);
-        ticket.setIdOrder(orderEntity);
-        ticket.setIdUser(userEntity);
-        ticket.setStatus(1);
-        ticket.setClaimedTime(new Timestamp(System.currentTimeMillis()));
-//        ticket.setRedeemedtimeTime(ticketDTO.getRedeemedtimeTime());
-        ticket.setExpiredTime(wareHouseEntity.getAvailableTo());
-        ticket.setAvailbleFrom(wareHouseEntity.getAvailableFrom());
-        ticket.setAvaibleTo(wareHouseEntity.getAvailableTo());
-        ticket.setDiscountType(ticketDTO.getDiscountType());
-        // làm tròn số thập phân sau dấy phẩy thành 3 số
-        ticket.setDiscountAmount(value.setScale(3, RoundingMode.HALF_UP));
-        ticket.setBannerUrl(ticketDTO.getBannerUrl());
-        ticket.setThumbnailUrl(ticketDTO.getThumbnailUrl());
-        ticket.setAcquirerLogoUrl(ticketDTO.getAcquirerLogoUrl());
-        ticket.setTermOfUse(ticketDTO.getTermOfUse());
-        ticket.setDescription(ticketDTO.getDescription());
-        ticket.setVoucherChannel(ticketDTO.getVoucherChannel());
-        ticket.setAvailbleFrom(wareHouseEntity.getAvailableFrom());
-        ticket.setAvaibleTo(wareHouseEntity.getAvailableTo());
-        ticket.setIdStore(storeEntity);
-        return ticket;
-        }
-
 
     public TicketEntity updateTicket(int statusTicket, TicketEntity oldTicket) {
         if(!Objects.equals(statusTicket, oldTicket.getStatus())) {
@@ -155,7 +113,6 @@ public class TicketConverter {
         buyTicketDTO.setAvailableTo(wareHouseEntity.getAvailableTo());
         buyTicketDTO.setClaimedTime(new Timestamp(System.currentTimeMillis()));
         buyTicketDTO.setExpiredTime(wareHouseEntity.getAvailableTo());
-        buyTicketDTO.setRedeemTime(new Timestamp(System.currentTimeMillis()));
         buyTicketDTO.setDiscountType(wareHouseEntity.getDiscountType().getName());
         buyTicketDTO.setDiscountAmount(value);
 
@@ -164,7 +121,7 @@ public class TicketConverter {
         ticketEntity.setClaimedTime(buyTicketDTO.getClaimedTime());
         ticketEntity.setAvailbleFrom(buyTicketDTO.getAvailableFrom());
         ticketEntity.setAvaibleTo(buyTicketDTO.getAvailableTo());
-        ticketEntity.setRedeemedtimeTime(buyTicketDTO.getRedeemTime());
+        ticketEntity.setExpiredTime(buyTicketDTO.getExpiredTime());
         ticketEntity.setDiscountType(buyTicketDTO.getDiscountType());
         ticketEntity.setDiscountAmount(buyTicketDTO.getDiscountAmount());
         return  ticketEntity;

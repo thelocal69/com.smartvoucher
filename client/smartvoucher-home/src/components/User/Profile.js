@@ -1,11 +1,11 @@
 import React from "react";
-import { Container, Form, Offcanvas, Button } from "react-bootstrap";
+import { Form, Offcanvas, Button, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import Loading from "../Util/Loading";
 import { toast } from "react-toastify";
 import "../User/Profile.scss";
 import { selectAccessToken } from "../../Redux/data/AuthSlice";
-import { avatar, username, userId, balance } from "../../Redux/data/UserSlice";
+import { userInfor } from "../../Redux/data/UserSlice";
 import {
   getUserInfor,
   updateImage,
@@ -36,28 +36,11 @@ const Profile = () => {
         if (rs) {
           setObjInfor(rs.data);
           dispatch(
-            avatar({
-              avatar: rs.data.avatarUrl,
-            })
-          );
-          dispatch(
-            username({
-              username: rs.data.userName,
-            })
-          );
-          dispatch(
-            userId({
-              id: rs.data.id,
-            })
-          );
-          dispatch(
-            balance({
-              balance: rs.data.balance,
-            })
+            userInfor(rs.data)
           );
         }
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => console.log(err.message));
   };
 
   const handleUploadAvatar = async () => {
@@ -73,15 +56,13 @@ const Profile = () => {
             toast.success("Change avatar successfully !");
             getUserInformation();
             dispatch(
-              avatar({
-                avatarUrl: rs.data,
-              })
+              userInfor(rs.data)
             );
           }
         })
         .catch((err) => {
           setLoading(false);
-          toast.error(err.message);
+          console.log(err.message);
         });
     } else {
       toast.error("Please choose an avatar !");
@@ -98,15 +79,13 @@ const Profile = () => {
           getUserInformation();
           handleClose();
           dispatch(
-            username({
-              username: rs.data.userName,
-            })
+            userInfor(rs.data)
           );
         }
       })
       .catch((err) => {
         setLoading(false);
-        toast.error(err.message);
+        console.log(err.message);
       });
   };
 
@@ -121,239 +100,268 @@ const Profile = () => {
 
   return (
     <>
-      <Container>
-        {accessToken && (
-          <>
+      {accessToken && (
+        <>
+          <div className="list">
             <div className="list-profile">
-              <div className="p-3">
-                <div>
-                  <h3 className="ps-3">Tổng quan</h3>
-                  <div className="p-3 d-flex flex-wrap">
-                    <div className="pe-5">
-                      <span>Tên đăng nhập</span>
-                      <p>
-                        <b>{objInfor.userName}</b>
-                      </p>
+              <div className="lj">
+                <Row xs={1} md={1}>
+                  <Col>
+                    <div>
+                      <h3 className="ps-3">Tổng quan</h3>
+                      <Row xs={1} md='auto' className="p-3">
+                        <Col>
+                          <div>
+                            <span>Tên đăng nhập</span>
+                            <p>
+                              <b>{objInfor.userName}</b>
+                            </p>
+                          </div>
+                        </Col>
+                        <Col>
+                          <div>
+                            <span>Email</span>
+                            <p>
+                              <b>{objInfor.email}</b>
+                            </p>
+                          </div>
+                        </Col>
+                        <Col>
+                          <div>
+                            <span>Họ và tên</span>
+                            <p>
+                              <b>{objInfor.fullName}</b>
+                            </p>
+                          </div>
+                        </Col>
+                        <Col>
+                          <div>
+                            <span>Nhóm khách hàng</span>
+                            <p>
+                              <b>{ }</b>
+                            </p>
+                          </div>
+                        </Col>
+                        <Col>
+                          <div>
+                            <span>Số dư</span>
+                            <p>
+                              <b>
+                                {new Intl.NumberFormat("vi-VN", {
+                                  style: "currency",
+                                  currency: "VND",
+                                }).format(objInfor.balance)}
+                              </b>
+                            </p>
+                          </div>
+                        </Col>
+                        <Col>
+                          <div>
+                            <span>Đã tích lũy</span>
+                            <p>
+                              <b>{ }đ</b>
+                            </p>
+                          </div>
+                        </Col>
+                        <Col>
+                          <div>
+                            <span>Ngày tham gia</span>
+                            <p>
+                              <b>
+                                {Moment(objInfor.createdAt).format(
+                                  "YYYY/MM/DD HH:mm:ss"
+                                )}
+                              </b>
+                            </p>
+                          </div>
+                        </Col>
+                      </Row>
                     </div>
-                    <div className="pe-5">
-                      <span>Email</span>
-                      <p>
-                        <b>{objInfor.email}</b>
-                      </p>
-                    </div>
-                    <div className="pe-5">
-                      <span>Họ và tên</span>
-                      <p>
-                        <b>{objInfor.fullName}</b>
-                      </p>
-                    </div>
-                    <div className="pe-5">
-                      <span>Nhóm khách hàng</span>
-                      <p>
-                        <b>{}</b>
-                      </p>
-                    </div>
-                    <div className="pe-5">
-                      <span>Số dư</span>
-                      <p>
-                        <b>
-                          {new Intl.NumberFormat("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                          }).format(objInfor.balance)}
-                        </b>
-                      </p>
-                    </div>
-                    <div className="pe-5">
-                      <span>Đã tích lũy</span>
-                      <p>
-                        <b>{}đ</b>
-                      </p>
-                    </div>
-                    <div className="pe-5">
-                      <span>Ngày tham gia</span>
-                      <p>
-                        <b>
-                          {Moment(objInfor.createdAt).format(
-                            "YYYY/MM/DD HH:mm:ss"
-                          )}
-                        </b>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="d-flex ka lu">
-                  <div className="yi">
-                    <img alt="" src={objInfor.avatarUrl} className="Ava" />
-                  </div>
-                  <div className="d-flex justify-content-center">
-                    <Form.Group className="d-flex justify-content-center flex-column yi">
-                      {file ? (
-                        <>
-                          <Form.Label
-                            className="btn btn-success my-3"
-                            onClick={() => handleUploadAvatar()}
-                          >
-                            {loading ? (
-                              <>
-                                <div className="loading">
-                                  <Loading fileName={file.name} />
-                                </div>
-                              </>
-                            ) : (
-                              <>
-                                <i class="fa-solid fa-check"></i>
-                                Accept
-                              </>
-                            )}
-                          </Form.Label>
-                        </>
-                      ) : (
-                        <>
-                          <Form.Label
-                            className="btn btn-primary my-3"
-                            onClick={() => {
-                              ref.current.click();
-                            }}
-                          >
-                            <i class="fa-solid fa-upload"></i>
-                            Upload avatar
-                          </Form.Label>
-                        </>
-                      )}
-                      <Form.Control
-                        type="file"
-                        ref={ref}
-                        accept="image/png, image/jpeg"
-                        onChange={(event) => setFile(event.target.files[0])}
-                        hidden
-                      />
-                      <button
-                        className="btn btn-warning"
-                        onClick={() => handClickEditProfile()}
+                  </Col>
+                  <Col>
+                    <Row xs='auto' md='auto' className="ro justify-content-md-between">
+                      <Col className="Mm">
+                        <div>
+                          <img alt="" src={objInfor.avatarUrl} className="Ava" />
+                        </div>
+                      </Col>
+                      <Col md={9}>
+                        <Row xs={1} md='auto' className="justify-content-md-center">
+                          <Col md={3} className="mL">
+                            <Form.Group className="GG Mm">
+                              {file ? (
+                                <>
+                                  <Form.Label
+                                    className="btn btn-success"
+                                    onClick={() => handleUploadAvatar()}
+                                  >
+                                    {loading ? (
+                                      <>
+                                        <div className="loading">
+                                          <Loading fileName={file.name} />
+                                        </div>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <i class="fa-solid fa-check"></i>
+                                        Accept
+                                      </>
+                                    )}
+                                  </Form.Label>
+                                </>
+                              ) : (
+                                <>
+                                  <Form.Label
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                      ref.current.click();
+                                    }}
+                                  >
+                                    <i class="fa-solid fa-upload"></i>
+                                    Upload avatar
+                                  </Form.Label>
+                                </>
+                              )}
+                              <Form.Control
+                                type="file"
+                                ref={ref}
+                                accept="image/png, image/jpeg"
+                                onChange={(event) => setFile(event.target.files[0])}
+                                hidden
+                              />
+                              <button
+                                className="btn btn-warning"
+                                onClick={() => handClickEditProfile()}
+                              >
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                Edit Profile
+                              </button>
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Row xs={1} md='auto' className="Mm">
+                              <Col className="mL">
+                                <span>Vui lòng chọn ảnh nhỏ hơn 5MB</span>
+                                <br />
+                                <span>Chọn hình ảnh phù hợp, không phản cảm</span>
+                              </Col>
+                            </Row>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+                <Offcanvas
+                  show={isShowModalUpdate}
+                  onHide={handleClose}
+                  placement="end"
+                  backdrop="static"
+                >
+                  <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>Update Profile</Offcanvas.Title>
+                  </Offcanvas.Header>
+                  <Offcanvas.Body>
+                    <Form>
+                      <Form.Group className="mb-3">
+                        <Form.Label>full name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter full name"
+                          onChange={(event) => {
+                            let element = { ...objEdit };
+                            element.fullName = event.target.value;
+                            setObjEdit(element);
+                          }}
+                          defaultValue={objEdit?.fullName}
+                        />
+                      </Form.Group>
+                      <Form.Group className="mb-3">
+                        <Form.Label>First Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter first name"
+                          onChange={(event) => {
+                            let element = { ...objEdit };
+                            element.firstName = event.target.value;
+                            setObjEdit(element);
+                          }}
+                          defaultValue={objEdit?.firstName}
+                        />
+                      </Form.Group>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Last Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter last name"
+                          onChange={(event) => {
+                            let element = { ...objEdit };
+                            element.lastName = event.target.value;
+                            setObjEdit(element);
+                          }}
+                          defaultValue={objEdit?.lastName}
+                        />
+                      </Form.Group>
+                      <Form.Group className="mb-3">
+                        <Form.Label>User Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter user name"
+                          onChange={(event) => {
+                            let element = { ...objEdit };
+                            element.userName = event.target.value;
+                            setObjEdit(element);
+                          }}
+                          defaultValue={objEdit?.userName}
+                        />
+                      </Form.Group>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Phone</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter phone"
+                          onChange={(event) => {
+                            let element = { ...objEdit };
+                            element.phone = event.target.value;
+                            setObjEdit(element);
+                          }}
+                          defaultValue={objEdit?.phone}
+                        />
+                      </Form.Group>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Address</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter address"
+                          onChange={(event) => {
+                            let element = { ...objEdit };
+                            element.address = event.target.value;
+                            setObjEdit(element);
+                          }}
+                          defaultValue={objEdit?.address}
+                        />
+                      </Form.Group>
+                    </Form>
+                    <div className="d-flex justify-content-between">
+                      <Button variant="secondary" onClick={handleClose}>
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        Close
+                      </Button>
+                      <Button
+                        variant="primary"
+                        onClick={() => handleUpdateProfile()}
                       >
-                        <i class="fa-solid fa-pen-to-square"></i>
-                        Edit Profile
-                      </button>
-                    </Form.Group>
-                    <div className="lu"></div>
-                    <div className="d-flex justify-content-center flex-column yi">
-                      <span>Vui lòng chọn ảnh nhỏ hơn 5MB</span>
-                      <br />
-                      <span>Chọn hình ảnh phù hợp, không phản cảm</span>
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Update Changes
+                      </Button>
                     </div>
-                  </div>
-                </div>
+                  </Offcanvas.Body>
+                </Offcanvas>
               </div>
             </div>
-            <Offcanvas
-              show={isShowModalUpdate}
-              onHide={handleClose}
-              placement="end"
-              backdrop="static"
-            >
-              <Offcanvas.Header closeButton>
-                <Offcanvas.Title>Update Profile</Offcanvas.Title>
-              </Offcanvas.Header>
-              <Offcanvas.Body>
-                <Form>
-                  <Form.Group className="mb-3">
-                    <Form.Label>full name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter full name"
-                      onChange={(event) => {
-                        let element = { ...objEdit };
-                        element.fullName = event.target.value;
-                        setObjEdit(element);
-                      }}
-                      defaultValue={objEdit?.fullName}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>First Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter first name"
-                      onChange={(event) => {
-                        let element = { ...objEdit };
-                        element.firstName = event.target.value;
-                        setObjEdit(element);
-                      }}
-                      defaultValue={objEdit?.firstName}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Last Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter last name"
-                      onChange={(event) => {
-                        let element = { ...objEdit };
-                        element.lastName = event.target.value;
-                        setObjEdit(element);
-                      }}
-                      defaultValue={objEdit?.lastName}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>User Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter user name"
-                      onChange={(event) => {
-                        let element = { ...objEdit };
-                        element.userName = event.target.value;
-                        setObjEdit(element);
-                      }}
-                      defaultValue={objEdit?.userName}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Phone</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter phone"
-                      onChange={(event) => {
-                        let element = { ...objEdit };
-                        element.phone = event.target.value;
-                        setObjEdit(element);
-                      }}
-                      defaultValue={objEdit?.phone}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Address</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter address"
-                      onChange={(event) => {
-                        let element = { ...objEdit };
-                        element.address = event.target.value;
-                        setObjEdit(element);
-                      }}
-                      defaultValue={objEdit?.address}
-                    />
-                  </Form.Group>
-                </Form>
-                <div className="d-flex justify-content-between">
-                  <Button variant="secondary" onClick={handleClose}>
-                    <i class="fa-solid fa-circle-xmark"></i>
-                    Close
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={() => handleUpdateProfile()}
-                  >
-                    <i class="fa-solid fa-floppy-disk"></i>
-                    Update Changes
-                  </Button>
-                </div>
-              </Offcanvas.Body>
-            </Offcanvas>
-          </>
-        )}
-      </Container>
+          </div>
+        </>
+      )}
     </>
   );
 };

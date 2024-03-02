@@ -1,8 +1,7 @@
 import React from "react";
 import { getAllMerchant } from "../../services/MerchantServices";
-import { toast } from "react-toastify";
 import "../Home/Merchant.scss";
-import { Container } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import Slider from "react-slick";
 
 const Merchant = () => {
@@ -44,33 +43,35 @@ const Merchant = () => {
           setListMerchantLogo(logo);
         }
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => console.log(err.message));
   };
 
   return (
     <>
       <Container>
-        <div className="p-3">
-          <h4>Thuơng hiệu mới</h4>
-        </div>
-        <div className="p-3">
-          <Slider {...settings}>
-            {listMerchantLogo.map((item, key) => {
-              return (
-                <div className="">
-                  <img
-                    src={item}
-                    alt=""
-                    style={{
-                      width: 8 + "rem",
-                      borderRadius: 10,
-                    }}
-                  />
-                </div>
-              );
-            })}
-          </Slider>
-        </div>
+        <Row xs={1} md={1}>
+          <Col>
+            <div className="p-3 ct">
+              <h4>Thuơng hiệu</h4>
+            </div>
+          </Col>
+          <Col>
+            <div className="p-3">
+              <Slider {...settings}>
+                {listMerchantLogo.map((item, key) => {
+                  return (
+                    <div className="size-img">
+                      <img
+                        src={item}
+                        alt=""
+                      />
+                    </div>
+                  );
+                })}
+              </Slider>
+            </div>
+          </Col>
+        </Row>
       </Container>
     </>
   );

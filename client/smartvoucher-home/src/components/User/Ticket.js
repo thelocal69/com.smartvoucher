@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectAccessToken } from "../../Redux/data/AuthSlice";
-import { Container } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { getAllTicket, userUseVoucher } from "../../services/TicketServices";
 import { toast } from "react-toastify";
 import Paginate from "../Util/Paginate";
@@ -14,7 +14,6 @@ const Ticket = (props) => {
   const [limit, setLimit] = React.useState(3);
   const [totalItem, setTotalItem] = React.useState(0);
   const [totalPage, setTotalPage] = React.useState(0);
-  const [openTicket, setOpenTicket] = React.useState(false);
 
   React.useEffect(() => {
     getTicket(id, currentPage, limit);
@@ -38,7 +37,7 @@ const Ticket = (props) => {
       .then((rs) => {
         if (rs) {
           toast.success("Use voucher is successfully !");
-          setOpenTicket(true);
+          getTicket(id, currentPage, limit);
         }
       })
       .catch((err) => console.log(err.message));
@@ -51,12 +50,13 @@ const Ticket = (props) => {
   return (
     <>
       {accessToken && (
-        <Container>
+        <div>
           {listTicket
             ? listTicket.map((item, key) => {
-                return (
-                  <div key={key} className="d-flex p-3">
-                    <div className="pe-3">
+              return (
+                <Row xs={1} md='auto' key={key} className="justify-content-md-between">
+                  <Col>
+                    <div>
                       <img
                         alt=""
                         src={item.bannerUrl}
@@ -67,6 +67,9 @@ const Ticket = (props) => {
                         }}
                       />
                     </div>
+                    <hr />
+                  </Col>
+                  <Col md={7}>
                     <div>
                       <div>
                         <h4>{item.warehouseName}</h4>
@@ -74,24 +77,28 @@ const Ticket = (props) => {
                       </div>
                       <div>
                         <button
-                          className="btn btn-primary"
+                          className={item.status === 2 ? "btn btn-danger" : "btn btn-primary"}
+                          disabled={item.status === 2}
                           onClick={() => handleUseVoucher(item.serialCode)}
                         >
-                          <i class="fa-solid fa-copy"></i>
+                          {item.status === 2 ? 'Used' : 'Redeem'}
+                          <i class={item.status === 2 ? "fa-solid fa-check" : "fa-solid fa-hand-point-down"}></i>
                         </button>
-                        {openTicket && (
-                          <>
-                            <input value={item.serialCode} />
-                          </>
-                        )}
+                        <label
+                          className="ps-3"
+                        >{
+                            item.status === 2 ? item.serialCode : ""
+                          }</label>
                       </div>
                     </div>
-                  </div>
-                );
-              })
+                    <hr />
+                  </Col>
+                </Row>
+              );
+            })
             : "No data"}
           <Paginate totalPages={totalPage} handlePageClick={handlePageClick} />
-        </Container>
+        </div>
       )}
     </>
   );

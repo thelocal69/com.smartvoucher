@@ -11,17 +11,11 @@ export const UserSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    avatar: (state, action) => {
-      state.avatarUrl = action.payload;
-    },
-    username: (state, action) => {
-      state.userName = action.payload;
-    },
-    userId: (state, action) => {
-      state.id = action.payload;
-    },
-    balance: (state, action) => {
-      state.balance = action.payload;
+    userInfor: (state, action) => {
+      state.avatarUrl = action.payload.avatarUrl;
+      state.userName = action.payload.userName;
+      state.id = action.payload.id;
+      state.balance = action.payload.balance;
     },
     reset: (state) => {
       state.avatarUrl = "";
@@ -30,10 +24,10 @@ export const UserSlice = createSlice({
       state.balance = 0;
     },
   },
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => { },
 });
 
-export const { avatar, username, userId, balance, reset, infoLogin } =
+export const { userInfor, reset } =
   UserSlice.actions;
 
 export const selectAvatar = (state) => state.user.avatarUrl;

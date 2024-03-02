@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Table } from "react-bootstrap";
+import { Col, Container, Row, Table } from "react-bootstrap";
 import { selectAccessToken } from "../../Redux/data/AuthSlice";
 import { useSelector } from "react-redux";
 import { getAllOrder } from "../../services/OrderServices";
@@ -34,7 +34,7 @@ const Order = () => {
         setListOrder(rs.data);
       }
     })
-    .catch((err) => console.log(err.message));
+      .catch((err) => console.log(err.message));
   };
 
   const handlePageClick = (event) => {
@@ -45,65 +45,73 @@ const Order = () => {
     <>
       {accessToken && (
         <>
-          <Container>
-            <div className="p-3 list-profile">
+          <div>
+            <div className="LN list-profile">
+              <Row xs={1} md='auto'>
+                <Col>
+                  <div>
+                    <h3>Lịch sử đơn hàng</h3>
+                    <p className="fD">
+                      Hiển thị thông tin các sản phẩm bạn đã mua tại Smart voucher
+                    </p>
+                  </div>
+                </Col>
+                <Col>
+                  <div className="customize-table">
+                    <Table bordered hover>
+                      <thead>
+                        <tr>
+                          <th>Thời gian</th>
+                          <th>Mã đơn hàng</th>
+                          <th>Sản phẩm</th>
+                          <th>Tổng tiền</th>
+                          <th>Trạng thái</th>
+                          <th>Chi tiết</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {listOrder ? (
+                          listOrder?.map((item, key) => {
+                            return (
+                              <tr key={key} className="fD">
+                                <td>
+                                  {Moment(item?.createdAt).format(
+                                    "YYYY/DD/MM hh:mm:ss"
+                                  )}
+                                </td>
+                                <td>{item?.orderNo}</td>
+                                <td className="d-flex justify-content-between">
+                                  <span>{item?.warehouseName}</span>
+                                  <span> x{item?.quantity}</span>
+                                </td>
+                                <td className="">
+                                  {item?.price * item?.quantity}đ
+                                </td>
+                                <td
+                                  className={
+                                    item?.status ? "ac active" : "ac deactive"
+                                  }
+                                >
+                                  {item?.status ? "Đã xử lí" : "Chưa xử lí"}
+                                </td>
+                                <td
+                                  onClick={() => {
+                                    navigate(`/User/Infor/${item.id}`);
+                                  }}
+                                  className="Ul"
+                                >
+                                  Chi tiết
+                                </td>
+                              </tr>
+                            );
+                          })
+                        ) : <></>}
+                      </tbody>
+                    </Table>
+                  </div>
+                </Col>
+              </Row>
               <div>
-                <h3>Lịch sử đơn hàng</h3>
-                <p className="fD">
-                  Hiển thị thông tin các sản phẩm bạn đã mua tại Smart voucher
-                </p>
-              </div>
-              <div>
-                <Table bordered hover>
-                  <thead>
-                    <tr>
-                      <th>Thời gian</th>
-                      <th>Mã đơn hàng</th>
-                      <th>Sản phẩm</th>
-                      <th>Tổng tiền</th>
-                      <th>Trạng thái</th>
-                      <th>Chi tiết</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {listOrder ? (
-                      listOrder?.map((item, key) => {
-                        return (
-                          <tr key={key} className="fD">
-                            <td>
-                              {Moment(item?.createdAt).format(
-                                "YYYY/DD/MM hh:mm:ss"
-                              )}
-                            </td>
-                            <td>{item?.orderNo}</td>
-                            <td className="d-flex justify-content-between">
-                              <span>{item?.warehouseName}</span>
-                              <span> x{item?.quantity}</span>
-                            </td>
-                            <td className="">
-                              {item?.price * item?.quantity}đ
-                            </td>
-                            <td
-                              className={
-                                item?.status ? "ac active" : "ac deactive"
-                              }
-                            >
-                              {item?.status ? "Đã xử lí" : "Chưa xử lí"}
-                            </td>
-                            <td
-                              onClick={() => {
-                                navigate(`/User/Infor/${item.id}`);
-                              }}
-                              className="Ul"
-                            >
-                              Chi tiết
-                            </td>
-                          </tr>
-                        );
-                      })
-                    ) : <></>}
-                  </tbody>
-                </Table>
               </div>
 
               <Paging
@@ -111,7 +119,7 @@ const Order = () => {
                 handlePageClick={handlePageClick}
               />
             </div>
-          </Container>
+          </div>
         </>
       )}
     </>

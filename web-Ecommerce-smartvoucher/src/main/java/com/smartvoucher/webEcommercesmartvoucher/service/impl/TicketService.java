@@ -21,9 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
 import javax.validation.constraints.NotNull;
-import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -115,7 +113,7 @@ public class TicketService implements ITicketService {
     }
 
     @Override
-    public ResponseObject insertTicket(@NotNull BuyTicketDTO buyTicketDTO) throws MessagingException, UnsupportedEncodingException {
+    public ResponseObject insertTicket(@NotNull BuyTicketDTO buyTicketDTO) {
         List<TicketDTO> listVoucher = new ArrayList<>();
         List<SerialEntity> listSerial =
                 generateSerial(buyTicketDTO.getIdWarehouse()
@@ -258,7 +256,7 @@ public class TicketService implements ITicketService {
                     ticketRepository.save(ticketEntity);
                     // Khi user bấm mua rồi thì ticket này không thể sử dụng được nữa
                     log.info("Used Ticket Success !");
-                    return "Used Ticket Success !";
+                    return serialCode;
                 } else {
                     log.info("Voucher used !");
                     throw new UsedVoucherException(405, "Voucher used !");

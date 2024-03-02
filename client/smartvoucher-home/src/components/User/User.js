@@ -1,37 +1,64 @@
 import React from "react";
-import { Link, Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import "../User/User.scss";
 import Profile from "./Profile";
 import Order from "./Order";
 import OrderInfor from "../Home/Detail/OrderInfor";
 import ChangePassword from "./ChangePassword";
+import { Col, Container, Row } from "react-bootstrap";
+import Wishlist from "./Wishlist";
 
 const User = () => {
+
+  const navigate = useNavigate();
+
   return (
     <>
-      <div className="p-3 d-flex">
-        <div className="list-l">
-          <div className="d-flex flex-column p-3">
-            <Link to="/User/Profile" className="sideBar oL">
-              Profile
-            </Link>
-            <Link to="/User/Order" className="sideBar oL">
-              Order
-            </Link>
-            <Link to="/User/Security" className="sideBar oL">
-              Change password
-            </Link>
-          </div>
-        </div>
-        <div className="ps-2">
-          <Routes>
-            <Route path="Profile" element={<Profile />} />
-            <Route path="Order" element={<Order />} />
-            <Route path="Security" element={<ChangePassword />}/>
-            <Route path="Infor/:id/*" element={<OrderInfor />}/>
-          </Routes>
-        </div>
-      </div>
+      <Container>
+        <Row xs={1} md={2} className="xx justify-content-md-between">
+          <Col md={3}>
+            <div className="list-l">
+              <div className="padluon papa">
+                <div className="sideBar oL" onClick={() => {
+                  navigate("/User/Profile");
+                }}>
+                  <i class="fa-solid fa-user"></i>
+                  <span>Profile</span>
+                </div>
+                <div className="sideBar oL" onClick={() => {
+                  navigate("/User/Order");
+                }}>
+                  <i class="fa-solid fa-cart-shopping"></i>
+                  <span>Order</span>
+                </div>
+                <div className="sideBar oL" onClick={() => {
+                  navigate("/User/Security");
+                }}>
+                  <i class="fa-solid fa-user-lock"></i>
+                  <span>Change password</span>
+                </div>
+                <div className="sideBar oL" onClick={() => {
+                  navigate("/User/Wishlist");
+                }}>
+                  <i class="fa-solid fa-heart"></i>
+                  <span>Wish list</span>
+                </div>
+              </div>
+            </div>
+          </Col>
+          <Col md={9}>
+            <div className="">
+              <Routes>
+                <Route path="Profile" element={<Profile />} />
+                <Route path="Order" element={<Order />} />
+                <Route path="Security" element={<ChangePassword />} />
+                <Route path="Wishlist" element={<Wishlist />} />
+                <Route path="Infor/:id/*" element={<OrderInfor />} />
+              </Routes>
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 };

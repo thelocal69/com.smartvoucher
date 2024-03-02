@@ -30,3 +30,12 @@
     height: 4rem;
     border-radius: 9999px;
   }
+
+  @media (max-width: 575.98px) {
+  .OH{
+    padding: 0.5rem 0;
+    button{
+      width: 100%;
+    }
+  }
+  }

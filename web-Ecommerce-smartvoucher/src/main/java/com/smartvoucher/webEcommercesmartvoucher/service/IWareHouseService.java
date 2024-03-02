@@ -1,6 +1,7 @@
 package com.smartvoucher.webEcommercesmartvoucher.service;
 
 import com.smartvoucher.webEcommercesmartvoucher.dto.WareHouseDTO;
+import com.smartvoucher.webEcommercesmartvoucher.dto.WarehouseNameDTO;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,6 +12,7 @@ public interface IWareHouseService {
     ResponseOutput getAllWareHouse(int page, int limit, String sortBy, String sortField);
     List<WareHouseDTO> getAllWareHouseCode(WareHouseDTO wareHouseDTO);
     List<WareHouseDTO> searchByWarehouseName(String name);
+    List<WarehouseNameDTO> searchAllWarehouseName(String name);
     WareHouseDTO upsert(WareHouseDTO wareHouseDTO);
     void deleteWareHouse(WareHouseDTO wareHouseDTO);
     Boolean existWareHouse(WareHouseDTO wareHouseDTO);
@@ -19,7 +21,7 @@ public interface IWareHouseService {
     WareHouseDTO getWarehouseById(Long id);
     List<WareHouseDTO> getAllWarehousesByLabel(int id);
     ResponseOutput getAllWarehousesByLabel(String  id, int page, int limit);
-    List<WareHouseDTO> getAllWarehouseByCategoryId(long id);
+    ResponseOutput getAllWarehouseByCategoryName(String name, int page, int limit);
     String uploadLocalWarehouseImages(MultipartFile fileName);
     byte[] readImageUrl(String fileName);
 }

@@ -1,19 +1,27 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getWarehouseById } from "../../../services/WarehouseServices";
-import { toast } from "react-toastify";
-import { Badge } from "react-bootstrap";
+import { Badge, Col, Container, Row } from "react-bootstrap";
 import "../Detail/ProductInfor.scss";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../Redux/data/CartSlice";
 import parse from "html-react-parser";
 import Comment from "./Comment";
+import { insertWishList, getWishListEntity } from "../../../services/WishlistServices";
+import { selectUserId } from "../../../Redux/data/UserSlice";
+import { toast } from "react-toastify";
+import { selectIsAuthenticated } from "../../../Redux/data/AuthSlice";
+import Account from "../../Security/Account";
 
 const ProductInfor = () => {
   const { id } = useParams();
   const [warehouse, setWareHouse] = React.useState({});
+  const [wishList, setWishList] = React.useState({});
+  const [isShowModalLogin, setIsShowModalLogin] = React.useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const idCurrentUser = useSelector(selectUserId);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   const [description, setDescription] = React.useState("");
 
   let thumbnailUrl = warehouse.thumbnailUrl;
@@ -28,6 +36,7 @@ const ProductInfor = () => {
 
   React.useEffect(() => {
     getWareHouse();
+    getWishList(idCurrentUser, id);
   }, [id]);
 
   const getWareHouse = async () => {
@@ -38,115 +47,185 @@ const ProductInfor = () => {
           setDescription(rs.data.description);
         }
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => console.log(err.message));
   };
+
+  const getWishList = async (idUser, idWarehouse) => {
+    await getWishListEntity(idUser, idWarehouse)
+      .then((rs) => {
+        if (rs) {
+          setWishList(rs.data);
+        }
+      })
+      .catch((err) => console.log(err.message));
+  }
+
+  const handleClickWishlist = async () => {
+    const obj = {
+      idUser: idCurrentUser,
+      idWarehouse: id
+    }
+    await insertWishList(obj)
+      .then((rs) => {
+        if (rs) {
+          toast.success("Add wishlist successfully !");
+        }
+      })
+      .catch((err) => console.log(err.message));
+  }
+
+  const handleClose = () => {
+    setIsShowModalLogin(false);
+  }
 
   return (
     <>
-      <div className="m-2 p-2 d-flex justify-content-between">
+      <Container>
+        <Row className="gofo justify-content-md-between">
+          <Col>
+            <div className="RZ">
+              <img
+                alt=""
+                src={thumbnailUrl}
+              />
+            </div>
+          </Col>
+          <Col>
+            <Row xs={1} md={1} className="HE">
+              <Col>
+                <h3 className="fW">{title}</h3>
+              </Col>
+              <Col>
+                <h4 className="fW">Mã sản phẩm: {warehouseCode}</h4>
+              </Col>
+              <Col>
+                <div className="d-flex lT">
+                  <p className="fW">
+                    Tình trạng:
+                    <span className={status ? "ps-3 ac active" : "ps-3 ac deactive"}>
+                      {status ? "Còn hàng" : "Hết hàng"}
+                    </span>
+                  </p>
+                  <p className="fW ps-md-3">
+                    Hình thức:
+                    <span
+                      className={
+                        voucherChannel ? "ps-3 ac active" : "ps-3 ac deactive"
+                      }
+                    >
+                      {voucherChannel ? "Online" : "Offline"}
+                    </span>
+                  </p>
+                </div>
+              </Col>
+              <Col>
+                <p>
+                  Thể loại:
+                  <span
+                    className={categoryName ? "ps-3 ac active" : "ps-3 ac deactive"}
+                  >
+                    {categoryName}
+                  </span>
+                </p>
+              </Col>
+              <Col>
+                <div className="d-flex">
+                  <h4 className="fW">
+                    {new Intl.NumberFormat("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    }).format(price)}
+                  </h4>
+                  {
+                    isAuthenticated ? (
+                      <>
+                        <span
+                          onClick={() => handleClickWishlist()}
+                          className="ps-3 btn-custom">
+                          <i class={
+                            wishList.status ? "fa-solid fa-heart kaka active" : "fa-solid fa-heart kaka deactive"
+                          }
+                          ></i>
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span
+                          onClick={() => {
+                            setIsShowModalLogin(true);
+                          }}
+                          className="ps-3 btn-custom">
+                          <i class="fa-solid fa-heart"></i>
+                        </span>
+                      </>
+                    )
+                  }
+                </div>
+              </Col>
+              <Col>
+                <h6 className="dp fW">
+                  {maxDiscountAmount > 0 && (
+                    <>
+                      {new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      }).format(originalPrice)}
+                      <span className="ps-3">
+                        <Badge bg="danger">-{maxDiscountAmount}%</Badge>
+                      </span>
+                    </>
+                  )}
+                </h6>
+                <hr />
+              </Col>
+              <Col>
+                <div className="YB">
+                  <span className="pe-3">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => {
+                        let element = null;
+                        element = { ...warehouse, quantity: 1 };
+                        dispatch(addToCart(element));
+                        navigate("/Cart ");
+                      }}
+                    >
+                      <i class="fa-solid fa-credit-card"></i>
+                      Mua ngay
+                    </button>
+                  </span>
+                  <span>
+                    <button
+                      className="btn btn-info"
+                      onClick={() => {
+                        let element = null;
+                        element = { ...warehouse, quantity: 1 };
+                        dispatch(addToCart(element));
+                      }}
+                    >
+                      <i class="fa-solid fa-cart-shopping"></i>
+                      Thêm vào giỏ hàng
+                    </button>
+                  </span>
+                </div>
+              </Col>
+              <Col>
+                <div className="pt-3">
+                  <h6 className="fW">{warehouse.termOfUse}</h6>
+                </div>
+              </Col>
+            </Row>
+            <Account
+              show={isShowModalLogin}
+              handleClose={handleClose}
+            />
+          </Col>
+        </Row>
+        {parse(description)}
         <div>
-          <img
-            alt=""
-            src={thumbnailUrl}
-            style={{
-              width: 30 + "rem",
-              height: 20 + "rem",
-              borderRadius: 2 + "rem",
-            }}
-          />
+          <Comment idWarehouse={id} />
         </div>
-        <div className="ms-3">
-          <h3 className="fW">{title}</h3>
-          <h4 className="fW">Mã sản phẩm: {warehouseCode}</h4>
-          <div className="d-flex">
-            <p className="fW">
-              Tình trạng:
-              <span className={status ? "ps-3 ac active" : "ps-3 ac deactive"}>
-                {status ? "Còn hàng" : "Hết hàng"}
-              </span>
-            </p>
-            <p className="fW ps-3">
-              Hình thức:
-              <span
-                className={
-                  voucherChannel ? "ps-3 ac active" : "ps-3 ac deactive"
-                }
-              >
-                {voucherChannel ? "Online" : "Offline"}
-              </span>
-            </p>
-          </div>
-          <p>
-            Thể loại:
-            <span
-              className={categoryName ? "ps-3 ac active" : "ps-3 ac deactive"}
-            >
-              {categoryName}
-            </span>
-          </p>
-          <div className="d-flex">
-            <h4 className="fW">
-              {new Intl.NumberFormat("vi-VN", {
-                style: "currency",
-                currency: "VND",
-              }).format(price)}
-            </h4>
-            <span className="ps-3">
-              <i class="fa-solid fa-heart"></i>
-            </span>
-          </div>
-          <h6 className="dp fW">
-            {maxDiscountAmount > 0 && (
-              <>
-                {new Intl.NumberFormat("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                }).format(originalPrice)}
-                <span className="ps-3">
-                  <Badge bg="danger">-{maxDiscountAmount}%</Badge>
-                </span>
-              </>
-            )}
-          </h6>
-          <hr />
-          <div className="">
-            <span className="pe-3">
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  let element = null;
-                  element = { ...warehouse, quantity: 1 };
-                  dispatch(addToCart(element));
-                  navigate("/Cart ");
-                }}
-              >
-                <i class="fa-solid fa-credit-card"></i>
-                Mua ngay
-              </button>
-            </span>
-            <span>
-              <button
-                className="btn btn-info"
-                onClick={() => {
-                  let element = null;
-                  element = { ...warehouse, quantity: 1 };
-                  dispatch(addToCart(element));
-                }}
-              >
-                <i class="fa-solid fa-cart-shopping"></i>
-                Thêm vào giỏ hàng
-              </button>
-            </span>
-          </div>
-          <div className="pt-3">
-            <h6 className="fW">{warehouse.termOfUse}</h6>
-          </div>
-        </div>
-      </div>
-      {parse(description)}
-      <div>
-            <Comment idWarehouse={id} />
-      </div>
+      </Container>
     </>
   );
 };

@@ -35,6 +35,8 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     @Value("${frontend_utl}")
     private String frontEndURL;
+    @Value("${ngrokURL}")
+    private String ngrokURL;
     @Autowired
     public SecurityConfig(final CustomAuthenticationProvider customAuthenticationProvider,
                           final JWTFilter jwtFilter,
@@ -65,14 +67,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
             return http.cors(cors -> cors.configurationSource(request -> {
                         CorsConfiguration configuration = new CorsConfiguration();
-                        configuration.setAllowedOrigins(List.of(frontEndURL));
+                        configuration.setAllowedOrigins(List.of(frontEndURL, ngrokURL));
                         configuration.setAllowedHeaders(Arrays.asList(
                                 "X-CSRF-Token",
                                 "X-Requested-With",
                                 "client-security-token",
+                                "user-agent",
                                 "Content-Type",
                                 "Accept",
-                                "Authorization"));
+                                "Authorization",
+                                "ngrok-skip-browser-warning"));
                         configuration.setAllowedMethods(Arrays.asList(
                                 "GET",
                                 "POST",
@@ -159,7 +163,8 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.DELETE, "/order/api/delete-order").hasRole("USER")
                     //order
                     //warehouse
-                    .antMatchers(HttpMethod.GET, "/warehouse/CategoryId/{id}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/warehouse/api/search_name").permitAll()
+                    .antMatchers(HttpMethod.GET, "/warehouse/api/category_name").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/all").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/get/label").permitAll()
                     .antMatchers(HttpMethod.GET, "/warehouse/api/{id}").permitAll()
@@ -186,6 +191,12 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.POST,"/warehouse_store/api/insert").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/warehouse_store/api/delete").hasRole("ADMIN")
                     //warehouse_merchant
+                    //wishlist
+                    .antMatchers(HttpMethod.GET, "/wishlist/api/get_all").hasRole("USER")
+                    .antMatchers(HttpMethod.GET, "/wishlist/api/get").hasRole("USER")
+                    .antMatchers(HttpMethod.POST, "/wishlist/api/insert").hasRole("USER")
+                    .antMatchers(HttpMethod.DELETE, "/wishlist/api/delete").hasRole("USER")
+                    //wishlist
                     //warehouse_store
                     .antMatchers(HttpMethod.GET, "/warehouse_serial/api/all").hasRole("USER")
                     .antMatchers(HttpMethod.POST,"/warehouse_serial/api/insert").hasRole("ADMIN")

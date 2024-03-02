@@ -1,3 +1,21 @@
-.size-img{
-    width: 8.5rem;
+.size-img {
+    img {
+        width: 8rem;
+        border-radius: 10px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .ct{
+        text-align: center;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .size-img {
+        img {
+            width: 6rem;
+            border-radius: 10px;
+        }
+    }
 }

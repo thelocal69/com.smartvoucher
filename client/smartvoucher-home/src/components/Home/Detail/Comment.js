@@ -80,7 +80,7 @@ const Comment = (props) => {
     setLoading(true);
     const objComment = {
       idWarehouse: idWarehouse,
-      idUser: idUser.id,
+      idUser: idUser,
       commentUser: commentText,
       avatarUrl: avatar.avatar,
       userName: userName.username,
@@ -107,7 +107,7 @@ const Comment = (props) => {
     setLoading(true);
     const objReply = {
       idComment: showInput,
-      idUser: idUser.id,
+      idUser: idUser,
       replyComment: replyText,
       avatarUrl: avatar.avatar,
       userName: userName.username,
@@ -133,7 +133,7 @@ const Comment = (props) => {
     setLoading(true);
     const objSubReply = {
       idComment: idCommentReply,
-      idUser: idUser.id,
+      idUser: idUser,
       replyComment: subReplyText,
       avatarUrl: avatar.avatar,
       userName: userName.username,
@@ -190,7 +190,7 @@ const Comment = (props) => {
           className="p-3 PO"
         />
       </div>
-      <div className="d-flex justify-content-end">
+      <div className="d-flex justify-content-end OH">
         {auth ? (
           <>
             <button
