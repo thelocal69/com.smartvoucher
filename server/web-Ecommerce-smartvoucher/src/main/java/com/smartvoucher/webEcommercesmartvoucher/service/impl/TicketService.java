@@ -14,6 +14,7 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ITicketService;
+import com.smartvoucher.webEcommercesmartvoucher.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +43,7 @@ public class TicketService implements ITicketService {
     private final WarehouseSerialRepository warehouseSerialRepository;
     private final IWareHouseRepository wareHouseRepository;
     private final WareHouseConverter wareHouseConverter;
+    private final RedisUtil redisUtil;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository
@@ -57,7 +59,8 @@ public class TicketService implements ITicketService {
                 , SerialConverter serialConverter
                 ,  WarehouseSerialRepository warehouseSerialRepository
                 , IWareHouseRepository wareHouseRepository
-                , WareHouseConverter wareHouseConverter) {
+                , WareHouseConverter wareHouseConverter
+                , RedisUtil redisUtil) {
         this.ticketRepository = ticketRepository;
         this.ticketConverter = ticketConverter;
         this.serialRepository = serialRepository;
@@ -72,6 +75,7 @@ public class TicketService implements ITicketService {
         this.warehouseSerialRepository = warehouseSerialRepository;
         this.wareHouseRepository = wareHouseRepository;
         this.wareHouseConverter = wareHouseConverter;
+        this.redisUtil = redisUtil;
     }
 
     @Override
@@ -104,16 +108,30 @@ public class TicketService implements ITicketService {
         int totalItem = ticketRepository.countByIdOrder(id);
         int totalPage = (int) Math.ceil((double) totalItem / limit);
         log.info("Get all ticket is completed !");
-        return new ResponseOutput(
-                page,
-                totalItem,
-                totalPage,
-                ticketDTODetailList
+        ResponseOutput dataCache = this.redisUtil.getAllRedis(
+                null, "getAllTicket", page, limit
         );
+        if (dataCache == null){
+            ResponseOutput dataDB = ResponseOutput
+                    .builder()
+                    .page(page)
+                    .totalItem(totalItem)
+                    .totalPage(totalPage)
+                    .data(ticketDTODetailList)
+                    .build();
+            if (dataDB != null){
+                this.redisUtil.saveToRedis(null, "getAllTicket", page, limit, dataDB);
+            }
+            log.info("Data DB Order");
+            return dataDB;
+        }
+        log.info("Data Cache Order");
+        return dataCache;
     }
 
     @Override
     public ResponseObject insertTicket(@NotNull BuyTicketDTO buyTicketDTO) {
+        this.redisUtil.clear();
         List<TicketDTO> listVoucher = new ArrayList<>();
         List<SerialEntity> listSerial =
                 generateSerial(buyTicketDTO.getIdWarehouse()
@@ -209,6 +227,7 @@ public class TicketService implements ITicketService {
 
     @Override
     public ResponseObject updateTicket(TicketDTO ticketDTO) {
+        this.redisUtil.clear();
         TicketEntity oldTicket = ticketRepository.findById(ticketDTO.getId()).orElse(null);
         if (oldTicket != null){
                 ticketHistoryRepository.save(
@@ -229,6 +248,7 @@ public class TicketService implements ITicketService {
 
     @Override
     public ResponseObject deleteTicket(long id) {
+        this.redisUtil.clear();
         TicketEntity ticket = ticketRepository.findById(id).orElse(null);
         if(ticket != null) {
             ticketHistoryRepository.deleteByIdTicket(ticket);
@@ -244,6 +264,7 @@ public class TicketService implements ITicketService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String userUseTicket(String serialCode) {
+        this.redisUtil.clear();
         TicketEntity ticketEntity = ticketRepository.findBySerialCode(serialRepository.findBySerialCode(serialCode));
         if(ticketEntity != null) {
             if(checkExpiredVoucher(ticketEntity)){

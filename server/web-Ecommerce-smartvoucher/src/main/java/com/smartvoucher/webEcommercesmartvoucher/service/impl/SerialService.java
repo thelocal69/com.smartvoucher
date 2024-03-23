@@ -10,6 +10,7 @@ import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseObject;
 import com.smartvoucher.webEcommercesmartvoucher.payload.ResponseOutput;
 import com.smartvoucher.webEcommercesmartvoucher.repository.*;
 import com.smartvoucher.webEcommercesmartvoucher.service.ISerialService;
+import com.smartvoucher.webEcommercesmartvoucher.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +33,7 @@ public class SerialService implements ISerialService {
     private final WarehouseSerialRepository warehouseSerialRepository;
     private final IWareHouseRepository wareHouseRepository;
     private final WareHouseConverter wareHouseConverter;
+    private final RedisUtil redisUtil;
 
     @Autowired
     public SerialService(SerialRepository serialRepository,
@@ -40,7 +42,8 @@ public class SerialService implements ISerialService {
                          IWareHouseRepository wareHouseRepository,
                          WareHouseConverter wareHouseConverter,
                          TicketHistoryRepository ticketHistoryRepository,
-                         TicketRepository ticketRepository) {
+                         TicketRepository ticketRepository,
+                         RedisUtil redisUtil) {
         this.serialRepository = serialRepository;
         this.serialConverter = serialConverter;
         this.warehouseSerialRepository = warehouseSerialRepository;
@@ -48,6 +51,7 @@ public class SerialService implements ISerialService {
         this.wareHouseConverter = wareHouseConverter;
         this.ticketRepository = ticketRepository;
         this.ticketHistoryRepository = ticketHistoryRepository;
+        this.redisUtil = redisUtil;
     }
 
     @Override
@@ -62,12 +66,25 @@ public class SerialService implements ISerialService {
         }
         int totalItem = (int) serialRepository.count();
         int totalPage = (int) Math.ceil((double) totalItem / limit);
-        return new ResponseOutput(
-                page,
-                totalItem,
-                totalPage,
-                serialDTOList
+        ResponseOutput dataCache = this.redisUtil.getAllRedis(
+                null, "getAllSerial", page, limit
         );
+        if (dataCache == null){
+            ResponseOutput dataDB = ResponseOutput
+                    .builder()
+                    .page(page)
+                    .totalItem(totalItem)
+                    .totalPage(totalPage)
+                    .data(serialDTOList)
+                    .build();
+            if (dataDB != null){
+                this.redisUtil.saveToRedis(null, "getAllSerial", page, limit, dataDB);
+            }
+            log.info("Data DB Order");
+            return dataDB;
+        }
+        log.info("Data Cache Order");
+        return dataCache;
     }
 
     @Override
@@ -90,6 +107,7 @@ public class SerialService implements ISerialService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseObject insertSerial(long idWarehouse, String batchCode, int numberOfSerial) {
+        this.redisUtil.clear();
         // list serial
         List<SerialEntity> listSerial = new ArrayList<>();
         // kiểm tra warehouse có tồn tại ở trong DB
@@ -139,6 +157,7 @@ public class SerialService implements ISerialService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseObject updateSerial(SerialDTO serialDTO) {
+        this.redisUtil.clear();
         SerialEntity oldSerial = serialRepository.findBySerialCodeAndId(serialDTO.getSerialCode(), serialDTO.getId());
             if (oldSerial != null){
                 log.info("Update Serial success");
@@ -155,6 +174,7 @@ public class SerialService implements ISerialService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseObject deleteSerial(long id){
+        this.redisUtil.clear();
         SerialEntity serial = serialRepository.findById(id).orElse(null);
             if(serial != null) {
                 ticketHistoryRepository.deleteBySerialCode(serial.getSerialCode());

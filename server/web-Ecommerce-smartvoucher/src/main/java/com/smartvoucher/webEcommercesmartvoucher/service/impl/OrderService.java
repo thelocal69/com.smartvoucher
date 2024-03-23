@@ -13,6 +13,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository
 import com.smartvoucher.webEcommercesmartvoucher.repository.OrderRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.UserRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IOrderService;
+import com.smartvoucher.webEcommercesmartvoucher.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -32,15 +33,18 @@ public class OrderService implements IOrderService {
     private final OrderConverter orderConverter;
     private final UserRepository userRepository;
     private final IWareHouseRepository iWareHouseRepository;
+    private final RedisUtil redisUtil;
     @Autowired
     public OrderService(OrderRepository orderRepository
             , OrderConverter orderConverter
             , UserRepository userRepository
-            , IWareHouseRepository iWareHouseRepository) {
+            , IWareHouseRepository iWareHouseRepository
+            , RedisUtil redisUtil) {
         this.orderRepository = orderRepository;
         this.orderConverter = orderConverter;
         this.userRepository = userRepository;
         this.iWareHouseRepository = iWareHouseRepository;
+        this.redisUtil = redisUtil;
     }
 
     @Override
@@ -78,12 +82,25 @@ public class OrderService implements IOrderService {
         int totalItem = orderRepository.countOrderByIdUser(user.getId());
         int totalPage = (int) Math.ceil((double) totalItem / limit);
         log.info("Get all orders of user is completed  !");
-        return new ResponseOutput(
-                page,
-                totalItem,
-                totalPage,
-                orderDetailDTOList
+        ResponseOutput dataCache = this.redisUtil.getAllRedis(
+                null, "getAllOrder", page, limit
         );
+        if (dataCache == null){
+            ResponseOutput dataDB = ResponseOutput
+                    .builder()
+                    .page(page)
+                    .totalItem(totalItem)
+                    .totalPage(totalPage)
+                    .data(orderDetailDTOList)
+                    .build();
+            if (dataDB != null){
+                this.redisUtil.saveToRedis(null, "getAllOrder", page, limit, dataDB);
+            }
+            log.info("Data DB Order");
+            return dataDB;
+        }
+        log.info("Data Cache Order");
+        return dataCache;
     }
 
     @Override
