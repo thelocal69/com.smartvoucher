@@ -1,10 +1,18 @@
-
 # SMART VOUCHER PROJECT INTRODUCTION
 Welcome to our cutting-edge e-commerce platform designed to revolutionize your shopping experience for electronic vouchers (e-vouchers). Our project focuses on providing users with a seamless platform to discover, purchase, and utilize e-vouchers efficiently. Once a user buys a voucher, they gain the flexibility to redeem it offline, coupled with a comprehensive overview of their voucher activity upon logging into the website. This project is collaboratively developed by four talented backend engineers 
-- Trần Khánh Thiện
-- Võ Đình Nhân
-- Hà Mai Phụng
-- Trần Minh Tâm
+## Key members
+- [Trần Khánh Thiện](https://github.com/thelocal69)
+- [Võ Đình Nhân](https://github.com/VoxNhandev)
+- [Hà Mai Phụng](https://github.com/phungha2603)
+- [Trần Minh Tâm](https://github.com/tamminhtran)
+## Tentative technologies and frameworks
+
+- Java 11
+- Spring boot 2.x.x
+- GitHub Actions
+- OpenTelemetry
+- Google API
+- Grafana, Loki, Prometheus, Tempo, Redis
 
 The technology stack driving our platform is a testament to our commitment to delivering a robust and user-friendly solution:
 - Redis cache is employed to expedite query processing, ensuring swift responses to user interactions. 
@@ -17,6 +25,35 @@ Key features of our project include:
 - The seamless implementation of refresh tokens to optimize user sessions. 
 
 This project epitomizes innovation and efficiency in the realm of e-commerce, ensuring a delightful experience for users navigating the diverse landscape of electronic vouchers.
+
+## Run this server project
+
+### Build this service:
+
+`mvn clean package`
+
+## Start docker and services:
+
+#### Also, make sure that the `install.sh` file has execute permissions. You can set the execute permission using the `chmod` command:
+
+`chmod +x install.sh`
+
+```bash
+docker-compose -f ./docker/docker-compose.yml -p docker up -d
+
+./install.sh
+```
+
+## Stop services:
+
+#### Also, make sure that the `terminate.sh` file has execute permissions. You can set the execute permission using the `chmod` command:
+
+`chmod +x terminate.sh`
+
+```bash
+./terminate.sh
+```
+
 <div id="header" align="center">
 CLICK HERE !!!
   <div id="badges">
@@ -117,3 +154,6 @@ tổng hóa đơn. Tuy nhiên, để sở hữu voucher, user cần trả 20k ->
 hoặc đã dùng thì không được phép dùng tiếp
 4. Nghiệp vụ quản lý giao dịch mua voucher của user
 - Sau khi user mua, SmartVoucher thống kê các voucher đã mua của user theo status (đã mua, đã dùng hoặc đã hết hạn)
+
+## Conclusion
+- Thanks to visit to our project !
