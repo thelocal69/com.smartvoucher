@@ -18,6 +18,7 @@ import com.smartvoucher.webEcommercesmartvoucher.repository.IDiscountTypeReposit
 import com.smartvoucher.webEcommercesmartvoucher.repository.ILabelRepository;
 import com.smartvoucher.webEcommercesmartvoucher.repository.IWareHouseRepository;
 import com.smartvoucher.webEcommercesmartvoucher.service.IWareHouseService;
+import com.smartvoucher.webEcommercesmartvoucher.util.RedisUtil;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadGoogleDriveUtil;
 import com.smartvoucher.webEcommercesmartvoucher.util.UploadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,7 @@ public class WareHouseService implements IWareHouseService {
     private String driveUrl;
     @Value("${domain_file}")
     private String domainFile;
+    private final RedisUtil redisUtil;
 
 
     @Autowired
@@ -56,7 +58,8 @@ public class WareHouseService implements IWareHouseService {
                             final ICategoryRepository categoryRepository,
                             final UploadGoogleDriveUtil uploadGoogleDriveUtil,
                             final ILabelRepository labelRepository,
-                            final UploadLocalUtil uploadLocalUtil
+                            final UploadLocalUtil uploadLocalUtil,
+                            final RedisUtil redisUtil
     ) {
         this.wareHouseRepository = wareHouseRepository;
         this.wareHouseConverter = wareHouseConverter;
@@ -65,6 +68,7 @@ public class WareHouseService implements IWareHouseService {
         this.uploadGoogleDriveUtil = uploadGoogleDriveUtil;
         this.labelRepository = labelRepository;
         this.uploadLocalUtil = uploadLocalUtil;
+        this.redisUtil = redisUtil;
     }
 
     @Override
@@ -93,12 +97,25 @@ public class WareHouseService implements IWareHouseService {
         }
         int totalItem = (int) wareHouseRepository.count();
         int totalPage = (int) Math.ceil((double) totalItem / limit);
-        return new ResponseOutput(
-                page,
-                totalItem,
-                totalPage,
-                wareHouseDTOList
+        ResponseOutput dataCache = this.redisUtil.getAllRedis(
+                null, "getAllWarehouse", page, limit
         );
+        if (dataCache == null){
+            ResponseOutput dataDB = ResponseOutput
+                    .builder()
+                    .page(page)
+                    .totalItem(totalItem)
+                    .totalPage(totalPage)
+                    .data(wareHouseDTOList)
+                    .build();
+            if (dataDB != null){
+                this.redisUtil.saveToRedis(null, "getAllWarehouse", page, limit, dataDB);
+            }
+            log.info("Data DB Order");
+            return dataDB;
+        }
+        log.info("Data Cache Order");
+        return dataCache;
     }
 
     @Override
@@ -126,6 +143,7 @@ public class WareHouseService implements IWareHouseService {
     @Transactional(rollbackFor = Exception.class)
     public WareHouseDTO upsert(WareHouseDTO wareHouseDTO) {
         WareHouseEntity wareHouse;
+        this.redisUtil.clear();
         if (wareHouseDTO.getId() != null) {
             if (!existWareHouse(wareHouseDTO)) {
                 log.info("Cannot update warehouse id: " + wareHouseDTO.getId());
@@ -172,6 +190,7 @@ public class WareHouseService implements IWareHouseService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteWareHouse(WareHouseDTO wareHouseDTO) {
+        this.redisUtil.clear();
         boolean exits = wareHouseRepository.existsById(wareHouseDTO.getId());
         if (!exits) {
             log.info("Cannot delete id: " + wareHouseDTO.getId());
@@ -245,12 +264,25 @@ public class WareHouseService implements IWareHouseService {
         }
         int totalItem = wareHouseRepository.countByLabel(slug);
         int totalPage = (int) Math.ceil((double) totalItem / limit);
-        return new ResponseOutput(
-                page,
-                totalItem,
-                totalPage,
-                wareHouseDTOList
+        ResponseOutput dataCache = this.redisUtil.getAllRedis(
+                null, "getAllWarehouseByLabel", page, limit
         );
+        if (dataCache == null){
+            ResponseOutput dataDB = ResponseOutput
+                    .builder()
+                    .page(page)
+                    .totalItem(totalItem)
+                    .totalPage(totalPage)
+                    .data(wareHouseDTOList)
+                    .build();
+            if (dataDB != null){
+                this.redisUtil.saveToRedis(null, "getAllWarehouseByLabel", page, limit, dataDB);
+            }
+            log.info("Data DB Order");
+            return dataDB;
+        }
+        log.info("Data Cache Order");
+        return dataCache;
     }
 
     @Override
@@ -266,12 +298,25 @@ public class WareHouseService implements IWareHouseService {
         }
         int totalItem = wareHouseRepository.countByCategory(name);
         int totalPage = (int) Math.ceil((double) totalItem / limit);
-        return new ResponseOutput(
-                page,
-                totalItem,
-                totalPage,
-                wareHouseDTOList
+        ResponseOutput dataCache = this.redisUtil.getAllRedis(
+                null, "getAllWarehouseByCategory", page, limit
         );
+        if (dataCache == null){
+            ResponseOutput dataDB = ResponseOutput
+                    .builder()
+                    .page(page)
+                    .totalItem(totalItem)
+                    .totalPage(totalPage)
+                    .data(wareHouseDTOList)
+                    .build();
+            if (dataDB != null){
+                this.redisUtil.saveToRedis(null, "getAllWarehouseByCategory", page, limit, dataDB);
+            }
+            log.info("Data DB Order");
+            return dataDB;
+        }
+        log.info("Data Cache Order");
+        return dataCache;
     }
 
 
