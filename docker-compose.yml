@@ -27,9 +27,7 @@ services:
 
   smartvoucher-service:
     container_name: smartvoucher-service
-    build:
-      context: .
-      dockerfile: DockerFileSpringboot
+    image: thelocal69/smartvoucher-service:latest
     ports:
       - "8082:8082"
     environment:
