@@ -12,7 +12,7 @@ jobs:
       matrix:
         include:
           - service: smartvoucher-service
-            directory: server/web-Ecommerce-smartvoucher
+            directory: web-Ecommerce-smartvoucher
 
 
     steps:

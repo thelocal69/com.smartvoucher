@@ -12,7 +12,7 @@ jobs:
       matrix:
         include:
           - service: smartvoucher-home
-            directory: client/smartvoucher-home
+            directory: smartvoucher-home
 
     steps:
       - name: Checkout
