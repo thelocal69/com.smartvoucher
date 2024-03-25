@@ -12,7 +12,7 @@ jobs:
       matrix:
         include:
           - service: smartvoucher-service
-            directory: web-Ecommerce-smartvoucher
+            directory: server/web-Ecommerce-smartvoucher
 
 
     steps:
@@ -43,7 +43,7 @@ jobs:
         working-directory: ./${{ matrix.directory }}
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest ./${{ matrix.directory }}
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest .
 
       - name: Push Docker image to Docker Hub
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest
