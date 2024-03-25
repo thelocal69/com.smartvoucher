@@ -25,11 +25,11 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'client/smartvoucher-home/package.json'
       - run: npm ci
-        working-directory: 'client/smartvoucher-home'
-      - run: npm run build --if-present
-        working-directory: 'client/smartvoucher-home'
+        working-directory: ./${{ matrix.directory }}
+      - run: npm install
+        working-directory: ./${{ matrix.directory }}
       - run: npm test
-        working-directory: 'client/smartvoucher-home'
+        working-directory: ./${{ matrix.directory }}
 
       - name: Login Docker Hub
         uses: docker/login-action@v1
@@ -38,7 +38,9 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest ./${{ matrix.directory }}
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest .
+        working-directory: ./${{ matrix.directory }}
 
       - name: Push Docker image to Docker Hub
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest
+        working-directory: ./${{ matrix.directory }}
