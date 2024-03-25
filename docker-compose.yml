@@ -1,7 +1,7 @@
 version: "3.7"
 services:
-  mysql8-container:
-    container_name: mysql8-container
+  smartvoucher-mysql-db:
+    container_name: smartvoucher-mysql-db
     image: mysql:latest
     restart: always
     environment:
@@ -14,9 +14,9 @@ services:
     networks:
       - smartvoucher-network
 
-  redis-container:
+  smartvoucher-redis:
     image: redis:latest
-    container_name: redis-container
+    container_name: smartvoucher-redis
     restart: always
     ports:
       - "6379:6379"
@@ -25,19 +25,19 @@ services:
     networks:
       - smartvoucher-network
 
-  smartvoucher-container:
-    container_name: smartvoucher-container
+  smartvoucher-service:
+    container_name: smartvoucher-service
     build:
       context: .
       dockerfile: DockerFileSpringboot
     ports:
       - "8082:8082"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql8-container:3307/CybersoftProject
+      SPRING_DATASOURCE_URL: jdbc:mysql://smartvoucher-mysql-db:3307/CybersoftProject
       MYSQL_ROOT_PASSWORD: Adc12345
-      REDIS_HOST: redis-container
+      REDIS_HOST: smartvoucher-redis
     depends_on:
-      - mysql8-container
+      - smartvoucher-mysql-db
     networks:
       - smartvoucher-network
     healthcheck:
@@ -54,7 +54,7 @@ services:
       dockerfile: DockerFileVoucherFE
     ports:
       - "3000:80"
-    restart: always
+    restart: unless-stopped
     networks:
       - smartvoucher-network
     healthcheck:

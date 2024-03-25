@@ -12,7 +12,6 @@ Welcome to our cutting-edge e-commerce platform designed to revolutionize your s
 - GitHub Actions
 - OpenTelemetry
 - Google API
-- Grafana, Loki, Prometheus, Tempo, Redis
 
 The technology stack driving our platform is a testament to our commitment to delivering a robust and user-friendly solution:
 - Redis cache is employed to expedite query processing, ensuring swift responses to user interactions. 
@@ -39,7 +38,7 @@ This project epitomizes innovation and efficiency in the realm of e-commerce, en
 `chmod +x install.sh`
 
 ```bash
-docker-compose -f ./docker/docker-compose.yml -p docker up -d
+docker-compose -f ./docker-compose.yml -p docker up -d
 
 ./install.sh
 ```
