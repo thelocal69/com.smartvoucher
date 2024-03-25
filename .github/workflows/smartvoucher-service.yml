@@ -44,7 +44,9 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest ./${{ matrix.directory }}
+        working-directory: 'server/web-Ecommerce-smartvoucher'
 
       - name: Push Docker image to Docker Hub
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest
+        working-directory: 'server/web-Ecommerce-smartvoucher'
 
