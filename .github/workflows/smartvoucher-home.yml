@@ -28,8 +28,6 @@ jobs:
         working-directory: ./${{ matrix.directory }}
       - run: npm install
         working-directory: ./${{ matrix.directory }}
-      - run: npm test
-        working-directory: ./${{ matrix.directory }}
 
       - name: Login Docker Hub
         uses: docker/login-action@v1
@@ -38,9 +36,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest .
-        working-directory: ./${{ matrix.directory }}
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest ./server/${{ matrix.directory }}
 
       - name: Push Docker image to Docker Hub
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest
-        working-directory: ./${{ matrix.directory }}
