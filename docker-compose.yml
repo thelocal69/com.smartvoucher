@@ -47,11 +47,9 @@ services:
       retries: 3
       start_period: 20s
 
-  voucher-frontend-container:
-    container_name: voucher-frontend-container
-    build:
-      context: .
-      dockerfile: DockerFileVoucherFE
+  smartvoucher-home:
+    container_name: smartvoucher-home
+    image: thelocal69/smartvoucher-home:latest
     ports:
       - "3000:80"
     restart: unless-stopped
