@@ -1,0 +1,42 @@
+
+# .github/workflows/cicd.yml
+name: CI/CD
+on:
+  push:
+    branches: [main]
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+        include:
+          - service: smartvoucher-home
+            directory: client/smartvoucher-home
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: UnitTest ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'client/smartvoucher-home/package.json'
+      - run: npm ci
+        working-directory: ./${{ matrix.directory }}
+      - run: npm install
+        working-directory: ./${{ matrix.directory }}
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest ./${{ matrix.directory }}
+
+      - name: Push Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest
